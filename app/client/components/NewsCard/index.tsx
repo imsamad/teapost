@@ -43,17 +43,27 @@ const Index = () => {
           )}
           <Flex alignItems="center">
             <Badge mr="2">Programming</Badge>
-            {isLargerThanSM && (
-              <>
-                <Text fontSize="13px" color="#757575">
-                  Oct 8,2018
-                </Text>
-                <Text mx="2">{'~'}</Text>
-                <Text fontSize="13px" color="#757575">
-                  11min read
-                </Text>
-              </>
-            )}
+            {/* {isLargerThanSM && (
+              <> */}
+            <Text
+              fontSize="13px"
+              color="#757575"
+              display={[null, null, 'none']}
+            >
+              Oct 8,2018
+            </Text>
+            <Text mx="2" display={[null, null, 'none']}>
+              {'~'}
+            </Text>
+            <Text
+              fontSize="13px"
+              color="#757575"
+              display={[null, null, 'none']}
+            >
+              11min read
+            </Text>
+            {/* </> */}
+            {/* )} */}
           </Flex>
         </Box>
         <Box maxW={[100, 150, 250]} maxH={[100, 120, 230]} overflow="hidden">

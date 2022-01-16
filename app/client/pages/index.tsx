@@ -1,9 +1,12 @@
 import HomePage from '../components/HomePage';
-import CheckResp from '../components/CheckResp';
+// import CheckResp from '../components/CheckResp';
+import Category from '../components/Category';
 const Index = () => {
   return (
     <>
-      <CheckResp />
+      <Category />
+      {/* <CheckResp /> */}
+
       <HomePage />
     </>
   );

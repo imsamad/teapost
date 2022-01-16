@@ -7,7 +7,7 @@ type propTypes = {
 
 const index = ({ image, full_name, short_name }: propTypes) => {
   return (
-    <Flex alignItems="center" pb="1">
+    <Flex alignItems="center">
       <Avatar size="xs" name={full_name} src={image} />
       <Text fontSize="md" ml="2" isTruncated>
         {short_name}

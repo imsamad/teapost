@@ -1,26 +1,25 @@
-import { Box, Divider, Flex } from '@chakra-ui/react';
+import { Box, Divider, Flex, Container } from '@chakra-ui/react';
 
-import Header from '../Header';
+import NavBar from '../NavBar';
 import Footer from '../Footer';
-import Category from '../Category';
+
 type LayoutProps = {
   children: React.ReactNode;
 };
 
 const Index = ({ children }: LayoutProps) => {
   return (
-    <Flex direction="column" maxW="100vw" minH="100vh" overflow="hidden">
-      <Box maxW="100%">
-        <Header />
+    <Container maxWidth="container.xl">
+      <Flex direction="column" maxW="100vw" minH="100vh" overflow="hidden">
+        <NavBar />
         <Divider />
-        <Category />
-        <Divider />
-      </Box>
-      {children}
-      <Box maxW="100%">
+
+        <Box flexGrow="1" as="main">
+          {children}
+        </Box>
         <Footer />
-      </Box>
-    </Flex>
+      </Flex>
+    </Container>
   );
 };
 

@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import Layout from '../components/Layout';
-import Container from '../components/Container';
 
 function MyApp({ Component, pageProps }: AppProps) {
   /**
@@ -13,13 +12,13 @@ function MyApp({ Component, pageProps }: AppProps) {
    * 3.) no Container
    */
 
+  const getContainer = Component?.getContainer
+    ? Component?.getContainer
+    : (page) => page;
+
   return (
     <ChakraProvider>
-      <Layout>
-        <Container>
-          <Component {...pageProps} />
-        </Container>
-      </Layout>
+      <Layout>{getContainer(<Component {...pageProps} />)}</Layout>
     </ChakraProvider>
   );
 }

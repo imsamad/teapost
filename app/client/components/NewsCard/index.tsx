@@ -1,45 +1,66 @@
-import { Badge, Box, Flex, Heading, Image, Text } from '@chakra-ui/react';
+import {
+  Badge,
+  Box,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  useMediaQuery,
+} from '@chakra-ui/react';
 
-import NewsCardActions from '../NewsCardActions';
-import Author from '../AuthorBadge';
+import { useTheme } from '@emotion/react';
+
+import AuthorBadge from '../AuthorBadge';
 const Index = () => {
+  const theme = useTheme();
+
+  const { sm } = theme.breakpoints;
+
+  const [isLargerThanSM] = useMediaQuery(`(min-width: ${sm})`);
+
   return (
-    <Flex p={4} alignItems="center" mx="auto">
-      <Box p={{ base: 2, md: 4 }}>
-        <Author
-          image="https://bit.ly/tioluwani-kolawole"
-          full_name="Kola Tioluwani"
-          short_name="imsamad"
-        />
-        <Heading
-          fontSize={{ base: 'sm', sm: 'md' }}
-          lineHeight="tall"
-          noOfLines={2}
-        >
-          Finding customers for your new business
-        </Heading>
-        <Badge variant="solid" display={['none', 'inline-block']}>
-          Marketing
-        </Badge>
-        <Text
-          mt={2}
-          color="gray.500"
-          noOfLines={2}
-          display={['none', 'block', 'block']}
-        >
-          Getting a new business off the ground is a lot of hard work. Here are
-          five ideas you can use to find your first customers.
-        </Text>
-        <NewsCardActions />
-      </Box>
-      <Box maxW={[100, 150, 250]} maxH={[100, 120, 230]}>
-        <Image
-          borderRadius="lg"
-          src="https://bit.ly/2jYM25F"
-          alt="Woman paying for a purchase"
-        />
-      </Box>
-    </Flex>
+    <Box m={4} borderBottom="1px">
+      <Flex alignItems="center">
+        <Box flexGrow={1} pr="2">
+          <AuthorBadge
+            image="https://bit.ly/tioluwani-kolawole"
+            full_name="Kola Tioluwani"
+            short_name="imsamad"
+          />
+          <Heading noOfLines={2} fontSize={['16px', null, '22px']} my="2">
+            The 6 Rules of Email: How to Eliminate Email Anxiety and Take
+            Control of Your Inbox Today (Backed by Science)
+          </Heading>
+          {isLargerThanSM && (
+            <Text
+              fontSize="16px"
+              fontWeight={500}
+              color="#757575"
+              noOfLines={1}
+            >
+              6 scientific ways to eliminate the daily stress caused by emails.
+            </Text>
+          )}
+          <Flex alignItems="center">
+            <Badge mr="2">Programming</Badge>
+            {isLargerThanSM && (
+              <>
+                <Text fontSize="13px" color="#757575">
+                  Oct 8,2018
+                </Text>
+                <Text mx="2">{'~'}</Text>
+                <Text fontSize="13px" color="#757575">
+                  11min read
+                </Text>
+              </>
+            )}
+          </Flex>
+        </Box>
+        <Box maxW={[100, 150, 250]} maxH={[100, 120, 230]} overflow="hidden">
+          <Image src="https://bit.ly/dan-abramov" alt="Dan Abramov" />
+        </Box>
+      </Flex>
+    </Box>
   );
 };
 

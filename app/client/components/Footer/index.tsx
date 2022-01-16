@@ -2,7 +2,7 @@ import { Box, Text } from '@chakra-ui/react';
 
 const Index = () => {
   return (
-    <Box>
+    <Box as="footer">
       <Text>Footer</Text>
     </Box>
   );

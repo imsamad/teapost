@@ -1,14 +1,11 @@
-import { Grid } from '@chakra-ui/react';
-import NewsCard from '../components/NewsCard';
-
+import HomePage from '../components/HomePage';
+import CheckResp from '../components/CheckResp';
 const Index = () => {
-  const arr = Array.from(Array(10).keys());
   return (
-    <Grid templateColumns={{ base: `repeat(1, 1fr)`, md: `repeat(2, 1fr)` }}>
-      {arr.map((val) => (
-        <NewsCard key={`${(val + 10) * 10}`} />
-      ))}
-    </Grid>
+    <>
+      <CheckResp />
+      <HomePage />
+    </>
   );
 };
 

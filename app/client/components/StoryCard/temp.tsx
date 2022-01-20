@@ -8,7 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import NewsCardActions from '../NewsCardActions';
+import NewsCardActions from '../StoryCardActions';
 import Author from '../AuthorBadge';
 const Index = () => {
   return (

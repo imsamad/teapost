@@ -11,6 +11,7 @@ import {
 import { useTheme } from '@emotion/react';
 
 import AuthorBadge from '../AuthorBadge';
+import NewsCardActions from '../StoryCardActions';
 const Index = () => {
   const theme = useTheme();
 
@@ -21,19 +22,19 @@ const Index = () => {
   return (
     <Box m={4} borderBottom="1px">
       <Flex alignItems="center">
-        <Box flexGrow={1} pr="2">
+        <Box pr="2">
           <AuthorBadge
             image="https://bit.ly/tioluwani-kolawole"
             full_name="Kola Tioluwani"
             short_name="imsamad"
           />
-          <Heading noOfLines={2} fontSize={['16px', null, '22px']} my="2">
+          <Heading noOfLines={2} fontSize={['14px', 16, '22px']} my="2">
             The 6 Rules of Email: How to Eliminate Email Anxiety and Take
             Control of Your Inbox Today (Backed by Science)
           </Heading>
           {isLargerThanSM && (
             <Text
-              fontSize="16px"
+              fontSize="20px"
               fontWeight={500}
               color="#757575"
               noOfLines={1}
@@ -42,34 +43,35 @@ const Index = () => {
             </Text>
           )}
           <Flex alignItems="center">
-            <Badge mr="2">Programming</Badge>
-            {/* {isLargerThanSM && (
-              <> */}
-            <Text
-              fontSize="13px"
-              color="#757575"
-              display={[null, null, 'none']}
-            >
+            <Badge mr="2" display={['none', 'block']}>
+              Programming
+            </Badge>
+            <Text fontSize={['10px', '13px']} color="#757575">
               Oct 8,2018
             </Text>
-            <Text mx="2" display={[null, null, 'none']}>
-              {'~'}
-            </Text>
-            <Text
-              fontSize="13px"
-              color="#757575"
-              display={[null, null, 'none']}
-            >
+            <Text mx="2">{'~'}</Text>
+            <Text fontSize={['10px', '13px']} color="#757575">
               11min read
             </Text>
-            {/* </> */}
-            {/* )} */}
           </Flex>
+          <Box display={['none', 'none', 'block']}>
+            <NewsCardActions />
+          </Box>
         </Box>
-        <Box maxW={[100, 150, 250]} maxH={[100, 120, 230]} overflow="hidden">
+        <Box
+          flexShrink={1}
+          maxW={[100, 150, 250]}
+          maxH={[100, 120, 230]}
+          minW="75"
+          minH="75"
+          overflow="hidden"
+        >
           <Image src="https://bit.ly/dan-abramov" alt="Dan Abramov" />
         </Box>
       </Flex>
+      <Box display={['block', 'block', 'none']}>
+        <NewsCardActions />
+      </Box>
     </Box>
   );
 };

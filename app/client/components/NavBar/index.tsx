@@ -6,18 +6,25 @@ import {
   InputGroup,
   InputLeftElement,
   Spacer,
-  Switch,
-  useColorMode,
 } from '@chakra-ui/react';
 import { Search2Icon } from '@chakra-ui/icons';
 
+import MyLink from '../MyLink';
+import DarkMode from '../DarkMode';
 const Index = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  console.log('first');
   return (
     <Flex alignItems="center" py={4} as="nav">
-      <Heading as="h1" textTransform="uppercase" fontStyle="italic">
-        Teapost
-      </Heading>
+      <MyLink href="/">
+        <Heading
+          as="h1"
+          _hover={{ cursor: 'pointer' }}
+          textTransform="uppercase"
+          fontStyle="italic"
+        >
+          Teapost
+        </Heading>
+      </MyLink>
       <Spacer />
       <InputGroup
         maxW="md"
@@ -33,19 +40,12 @@ const Index = () => {
         />
         <Input placeholder="Enter or ctrl + /" variant="filled" />
       </InputGroup>
-      <Switch
-        size="lg"
-        onChange={toggleColorMode}
-        name="colorMode"
-        value={colorMode}
-        isChecked={colorMode === 'dark'}
-      />
-      <Button size={'sm'} colorScheme="blue" mx={[1, 4]}>
-        Sign Up
-      </Button>
-      <Button size="sm" colorScheme="blue">
-        Log in
-      </Button>
+      <DarkMode />
+      <MyLink href="/auth/login">
+        <Button size="md" mx={[1, 4]}>
+          Log in
+        </Button>
+      </MyLink>
     </Flex>
   );
 };

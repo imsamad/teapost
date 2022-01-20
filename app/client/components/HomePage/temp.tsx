@@ -1,5 +1,5 @@
 import { Grid } from '@chakra-ui/react';
-import NewsCard from '../NewsCard/temp';
+import NewsCard from '../StoryCard/temp';
 
 const Index = () => {
   const arr = Array.from(Array(10).keys());

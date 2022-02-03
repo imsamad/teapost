@@ -34,3 +34,8 @@ export const registerSchema = yup.object({
       .oneOf([yup.ref('password'), null], 'Passwords must match'),
   }),
 });
+export const verifyEmailSchema = yup.object({
+  query: yup.object({
+    token: yup.string().required('Mallicious request.'),
+  }),
+});

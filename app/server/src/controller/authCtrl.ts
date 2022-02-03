@@ -4,7 +4,7 @@ import asyncHandler from '../utils/asyncHandler';
 import User from '../models/UserModel';
 import emailVerifyMessage from '../utils/sendVerifyEmail';
 import ErrorResponse from '../utils/ErrorResponse';
-import { signJwt } from '../utils/jwt';
+import { decodeJwt, signJwt } from '../utils/jwt';
 import { createHash, randomBytes } from '../utils/crypto';
 import Token from '../models/TokenModel';
 
@@ -44,7 +44,7 @@ export const register = asyncHandler(
 
     const redirectUrl = `${req.protocol}://${req.get(
       'host'
-    )}/api/v1/auth/confirmemail?token=${jwtVerifyToken}`;
+    )}/api/v1/auth/verifyemail?token=${jwtVerifyToken}`;
 
     const emailSentResult = await emailVerifyMessage(email, redirectUrl);
 
@@ -72,5 +72,41 @@ export const register = asyncHandler(
 export const signin = asyncHandler(
   (req: Request, res: Response, next: NextFunction) => {
     return res.json('Ok from login');
+  }
+);
+
+export const verifyEmail = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const jwtCodedToken: string = req.query.token as string;
+
+    const malliciousReq = ErrorResponse(400, 'Mallicious request.');
+
+    const { token: decodedVerifyToken }: any = decodeJwt(jwtCodedToken);
+
+    if (!decodedVerifyToken) return next(malliciousReq);
+
+    const hashedVerifyToken = createHash(decodedVerifyToken);
+
+    let token = await Token.findOne({
+      emailVerifyToken: hashedVerifyToken,
+    });
+
+    if (!token) return next(malliciousReq);
+
+    const userId: string = token.userId;
+
+    const user = await User.findById(userId);
+
+    if (!user) return next(malliciousReq);
+
+    user.isEmailVerified = true;
+
+    await user.save();
+    await token.delete();
+
+    res.status(200).json({
+      success: true,
+      message: 'Email verfied successfully.',
+    });
   }
 );

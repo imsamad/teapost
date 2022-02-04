@@ -46,31 +46,38 @@ export const register = asyncHandler(
       'host'
     )}/api/v1/auth/verifyemail?token=${jwtVerifyToken}`;
 
-    const emailSentResult = await emailVerifyMessage(email, redirectUrl);
+    let isEmailService: string | boolean = process.env
+      .IS_EMAIL_SERVICE as string;
 
-    if (!emailSentResult) {
-      await user.delete();
-      await token.delete();
+    isEmailService = isEmailService === 'true';
 
-      return next(
-        ErrorResponse(
-          400,
-          'Unable to process your request please register again.'
-        )
-      );
+    if (isEmailService) {
+      let emailSentResult = await emailVerifyMessage(email, redirectUrl);
+
+      if (emailSentResult) {
+        await user.delete();
+        await token.delete();
+
+        return next(
+          ErrorResponse(
+            400,
+            'Unable to process your request please register again.'
+          )
+        );
+      }
     }
 
     return res.json({
       status: 200,
       success: true,
-      message: `Verify email sent to ${email} `,
-      url: redirectUrl,
+      message: `Created your account successfully ,Verify your email sent to ${email}.  `,
+      url: !isEmailService && redirectUrl,
     });
   }
 );
 
-export const signin = asyncHandler(
-  (req: Request, res: Response, next: NextFunction) => {
+export const logIn = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
     return res.json('Ok from login');
   }
 );

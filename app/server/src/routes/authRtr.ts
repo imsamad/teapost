@@ -1,11 +1,11 @@
 import express, { Router } from 'express';
 const router: Router = express();
 
-import { signin, register, verifyEmail } from '../controller/authCtrl';
+import { logIn, register, verifyEmail } from '../controller/authCtrl';
 import validateSchema from '../middleware/validateSchema';
-import { registerSchema, verifyEmailSchema } from '../schema/auth';
+import { logInSchema, registerSchema, verifyEmailSchema } from '../schema/auth';
 
-router.post('/signin', signin);
+router.post('/login', validateSchema(logInSchema), logIn);
 router.post('/register', validateSchema(registerSchema), register);
 router.get('/verifyemail', validateSchema(verifyEmailSchema), verifyEmail);
 

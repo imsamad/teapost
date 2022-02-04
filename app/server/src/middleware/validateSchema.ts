@@ -18,7 +18,7 @@ const validateSchema =
 
       return next();
     } catch (error: any) {
-      console.error('Error from validation ', error);
+      // console.error('Error from validation ', Object.keys(error));
 
       return next(
         ErrorResponse(

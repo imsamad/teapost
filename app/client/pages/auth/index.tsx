@@ -1,6 +1,6 @@
-import Login from '../../components/Login';
+import LogIn from '../../components/LogIn';
 const Index = () => {
-  return <Login />;
+  return <LogIn />;
 };
 
 export default Index;

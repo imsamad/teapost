@@ -8,6 +8,7 @@ export interface UserDocument extends mongoose.Document {
   password: string;
   isEmailVerified: boolean;
   role: string | 'admin' | 'reader' | 'author';
+  matchPassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema(
@@ -57,7 +58,9 @@ userSchema.post<Query<UserDocument, UserDocument>>(
     if (error?.code === 11000) {
       console.log('Executed');
       next(
-        ErrorResponse(422, `${doc.email || 'This email'} already registered.`)
+        ErrorResponse(400, {
+          email: `${doc.email || 'This email'} already registered.`,
+        })
       );
     } else {
       next(error);
@@ -81,6 +84,11 @@ userSchema.pre('save', async function (next) {
   return next();
 });
 
+userSchema.methods.matchPassword = async function (
+  enterPassword: UserDocument['password']
+) {
+  return await bcrypt.compare(enterPassword, this.password);
+};
 const User = mongoose.model<UserDocument>('User', userSchema);
 
 export default User;

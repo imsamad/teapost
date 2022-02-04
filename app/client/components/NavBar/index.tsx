@@ -41,7 +41,7 @@ const Index = () => {
         <Input placeholder="Enter or ctrl + /" variant="filled" />
       </InputGroup>
       <DarkMode />
-      <MyLink href="/auth/login">
+      <MyLink href="/auth">
         <Button size="md" mx={[1, 4]}>
           Log in
         </Button>

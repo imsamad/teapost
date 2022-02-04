@@ -1,9 +1,9 @@
 import * as yup from 'yup';
+import { trimExtra } from '../utils';
 
 import YupPassword from 'yup-password';
-YupPassword(yup); // extend yup
 
-import trimExtra from '../utils/trimExtra';
+YupPassword(yup); // extend yup
 
 const usernameField = yup
   .string()
@@ -29,24 +29,15 @@ const pwdConfirmField = yup
   .string()
   .oneOf([yup.ref('password'), null], 'Passwords must match');
 
-export const registerSchema = yup.object({
-  body: yup.object({
-    username: usernameField,
-    email: emailField,
-    password: pwdField,
-    passwordConfirmation: pwdConfirmField,
-  }),
+const registerSchema = yup.object({
+  username: usernameField,
+  email: emailField,
+  password: pwdField,
+  passwordConfirmation: pwdConfirmField,
+});
+const signInSchema = yup.object({
+  email: emailField,
+  password: pwdField,
 });
 
-export const logInSchema = yup.object({
-  body: yup.object({
-    email: emailField,
-    password: yup.string().required('Password is required'),
-  }),
-});
-
-export const verifyEmailSchema = yup.object({
-  query: yup.object({
-    token: yup.string().required('Mallicious request.'),
-  }),
-});
+export { registerSchema, signInSchema };

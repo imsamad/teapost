@@ -1,17 +1,21 @@
-import mongoose, { Query } from 'mongoose';
-import ErrorResponse from '../utils/ErrorResponse';
+import mongoose, { Date } from 'mongoose';
+import { ErrorResponse } from '../lib/utils';
 import bcrypt from 'bcrypt';
+import { boolean } from 'yup';
 
 export interface UserDocument extends mongoose.Document {
   email: string;
   username: string;
   password: string;
   isEmailVerified: boolean;
+  isAuthorised: boolean;
   role: string | 'admin' | 'reader' | 'author';
   matchPassword(candidatePassword: string): Promise<boolean>;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-const userSchema = new mongoose.Schema(
+const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -42,6 +46,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isAuthorised: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
   },
 
   {
@@ -52,23 +61,23 @@ const userSchema = new mongoose.Schema(
 );
 
 // Do sth here bcoz ,sth might be missing.
-userSchema.post<Query<UserDocument, UserDocument>>(
-  'save',
-  function (error: any, doc: UserDocument, next: any) {
-    if (error?.code === 11000) {
-      console.log('Executed');
-      next(
-        ErrorResponse(400, {
-          email: `${doc.email || 'This email'} already registered.`,
-        })
-      );
-    } else {
-      next(error);
-    }
-  }
-);
 
-userSchema.pre('save', async function (next) {
+// UserSchema.post<Query<UserDocument, UserDocument>>(
+
+UserSchema.post('save', function (error: any, doc: UserDocument, next: any) {
+  if (error?.code === 11000) {
+    console.log('Executed');
+    next(
+      ErrorResponse(400, {
+        email: `${doc.email || 'This email'} already registered.`,
+      })
+    );
+  } else {
+    next(error);
+  }
+});
+
+UserSchema.pre('save', async function (next) {
   const user = this as UserDocument;
 
   if (!user.isModified('password')) return next();
@@ -84,11 +93,12 @@ userSchema.pre('save', async function (next) {
   return next();
 });
 
-userSchema.methods.matchPassword = async function (
+UserSchema.methods.matchPassword = async function (
   enterPassword: UserDocument['password']
 ) {
   return await bcrypt.compare(enterPassword, this.password);
 };
-const User = mongoose.model<UserDocument>('User', userSchema);
+
+const User = mongoose.model<UserDocument>('User', UserSchema);
 
 export default User;

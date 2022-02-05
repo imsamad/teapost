@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response, Errback } from 'express';
-import { ErrorResponseType } from '../utils/ErrorResponse';
+import { NextFunction, Request, Response } from 'express';
+import { ErrorResponseType, typeOf } from '../lib/utils';
 
 const errorHandler = (
   err: ErrorResponseType,
@@ -11,6 +11,8 @@ const errorHandler = (
     console.log('Error from errom middleware ', err);
   let error = { ...err };
   error.message = err.message;
+
+  // Do some thing if error.mesage include 'call stack exceed'
 
   return res.status(error.statusCode || 500).json({
     success: false,

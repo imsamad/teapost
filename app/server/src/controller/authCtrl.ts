@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 
-import asyncHandler from '../utils/asyncHandler';
-import User from '../models/UserModel';
-import emailVerifyMessage from '../utils/sendVerifyEmail';
-import ErrorResponse from '../utils/ErrorResponse';
-import { decodeJwt, signJwt } from '../utils/jwt';
-import { createHash, randomBytes } from '../utils/crypto';
+import { asyncHandler } from '../lib/utils';
+import User, { UserDocument } from '../models/UserModel';
+import emailVerifyMessage from '../lib/sendVerifyEmail';
+import { ErrorResponse, createHash, randomBytes } from '../lib/utils';
+import { decodeJwt, signJwt } from '../lib/jwt';
 import Token from '../models/TokenModel';
+import { signTokens } from '../lib/signTokens';
 
 export const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -70,7 +70,7 @@ export const register = asyncHandler(
     return res.json({
       status: 200,
       success: true,
-      message: `Created your account successfully ,Verify your email sent to ${email}.  `,
+      message: `Account created successfully ,Verify your email sent to ${email}.  `,
       url: !isEmailService && redirectUrl,
     });
   }
@@ -78,7 +78,23 @@ export const register = asyncHandler(
 
 export const logIn = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    return res.json('Ok from login');
+    const { email, password } = req.body;
+
+    let user = await User.findOne({ email }).select('+password');
+
+    if (!user)
+      return next(ErrorResponse(400, { email: 'Email not registered.' }));
+
+    const isPwdMatch = await user.matchPassword(password);
+
+    if (!isPwdMatch)
+      return next(ErrorResponse(400, { password: 'Password is wrong.' }));
+
+    if (!user.isAuthorised) return next(ErrorResponse(400, 'Not authorised!'));
+
+    user.password = '';
+
+    sendTokens(user, 200, res);
   }
 );
 
@@ -117,3 +133,21 @@ export const verifyEmail = asyncHandler(
     });
   }
 );
+
+const sendTokens = async (
+  user: UserDocument,
+  statusCode: number,
+  res: Response
+) => {
+  const resdata = {
+    success: true,
+    user: {
+      email: user.email,
+      username: user.username,
+      role: user.role,
+    },
+    ...(await signTokens(user)),
+  };
+
+  return res.status(statusCode).json(resdata);
+};

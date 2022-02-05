@@ -1,10 +1,12 @@
 import * as dotenv from 'dotenv';
+
 dotenv.config({
   path:
     process.env.NODE_ENV !== 'production'
       ? `${__dirname}/.env.development`
       : `${__dirname}/.env`,
 });
+
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -32,10 +34,5 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   connectDB();
-  console.log('process ', process.env.MONGO_URI);
   console.log(`Listening on http://localhost:${PORT}`);
 });
-
-// @types/bcrypt @types/body-parser @types/config @types/cors @types/express @types/jsonwebtoken @types/lodash @types/nanoid @types/node @types/pino @types/yup ts-node
-
-// "bcrypt cors dayjs express jsonwebtoken lodash  colors dotenv jsonwebtoken slugify morgan

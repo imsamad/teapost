@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import ErrorResponse from '../utils/ErrorResponse';
+import { ErrorResponse } from '../lib/utils';
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
   next(

@@ -3,7 +3,7 @@ import sendEmail from './sendEmail';
 
 const brandName = process.env.BRAND_NAME as string;
 
-const emailVerifyMessage = async (to: string, redirectUrl: string) => {
+const sendVerifyEmail = async (to: string, redirectUrl: string) => {
   const message: MailDataRequired = {
     to,
     from: {
@@ -17,7 +17,8 @@ const emailVerifyMessage = async (to: string, redirectUrl: string) => {
   return await sendEmail(message);
 };
 
-export default emailVerifyMessage;
+export default sendVerifyEmail;
+
 function html(redirectUrl: string, brandName: string) {
   // Some simple styling options
   const backgroundColor = '#f9f9f9';

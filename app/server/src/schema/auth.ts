@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import YupPassword from 'yup-password';
 YupPassword(yup); // extend yup
 
-import trimExtra from '../utils/trimExtra';
+import { trimExtra } from '../lib/utils';
 
 const usernameField = yup
   .string()

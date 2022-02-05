@@ -1,7 +1,7 @@
 import { AnySchema, ValidationError } from 'yup';
 import { Request, Response, NextFunction } from 'express';
 
-import ErrorResponse from '../utils/ErrorResponse';
+import { ErrorResponse } from '../lib/utils';
 
 const validateSchema =
   (schema: AnySchema) =>

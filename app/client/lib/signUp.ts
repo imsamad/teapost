@@ -1,11 +1,14 @@
 import axios from 'axios';
 
-export type UserRegisterFields = {
-  username?: string;
+export interface LogInFields {
   email: string;
   password: string;
+}
+
+export interface UserRegisterFields extends LogInFields {
+  username: string;
   passwordConfirmation: string;
-};
+}
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 

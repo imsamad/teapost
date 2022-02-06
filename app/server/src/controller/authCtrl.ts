@@ -139,15 +139,18 @@ const sendTokens = async (
   statusCode: number,
   res: Response
 ) => {
-  const resdata = {
+  const { accessToken, refreshToken } = await signTokens(user);
+
+  const resData = {
     success: true,
     user: {
       email: user.email,
+      accessToken,
       username: user.username,
       role: user.role,
     },
-    ...(await signTokens(user)),
+    refreshToken,
   };
 
-  return res.status(statusCode).json(resdata);
+  return res.status(statusCode).json(resData);
 };

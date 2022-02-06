@@ -8,7 +8,7 @@ type Token = {
   refreshToken: String;
 };
 
-export const signTokens = async (user: UserDocument) => {
+export const signTokens = async (user: UserDocument): Promise<Token> => {
   const userId: UserDocument['_id'] = user.id || user._id;
   let refreshToken: String;
   const alreadyExist = await RefreshTokenModel.findOne({ userId });
@@ -37,7 +37,12 @@ export const signTokens = async (user: UserDocument) => {
   }
 
   const tokens: Token = {
-    accessToken: signJwt({ userId }),
+    accessToken: signJwt(
+      { userId },
+      {
+        expiresIn: '7d',
+      }
+    ),
     refreshToken,
   };
 

@@ -18,11 +18,17 @@ import FormContainer from '../FormContainer';
 import { signUp } from '../../lib/signUp';
 import { typeOf } from '../../lib/utils';
 import HeadMessage, { HeadMessageProps } from './HeadMessage';
+import axios from 'axios';
+import useUser from '../../lib/useUser';
 
 const Index = () => {
+  const { setCookies } = useUser({
+    redirectTo: '/me',
+    redirectToIfLoggedIn: true,
+  });
+
   const [registerForm, setRegisterForm] = useBoolean();
   const [headMsg, setHeadMsg] = useState<HeadMessageProps>();
-
   const handleSubmit = async (values: any, action: FormikHelpers<any>) => {
     // Callback to show result...
     const setMessages = ({ error, message, url }: HeadMessageProps) => {
@@ -43,6 +49,24 @@ const Index = () => {
 
     action.setSubmitting(true);
     if (registerForm) await signUp(values, setMessages);
+    else {
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
+      try {
+        const { data } = await axios.post(apiUrl, values);
+
+        const user: any = data.user;
+        const refreshToken: any = data.refreshToken;
+
+        setCookies(user, refreshToken);
+      } catch (err: any) {
+        const msgs = err.response.data.message;
+
+        setMessages({
+          error: true,
+          message: msgs ? msgs : 'Invalid data, please try again.',
+        });
+      }
+    }
     action.setSubmitting(false);
   };
 

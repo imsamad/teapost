@@ -18,7 +18,6 @@ const Index = ({ headMsg }: { headMsg: HeadMessageProps }) => {
         </Link>
       ) : typeOf(headMsg.message, 'array') ? (
         headMsg.message.map((msg: any) => {
-          console.log('msg ', msg);
           return (
             <Text
               key={msg}

@@ -11,19 +11,22 @@ const usernameField = yup
   .required('Username is required')
   .test('password', 'Username must be above 4 chars.', (val) =>
     trimExtra(val, 4)
-  );
+  )
+  .label('Username');
 
 const emailField = yup
   .string()
   .email('Must be a valid email')
-  .required('Email is required');
+  .required('Email is required')
+  .label('Email');
 
 const pwdField = yup
   .string()
   .password()
   .minSymbols(1, 'Password must contain one symbol')
   .minUppercase(1, 'Password must contain one uppercase letter')
-  .required('Password is required');
+  .required('Password is required')
+  .label('Password');
 
 const pwdConfirmField = yup
   .string()
@@ -41,12 +44,12 @@ export const registerSchema = yup.object({
 export const logInSchema = yup.object({
   body: yup.object({
     email: emailField,
-    password: yup.string().required('Password is required'),
+    password: yup.string().required('Password is required').label('Password'),
   }),
 });
 
 export const verifyEmailSchema = yup.object({
   query: yup.object({
-    token: yup.string().required('Mallicious request.'),
+    token: yup.string().required('Mallicious request.').label('data'),
   }),
 });

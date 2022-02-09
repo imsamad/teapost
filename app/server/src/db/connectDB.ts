@@ -6,7 +6,7 @@ const connectDB = () => {
   mongoose.connect(mongoUri);
 
   mongoose.connection.on('connected', () => {
-    console.log('Mongoose connected to db...');
+    console.log('Mongoose DB connected!');
   });
 
   mongoose.connection.on('error', (err) => {

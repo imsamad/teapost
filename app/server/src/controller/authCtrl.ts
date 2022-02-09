@@ -53,8 +53,8 @@ export const register = asyncHandler(
 
     if (isEmailService) {
       let emailSentResult = await emailVerifyMessage(email, redirectUrl);
-
-      if (emailSentResult) {
+      console.log('emailSentResult ', emailSentResult);
+      if (!emailSentResult) {
         await user.delete();
         await token.delete();
 
@@ -67,12 +67,15 @@ export const register = asyncHandler(
       }
     }
 
-    return res.json({
+    let resObj: any = {
       status: 200,
       success: true,
-      message: `Account created successfully ,Verify your email sent to ${email}.  `,
-      url: !isEmailService && redirectUrl,
-    });
+      message: `Account created successfully ,Verify your email sent to ${email}.`,
+    };
+
+    if (!isEmailService) resObj = { ...resObj, url: redirectUrl };
+
+    return res.json(resObj);
   }
 );
 
@@ -103,6 +106,8 @@ export const verifyEmail = asyncHandler(
     const jwtCodedToken: string = req.query.token as string;
 
     const malliciousReq = ErrorResponse(400, 'Mallicious request.');
+
+    if (!jwtCodedToken) return next(malliciousReq);
 
     const { token: decodedVerifyToken }: any = decodeJwt(jwtCodedToken);
 

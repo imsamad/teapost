@@ -1,7 +1,6 @@
 import mongoose, { Date } from 'mongoose';
 import { ErrorResponse } from '../lib/utils';
 import bcrypt from 'bcrypt';
-import { boolean } from 'yup';
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -46,6 +45,7 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // Only Admin can modified this value
     isAuthorised: {
       type: Boolean,
       default: true,

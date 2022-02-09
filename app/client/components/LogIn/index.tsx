@@ -41,10 +41,11 @@ const Index = () => {
 
       if (typeOf(message, 'string') || typeOf(message, 'array')) {
         setHeadMsg({ error, message, url });
-      } else
+      } else {
         Object.keys(message).forEach((field) => {
           action.setFieldError(field, message[field]);
         });
+      }
     };
 
     action.setSubmitting(true);

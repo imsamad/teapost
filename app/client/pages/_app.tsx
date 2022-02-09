@@ -11,10 +11,12 @@ function MyApp({ Component, pageProps }: AppProps) {
    * 2.) getContainer from page
    * 3.) no Container
    */
-
+  // @ts-ignore
   const getContainer = Component?.getContainer
-    ? Component?.getContainer
-    : (page) => page;
+    ? // @ts-ignore
+      Component?.getContainer
+    : // @ts-ignore
+      (page) => page;
 
   return (
     <ChakraProvider>

@@ -12,7 +12,6 @@ import { Search2Icon } from '@chakra-ui/icons';
 import MyLink from '../MyLink';
 import DarkMode from '../DarkMode';
 const Index = () => {
-  console.log('first');
   return (
     <Flex alignItems="center" py={4} as="nav">
       <MyLink href="/">

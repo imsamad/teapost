@@ -1,31 +1,31 @@
-import { AnySchema, ValidationError } from 'yup';
+import { AnySchema } from 'yup';
 import { Request, Response, NextFunction } from 'express';
 
-import { ErrorResponse } from '../lib/utils';
+import { ErrorResponse, validateYupSchema } from '../lib/utils';
 
 const validateSchema =
-  (schema: AnySchema) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  (schema?: AnySchema, abortEarly = false) =>
+  async (req: Request, _res: Response, next: NextFunction) => {
     try {
-      await schema.validate(
+      // @ts-ignore
+      schema = schema ? schema : (req.__YUP_SCHEMA__ as AnySchema);
+      req.body.__YUP_SCHEMA__ && delete req.body.__YUP_SCHEMA__;
+      await validateYupSchema(
+        schema,
         {
           body: req.body,
           query: req.query,
           params: req.params,
         },
-        { abortEarly: false }
+        abortEarly
       );
 
       return next();
-    } catch (error: any) {
-      // console.error('Error from validation ', Object.keys(error));
-
+    } catch (yupError: any) {
       return next(
         ErrorResponse(
           422,
-          error.errors
-            ? error.errors
-            : 'Provide Proper Data,for further processing.'
+          yupError ? yupError : 'Provide Proper Data,for further processing.'
         )
       );
     }

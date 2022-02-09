@@ -3,7 +3,6 @@ export const trimExtra = (str: string | any, length: number): boolean => {
   let splitted = str.split(' ');
   let filtered = splitted.filter((val: string) => val !== '');
   let joined = filtered.join(' ');
-  console.log('joined ', joined);
   return joined.length >= length ? true : false;
 };
 

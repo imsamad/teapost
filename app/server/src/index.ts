@@ -16,6 +16,7 @@ import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
 
 import authRtr from './routes/authRtr';
+import storyRtr from './routes/storyRtr';
 
 const app = express();
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use('/api/v1/auth', authRtr);
+app.use('/api/v1/story', storyRtr);
 
 app.get('/', (_req, res) => {
   res.send('Hello from TeaPost API...');

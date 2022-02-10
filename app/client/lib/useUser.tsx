@@ -17,22 +17,15 @@ const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
     cookies.set(refreshTokenCookie, refToken);
     if (redirect || redirectTo) Router.push(redirect || redirectTo);
   };
-  // console.log('redirectTo ', redirectTo);
-  // console.log('redirectToIfLoggedIn ', redirectToIfLoggedIn);
-  // console.log('user ', user);
   useEffect(() => {
-    // console.log('useEffect one');
     if (!redirectTo) return;
-    // console.log('useEffect two');
 
     if (
       (redirectTo && !redirectToIfLoggedIn && !user) ||
       (redirectToIfLoggedIn && user)
     ) {
-      // console.log('useEffect three');
       Router.push(redirectTo);
     }
-    // console.log('useEffect four');
   }, [user, redirectTo, redirectToIfLoggedIn]);
   return { user, setCookies, refreshToken };
 };

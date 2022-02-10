@@ -8,18 +8,19 @@ import {
   useBoolean,
 } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { FaUserAlt as UserNameIcon } from 'react-icons/fa';
+import { FaUserAlt as UserIcon } from 'react-icons/fa';
 import { MdAlternateEmail as EmailIcon } from 'react-icons/md';
 
 import { registerSchema, signInSchema } from '../../lib/Schema/signInForm';
-import { PasswordField, Input } from './CustomInput';
 import MyLink from '../MyLink';
 import FormContainer from '../FormContainer';
 import { signUp } from '../../lib/signUp';
 import { typeOf } from '../../lib/utils';
 import HeadMessage, { HeadMessageProps } from './HeadMessage';
-import axios from 'axios';
 import useUser from '../../lib/useUser';
+
+import CustomInput from '../FormFields/Input';
+import CustomPassword from '../FormFields/Password';
 
 const Index = () => {
   const { setCookies } = useUser({
@@ -27,48 +28,36 @@ const Index = () => {
     redirectToIfLoggedIn: true,
   });
 
-  const [registerForm, setRegisterForm] = useBoolean();
+  const [registerForm, setRegisterForm] = useBoolean(false);
   const [headMsg, setHeadMsg] = useState<HeadMessageProps>();
+
   const handleSubmit = async (values: any, action: FormikHelpers<any>) => {
-    // Callback to show result...
-    const setMessages = ({ error, message, url }: HeadMessageProps) => {
-      /**
-       * 1.a) Value was invalid put setHeadMsg={ error: true ,message:@string }
-       * 1.b) Value is valid & account cretated =>
-       * then setHeadMsg={ error: false , message:@string, url:HttpUrl }
-       * 2.) In case of signIn if any field was incorret setFieldError individually
-       */
-
-      if (typeOf(message, 'string') || typeOf(message, 'array')) {
-        setHeadMsg({ error, message, url });
-      } else {
-        Object.keys(message).forEach((field) => {
-          action.setFieldError(field, message[field]);
-        });
-      }
-    };
-
+    setHeadMsg({ isError: false, message: '' });
     action.setSubmitting(true);
-    if (registerForm) await signUp(values, setMessages);
-    else {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
-      try {
-        const { data } = await axios.post(apiUrl, values);
-
-        const user: any = data.user;
-        const refreshToken: any = data.refreshToken;
+    try {
+      const res = await signUp(values, registerForm);
+      if (registerForm)
+        setHeadMsg({
+          isError: false,
+          redirectUrl: res?.redirectUrl,
+          message: res.message,
+        });
+      else {
+        const user: any = res.data.user,
+          refreshToken: any = res.data.refreshToken;
 
         setCookies(user, refreshToken);
-      } catch (err: any) {
-        const msgs = err.response.data.message;
-
-        setMessages({
-          error: true,
-          message: msgs ? msgs : 'Invalid data, please try again.',
-        });
       }
+      action.setSubmitting(false);
+      action.resetForm();
+    } catch (errors: any) {
+      if (typeOf(errors, 'string') || typeOf(errors, 'array')) {
+        setHeadMsg({ isError: true, message: errors });
+      } else {
+        action.setErrors(errors);
+      }
+      action.setSubmitting(false);
     }
-    action.setSubmitting(false);
   };
 
   return (
@@ -77,7 +66,7 @@ const Index = () => {
       <Formik
         initialValues={{
           username: 'imsamad',
-          email: 'imsamad1@gmail.com',
+          email: 'imsamad00@gmail.com',
           password: 'Password@1206',
           passwordConfirmation: 'Password@1206',
         }}
@@ -88,16 +77,21 @@ const Index = () => {
           <Form>
             <Stack spacing={4}>
               {registerForm && (
-                <Input
+                <CustomInput
                   name="username"
                   placeholder="Username"
-                  Icon={EmailIcon}
+                  LeftAddOn={<UserIcon />}
                 />
               )}
-              <Input name="email" placeholder="Email" Icon={UserNameIcon} />
-              <PasswordField name="password" placeholder="Password" />
+              <CustomInput
+                name="email"
+                placeholder="kk"
+                LeftAddOn={<EmailIcon />}
+                isRequired={true}
+              />
+              <CustomPassword name="password" />
               {registerForm && (
-                <PasswordField
+                <CustomPassword
                   name="passwordConfirmation"
                   placeholder="Confirm Password"
                 />

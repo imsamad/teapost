@@ -14,17 +14,17 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 
 export const signUp = async (
   values: UserRegisterFields,
-  setMessages: Function
+  isRegister: boolean
 ) => {
   try {
-    const { data } = await axios.post(`${apiUrl}/auth/register`, values);
-    setMessages({ error: false, url: data.url, message: data.message });
-  } catch (err: any) {
-    const msgs = err.response.data.message;
+    const endPoint = isRegister
+      ? `${apiUrl}/auth/register`
+      : `${apiUrl}/auth/login`;
 
-    setMessages({
-      error: true,
-      message: msgs ? msgs : 'Invalid data, please try again.',
-    });
+    const { data } = await axios.post(endPoint, values);
+    return data;
+    // setMessages({ error: false, url: data.url, message: data.message });
+  } catch (err: any) {
+    throw err?.response?.data?.message || 'Invalid Data';
   }
 };

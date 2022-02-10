@@ -4,16 +4,16 @@ import { Box, Link, Text } from '@chakra-ui/react';
 import { typeOf } from '../../../lib/utils';
 
 export type HeadMessageProps = {
-  error: boolean;
+  isError: boolean;
   message: any;
-  url?: string;
+  redirectUrl?: string;
 };
 
 const Index = ({ headMsg }: { headMsg: HeadMessageProps }) => {
   return (
     <Box textAlign="center">
-      {headMsg.url ? (
-        <Link target="_blank" href={headMsg.url} color="blue.500">
+      {headMsg.redirectUrl ? (
+        <Link target="_blank" href={headMsg.redirectUrl} color="blue.500">
           {headMsg.message} <ExternalLinkIcon mx="2px" />
         </Link>
       ) : typeOf(headMsg.message, 'array') ? (
@@ -22,14 +22,14 @@ const Index = ({ headMsg }: { headMsg: HeadMessageProps }) => {
             <Text
               key={msg}
               fontSize="xs"
-              color={headMsg.error ? 'red.500' : 'green.500'}
+              color={headMsg.isError ? 'red.500' : 'green.500'}
             >
               {msg}
             </Text>
           );
         })
       ) : (
-        <Text fontSize="xs" color={headMsg.error ? 'red.500' : 'green.500'}>
+        <Text fontSize="xs" color={headMsg.isError ? 'red.500' : 'green.500'}>
           {headMsg.message}
         </Text>
       )}

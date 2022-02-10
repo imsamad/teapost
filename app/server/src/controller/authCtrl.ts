@@ -12,6 +12,14 @@ export const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password } = req.body;
 
+    const alreadyExist = await User.findOne({ email });
+    if (alreadyExist)
+      next(
+        ErrorResponse(400, {
+          email: `${email} already registered.`,
+        })
+      );
+
     const newUser = new User({
       username,
       email,
@@ -53,7 +61,6 @@ export const register = asyncHandler(
 
     if (isEmailService) {
       let emailSentResult = await emailVerifyMessage(email, redirectUrl);
-      console.log('emailSentResult ', emailSentResult);
       if (!emailSentResult) {
         await user.delete();
         await token.delete();
@@ -70,10 +77,10 @@ export const register = asyncHandler(
     let resObj: any = {
       status: 200,
       success: true,
-      message: `Account created successfully ,Verify your email sent to ${email}.`,
+      message: `Account created successfully, Verify your email sent to ${email}.`,
     };
 
-    if (!isEmailService) resObj = { ...resObj, url: redirectUrl };
+    if (!isEmailService) resObj = { ...resObj, redirectUrl };
 
     return res.json(resObj);
   }
@@ -148,13 +155,15 @@ const sendTokens = async (
 
   const resData = {
     success: true,
-    user: {
-      email: user.email,
-      accessToken,
-      username: user.username,
-      role: user.role,
+    data: {
+      user: {
+        email: user.email,
+        accessToken,
+        username: user.username,
+        role: user.role,
+      },
+      refreshToken,
     },
-    refreshToken,
   };
 
   return res.status(statusCode).json(resData);

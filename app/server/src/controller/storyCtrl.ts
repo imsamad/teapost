@@ -10,7 +10,7 @@ import TagModel, { TagModelDocument } from '../models/TagModel';
 export const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (req?.body?.isPublished) req.body.isPublished = false;
-    console.log('req.body ', req.body);
+
     // @ts-ignore
     const author = req.user;
     const { tags, storyId, slug, ...rest } = req.body;
@@ -22,14 +22,14 @@ export const createOrUpdateStory = asyncHandler(
 
     if (tags?.length) storyObj.$addToSet = { tags };
 
-    let queryObj: { slug?: string; id?: string; author: string } = {
+    let queryObj: { slug?: string; _id?: string; author: string } = {
       author,
     };
 
     if (slug) {
       queryObj.slug = slug;
       storyObj.slug = slug;
-    } else queryObj.id = storyId;
+    } else queryObj._id = storyId;
 
     let story = await StoryModel.findOneAndUpdate(queryObj, storyObj, {
       new: true,

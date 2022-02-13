@@ -1,8 +1,12 @@
 import express, { Router } from 'express';
-import { createOrUpdateStory, handleTags } from '../controller/storyCtrl';
+import {
+  changeSlug,
+  createOrUpdateStory,
+  handleTags,
+} from '../controller/storyCtrl';
 import { protect } from '../middleware/auth';
 import validateSchema from '../middleware/validateSchema';
-import { createStorySchema } from '../schema/story';
+import { changeSlugSchema, createStorySchema } from '../schema/story';
 
 const router: Router = express();
 
@@ -14,6 +18,10 @@ router
     handleTags,
     createOrUpdateStory
   );
+
+router
+  .route('/changeslug')
+  .put(protect, validateSchema(changeSlugSchema), changeSlug);
 
 export default router;
 /*

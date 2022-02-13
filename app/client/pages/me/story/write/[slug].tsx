@@ -14,17 +14,27 @@ import { Form, Formik } from 'formik';
 import { GiQuill } from 'react-icons/gi';
 import { GetServerSideProps } from 'next';
 import { applyServerSideCookie } from 'next-universal-cookie';
+import { useRouter } from 'next/router';
 
-import useUser from '../../../../lib/useUser';
 import MyInput from '../../../../components/FormFields/Input';
 import MySwitch from '../../../../components/FormFields/Switch';
 
 import axios, { AxiosRequestConfig } from 'axios';
 import TagSelect from '.././../../../components/StoryForm/Tags';
 import AddTags from '../../../../components/StoryForm/Tags/AddTags';
-import { submitStory } from '../../../../lib/createStory';
+import { changeSlug, submitStory } from '../../../../lib/createStory';
 
 const StoryForm = ({ story, accessToken }: any) => {
+  const router = useRouter();
+  const handleStorySlugChange =
+    (reqObj: { id: string; slug: string }) => async () => {
+      const res = await changeSlug(reqObj, accessToken);
+      if (res) {
+        router.push(`/me/story/write/${reqObj.slug}`, undefined, {
+          shallow: true,
+        });
+      }
+    };
   return (
     <Box p={[0, 4]}>
       <HStack justifyContent="center">
@@ -78,13 +88,24 @@ const StoryForm = ({ story, accessToken }: any) => {
                     label="Title"
                     size="sm"
                   />
-                  <MyInput
-                    name="slug"
-                    placeholder="Slug"
-                    label="Slug"
-                    size="sm"
-                  />
-
+                  <HStack>
+                    <MyInput
+                      name="slug"
+                      placeholder="Slug"
+                      label="Slug"
+                      size="sm"
+                    />
+                    <Button
+                      size="sm"
+                      alignSelf="self-end"
+                      onClick={handleStorySlugChange({
+                        slug: formikProps.values.slug,
+                        id: formikProps.values.id,
+                      })}
+                    >
+                      Save
+                    </Button>
+                  </HStack>
                   <TagSelect />
                   <Stack alignItems="center">
                     <MyInput

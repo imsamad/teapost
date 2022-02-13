@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { asyncHandler } from '../lib/utils';
+import { asyncHandler, ErrorResponse } from '../lib/utils';
 import StoryModel, { StorySchemaDocument } from '../models/StoryModel';
 import TagModel, { TagModelDocument } from '../models/TagModel';
 
@@ -93,6 +93,23 @@ export const handleTags = asyncHandler(
         req.body.tags = alreadyExistedTags;
         next();
       });
+    });
+  }
+);
+
+// @desc      Change slug story
+// @route     PUT /api/v1/story/changeslug
+// @access    Auth [Reader]
+export const changeSlug = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const story = await StoryModel.findById(req.body.id);
+    if (!story)
+      return next(ErrorResponse(400, `Story not found for ${req.body.id} `));
+    story.slug = req.body.slug;
+    await story.save();
+    return res.status(200).json({
+      success: true,
+      data: story,
     });
   }
 );

@@ -2,6 +2,19 @@ import { isValidObjectId } from 'mongoose';
 import { array, object, string } from 'yup';
 import { trimExtra } from '../lib/utils';
 
+export const changeSlugSchema = object({
+  body: object({
+    slug: string()
+      .label('slug')
+      .typeError('It must be string')
+      .required('It is required'),
+    id: string()
+      .label('id')
+      .required('It is required')
+      .test('id', 'It is not valid id.', (val) => isValidObjectId(val)),
+  }),
+});
+
 export const createStorySchema = object({
   body: object().shape(
     {

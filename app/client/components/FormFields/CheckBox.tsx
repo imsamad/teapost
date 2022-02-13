@@ -35,6 +35,15 @@ const Index = ({
   return (
     <FormControl isInvalid={isError}>
       {label && <FormLabel>{label}</FormLabel>}
+      {/* @ts-ignore */}
+      {isError && typeOf(meta.error, 'array') ? (
+        // @ts-ignore
+        [...new Set(meta?.error)].map((err: string) => (
+          <FormErrorMessage key={err}>{err}</FormErrorMessage>
+        ))
+      ) : (
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
+      )}
       <Stack direction={direction} wrap={'wrap'}>
         {data.map((option: any) => {
           // console.log('chekbox data');
@@ -54,16 +63,7 @@ const Index = ({
           );
         })}
       </Stack>
-
       {!isError && helperText && <FormHelperText>{helperText}</FormHelperText>}
-      {isError && typeOf(meta.error, 'array') ? (
-        // @ts-ignore
-        meta?.error?.map((err: string) => (
-          <FormErrorMessage key={err}>{err}</FormErrorMessage>
-        ))
-      ) : (
-        <FormErrorMessage>{meta.error}</FormErrorMessage>
-      )}
     </FormControl>
   );
 };

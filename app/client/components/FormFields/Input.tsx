@@ -33,11 +33,12 @@ const CustomInput = ({
   isRequired,
   ...rest
 }: Props) => {
-  // console.log('name ', name);
   return (
     <FastField name={name}>
       {({ meta, field }: FieldProps) => {
         const isError: boolean = Boolean(meta.error && meta.touched);
+        // @ts-ignore
+        console.log('meta.error ', meta.error);
         return (
           <FormControl isInvalid={isError} isRequired={isRequired}>
             {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
@@ -49,9 +50,10 @@ const CustomInput = ({
             {!isError && helperText && (
               <FormHelperText>{helperText}</FormHelperText>
             )}
+            {/* @ts-ignore */}
             {isError && typeOf(meta.error, 'array') ? (
               // @ts-ignore
-              meta?.error?.map((err: string) => (
+              [...new Set(meta?.error)].map((err: string) => (
                 <FormErrorMessage key={err}>{err}</FormErrorMessage>
               ))
             ) : (

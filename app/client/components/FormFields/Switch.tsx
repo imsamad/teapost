@@ -29,17 +29,24 @@ const CustomSwitch = ({
   return (
     <Field name={name} type="radio">
       {({ field, meta }: FieldProps) => {
+        console.table({ field, meta });
         const isError = Boolean(meta.error && meta.touched);
         return (
           <FormControl isInvalid={isError} isRequired={isRequired}>
             {label && <FormLabel>{label}</FormLabel>}
-            <Switch colorScheme={colorScheme} size={size} {...field} />
+            <Switch
+              colorScheme={colorScheme}
+              size={size}
+              {...field}
+              isChecked={meta.value}
+            />
             {!isError && helperText && (
               <FormHelperText>{helperText}</FormHelperText>
             )}
-            {isError && typeOf(meta.error, 'array') ? (
+            {/* @ts-ignore */}
+            {isError && typeOf(meta.error, 'array') && meta?.error.length ? (
               // @ts-ignore
-              meta?.error?.map((err: string) => (
+              [...new Set(meta?.error)].map((err: string) => (
                 <FormErrorMessage key={err}>{err}</FormErrorMessage>
               ))
             ) : (

@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 
 import MyInput from '../../../../components/FormFields/Input';
 import MySwitch from '../../../../components/FormFields/Switch';
-
+import Published from '../../../../components/StoryForm/Published';
 import axios, { AxiosRequestConfig } from 'axios';
 import TagSelect from '.././../../../components/StoryForm/Tags';
 import AddTags from '../../../../components/StoryForm/Tags/AddTags';
@@ -53,6 +53,7 @@ const StoryForm = ({ story, accessToken }: any) => {
           keywords: '',
           tags: [],
           additionalTags: [],
+          isPublished: story.isPublished || false,
           ...story,
         }}
         onSubmit={async (values, actions) => {
@@ -69,6 +70,7 @@ const StoryForm = ({ story, accessToken }: any) => {
               'storyform',
               JSON.stringify(formikProps.values)
             );
+          console.log('formikProps ', formikProps);
           return (
             <Form>
               <HStack justifyContent="flex-end" my="4">
@@ -76,7 +78,8 @@ const StoryForm = ({ story, accessToken }: any) => {
                   <Text size="md" mx="4">
                     Published
                   </Text>
-                  <MySwitch name="isPublished" size="md" />
+                  {/* <MySwitch name="isPublished" size="md" /> */}
+                  <Published />
                 </Flex>
               </HStack>
               <Divider my="4" />

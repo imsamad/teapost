@@ -60,9 +60,10 @@ const PasswordField = ({
             {!isError && helperText && (
               <FormHelperText>{helperText}</FormHelperText>
             )}
-            {isError && typeOf(meta.error, 'array') ? (
+            {/* @ts-ignore */}
+            {isError && typeOf(meta.error, 'array') && meta?.error.length ? (
               // @ts-ignore
-              meta?.error?.map((err: string) => (
+              [...new Set(meta?.error)].map((err: string) => (
                 <FormErrorMessage key={err}>{err}</FormErrorMessage>
               ))
             ) : (

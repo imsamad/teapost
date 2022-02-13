@@ -102,7 +102,8 @@ export const logIn = asyncHandler(
 
     if (!user.isAuthorised) return next(ErrorResponse(400, 'Not authorised!'));
 
-    user.password = '';
+    // user.password = '';
+    delete user.password;
 
     sendTokens(user, 200, res);
   }
@@ -152,7 +153,7 @@ const sendTokens = async (
   res: Response
 ) => {
   const { accessToken, refreshToken } = await signTokens(user);
-
+  // console.table({ accessToken, refreshToken });
   const resData = {
     success: true,
     data: {

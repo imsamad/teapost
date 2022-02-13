@@ -17,6 +17,7 @@ import notFound from './middleware/notFound';
 
 import authRtr from './routes/authRtr';
 import storyRtr from './routes/storyRtr';
+import tagRtr from './routes/tagRtr';
 
 const app = express();
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(morgan('dev'));
 
 app.use('/api/v1/auth', authRtr);
 app.use('/api/v1/story', storyRtr);
+app.use('/api/v1/tags', tagRtr);
 
 app.get('/', (_req, res) => {
   res.send('Hello from TeaPost API...');

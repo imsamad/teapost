@@ -79,13 +79,13 @@ const Index = () => {
               {registerForm && (
                 <CustomInput
                   name="username"
-                  placeholder="Username"
+                  placeholder="John Doe"
                   LeftAddOn={<UserIcon />}
                 />
               )}
               <CustomInput
                 name="email"
-                placeholder="kk"
+                placeholder="johndoe@email.com"
                 LeftAddOn={<EmailIcon />}
                 isRequired={true}
               />

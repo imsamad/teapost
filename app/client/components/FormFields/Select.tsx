@@ -1,51 +1,47 @@
 import {
   FormControl,
   FormLabel,
-  InputGroup,
-  InputLeftAddon,
-  Input,
-  InputRightAddon,
   FormHelperText,
   FormErrorMessage,
+  Select,
 } from '@chakra-ui/react';
-import { FieldProps, FastField } from 'formik';
+import { Field, FieldProps } from 'formik';
 import { typeOf } from '../../lib/utils';
 
 type Props = {
   label?: string;
-  LeftAddOn?: string | React.ReactNode;
-  rightAddOn?: string | React.ReactNode;
   helperText?: string;
   name: string;
   placeholder?: string;
-  size?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   isRequired?: boolean | false;
+  data: { key: string | number; label: string }[];
 };
 
 const CustomInput = ({
   label,
-  LeftAddOn,
-  rightAddOn,
   helperText,
   name,
   placeholder,
   size,
   isRequired,
+  data,
   ...rest
 }: Props) => {
-  // console.log('name ', name);
   return (
-    <FastField name={name}>
+    <Field name={name}>
       {({ meta, field }: FieldProps) => {
         const isError: boolean = Boolean(meta.error && meta.touched);
         return (
           <FormControl isInvalid={isError} isRequired={isRequired}>
             {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-            <InputGroup size={size ? size : 'md'}>
-              {LeftAddOn && <InputLeftAddon>{LeftAddOn}</InputLeftAddon>}
-              <Input {...field} id={name} placeholder={placeholder} {...rest} />
-              {rightAddOn && <InputRightAddon>{rightAddOn}</InputRightAddon>}
-            </InputGroup>
+            <Select id={name} {...field} {...rest} size={size}>
+              {data.map((opt: any) => (
+                <option key={opt.key} value={opt.key}>
+                  {opt.label}
+                </option>
+              ))}
+            </Select>
             {!isError && helperText && (
               <FormHelperText>{helperText}</FormHelperText>
             )}
@@ -60,7 +56,7 @@ const CustomInput = ({
           </FormControl>
         );
       }}
-    </FastField>
+    </Field>
   );
 };
 

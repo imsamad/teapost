@@ -3,6 +3,7 @@ import Cookies from 'universal-cookie';
 import Router from 'next/router';
 
 const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
+  // console.log('useUser ');
   const cookies = new Cookies();
 
   const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION as string;
@@ -12,11 +13,22 @@ const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
   const user = cookies.get(userAuthCookie);
   const refreshToken = cookies.get(refreshTokenCookie);
 
-  const setCookies = (userValue: any, refToken: any, redirect?: string) => {
+  const setCookies = (
+    userValue: any,
+    refToken: any,
+    customRedirect?: string
+  ) => {
     cookies.set(userAuthCookie, userValue);
     cookies.set(refreshTokenCookie, refToken);
-    if (redirect || redirectTo) Router.push(redirect || redirectTo);
+    if (customRedirect || redirectTo) Router.push(customRedirect || redirectTo);
   };
+
+  const logout = (customRedirect?: string) => {
+    cookies.remove(userAuthCookie);
+    cookies.remove(refreshTokenCookie);
+    if (customRedirect || redirectTo) Router.push(customRedirect || redirectTo);
+  };
+
   useEffect(() => {
     if (!redirectTo) return;
 
@@ -27,7 +39,7 @@ const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
       Router.push(redirectTo);
     }
   }, [user, redirectTo, redirectToIfLoggedIn]);
-  return { user, setCookies, refreshToken };
+  return { user, setCookies, refreshToken, logout };
 };
 
 export default useUser;

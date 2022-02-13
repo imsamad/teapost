@@ -10,48 +10,65 @@ import TagModel, { TagModelDocument } from '../models/TagModel';
 export const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (req?.body?.isPublished) req.body.isPublished = false;
-
+    console.log('create ', req.body);
     // @ts-ignore
     const author = req.user;
-    const { tags, storyId, slug, ...rest } = req.body;
+    const { id, slug, ...rest } = req.body;
 
     let storyObj: any = {
       author,
       ...rest,
     };
 
-    if (tags?.length) storyObj.$addToSet = { tags };
+    // if (tags?.length) storyObj.tags = tags;
+    // if (tags?.length) storyObj.$addToSet = { tags };
 
     let queryObj: { slug?: string; _id?: string; author: string } = {
       author,
     };
 
-    if (slug) {
+    if (id) {
+      queryObj._id = id;
+    } else {
       queryObj.slug = slug;
       storyObj.slug = slug;
-    } else queryObj._id = storyId;
+    }
 
     let story = await StoryModel.findOneAndUpdate(queryObj, storyObj, {
       new: true,
       upsert: true,
     });
-    res.status(200).json(story);
+    res.status(200).json({
+      success: true,
+      data: story,
+    });
   }
 );
 
 export const handleTags = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.body?.tags?.length) return next();
+    if (!req.body?.tags?.length && !req.body?.additionalTags?.length) {
+      req.body.tags = [];
+      return next();
+    }
+
     let alreadyExistedTags: StorySchemaDocument['_id'] = [];
     let newTags: any = [];
 
-    req.body.tags.forEach((tag: string) => {
-      // @ts-ignore
+    req.body?.tags?.forEach((tag: string) => {
       isValidObjectId(tag) ? alreadyExistedTags.push(tag) : newTags.push(tag);
     });
+    if (req.body?.additionalTags?.length)
+      req.body?.additionalTags?.forEach((tag: string) => {
+        isValidObjectId(tag) ? alreadyExistedTags.push(tag) : newTags.push(tag);
+      });
 
     req.body.tags = [];
-    if (!newTags.length) return next();
+    req.body.additionalTags = '';
+    if (!newTags.length) {
+      req.body.tags = alreadyExistedTags;
+      return next();
+    }
     let oldTags: any = [];
     newTags = newTags.map((tag: String) =>
       TagModel.create({ tag })

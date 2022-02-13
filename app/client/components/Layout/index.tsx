@@ -10,7 +10,7 @@ type LayoutProps = {
 const Index = ({ children }: LayoutProps) => {
   return (
     <Container maxWidth="container.xl">
-      <Flex direction="column" maxW="100vw" minH="100vh" overflow="hidden">
+      <Flex direction="column" w="100%" minH="100vh" overflow="hidden">
         <NavBar />
         <Divider />
 

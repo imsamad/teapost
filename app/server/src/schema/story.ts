@@ -1,5 +1,5 @@
 import { isValidObjectId } from 'mongoose';
-import { array, boolean, object, string } from 'yup';
+import { array, object, string } from 'yup';
 import { trimExtra } from '../lib/utils';
 
 export const createStorySchema = object({
@@ -14,8 +14,8 @@ export const createStorySchema = object({
         .trim()
         .label('slug')
         .typeError('It must be string type')
-        .when('storyId', {
-          is: (storyId: string) => !storyId,
+        .when('id', {
+          is: (id: string) => !id,
           then: string()
             .required('It is required')
             .min(8, 'It must be above 8 char')
@@ -24,18 +24,19 @@ export const createStorySchema = object({
             )
             .required('It is required to create a story'),
         }),
-      storyId: string()
-        .label('storyId')
+      additionalTags: array()
+        .label('additionalTags')
+        .typeError('It must be array'),
+      id: string()
+        .label('id')
         .when('slug', {
           is: (slug: string) => !slug,
           then: string()
             .required('It is required')
-            .test('storyId', 'It is not valid id.', (val) =>
-              isValidObjectId(val)
-            ),
+            .test('id', 'It is not valid id.', (val) => isValidObjectId(val)),
         }),
     },
-    [['storyId', 'slug']]
+    [['id', 'slug']]
   ),
 });
 

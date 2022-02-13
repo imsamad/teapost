@@ -10,8 +10,11 @@ type Token = {
 
 export const signTokens = async (user: UserDocument): Promise<Token> => {
   const userId: UserDocument['_id'] = user.id || user._id;
-  let refreshToken: String;
-  const alreadyExist = await RefreshTokenModel.findOne({ userId });
+
+  // let refreshToken: String;
+  // const alreadyExist = await RefreshTokenModel.findOne({ userId });
+  // console.log('alreadyExist ', alreadyExist);
+
   /**
    * If found
    * a.) if exprire update
@@ -19,6 +22,7 @@ export const signTokens = async (user: UserDocument): Promise<Token> => {
    * else  notFound,then create
    */
 
+  /*
   if (alreadyExist) {
     let crntYear: any = Date.now();
     let oneYear = ms('1y');
@@ -35,7 +39,7 @@ export const signTokens = async (user: UserDocument): Promise<Token> => {
     refreshToken = signJwt({ id: userId }, { expiresIn: '1y' });
     await RefreshTokenModel.create({ userId, token: refreshToken });
   }
-
+  */
   const tokens: Token = {
     accessToken: signJwt(
       { userId },
@@ -43,7 +47,7 @@ export const signTokens = async (user: UserDocument): Promise<Token> => {
         expiresIn: '7d',
       }
     ),
-    refreshToken,
+    refreshToken: 'RefreshToken',
   };
 
   return tokens;

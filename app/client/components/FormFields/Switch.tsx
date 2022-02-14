@@ -29,7 +29,6 @@ const CustomSwitch = ({
   return (
     <Field name={name} type="radio">
       {({ field, meta }: FieldProps) => {
-        console.table({ field, meta });
         const isError = Boolean(meta.error && meta.touched);
         return (
           <FormControl isInvalid={isError} isRequired={isRequired}>

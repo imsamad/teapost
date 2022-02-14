@@ -5,7 +5,6 @@ import CheckBox from '../../FormFields/CheckBox';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL + '/tags';
 const TagSelect = () => {
-  // console.log('name ', 'TagSelect');
   const { data } = useSWR(apiUrl);
   return (
     <Box>

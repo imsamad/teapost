@@ -46,7 +46,7 @@ export const changeSlug = async (
       },
     });
     return data.data;
-  } catch (err) {
-    return false;
+  } catch (err: any) {
+    throw err.response.data;
   }
 };

@@ -37,8 +37,7 @@ const CustomInput = ({
     <FastField name={name}>
       {({ meta, field }: FieldProps) => {
         const isError: boolean = Boolean(meta.error && meta.touched);
-        // @ts-ignore
-        console.log('meta.error ', meta.error);
+
         return (
           <FormControl isInvalid={isError} isRequired={isRequired}>
             {label && <FormLabel htmlFor={name}>{label}</FormLabel>}

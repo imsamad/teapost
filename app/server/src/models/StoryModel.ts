@@ -98,7 +98,7 @@ async function errorHandlerMdlwr(
     if (error?.code === 11000) {
       next(
         ErrorResponse(400, {
-          slug: `${doc.slug || 'This slug'} already registered.`,
+          slug: `This slug already registered.`,
         })
       );
     } else {

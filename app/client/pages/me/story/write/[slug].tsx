@@ -9,6 +9,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { GiQuill } from 'react-icons/gi';
@@ -17,24 +18,59 @@ import { applyServerSideCookie } from 'next-universal-cookie';
 import { useRouter } from 'next/router';
 
 import MyInput from '../../../../components/FormFields/Input';
-import MySwitch from '../../../../components/FormFields/Switch';
 import Published from '../../../../components/StoryForm/Published';
 import axios, { AxiosRequestConfig } from 'axios';
 import TagSelect from '.././../../../components/StoryForm/Tags';
 import AddTags from '../../../../components/StoryForm/Tags/AddTags';
 import { changeSlug, submitStory } from '../../../../lib/createStory';
+import Quill from '../../../../components/Quill';
+import { useEffect } from 'react';
 
 const StoryForm = ({ story, accessToken }: any) => {
   const router = useRouter();
+  const toast = useToast();
+  const saveToast = (title: string, position?: any) =>
+    toast({
+      title,
+      status: 'success',
+      duration: 1000,
+      isClosable: true,
+      position: position || 'bottom',
+    });
+  const changeSlugToast = () =>
+    toast({
+      title: 'This slug already existed.',
+      status: 'error',
+      duration: 5000,
+      variant: 'subtle',
+      position: 'top-right',
+      isClosable: true,
+    });
+
+  useEffect(() => {
+    const unloadCallback = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+      return '';
+    };
+    window.addEventListener('beforeunload', unloadCallback);
+    return () => window.removeEventListener('beforeunload', unloadCallback);
+  }, []);
+
   const handleStorySlugChange =
     (reqObj: { id: string; slug: string }) => async () => {
-      const res = await changeSlug(reqObj, accessToken);
-      if (res) {
-        router.push(`/me/story/write/${reqObj.slug}`, undefined, {
-          shallow: true,
+      changeSlug(reqObj, accessToken)
+        .then((res) => {
+          router.push(`/me/story/write/${reqObj.slug}`, undefined, {
+            shallow: true,
+          });
+          saveToast('Slug Changed.', 'top-right');
+        })
+        .catch((err: any) => {
+          changeSlugToast();
         });
-      }
     };
+
   return (
     <Box p={[0, 4]}>
       <HStack justifyContent="center">
@@ -62,15 +98,10 @@ const StoryForm = ({ story, accessToken }: any) => {
           actions.resetForm();
           actions.setValues(data);
           actions.setSubmitting(false);
+          saveToast('Saved Changes.');
         }}
       >
         {(formikProps: any) => {
-          typeof window !== 'undefined' &&
-            localStorage.setItem(
-              'storyform',
-              JSON.stringify(formikProps.values)
-            );
-          console.log('formikProps ', formikProps);
           return (
             <Form>
               <HStack justifyContent="flex-end" my="4">
@@ -126,13 +157,18 @@ const StoryForm = ({ story, accessToken }: any) => {
                   label="Keywords"
                   size="sm"
                 />
-                <MyInput
-                  name="body"
-                  placeholder="Body"
-                  label="Body"
-                  size="sm"
-                />
-                <Button type="submit">Submit</Button>
+
+                <Quill />
+                <Button
+                  variant="solid"
+                  colorScheme="blue"
+                  disabled={!formikProps.dirty}
+                  isLoading={formikProps.isSubmitting}
+                  loadingText="Submitting"
+                  type="submit"
+                >
+                  Submit
+                </Button>
               </SimpleGrid>
             </Form>
           );
@@ -180,7 +216,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   try {
     const { data } = await axios(axiosArgs);
-    // console.log('=======data ', data);
 
     return {
       props: {

@@ -7,8 +7,6 @@ import useUser from '../../lib/useUser';
 import MyInput from '../FormFields/Input';
 const StoryForm = () => {
   const { user } = useUser();
-  console.log('user ', user);
-  console.log('StoryForm');
   return (
     <Box>
       <Heading textAlign="center" size="lg">

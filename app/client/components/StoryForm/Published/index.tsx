@@ -18,13 +18,11 @@ const Index = () => {
     // @ts-ignore
     validateYupSchema(isAbleToPublished, values)
       .then((res) => {
-        console.log('res');
         // @ts-ignore
         setFieldValue('isPublished', !values.isPublished);
         setFieldTouched('isPublished', true);
       })
       .catch((err) => {
-        console.log('err ', err);
         setStatus(true);
         Object.keys(err).forEach((key: any) => {
           setFieldTouched(key, true, false);

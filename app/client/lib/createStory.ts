@@ -1,6 +1,6 @@
-import axios from 'axios';
-const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
-export const submitStory = async (val: any, accessToken: string) => {
+import axios from './axios';
+
+export const submitStory = async (val: any) => {
   let storyObjKey: any = [
     'id',
     'title',
@@ -16,34 +16,17 @@ export const submitStory = async (val: any, accessToken: string) => {
     if (val[key]?.length) storyObj[key] = val[key];
   });
   try {
-    console.log('storyObj ', storyObj);
-    const { data } = await axios({
-      method: 'POST',
-      url: `${apiUrl}/story`,
-      data: storyObj,
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-      },
-    });
-    console.log('data ', data.data);
+    const { data } = await axios.post('/story', { ...storyObj });
     return data.data;
   } catch (err: any) {
-    console.log('err ', err?.response);
+    throw err.response.data;
   }
 };
 
-export const changeSlug = async (
-  reqBody: { id: string; slug: string },
-  accessToken: string
-) => {
+export const changeSlug = async (reqBody: { id: string; slug: string }) => {
   try {
-    const { data } = await axios({
-      method: 'PUT',
-      url: `${apiUrl}/story/changeslug`,
-      data: reqBody,
-      headers: {
-        authorization: `Bearer ${accessToken}`,
-      },
+    const { data } = await axios.put('/story/changeslug', {
+      ...reqBody,
     });
     return data.data;
   } catch (err: any) {

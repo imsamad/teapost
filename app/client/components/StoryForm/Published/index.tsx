@@ -1,18 +1,13 @@
-import { Switch } from '@chakra-ui/react';
-import {
-  Field,
-  FieldProps,
-  FormikProps,
-  useField,
-  useFormikContext,
-} from 'formik';
+import { Flex, HStack, Switch, Text } from '@chakra-ui/react';
+import { useFormikContext } from 'formik';
 import { isAbleToPublished } from '../../../lib/Schema/storySchema';
 import { validateYupSchema } from '../../../lib/utils';
 
 const Index = () => {
-  const [, meta, helpers] = useField('isPublished');
   const { values, setFieldValue, setFieldTouched, setStatus, setErrors } =
     useFormikContext();
+
+  console.log('publsihed values ', values);
   // console.log('formikCtx ', formikCtx);
   const handleChange = async () => {
     // @ts-ignore
@@ -31,16 +26,17 @@ const Index = () => {
       });
   };
   return (
-    <Field name="isPublished" type="radio">
-      {(formikProps: FieldProps) => {
-        return (
-          <Switch // @ts-ignore
-            isChecked={values.isPublished}
-            onChange={handleChange}
-          />
-        );
-      }}
-    </Field>
+    <HStack justifyContent="flex-end" my="4">
+      <Flex justifyContent="center" alignItems="center">
+        <Text size="md" mx="4">
+          Published
+        </Text>
+        <Switch // @ts-ignore
+          isChecked={values?.isPublished}
+          onChange={handleChange}
+        />
+      </Flex>
+    </HStack>
   );
 };
 

@@ -105,6 +105,12 @@ export const changeSlug = asyncHandler(
     const story = await StoryModel.findById(req.body.id);
     if (!story)
       return next(ErrorResponse(400, `Story not found for ${req.body.id} `));
+    if (req.body.slug === story.slug)
+      return res.status(200).json({
+        success: true,
+        data: story,
+      });
+
     story.slug = req.body.slug;
     await story.save();
     return res.status(200).json({

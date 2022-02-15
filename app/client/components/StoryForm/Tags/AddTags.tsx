@@ -15,7 +15,7 @@ import {
 import { useField } from 'formik';
 import React, { useRef } from 'react';
 import { useState } from 'react';
-import { boolean } from 'yup/lib/locale';
+
 import { trimExtra } from '../../../lib/utils';
 
 const AddTags = () => {
@@ -45,15 +45,17 @@ const AddTags = () => {
     <Box>
       <FormControl isInvalid={Boolean(isError)}>
         <FormLabel htmlFor="additionalTags">Add additional tags</FormLabel>
-        <InputGroup>
+        <InputGroup size="sm">
           <Input
-            size="sm"
             // @ts-ignore
             ref={ref}
             id="additionalTags"
             pr="4.5rem"
             onChange={() => {
               if (isError) setIsError(false);
+            }}
+            onKeyDown={() => {
+              console.log('enter');
             }}
           />
           <InputRightElement>

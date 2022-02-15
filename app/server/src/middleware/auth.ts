@@ -7,15 +7,18 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ) => {
+  // console.log('req.headers ', req.headers);
   let token: any;
   if (req.headers?.authorization?.startsWith('Bearer '))
     token = req.headers.authorization.split(' ')[1];
 
+  // console.log('first ', token);
   if (!token)
     return next(ErrorResponse(400, `Not authorized to access this route one`));
 
   // this is user info
   token = decodeJwt(token);
+  // console.log('second ', token);
   if (!token)
     return next(ErrorResponse(400, `Not authorized to access this route two`));
 

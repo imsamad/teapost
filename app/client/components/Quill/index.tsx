@@ -1,4 +1,4 @@
-import { FormErrorMessage, FormLabel, Text } from '@chakra-ui/react';
+import { FormLabel, Text } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
 import dynamic from 'next/dynamic';
 import { typeOf } from '../../lib/utils';

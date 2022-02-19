@@ -1,18 +1,6 @@
 import { Document, model, Schema } from 'mongoose';
-import { ErrorResponse, validateYupSchema } from '../lib/utils';
-import { isAbleToPublished } from '../schema/story';
+import { ErrorResponse } from '../lib/utils';
 import { UserDocument } from './UserModel';
-
-// mongoose.plugin((schema: Schema) => {
-//   schema.pre('findOneAndUpdate', setRunValidators);
-//   schema.pre('updateMany', setRunValidators);
-//   schema.pre('updateOne', setRunValidators);
-//   schema.pre('update', setRunValidators);
-// });
-
-// function setRunValidators(this: any) {
-//   this.setOptions({ runValidators: true });
-// }
 
 export interface StorySchemaDocument extends Document {
   title?: String;
@@ -32,6 +20,7 @@ const storySchema = new Schema(
       type: String,
       trim: true,
     },
+    titleImage: String,
     subtitle: {
       type: String,
       trim: true,

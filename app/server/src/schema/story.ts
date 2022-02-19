@@ -19,6 +19,7 @@ export const createStorySchema = object({
   body: object().shape(
     {
       title: string().label('title').typeError('title must be string'),
+
       subtitle: string().label('subtitle').typeError('subtitle must be string'),
       tags: array().label('tags').typeError('tags must be array'),
       body: string().label('body').typeError('body must be string'),
@@ -83,6 +84,11 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 
 export const isAbleToPublished = object({
   title: stringSchema('title', 40, 70),
+  titleImage: string()
+    .label('titleImage')
+    .required('titleImage is required.')
+    .url('titleImage must be url')
+    .typeError('titleImage must be url'),
   subtitle: stringSchema('subtitle', 60, 175),
   slug: string()
     .required('slug is required to create a story')

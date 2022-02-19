@@ -20,6 +20,11 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 
 export const isAbleToPublished = object({
   title: stringSchema('Title', 40, 70),
+  titleImage: string()
+    .label('titleImage')
+    .required('titleImage is required.')
+    .url('titleImage must be url')
+    .typeError('titleImage must be url'),
   subtitle: stringSchema('Subtitle', 60, 175),
   slug: string()
     .required('Slug is required to create a story')

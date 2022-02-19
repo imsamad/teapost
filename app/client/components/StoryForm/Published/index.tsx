@@ -7,7 +7,7 @@ const Index = () => {
   const { values, setFieldValue, setFieldTouched, setStatus, setErrors } =
     useFormikContext();
 
-  console.log('publsihed values ', values);
+  // console.log('publsihed values ', values);
   // console.log('formikCtx ', formikCtx);
   const handleChange = async () => {
     // @ts-ignore

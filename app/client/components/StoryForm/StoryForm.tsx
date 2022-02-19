@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import MyInput from '../FormFields/Input';
 import { submitStory } from '../../lib/createStory';
 import Published from './Published';
-import Quill from '../Quill';
+import QuillEditor from '../QuillEditor';
 import Slug from './Slug';
 import TagSelect from './Tags';
 import AddTags from './Tags/AddTags';
@@ -53,7 +53,7 @@ const StoryForm = ({ story }: any) => {
       }}
     >
       {(formikProps: any) => {
-        console.log('formikProps ', formikProps);
+        console.log('formikProps ', formikProps.values.body);
         return (
           <Form>
             <Published />
@@ -86,7 +86,7 @@ const StoryForm = ({ story }: any) => {
                 size="sm"
               />
 
-              <Quill />
+              <QuillEditor />
               <Button
                 variant="solid"
                 colorScheme="blue"

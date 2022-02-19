@@ -33,7 +33,7 @@ const Index = ({
   const [, meta] = useField(name);
   const isError = Boolean(meta.error && meta.touched);
   return (
-    <FormControl isInvalid={isError}>
+    <FormControl isInvalid={isError} size={size}>
       {label && <FormLabel>{label}</FormLabel>}
       {/* @ts-ignore */}
       {isError && typeOf(meta.error, 'array') ? (

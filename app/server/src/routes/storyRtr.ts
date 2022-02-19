@@ -10,13 +10,14 @@ import { changeSlugSchema, createStorySchema } from '../schema/story';
 
 const router: Router = express();
 
-router.route('/').post(
-  protect,
-
-  validateSchema(createStorySchema, true),
-  handleTags,
-  createOrUpdateStory
-);
+router
+  .route('/')
+  .post(
+    protect,
+    validateSchema(createStorySchema, true),
+    handleTags,
+    createOrUpdateStory
+  );
 
 router.route('/changeslug').put(
   protect,
@@ -24,6 +25,8 @@ router.route('/changeslug').put(
   validateSchema(changeSlugSchema),
   changeSlug
 );
+
+// router.post('/image', imageUpload);
 
 export default router;
 /*

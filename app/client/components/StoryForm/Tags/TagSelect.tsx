@@ -6,6 +6,7 @@ import CheckBox from '../../FormFields/CheckBox';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL + '/tags';
 const TagSelect = () => {
   const { data } = useSWR(apiUrl);
+
   return (
     <Box>
       <Text size="sm" mb="4px">
@@ -13,13 +14,15 @@ const TagSelect = () => {
       </Text>
       <Box
         maxH="150px"
-        overflowY="scroll"
+        overflowY="auto"
         border="1px"
         borderRadius="md"
-        p="10px"
+        p="5px"
         borderColor="gray.200"
       >
-        {data ? (
+        {!data ? (
+          <>Loading tags...</>
+        ) : data.data.length ? (
           <CheckBox
             name="tags"
             data={data?.data}
@@ -27,7 +30,7 @@ const TagSelect = () => {
             size="lg"
           />
         ) : (
-          <>Loading</>
+          <>No tags available </>
         )}
       </Box>
     </Box>

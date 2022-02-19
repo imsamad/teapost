@@ -6,6 +6,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  useBoolean,
   useToast,
   UseToastOptions,
 } from '@chakra-ui/react';
@@ -14,6 +15,8 @@ import { useRouter } from 'next/router';
 import { FastField, FieldProps } from 'formik';
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useBoolean(false);
+
   const router = useRouter();
   const toast = useToast();
   const triggerToast = (options: UseToastOptions) => {
@@ -27,16 +30,19 @@ const Index = () => {
   };
   const handleStorySlugChange =
     (reqObj: { id: string; slug: string }) => async () => {
+      setIsLoading.on();
       try {
         await changeSlug(reqObj);
         router.push(`/me/story/write/${reqObj.slug}`, undefined, {
           shallow: true,
         });
+        setIsLoading.off();
         triggerToast({
           title: 'Slug Changed.',
           position: 'top-right',
           status: 'success',
         });
+        setIsLoading.off();
       } catch (err) {
         triggerToast({
           title: 'This slug already existed.',
@@ -44,6 +50,7 @@ const Index = () => {
           position: 'top-right',
           variant: 'subtle',
         });
+        setIsLoading.off();
       }
     };
 
@@ -57,9 +64,10 @@ const Index = () => {
             <InputGroup size="sm">
               <Input {...field} pr="4.5rem" />
 
-              <InputRightElement>
+              <InputRightElement mr="0.5rem">
                 <Button
                   size="xs"
+                  isLoading={isLoading}
                   onClick={handleStorySlugChange({
                     slug: field.value,
                     id: form.values.id,

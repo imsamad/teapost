@@ -1,10 +1,12 @@
 import express, { Router } from 'express';
+
 import {
   changeSlug,
   createOrUpdateStory,
   handleTags,
 } from '../controller/storyCtrl';
 import { protect } from '../middleware/auth';
+import checkTemp from '../middleware/checkTemp';
 import validateSchema from '../middleware/validateSchema';
 import { changeSlugSchema, createStorySchema } from '../schema/story';
 
@@ -19,12 +21,9 @@ router
     createOrUpdateStory
   );
 
-router.route('/changeslug').put(
-  protect,
-
-  validateSchema(changeSlugSchema),
-  changeSlug
-);
+router
+  .route('/changeslug')
+  .put(protect, validateSchema(changeSlugSchema), changeSlug);
 
 // router.post('/image', imageUpload);
 

@@ -10,6 +10,7 @@ export const submitStory = async (val: any) => {
     'body',
     'keywords',
     'additionalTags',
+    'titleImage',
   ];
   let storyObj: any = { isPublished: false };
   storyObjKey.forEach((key: string) => {

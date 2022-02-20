@@ -21,19 +21,18 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useFormikContext } from 'formik';
+import axios from '../../../lib/axios';
+import { useField } from 'formik';
 import { useRef } from 'react';
 import { FiFile } from 'react-icons/fi';
 import { typeOf } from '../../../lib/utils';
 const File = () => {
-  const {
-    values: { titleImage },
-    errors: { titleImage: titleImageError },
-    touched: { titleImage: titleImageTouched },
-  } = useFormikContext();
+  const [, meta, helpers] = useField('titleImage');
+
+  const titleImage = meta.value;
 
   const inputRef: any = useRef();
-  const isError = Boolean(titleImageError && titleImageTouched);
+  const isError = Boolean(meta.error && meta.touched);
 
   const toast = useToast();
 
@@ -43,12 +42,20 @@ const File = () => {
   const handleUpload = () => {
     if (!inputRef?.current?.files.length) return;
     const file = inputRef.current.files[0];
-    // setIsLoading.on();
+    setIsLoading.on();
     const fileReader: FileReader = new FileReader();
     fileReader.readAsDataURL(file);
     fileReader.onloadend = async () => {
-      console.log(fileReader.result);
       try {
+        // @ts-ignore
+        const {
+          data: {
+            data: { imageUrl },
+          },
+        } = await axios.post('/image/upload', {
+          image: fileReader.result,
+        });
+        helpers.setValue(imageUrl);
         toast({
           title: 'Image uploaded',
           position: 'bottom',
@@ -56,6 +63,7 @@ const File = () => {
           status: 'success',
           isClosable: true,
         });
+        setIsLoading.off();
       } catch (err) {
         toast({
           title: 'Image uploading failed',
@@ -64,6 +72,7 @@ const File = () => {
           status: 'error',
           isClosable: true,
         });
+        setIsLoading.off();
       }
     };
   };
@@ -87,11 +96,10 @@ const File = () => {
             border="2px solid red"
             placeholder={
               titleImage
-                ? 'Click To Select Image'
+                ? 'Click To Change Image'
                 : 'Click To Upload Title Image'
             }
             onClick={(e: any) => {
-              console.log('e.target ', e.target);
               inputRef.current.click();
             }}
           />
@@ -134,13 +142,13 @@ const File = () => {
         </Flex>
       </HStack>
       {/* @ts-ignore */}
-      {isError && typeOf(titleImageError, 'array') ? (
+      {isError && typeOf(meta.error, 'array') ? (
         // @ts-ignore
-        [...new Set(titleImageError)].map((err: string) => (
+        [...new Set(meta.error)].map((err: string) => (
           <FormErrorMessage key={err}>{err}</FormErrorMessage>
         ))
       ) : (
-        <FormErrorMessage>{titleImageError}</FormErrorMessage>
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
       )}
     </FormControl>
   );

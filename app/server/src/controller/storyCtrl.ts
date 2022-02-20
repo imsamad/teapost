@@ -10,7 +10,7 @@ import TagModel, { TagModelDocument } from '../models/TagModel';
 export const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (req?.body?.isPublished) req.body.isPublished = false;
-    console.log('create ', req.body);
+
     // @ts-ignore
     const author = req.user;
     const { id, slug, ...rest } = req.body;

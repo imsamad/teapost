@@ -19,7 +19,10 @@ export const createStorySchema = object({
   body: object().shape(
     {
       title: string().label('title').typeError('title must be string'),
-
+      titleImage: string()
+        .label('titleImage')
+        .url('titleImage must be url')
+        .typeError('titleImage must be url'),
       subtitle: string().label('subtitle').typeError('subtitle must be string'),
       tags: array().label('tags').typeError('tags must be array'),
       body: string().label('body').typeError('body must be string'),
@@ -65,17 +68,6 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
     .required(`${label} is required`)
     .test(label, minLengthMsg, (val) => {
       const res = trimExtra(val, minLength);
-
-      label == 'body' &&
-        console.log(
-          'length => ',
-          // @ts-ignore
-          val.length,
-          '\nval =>',
-          val,
-          '\nres => ',
-          res
-        );
       return res;
     })
     .label(label)

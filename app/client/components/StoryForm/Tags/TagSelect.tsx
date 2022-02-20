@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
+
 import { memo } from 'react';
 import useSWR from 'swr';
 import CheckBox from '../../FormFields/CheckBox';

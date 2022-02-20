@@ -38,8 +38,6 @@ refreshTokenSchema.post(
 );
 
 refreshTokenSchema.virtual('timsestamp_ms').get(function (this: UserDocument) {
-  console.log('thisthis ', this);
-
   let createdYear: any = this.updatedAt;
   createdYear = Date.parse(createdYear);
   return createdYear;

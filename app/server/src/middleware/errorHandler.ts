@@ -18,7 +18,6 @@ const errorHandler = (
     console.log('ValidationErrorValidationErrorValidationError');
     error.message = {};
     Object.keys(err.errors).forEach((key: any) => {
-      console.log('val', key);
       error.message[key] = err.errors[key].message;
     });
   }

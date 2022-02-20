@@ -66,7 +66,6 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.post('save', function (error: any, doc: UserDocument, next: any) {
   if (error?.code === 11000) {
-    console.log('Executed');
     next(
       ErrorResponse(400, {
         email: `${doc.email || 'This email'} already registered.`,

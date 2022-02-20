@@ -4,6 +4,7 @@ import { UserDocument } from './UserModel';
 
 export interface StorySchemaDocument extends Document {
   title?: String;
+  titleImage?: String;
   subtitle?: String;
   slug?: String;
   tags?: String[];

@@ -64,9 +64,10 @@ const Index = () => {
             <InputGroup size="sm">
               <Input {...field} pr="4.5rem" />
 
-              <InputRightElement mr="0.5rem">
+              <InputRightElement width="4.5rem">
                 <Button
                   size="xs"
+                  h="1.75rem"
                   isLoading={isLoading}
                   onClick={handleStorySlugChange({
                     slug: field.value,

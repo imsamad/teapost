@@ -4,11 +4,22 @@ import { useEffect } from 'react';
 
 import { submitStory } from '../../lib/createStory';
 import StoryForm from './StoryForm';
+const initValues = {
+  title: '',
+  slug: '',
+  subtitle: '',
+  body: '',
+  keywords: '',
+  tags: [],
+  additionalTags: [],
+  titleImage: '',
+  isPublished: false,
+};
 
 const Index = ({ story }: any) => {
   useEffect(() => {
     const unloadCallback = (event: BeforeUnloadEvent) => {
-      //   event.preventDefault();
+      event.preventDefault();
       event.returnValue = '';
       return '';
     };
@@ -27,24 +38,19 @@ const Index = ({ story }: any) => {
   return (
     <Formik
       initialValues={{
-        title: '',
-        slug: '',
-        subtitle: '',
-        body: '',
-        keywords: '',
-        tags: [],
-        additionalTags: [],
-        titleImage:
-          'https://res.cloudinary.com/demo/image/upload/w_150,h_100,c_fill/sample.jpg',
-        isPublished: story.isPublished || false,
+        ...initValues,
         ...story,
       }}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
         const data = await submitStory(values);
-        actions.resetForm();
-        actions.setValues(data);
         actions.setSubmitting(false);
+
+        actions.setValues({
+          ...initValues,
+          ...data,
+        });
+
         saveToast('Saved Changes.');
       }}
     >

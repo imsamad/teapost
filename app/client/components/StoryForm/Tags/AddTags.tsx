@@ -54,11 +54,8 @@ const AddTags = () => {
             onChange={() => {
               if (isError) setIsError(false);
             }}
-            onKeyDown={() => {
-              console.log('enter');
-            }}
           />
-          <InputRightElement>
+          <InputRightElement width="4.5rem">
             <Button size="xs" onClick={handleClick}>
               Add
             </Button>

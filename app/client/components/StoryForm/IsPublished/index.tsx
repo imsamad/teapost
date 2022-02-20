@@ -4,11 +4,9 @@ import { isAbleToPublished } from '../../../lib/Schema/storySchema';
 import { validateYupSchema } from '../../../lib/utils';
 
 const Index = () => {
-  const { values, setFieldValue, setFieldTouched, setStatus, setErrors } =
+  const { values, setFieldValue, setFieldTouched, setErrors } =
     useFormikContext();
 
-  // console.log('publsihed values ', values);
-  // console.log('formikCtx ', formikCtx);
   const handleChange = async () => {
     // @ts-ignore
     validateYupSchema(isAbleToPublished, values)
@@ -18,7 +16,7 @@ const Index = () => {
         setFieldTouched('isPublished', true);
       })
       .catch((err) => {
-        setStatus(true);
+        // setStatus(true);
         Object.keys(err).forEach((key: any) => {
           setFieldTouched(key, true, false);
         });

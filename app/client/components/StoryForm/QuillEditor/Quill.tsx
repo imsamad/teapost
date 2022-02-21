@@ -1,10 +1,15 @@
-import { Box } from '@chakra-ui/react';
+import {
+  Box,
+  HStack,
+  IconButton,
+  Spacer,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import QuillClass from 'quill';
 import 'quill/dist/quill.snow.css';
-import { formats, modules } from '../../lib/quillConfig';
+import { formats, modules } from '../../../lib/quillConfig';
 import { useFormikContext } from 'formik';
-
 const ImageCompress = require('quill-image-compress').default;
 QuillClass.register('modules/imageCompress', ImageCompress);
 
@@ -81,7 +86,7 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quill]);
   return (
-    <Box w="100%" border="1px" overflow="hidden">
+    <Box w="100%" border="1px" maxH="100vh" overflow="hidden">
       <Box ref={editorRef} overflow="hidden"></Box>
       <style>{`
         .ql-toolbar{
@@ -94,6 +99,7 @@ const Index = () => {
             border-radius:1rem;
         }
         .ql-container{
+            background:#fff;
             border:none;
             height:600px; 
             margin-bottom:10px;
@@ -105,8 +111,9 @@ const Index = () => {
         .ql-editor{
             margin:8px;
             height:100%;
-            box-shadow:0 0 5px 0 rgba(0,0,0,0.5);
-            // padding:20px
+            border:2px solid #ddd;
+            padding:5rem;
+            box-shadow: -1px 10px 5px 0px rgba(199,187,187,0.75);
         }
     `}</style>
     </Box>

@@ -9,7 +9,7 @@ const usernameField = yup
   .string()
   .trim()
   .required('Username is required')
-  .test('password', 'Username must be above 4 chars.', (val) =>
+  .test('password', 'Username must be above 4 chars', (val) =>
     trimExtra(val, 4)
   );
 

@@ -83,7 +83,6 @@ async function errorHandlerMdlwr(
   doc: StorySchemaDocument,
   next: any
 ) {
-  console.log('Error from post mdlwr ', JSON.stringify(error, null, 4));
   if (error) {
     if (error?.code === 11000) {
       next(

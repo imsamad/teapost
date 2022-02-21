@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-
+const path = require('path');
 module.exports = {
   reactStrictMode: false,
   async redirects() {
@@ -25,5 +25,9 @@ module.exports = {
         permanent: true,
       },
     ];
+  },
+  webpack: (config) => {
+    config.resolve.alias['#axios'] = path.join(__dirname, 'lib/axios');
+    return config;
   },
 };

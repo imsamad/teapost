@@ -1,9 +1,9 @@
-import { Button, useToast } from '@chakra-ui/react';
+import { Box, Button, HStack, Text, useToast } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useEffect } from 'react';
 
 import { submitStory } from '../../lib/createStory';
-import StoryForm from './StoryForm';
+import StoryForm from './Form';
 const initValues = {
   title: '',
   slug: '',
@@ -44,6 +44,7 @@ const Index = ({ story }: any) => {
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
         const data = await submitStory(values);
+
         actions.setSubmitting(false);
 
         actions.setValues({
@@ -58,16 +59,29 @@ const Index = ({ story }: any) => {
         return (
           <Form>
             <StoryForm />
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              disabled={!formikProps.dirty}
-              isLoading={formikProps.isSubmitting}
-              loadingText="Submitting"
-              type="submit"
+            <HStack
+              position="fixed"
+              bottom="0"
+              right="0"
+              px="2rem"
+              py="1rem"
+              bgColor="gray.400"
+              borderTopLeftRadius="3xl"
+              shadow="lg"
             >
-              Submit
-            </Button>
+              <Text>Save Changes</Text>
+              <Button
+                variant="solid"
+                colorScheme="blue"
+                disabled={!formikProps.dirty}
+                isLoading={formikProps.isSubmitting}
+                loadingText="Submitting"
+                type="submit"
+                size="sm"
+              >
+                Submit
+              </Button>
+            </HStack>
           </Form>
         );
       }}

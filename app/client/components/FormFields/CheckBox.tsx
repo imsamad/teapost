@@ -6,7 +6,7 @@ import {
   FormLabel,
   Stack,
 } from '@chakra-ui/react';
-import { Field, FieldProps, Formik, FastField, useField } from 'formik';
+import { Field, Formik, FastField, useField } from 'formik';
 import { typeOf } from '../../lib/utils';
 
 type Direction = 'row' | 'column' | 'row-reverse' | 'column-reverse';
@@ -30,7 +30,9 @@ const Index = ({
   direction = ['row'],
   dataKeys,
 }: Props) => {
-  const [, meta] = useField(name);
+  const fieldProps = useField(name);
+  const [, meta] = fieldProps;
+
   const isError = Boolean(meta.error && meta.touched);
   return (
     <FormControl isInvalid={isError} size={size}>
@@ -46,13 +48,11 @@ const Index = ({
       )}
       <Stack direction={direction} wrap={'wrap'}>
         {data.map((option: any) => {
-          // console.log('chekbox data');
           const value = dataKeys ? option[dataKeys[0]] : option.key,
             label = dataKeys ? option[dataKeys[1]] : option.label;
           return (
             <FastField key={value} name={name} value={value} type="checkbox">
               {({ field }: any) => {
-                // console.log('chekbox data option');
                 return (
                   <Checkbox isChecked={field.checked} {...field} size={size}>
                     {label}

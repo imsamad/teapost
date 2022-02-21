@@ -13,14 +13,14 @@ export const createOrUpdateStory = asyncHandler(
 
     // @ts-ignore
     const author = req.user;
-    const { id, slug, ...rest } = req.body;
+    const { id, slug, tags, ...rest } = req.body;
 
     let storyObj: any = {
       author,
       ...rest,
     };
 
-    // if (tags?.length) storyObj.tags = tags;
+    if (tags?.length) storyObj.tags = tags;
     // if (tags?.length) storyObj.$addToSet = { tags };
 
     let queryObj: { slug?: string; _id?: string; author: string } = {

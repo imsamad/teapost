@@ -3,7 +3,6 @@ import Cookies from 'universal-cookie';
 import Router from 'next/router';
 
 const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
-  // console.log('useUser ');
   const cookies = new Cookies();
 
   const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION as string;

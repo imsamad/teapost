@@ -2,12 +2,8 @@ import {
   Button,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
-  HStack,
-  Icon,
   Image,
-  Input,
   InputGroup,
   InputLeftAddon,
   Modal,
@@ -21,17 +17,19 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import axios from '../../../lib/axios';
 import { useField } from 'formik';
-import { useRef } from 'react';
-import { FiFile } from 'react-icons/fi';
-import { typeOf } from '../../../lib/utils';
+import CustomError from '../../FormFields/CustomError';
+
+// @ts-ignore
+import axios from '#axios';
+
+import { BiImageAdd } from 'react-icons/bi';
+import { useState } from 'react';
 const File = () => {
   const [, meta, helpers] = useField('titleImage');
-
+  const [file, setFile] = useState<any>();
   const titleImage = meta.value;
 
-  const inputRef: any = useRef();
   const isError = Boolean(meta.error && meta.touched);
 
   const toast = useToast();
@@ -39,117 +37,134 @@ const File = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useBoolean(false);
 
-  const handleUpload = () => {
-    if (!inputRef?.current?.files.length) return;
-    const file = inputRef.current.files[0];
+  const handleUpload = async () => {
     setIsLoading.on();
-    const fileReader: FileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onloadend = async () => {
-      try {
-        // @ts-ignore
-        const {
-          data: {
-            data: { imageUrl },
-          },
-        } = await axios.post('/image/upload', {
-          image: fileReader.result,
-        });
-        helpers.setValue(imageUrl);
-        toast({
-          title: 'Image uploaded',
-          position: 'bottom',
-          variant: 'subtle',
-          status: 'success',
-          isClosable: true,
-        });
-        setIsLoading.off();
-      } catch (err) {
-        toast({
-          title: 'Image uploading failed',
-          position: 'bottom',
-          variant: 'subtle',
-          status: 'error',
-          isClosable: true,
-        });
-        setIsLoading.off();
-      }
-    };
+    const imageData = new FormData();
+    imageData.append('image', file);
+    try {
+      // @ts-ignore
+      const {
+        data: {
+          data: { imageUrl },
+        },
+      } = await axios.post('/image/upload', imageData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      helpers.setValue(imageUrl);
+      toast({
+        title: 'Image uploaded',
+        position: 'bottom',
+        variant: 'subtle',
+        status: 'success',
+        isClosable: true,
+      });
+      setIsLoading.off();
+    } catch (err) {
+      toast({
+        title: 'Image uploading failed',
+        position: 'bottom',
+        variant: 'subtle',
+        status: 'error',
+        isClosable: true,
+      });
+      setIsLoading.off();
+    }
   };
+  const oneMB = 1_000_000;
+  const handleChange = (e: any) => {
+    const selectedFile = e.target.files[0];
 
+    if (selectedFile.size < oneMB * 4) {
+      helpers.setTouched(false, false);
+      helpers.setError('');
+      setFile(selectedFile);
+    } else {
+      setFile('');
+      helpers.setTouched(true, false);
+      helpers.setError('Max image size is 4Mb');
+    }
+  };
+  const size = 'sm';
   return (
     <FormControl isInvalid={isError} size="sm">
       <FormLabel>Upload Title Image</FormLabel>
-      <HStack>
-        <InputGroup size="sm">
-          <InputLeftAddon>
-            <Icon as={FiFile} />
-          </InputLeftAddon>
-          <input
-            type="file"
-            accept="image/*"
-            name="image"
-            style={{ display: 'none' }}
-            ref={inputRef}
-          />
-          <Input
-            border="2px solid red"
-            placeholder={
-              titleImage
-                ? 'Click To Change Image'
-                : 'Click To Upload Title Image'
-            }
-            onClick={(e: any) => {
-              inputRef.current.click();
-            }}
-          />
-        </InputGroup>
-        <Flex>
-          <Button
-            size="xs"
-            mr="8px"
-            onClick={handleUpload}
-            isLoading={isLoading}
-          >
-            Upload
-          </Button>
-          {titleImage && (
-            <>
-              <Button size="xs" onClick={onOpen}>
-                View
-              </Button>
-              <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                  <ModalCloseButton />
-                  <Image src={titleImage} alt="Dan Abramov" />
-                  <ModalFooter>
-                    <Text mr="5px">Title Image</Text>
-                    <Spacer />
-                    <Button
-                      colorScheme="blue"
-                      mr={3}
-                      onClick={onClose}
-                      size="sm"
-                    >
-                      Close
-                    </Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
-            </>
-          )}
+      <Flex w="100%" alignItems="center" wrap="wrap">
+        <Flex flex="1" border="2px" borderColor="gray.300">
+          <InputGroup size={size}>
+            <InputLeftAddon>
+              <BiImageAdd size="1rem" />
+            </InputLeftAddon>
+            <Flex
+              alignItems="center"
+              w="100%"
+              _hover={{
+                bgColor: '#ddd',
+              }}
+              transition="background"
+            >
+              <input
+                type="file"
+                onChange={handleChange}
+                style={{ display: 'none' }}
+                id="imageUpload"
+                accept="image/*"
+                multiple={false}
+              />
+              <Text
+                pl="8px"
+                flex="1"
+                as="label"
+                cursor="pointer"
+                htmlFor="imageUpload"
+                isTruncated
+              >
+                {/* @ts-ignore */}
+                {file?.name || 'Select Image'}
+              </Text>
+            </Flex>
+          </InputGroup>
         </Flex>
-      </HStack>
+        <Button
+          size={size}
+          mx="8px"
+          onClick={handleUpload}
+          isLoading={isLoading}
+          loadingText="Saving..."
+          disabled={!file}
+        >
+          Upload
+        </Button>
+        {titleImage && (
+          <>
+            <Button size={size} onClick={onOpen}>
+              View
+            </Button>
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+                <Image src={titleImage} alt="titleImage" />
+                <ModalFooter>
+                  <Text mr="5px">Title Image</Text>
+                  <Spacer />
+                  <Button
+                    colorScheme="blue"
+                    mr={3}
+                    onClick={onClose}
+                    size={size}
+                  >
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </>
+        )}
+      </Flex>
       {/* @ts-ignore */}
-      {isError && typeOf(meta.error, 'array') ? (
-        // @ts-ignore
-        [...new Set(meta.error)].map((err: string) => (
-          <FormErrorMessage key={err}>{err}</FormErrorMessage>
-        ))
-      ) : (
-        <FormErrorMessage>{meta.error}</FormErrorMessage>
-      )}
+      <CustomError isError={isError} errors={meta.error} />
     </FormControl>
   );
 };

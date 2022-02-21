@@ -21,17 +21,17 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 export const isAbleToPublished = object({
   title: stringSchema('Title', 40, 70),
   titleImage: string()
+    .url('TitleImage must be url')
     .label('titleImage')
-    .required('titleImage is required.')
-    .url('titleImage must be url')
-    .typeError('titleImage must be url'),
+    .required('TitleImage is required')
+    .typeError('TitleImage must be url'),
   subtitle: stringSchema('Subtitle', 60, 175),
   slug: string()
     .required('Slug is required to create a story')
     .label('slug')
     .typeError('Slug must be string'),
   tags: array()
-    .min(1, 'Minimum one tag is required.')
+    .min(1, 'Minimum one tag is required')
     .required('Minimum one tag is required')
     .label('tags')
     .typeError('Tags must be array type'),

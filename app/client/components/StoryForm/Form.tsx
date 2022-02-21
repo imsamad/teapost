@@ -1,16 +1,20 @@
-import { Box, Divider, SimpleGrid } from '@chakra-ui/react';
+import { Divider, SimpleGrid } from '@chakra-ui/react';
 
+import dynamic from 'next/dynamic';
 import MyInput from '../FormFields/Input';
 import IsPublished from './IsPublished';
-import QuillEditor from '../QuillEditor';
 import Slug from './Slug';
 import TagSelect from './Tags/TagSelect';
 import AddTags from './Tags/AddTags';
 import TitleImage from './TitleImage';
+const QuillEditor = dynamic(() => import('./QuillEditor'), {
+  ssr: false,
+  loading: () => <p>Loading editor...</p>,
+});
 
 const StoryForm = () => {
   return (
-    <Box border="2px" borderColor="white" p="8px" borderRadius="md">
+    <>
       <IsPublished />
       <Divider my="4" />
       <SimpleGrid gap={2}>
@@ -36,7 +40,7 @@ const StoryForm = () => {
 
         <QuillEditor />
       </SimpleGrid>
-    </Box>
+    </>
   );
 };
 

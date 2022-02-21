@@ -14,6 +14,7 @@ export const uploadImageToCloudinary = async (data: any) => {
     });
     return { ...uploadResponse, result: true };
   } catch (err) {
+    console.log('error from uploadImageToCloudinary');
     return { err, result: false };
   }
 };
@@ -32,7 +33,7 @@ export const getAllImageFromCloudinary = async () => {
     // return { uploadResponse, result: true };
     console.log('resources ', resources);
   } catch (err) {
-    console.log('er ', err);
+    console.log('err from getAllImageFromCloudinary ', err);
     // return err;
   }
 };

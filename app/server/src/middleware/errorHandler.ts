@@ -8,14 +8,14 @@ const errorHandler = (
   _next: NextFunction
 ) => {
   if (process.env.NODE_ENV !== 'production')
-    console.log('Error from errom middleware ', JSON.stringify(err, null, 4));
+    console.log('Error from error middleware ', JSON.stringify(err, null, 4));
   let error = { ...err };
   error.message = err.message;
 
   // Do some thing if error.mesage include 'call stack exceed'
 
   if (err.name === 'ValidationError') {
-    console.log('ValidationErrorValidationErrorValidationError');
+    console.log('ValidationError from errorHandler');
     error.message = {};
     Object.keys(err.errors).forEach((key: any) => {
       error.message[key] = err.errors[key].message;

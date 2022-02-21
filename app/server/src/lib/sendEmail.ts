@@ -6,7 +6,6 @@ const sendEmail = async (message: MailDataRequired) => {
   try {
     sgMail.setApiKey(apiKeys);
     const res = await sgMail.send(message);
-    console.log('Response from sendGrid ', res);
     return true;
   } catch (err) {
     console.log('Error from sendGrid ', err);

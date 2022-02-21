@@ -12,9 +12,9 @@ export const uploadImageToCloudinary = async (data: any) => {
     const uploadResponse = await cloudinary.uploader.upload(data, {
       upload_preset: 'custom_upload_preset',
     });
-    return { uploadResponse, result: true };
+    return { ...uploadResponse, result: true };
   } catch (err) {
-    return err;
+    return { err, result: false };
   }
 };
 

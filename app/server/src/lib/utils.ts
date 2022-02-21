@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-
+import slugify from 'slugify';
 import crypto from 'crypto';
+import path from 'path';
+import { nanoid } from 'nanoid';
 import { AnySchema } from 'yup';
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
@@ -102,5 +104,27 @@ export const validateYupSchema = async (
       });
     }
     throw Object.keys(finalError).length ? finalError : 'Provide proper data';
+  }
+};
+
+export const saveImageLocally = async (file: any, appUrl: string) => {
+  try {
+    let fileName = slugify(path.parse(file.name).name);
+    fileName = fileName + nanoid(10) + path.extname(file.name);
+
+    const savePath = path.join(
+      __dirname,
+      '../',
+      'public',
+      'uploads',
+      'image',
+      fileName
+    );
+
+    const res = await file.mv(savePath);
+
+    return { ...res, url: `${appUrl}/image/${fileName}`, result: true };
+  } catch (err) {
+    return { result: false };
   }
 };

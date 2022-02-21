@@ -6,7 +6,6 @@ import {
   handleTags,
 } from '../controller/storyCtrl';
 import { protect } from '../middleware/auth';
-import checkTemp from '../middleware/checkTemp';
 import validateSchema from '../middleware/validateSchema';
 import { changeSlugSchema, createStorySchema } from '../schema/story';
 

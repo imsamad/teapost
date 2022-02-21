@@ -1,24 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
+import { UploadedFile } from 'express-fileupload';
 import { uploadImageToCloudinary } from '../lib/cloudinary';
-import { asyncHandler, ErrorResponse } from '../lib/utils';
+import { asyncHandler, ErrorResponse, saveImageLocally } from '../lib/utils';
 
 // @desc      Upload photo
 // @route     POST /api/v1/image/upload
 // @access    Auth [Reader]
 export const imageUpload = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const imageStr = req.body.image;
+    // @ts-ignore
+    const file = req.files.image as UploadedFile;
 
-    if (!imageStr) return next(ErrorResponse(400, 'Provide image'));
+    // const appUrl = `${req.protocol}://${req.get('host')}`;
+    // const response: any = await saveImageLocally(file, appUrl);
 
-    const response: any = await uploadImageToCloudinary(imageStr);
+    const response: any = await uploadImageToCloudinary(file.tempFilePath);
 
-    if (!response.result) {
+    if (!response.result)
       return next(ErrorResponse(400, 'Unable to upload Image'));
-    }
 
-    res
-      .status(200)
-      .json({ success: true, data: { imageUrl: response.uploadResponse.url } });
+    res.status(200).json({ success: true, data: { imageUrl: response.url } });
   }
 );

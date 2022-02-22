@@ -3,6 +3,7 @@ import express, { Router } from 'express';
 import {
   changeSlug,
   createOrUpdateStory,
+  getAllStories,
   handleTags,
   publishedStory,
 } from '../controller/storyCtrl';
@@ -16,6 +17,16 @@ import {
 } from '../schema/story';
 
 const router: Router = express();
+
+router
+  .route('/')
+  .post(
+    protect,
+    validateSchema(createStorySchema, true),
+    handleTags,
+    createOrUpdateStory
+  )
+  .get(getAllStories);
 
 router
   .route('/changeslug')

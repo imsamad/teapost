@@ -45,6 +45,21 @@ export const createOrUpdateStory = asyncHandler(
   }
 );
 
+// @desc      Get all stories
+// @route     GGET /api/v1/story
+// @access    Public
+export const getAllStories = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const stories = await StoryModel.find({ isPublished: true }).select(
+      '-body'
+    );
+
+    res.status(200).json({
+      data: stories,
+    });
+  }
+);
+
 export const handleTags = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.body?.tags?.length && !req.body?.additionalTags?.length) {

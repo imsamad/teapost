@@ -102,8 +102,8 @@ export const logIn = asyncHandler(
 
     if (!user.isAuthorised) return next(ErrorResponse(400, 'Not authorised!'));
 
-    // user.password = '';
-    delete user.password;
+    user.password = '';
+    // delete user?.password;
 
     sendTokens(user, 200, res);
   }

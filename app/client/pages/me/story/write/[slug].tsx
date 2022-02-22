@@ -1,12 +1,14 @@
 import { Box, Heading, HStack, Icon } from '@chakra-ui/react';
 import { GiQuill } from 'react-icons/gi';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { applyServerSideCookie } from 'next-universal-cookie';
 
 import StoryForm from '../../../../components/StoryForm';
 import axios, { AxiosRequestConfig } from 'axios';
 
-const Index = ({ story }: any) => {
+const Index = ({
+  story,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <Box p={[0, 4]}>
       <HStack justifyContent="center">
@@ -24,7 +26,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   res,
   params,
-  query,
 }): Promise<any> => {
   applyServerSideCookie(req, res);
   const allCookies = req.cookies;
@@ -32,11 +33,11 @@ export const getServerSideProps: GetServerSideProps = async ({
     refreshTokenCookie = process.env.REFRESH_AUTH_SESSION as string;
 
   // @ts-ignore
-  const slug = params.slug || query.slug;
+  const slug = params.slug;
   if (!allCookies[userAuthCookie]) {
     return {
       redirect: {
-        destination: `/auth?redirectTo=/me/story/create/${slug}`,
+        destination: `/auth?redirectTo=/me/story/write/${slug}`,
         permanent: false,
       },
     };

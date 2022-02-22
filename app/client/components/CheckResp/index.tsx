@@ -1,7 +1,7 @@
-import { Box, useMediaQuery } from '@chakra-ui/react';
+import { Box, Text, useMediaQuery } from '@chakra-ui/react';
 import { useTheme } from '@emotion/react';
 const Index = () => {
-  const theme = useTheme();
+  const theme: any = useTheme();
   const { base, sm, md, lg, xl } = theme?.breakpoints;
   const [isLargerThanXL] = useMediaQuery(`(min-width: ${xl})`);
   const [isLargerThanLG] = useMediaQuery(`(min-width: ${lg})`);
@@ -15,6 +15,7 @@ const Index = () => {
       resize="both"
       my={4}
     >
+      <Text fontSize="md">App Name :- {process.env.NEXT_PUBLIC_APP_NAME}</Text>
       {isLargerThanXL ? (
         <>
           isLargerThanXL

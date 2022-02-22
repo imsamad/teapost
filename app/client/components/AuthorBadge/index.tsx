@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text } from '@chakra-ui/react';
+import { Avatar, Circle, Flex, Text } from '@chakra-ui/react';
 type propTypes = {
   image: string;
   full_name: string;
@@ -8,8 +8,19 @@ type propTypes = {
 const index = ({ image, full_name, short_name }: propTypes) => {
   return (
     <Flex alignItems="center">
-      <Avatar size="xs" name={full_name} src={image} />
-      <Text fontSize="md" ml="2" isTruncated>
+      <Circle size="20px" bgColor="pink">
+        <Text fontSize="10px" lineHeight="10px">
+          H
+        </Text>
+      </Circle>
+      {/* <Avatar size="xs" name={full_name} src={image} /> */}
+      <Text
+        fontSize="15px"
+        fontWeight={600}
+        // color="rgba(41,41,41)"
+        lineHeight="13px"
+        ml={1}
+      >
         {short_name}
       </Text>
     </Flex>

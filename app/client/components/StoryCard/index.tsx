@@ -1,78 +1,143 @@
 import {
   Badge,
   Box,
+  Center,
   Flex,
   Heading,
+  HStack,
   Image,
+  Spacer,
+  Square,
+  Stack,
   Text,
-  useMediaQuery,
+  useColorModeValue,
+  VStack,
 } from '@chakra-ui/react';
-
-import { useTheme } from '@emotion/react';
-
+import React from 'react';
 import AuthorBadge from '../AuthorBadge';
-import NewsCardActions from '../StoryCardActions';
+import StoryCardActions from '../StoryCardActions';
+
+const imageUrl = `https://res.cloudinary.com/dnkb5aetl/image/upload/c_scale,w_200,h_134/v1645525350/iqlkldocqxn9gg6pw58l.jpg`;
+const heading = `The First Step To An inclusive work culture Getting Your colleaguses
+Rights The First S The First Step To An inclusive work culture Getting
+Your colleaguses Rights The First S`;
+const subheading = `It’s your responsibility to appreciate and celebrate the diversity of
+your coworkers It’s your responsibility to appreciate and celebrate
+the diversity of your coworkers`;
+const red = '0px solid red';
+const black = '0px solid black';
+const green = '0px solid green';
 const Index = () => {
-  const theme = useTheme();
-
-  const { sm } = theme.breakpoints;
-
-  const [isLargerThanSM] = useMediaQuery(`(min-width: ${sm})`);
-
+  // Here's the signature
+  const value = useColorModeValue('rgba(41,41,41)', 'gray.100');
   return (
-    <Box m={4} borderBottom="1px">
-      <Flex alignItems="center">
-        <Box pr="2">
-          <AuthorBadge
-            image="https://bit.ly/tioluwani-kolawole"
-            full_name="Kola Tioluwani"
-            short_name="imsamad"
-          />
-          <Heading noOfLines={2} fontSize={['14px', 16, '22px']} my="2">
-            The 6 Rules of Email: How to Eliminate Email Anxiety and Take
-            Control of Your Inbox Today (Backed by Science)
+    <Stack
+      my={4}
+      p="8px"
+      shadow="md"
+      border="1px"
+      borderColor="gray.300"
+      borderRadius="md"
+      overflow="hidden"
+      // alignItems="center"
+      h={['155px', '155px', '210px']}
+    >
+      <HStack fontSize={['10px', '13px']} border={black}>
+        <AuthorBadge
+          image="https://bit.ly/tioluwani-kolawole"
+          full_name="Kola Tioluwani"
+          short_name="imsamad"
+        />
+
+        <Spacer />
+        <StoryMeta />
+      </HStack>
+      <Flex border={red}>
+        <Box pr="15px" flex="1">
+          <Heading
+            my="4px"
+            as="h1"
+            fontWeight={700}
+            fontSize={['16px', '22px']}
+            // color={value}
+            // color="rgba(41,41,41)"
+            textOverflow="ellipsis"
+            // lineHeight="28px"
+            noOfLines={[3, 2]}
+          >
+            {heading + heading}
+            {/* {heading.substring(0, 90)} */}
           </Heading>
-          {isLargerThanSM && (
-            <Text
-              fontSize="20px"
-              fontWeight={500}
-              color="#757575"
-              noOfLines={1}
+          <Box display={['none', 'none', '-webkit-box']}>
+            <Heading
+              m="0"
+              my="8px"
+              as="h1"
+              fontWeight={400}
+              size="16px"
+              // color="rgba(117,117,117)"
+              noOfLines={[0, 1, 2]}
+              textOverflow="ellipsis"
+              // lineHeight="20px"
             >
-              6 scientific ways to eliminate the daily stress caused by emails.
-            </Text>
-          )}
-          <Flex alignItems="center">
-            <Badge mr="2" display={['none', 'block']}>
-              Programming
-            </Badge>
-            <Text fontSize={['10px', '13px']} color="#757575">
-              Oct 8,2018
-            </Text>
-            <Text mx="2">{'~'}</Text>
-            <Text fontSize={['10px', '13px']} color="#757575">
-              11min read
-            </Text>
-          </Flex>
-          <Box display={['none', 'none', 'block']}>
-            <NewsCardActions />
+              {subheading + subheading}
+            </Heading>
           </Box>
+
+          <StoryCardActions />
         </Box>
-        <Box
-          flexShrink={1}
-          maxW={[100, 150, 250]}
-          maxH={[100, 120, 230]}
-          minW="75"
-          minH="75"
-          overflow="hidden"
+        <Center
+          border="0px solid red"
+          minW="85px"
+          w={['110px', '120px', '200px']}
         >
-          <Image src="https://bit.ly/dan-abramov" alt="Dan Abramov" />
-        </Box>
+          <Image src={imageUrl} alt="altsdcs" />
+        </Center>
       </Flex>
-      <Box display={['block', 'block', 'none']}>
-        <NewsCardActions />
+    </Stack>
+  );
+};
+
+const StoryMeta = () => {
+  return (
+    <HStack
+      spacing={2}
+      // display={['none', 'none', 'flex']}
+      alignItems="center"
+    >
+      <CustomBadges
+        // @ts-ignore
+        fontWeight={100}
+      >
+        |
+      </CustomBadges>
+
+      {/* <HStack display={['none', 'none', 'flex']} alignItems="center"> */}
+      <CustomBadges>6 min</CustomBadges>
+      <CustomBadges>~</CustomBadges>
+      <Box bgColor="gray.200" px="2px" borderRadius="md">
+        <CustomBadges> Removed</CustomBadges>
       </Box>
-    </Box>
+
+      <CustomBadges>~</CustomBadges>
+      {/* </HStack> */}
+      <CustomBadges>{`Feb 17`}</CustomBadges>
+    </HStack>
+  );
+};
+
+const CustomBadges = ({ children, ...rest }: { children: React.ReactNode }) => {
+  return (
+    <Text
+      // fontSize={13}
+      fontWeight={400}
+      // color="rgba(117,117,117)"
+      lineHeight="20px"
+      whiteSpace="nowrap"
+      {...rest}
+    >
+      {children}
+    </Text>
   );
 };
 

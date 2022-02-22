@@ -34,7 +34,6 @@ export const createOrUpdateStory = asyncHandler(
       queryObj.slug = slug;
       storyObj.slug = slug;
     }
-
     let story = await StoryModel.findOneAndUpdate(queryObj, storyObj, {
       new: true,
       upsert: true,

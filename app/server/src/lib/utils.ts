@@ -125,7 +125,7 @@ export const saveImageLocally = async (file: any, appUrl: string) => {
 
     const savePath = path.join(
       __dirname,
-      '../',
+      '../../',
       'public',
       'uploads',
       'image',

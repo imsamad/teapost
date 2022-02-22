@@ -10,6 +10,7 @@ import {
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { FaUserAlt as UserIcon } from 'react-icons/fa';
 import { MdAlternateEmail as EmailIcon } from 'react-icons/md';
+import Router, { useRouter } from 'next/router';
 
 import { registerSchema, signInSchema } from '../../lib/Schema/signInForm';
 import MyLink from '../MyLink';
@@ -23,8 +24,14 @@ import CustomInput from '../FormFields/Input';
 import CustomPassword from '../FormFields/Password';
 
 const Index = () => {
+  const router = useRouter();
+
+  const redirectTo = router.query.redirectTo
+    ? (router.query.redirectTo as string)
+    : '/me';
+
   const { setCookies } = useUser({
-    redirectTo: '/me',
+    redirectTo,
     redirectToIfLoggedIn: true,
   });
 

@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 export interface UserDocument extends mongoose.Document {
   email: string;
   username: string;
-  password?: string;
+  password: string;
   isEmailVerified: boolean;
   isAuthorised: boolean;
   role: string | 'admin' | 'reader' | 'author';

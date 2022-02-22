@@ -18,15 +18,6 @@ import {
 const router: Router = express();
 
 router
-  .route('/')
-  .post(
-    protect,
-    validateSchema(createStorySchema, true),
-    handleTags,
-    createOrUpdateStory
-  );
-
-router
   .route('/changeslug')
   .put(protect, validateSchema(changeSlugSchema), changeSlug);
 

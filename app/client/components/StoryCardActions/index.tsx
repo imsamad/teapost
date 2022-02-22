@@ -4,13 +4,18 @@ import { BiLike, BiDislike } from 'react-icons/bi';
 const Index = () => {
   return (
     <ButtonGroup spacing="2" my="2">
-      <Button leftIcon={<ChatIcon />} size="xs" variant="solid">
+      <Button leftIcon={<BiLike />} size="xs" fontSize="10px" variant="solid">
         5
       </Button>
-      <Button leftIcon={<BiLike />} size="xs" variant="solid">
+      <Button
+        leftIcon={<BiDislike />}
+        size="xs"
+        fontSize="10px"
+        variant="solid"
+      >
         5
       </Button>
-      <Button leftIcon={<BiDislike />} size="xs" variant="solid">
+      <Button leftIcon={<ChatIcon />} size="xs" fontSize="10px" variant="solid">
         5
       </Button>
     </ButtonGroup>

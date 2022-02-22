@@ -1,21 +1,17 @@
 import axios from 'axios';
-import Cookies from 'universal-cookie';
+import { getCookies } from './getUserFromCookie';
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-const cookies = new Cookies();
-const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION as string;
-const refreshTokenCookie = process.env
-  .NEXT_PUBLIC_REFRESH_AUTH_SESSION as string;
+const { user, refreshToken } = getCookies();
 
-const user = cookies.get(userAuthCookie);
-const refreshToken = cookies.get(refreshTokenCookie);
-
-instance.defaults.headers.common[
-  'Authorization'
-] = `Bearer ${user?.accessToken}`;
-instance.defaults.headers.common['x-ref-Token'] = refreshToken;
+if (user)
+  instance.defaults.headers.common[
+    'Authorization'
+  ] = `Bearer ${user?.accessToken}`;
+if (refreshToken)
+  instance.defaults.headers.common['x-ref-token'] = refreshToken;
 
 export default instance;

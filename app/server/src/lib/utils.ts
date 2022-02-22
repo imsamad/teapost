@@ -43,6 +43,16 @@ export const ErrorResponse = (
   return { statusCode, message };
 };
 
+/*
+export function ErrorResponseConstrutorType(
+  statusCode: number,
+  message: string | string[] | {}
+): ErrorResponseType {
+  // if (!new.target) return new ErrorResponse(statusCode, message);
+  return { this.statusCode=statusCode; this.message=message };
+}
+*/
+
 export const validateYupSchema = async (
   schema: AnySchema,
   data: any,
@@ -103,6 +113,7 @@ export const validateYupSchema = async (
         }
       });
     }
+
     throw Object.keys(finalError).length ? finalError : 'Provide proper data';
   }
 };

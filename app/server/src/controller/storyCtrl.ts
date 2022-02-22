@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
-import { asyncHandler, ErrorResponse } from '../lib/utils';
+import { asyncHandler, ErrorResponse, validateYupSchema } from '../lib/utils';
 import StoryModel, { StorySchemaDocument } from '../models/StoryModel';
 import TagModel, { TagModelDocument } from '../models/TagModel';
+import { isAbleToPublished } from '../schema/story';
 
 // @desc      Create a story
 // @route     POST /api/v1/story
@@ -117,5 +118,27 @@ export const changeSlug = asyncHandler(
       success: true,
       data: story,
     });
+  }
+);
+
+// @desc      Published story story
+// @route     PUT /api/v1/story/published/:storyId
+// @access    Auth [Reader]
+export const publishedStory = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let story = await StoryModel.findById(req.params.storyId);
+
+    if (!story) return next(ErrorResponse(400, 'No story exist with this id.'));
+
+    try {
+      await validateYupSchema(isAbleToPublished, story);
+
+      story.isPublished = req.body.isPublished ?? true;
+      story = await story.save();
+
+      return res.status(200).json({ data: story });
+    } catch (err: any) {
+      return next(ErrorResponse(400, err));
+    }
   }
 );

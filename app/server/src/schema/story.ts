@@ -1,5 +1,5 @@
 import { isValidObjectId } from 'mongoose';
-import { array, object, string } from 'yup';
+import { array, boolean, object, string } from 'yup';
 import { trimExtra } from '../lib/utils';
 
 export const changeSlugSchema = object({
@@ -12,6 +12,21 @@ export const changeSlugSchema = object({
       .label('id')
       .required('It is required')
       .test('id', 'It is not valid id.', (val) => isValidObjectId(val)),
+  }),
+});
+
+export const publishedStorySchema = object({
+  params: object({
+    storyId: string()
+      .label('storyId')
+      .required('Story id is required')
+      .test('id', 'story id is invalid.', (val) => isValidObjectId(val)),
+  }),
+  body: object({
+    isPublished: boolean()
+      .nullable()
+      .label('isPublished')
+      .typeError('Only boolean values are allowed'),
   }),
 });
 
@@ -75,13 +90,13 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 };
 
 export const isAbleToPublished = object({
-  title: stringSchema('title', 40, 70),
+  title: stringSchema('title', 10, 90),
   titleImage: string()
     .label('titleImage')
     .required('titleImage is required.')
     .url('titleImage must be url')
     .typeError('titleImage must be url'),
-  subtitle: stringSchema('subtitle', 60, 175),
+  subtitle: stringSchema('subtitle', 10, 175),
   slug: string()
     .required('slug is required to create a story')
     .label('slug')
@@ -92,7 +107,7 @@ export const isAbleToPublished = object({
     .label('tags')
     .typeError('tags must be array type'),
   body: stringSchema('body', 2200, Infinity),
-  keywords: stringSchema('keywords', 10, 25),
+  keywords: stringSchema('keywords', 10, 150),
 });
 
 function notRequiredStringSchema(

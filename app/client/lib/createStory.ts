@@ -1,4 +1,5 @@
-import axios from './axios';
+// @ts-ignore
+import axios from '#axios';
 
 export const submitStory = async (val: any) => {
   let storyObjKey: any = [

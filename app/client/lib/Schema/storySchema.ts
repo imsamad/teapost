@@ -19,22 +19,22 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 };
 
 export const isAbleToPublished = object({
-  title: stringSchema('Title', 40, 70),
+  title: stringSchema('title', 10, 90),
   titleImage: string()
-    .url('TitleImage must be url')
     .label('titleImage')
-    .required('TitleImage is required')
-    .typeError('TitleImage must be url'),
-  subtitle: stringSchema('Subtitle', 60, 175),
+    .required('titleImage is required.')
+    .url('titleImage must be url')
+    .typeError('titleImage must be url'),
+  subtitle: stringSchema('subtitle', 10, 175),
   slug: string()
-    .required('Slug is required to create a story')
+    .required('slug is required to create a story')
     .label('slug')
-    .typeError('Slug must be string'),
+    .typeError('slug must be string'),
   tags: array()
-    .min(1, 'Minimum one tag is required')
+    .min(1, 'Minimum one tag is required.')
     .required('Minimum one tag is required')
     .label('tags')
-    .typeError('Tags must be array type'),
-  body: stringSchema('Body', 2200, Infinity),
-  keywords: stringSchema('Keywords', 10, 25),
+    .typeError('tags must be array type'),
+  body: stringSchema('body', 2200, Infinity),
+  keywords: stringSchema('keywords', 10, 150),
 });

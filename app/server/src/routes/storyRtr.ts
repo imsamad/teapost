@@ -4,10 +4,16 @@ import {
   changeSlug,
   createOrUpdateStory,
   handleTags,
+  publishedStory,
 } from '../controller/storyCtrl';
+
 import { protect } from '../middleware/auth';
 import validateSchema from '../middleware/validateSchema';
-import { changeSlugSchema, createStorySchema } from '../schema/story';
+import {
+  changeSlugSchema,
+  createStorySchema,
+  publishedStorySchema,
+} from '../schema/story';
 
 const router: Router = express();
 
@@ -24,7 +30,9 @@ router
   .route('/changeslug')
   .put(protect, validateSchema(changeSlugSchema), changeSlug);
 
-// router.post('/image', imageUpload);
+router
+  .route('/published/:storyId')
+  .put(protect, validateSchema(publishedStorySchema), publishedStory);
 
 export default router;
 /*

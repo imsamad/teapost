@@ -3,25 +3,42 @@ import { useFormikContext } from 'formik';
 import { isAbleToPublished } from '../../../lib/Schema/storySchema';
 import { validateYupSchema } from '../../../lib/utils';
 
+// @ts-ignore
+import axios from '#axios';
 const Index = () => {
   const { values, setFieldValue, setFieldTouched, setErrors } =
     useFormikContext();
 
+  const sendRequestAndChangeValues = async () => {
+    const {
+      data, // @ts-ignore
+    } = await axios.put(`/story/published/${values.id}`, {
+      // @ts-ignore
+      isPublished: !values.isPublished,
+    });
+
+    setFieldValue('isPublished', data.data.isPublished);
+    setFieldTouched('isPublished', true);
+  };
   const handleChange = async () => {
     // @ts-ignore
-    validateYupSchema(isAbleToPublished, values)
-      .then((res) => {
-        // @ts-ignore
-        setFieldValue('isPublished', !values.isPublished);
-        setFieldTouched('isPublished', true);
-      })
-      .catch((err) => {
-        // setStatus(true);
-        Object.keys(err).forEach((key: any) => {
-          setFieldTouched(key, true, false);
+    // console.log('values inside', values.isPublished);
+    if (values.isPublished == true) {
+      await sendRequestAndChangeValues();
+    }
+    // @ts-ignore
+    else
+      validateYupSchema(isAbleToPublished, values)
+        .then(async (res) => {
+          await sendRequestAndChangeValues();
+        })
+        .catch((err) => {
+          // setStatus(true);
+          Object.keys(err).forEach((key: any) => {
+            setFieldTouched(key, true, false);
+          });
+          setErrors(err);
         });
-        setErrors(err);
-      });
   };
   return (
     <HStack justifyContent="flex-end" my="4">
@@ -31,6 +48,8 @@ const Index = () => {
         </Text>
         <Switch // @ts-ignore
           isChecked={values?.isPublished}
+          // @ts-ignore
+          value={values?.isPublished}
           onChange={handleChange}
         />
       </Flex>

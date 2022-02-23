@@ -19,6 +19,6 @@ export const imageUpload = asyncHandler(
     if (!response.result)
       return next(ErrorResponse(400, 'Unable to upload Image'));
 
-    res.status(200).json({ success: true, data: { imageUrl: response.url } });
+    res.status(200).json({ status: 'ok', data: { imageUrl: response.url } });
   }
 );

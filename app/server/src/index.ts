@@ -54,7 +54,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, async () => {
   connectDB();
-  /**
+  /*
    * appTopUrl :- Set as env dynamically ssh script
    * image storing folder path
    */

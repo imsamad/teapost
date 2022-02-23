@@ -11,16 +11,12 @@ import { Search2Icon } from '@chakra-ui/icons';
 
 import MyLink from '../MyLink';
 import DarkMode from '../DarkMode';
+
 const Index = () => {
   return (
     <Flex alignItems="center" py={4} as="nav">
       <MyLink href="/">
-        <Heading
-          as="h1"
-          _hover={{ cursor: 'pointer' }}
-          textTransform="uppercase"
-          fontStyle="italic"
-        >
+        <Heading as="h1" textTransform="uppercase" fontStyle="italic">
           Teapost
         </Heading>
       </MyLink>

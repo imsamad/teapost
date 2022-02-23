@@ -22,7 +22,6 @@ const Index = () => {
   };
   const handleChange = async () => {
     // @ts-ignore
-    // console.log('values inside', values.isPublished);
     if (values.isPublished == true) {
       await sendRequestAndChangeValues();
     }

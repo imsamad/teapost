@@ -19,6 +19,7 @@ export const signUp = async (
     const endPoint = isRegister ? `/auth/register` : `/auth/login`;
 
     const { data } = await axios.post(endPoint, values);
+
     return data;
   } catch (err: any) {
     throw err?.response?.data?.message || 'Invalid Data';

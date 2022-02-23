@@ -23,9 +23,8 @@ const errorHandler = (
   }
 
   return res.status(error.statusCode || 500).json({
-    success: false,
+    status: 'error',
     message: error.message || 'Server Error',
-    status: error.statusCode || 500,
   });
 };
 

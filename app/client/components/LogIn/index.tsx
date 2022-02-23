@@ -42,17 +42,17 @@ const Index = () => {
     setHeadMsg({ isError: false, message: '' });
     action.setSubmitting(true);
     try {
-      const res = await signUp(values, registerForm);
+      const { user, refreshToken, redirectUrl, message }: any = await signUp(
+        values,
+        registerForm
+      );
       if (registerForm)
         setHeadMsg({
           isError: false,
-          redirectUrl: res?.redirectUrl,
-          message: res.message,
+          redirectUrl: redirectUrl,
+          message: message,
         });
       else {
-        const user: any = res.data.user,
-          refreshToken: any = res.data.refreshToken;
-
         setCookies(user, refreshToken);
       }
       action.setSubmitting(false);
@@ -150,8 +150,6 @@ const ExtraStrip = ({
       </Link>
     )}
     <Spacer />
-    <MyLink href="/auth/register" onHover="underline">
-      Forgot Password
-    </MyLink>
+    <MyLink href="/auth/register">Forgot Password</MyLink>
   </Flex>
 );

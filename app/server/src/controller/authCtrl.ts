@@ -75,8 +75,7 @@ export const register = asyncHandler(
     }
 
     let resObj: any = {
-      status: 200,
-      success: true,
+      status: 'ok',
       message: `Account created successfully, Verify your email sent to ${email}.`,
     };
 
@@ -141,7 +140,7 @@ export const verifyEmail = asyncHandler(
     await token.delete();
 
     res.status(200).json({
-      success: true,
+      status: 'ok',
       message: 'Email verfied successfully.',
     });
   }
@@ -155,16 +154,14 @@ const sendTokens = async (
   const { accessToken, refreshToken } = await signTokens(user);
   // console.table({ accessToken, refreshToken });
   const resData = {
-    success: true,
-    data: {
-      user: {
-        email: user.email,
-        accessToken,
-        username: user.username,
-        role: user.role,
-      },
-      refreshToken,
+    status: 'ok',
+    user: {
+      email: user.email,
+      accessToken,
+      username: user.username,
+      role: user.role,
     },
+    refreshToken,
   };
 
   return res.status(statusCode).json(resData);

@@ -39,7 +39,7 @@ export const createOrUpdateStory = asyncHandler(
       upsert: true,
     });
     res.status(200).json({
-      success: true,
+      status: 'ok',
       data: story,
     });
   }
@@ -50,12 +50,23 @@ export const createOrUpdateStory = asyncHandler(
 // @access    Public
 export const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const stories = await StoryModel.find({ isPublished: true }).select(
-      '-body'
-    );
+    const stories = await StoryModel.find({ isPublished: true })
+      .select('-body')
+      .populate([
+        {
+          path: 'author',
+          select: 'username email',
+        },
+        {
+          path: 'tags',
+          select: 'tag',
+        },
+      ]);
+    // .populate();
 
-    res.status(200).json({
-      data: stories,
+    return res.status(200).json({
+      status: 'ok',
+      stories,
     });
   }
 );
@@ -129,7 +140,7 @@ export const changeSlug = asyncHandler(
     story.slug = req.body.slug;
     await story.save();
     return res.status(200).json({
-      success: true,
+      status: 'ok',
       data: story,
     });
   }
@@ -150,7 +161,7 @@ export const publishedStory = asyncHandler(
       story.isPublished = req.body.isPublished ?? true;
       story = await story.save();
 
-      return res.status(200).json({ data: story });
+      return res.status(200).json({ status: 'ok', data: story });
     } catch (err: any) {
       return next(ErrorResponse(400, err));
     }

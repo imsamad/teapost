@@ -2,7 +2,7 @@ import { Document, model, Schema } from 'mongoose';
 import { ErrorResponse } from '../lib/utils';
 import { UserDocument } from './UserModel';
 
-export interface StorySchemaDocument extends Document {
+export interface StoryDocument extends Document {
   title?: String;
   titleImage?: String;
   subtitle?: String;
@@ -12,7 +12,7 @@ export interface StorySchemaDocument extends Document {
   keywords?: String;
   isPublished: Boolean;
   isPublishedByAdmin: Boolean;
-  authorId: UserDocument['_id'];
+  author: UserDocument['_id'];
 }
 
 const storySchema = new Schema(
@@ -78,11 +78,7 @@ const storySchema = new Schema(
 storySchema.post(['save', 'updateOne'], errorHandlerMdlwr);
 storySchema.post('findOneAndUpdate', errorHandlerMdlwr);
 
-async function errorHandlerMdlwr(
-  error: any,
-  doc: StorySchemaDocument,
-  next: any
-) {
+async function errorHandlerMdlwr(error: any, doc: StoryDocument, next: any) {
   if (error) {
     if (error?.code === 11000) {
       next(
@@ -98,6 +94,6 @@ async function errorHandlerMdlwr(
   }
 }
 
-const StoryModel = model<StorySchemaDocument>('Story', storySchema);
+const StoryModel = model<StoryDocument>('Story', storySchema);
 
 export default StoryModel;

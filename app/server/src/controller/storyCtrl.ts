@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
 import { asyncHandler, ErrorResponse, validateYupSchema } from '../lib/utils';
-import StoryModel, { StorySchemaDocument } from '../models/StoryModel';
+import StoryModel, { StoryDocument } from '../models/StoryModel';
 import TagModel, { TagModelDocument } from '../models/TagModel';
 import { isAbleToPublished } from '../schema/story';
 
@@ -10,40 +10,73 @@ import { isAbleToPublished } from '../schema/story';
 // @access    Auth [Reader]
 export const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (req?.body?.isPublished) req.body.isPublished = false;
+    let query: { _id?: any; slug?: any } = {};
 
-    // @ts-ignore
-    const author = req.user;
-    const { id, slug, tags, ...rest } = req.body;
+    if (req.body.id) query._id = req.body.id;
+    else query.slug = req.body.slug;
 
-    let storyObj: any = {
-      author,
-      ...rest,
-    };
+    const storyExist = await StoryModel.findOne(query);
 
-    if (tags?.length) storyObj.tags = tags;
-    // if (tags?.length) storyObj.$addToSet = { tags };
+    if (storyExist) {
+      // @ts-ignore
+      if (storyExist.author.toString() !== req.user) {
+        return next(ErrorResponse(400, 'this slug already exist'));
+      }
+      if (req.body.title) storyExist.title = req.body.title;
+      if (req.body.subtitle) storyExist.title = req.body.subtitle;
+      if (req.body.titleImage) storyExist.titleImage = req.body.titleImage;
+      if (req.body.tags) storyExist.tags = req.body.tags;
+      if (req.body.body) storyExist.body = req.body.body;
+      if (req.body.keywords) storyExist.keywords = req.body.keywords;
+      // explicit
+      if (typeof req.body.isPublished && req.body.isPublished === false)
+        storyExist.isPublished = false;
 
-    let queryObj: { slug?: string; _id?: string; author: string } = {
-      author,
-    };
-
-    if (id) {
-      queryObj._id = id;
+      sendResponse(req.body.isPublished, storyExist, res);
     } else {
-      queryObj.slug = slug;
-      storyObj.slug = slug;
+      const { id, isPublished, ...rest } = req.body;
+      let newStory = new StoryModel({
+        ...rest,
+        // @ts-ignore
+        author: req.user,
+      });
+      sendResponse(isPublished, newStory, res);
     }
-    let story = await StoryModel.findOneAndUpdate(queryObj, storyObj, {
-      new: true,
-      upsert: true,
-    });
-    res.status(200).json({
-      status: 'ok',
-      data: story,
-    });
   }
 );
+
+const sendResponse = async (
+  isPublished: StoryDocument['isPublished'],
+  story: StoryDocument,
+  res: Response
+) => {
+  if (isPublished) {
+    try {
+      const result = await validateYupSchema(isAbleToPublished, story);
+      story.isPublished = true;
+      story = await story.save();
+      return res.status(200).json({
+        status: 'ok',
+        story: story,
+      });
+    } catch (err: any) {
+      story.isPublished = false;
+      story = await story.save();
+
+      return res.status(200).json({
+        status: 'ok',
+        story,
+        message: err,
+      });
+    }
+  } else {
+    story = await story.save();
+    return res.status(200).json({
+      status: 'ok',
+      story,
+    });
+  }
+};
 
 // @desc      Get all stories
 // @route     GGET /api/v1/story
@@ -74,11 +107,11 @@ export const getAllStories = asyncHandler(
 export const handleTags = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.body?.tags?.length && !req.body?.additionalTags?.length) {
-      req.body.tags = [];
+      // req.body.tags
       return next();
     }
 
-    let alreadyExistedTags: StorySchemaDocument['_id'] = [];
+    let alreadyExistedTags: StoryDocument['_id'] = [];
     let newTags: any = [];
 
     req.body?.tags?.forEach((tag: string) => {
@@ -133,15 +166,15 @@ export const changeSlug = asyncHandler(
       return next(ErrorResponse(400, `Story not found for ${req.body.id} `));
     if (req.body.slug === story.slug)
       return res.status(200).json({
-        success: true,
-        data: story,
+        status: 'ok',
+        story,
       });
 
     story.slug = req.body.slug;
     await story.save();
     return res.status(200).json({
       status: 'ok',
-      data: story,
+      story,
     });
   }
 );
@@ -153,7 +186,8 @@ export const publishedStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     let story = await StoryModel.findById(req.params.storyId);
 
-    if (!story) return next(ErrorResponse(400, 'No story exist with this id.'));
+    if (!story)
+      return next(ErrorResponse(400, 'No resources found with this id.'));
 
     try {
       await validateYupSchema(isAbleToPublished, story);
@@ -161,7 +195,7 @@ export const publishedStory = asyncHandler(
       story.isPublished = req.body.isPublished ?? true;
       story = await story.save();
 
-      return res.status(200).json({ status: 'ok', data: story });
+      return res.status(200).json({ status: 'ok', story });
     } catch (err: any) {
       return next(ErrorResponse(400, err));
     }

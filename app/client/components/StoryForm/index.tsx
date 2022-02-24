@@ -1,9 +1,11 @@
-import { Box, Button, HStack, Text, useToast } from '@chakra-ui/react';
+import { Button, HStack, Text, useToast } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 import { submitStory } from '../../lib/createStory';
 import StoryForm from './Form';
+
 const initValues = {
   title: '',
   slug: '',
@@ -17,6 +19,7 @@ const initValues = {
 };
 
 const Index = ({ story }: any) => {
+  const router = useRouter();
   useEffect(() => {
     const unloadCallback = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -42,14 +45,19 @@ const Index = ({ story }: any) => {
         ...story,
       }}
       onSubmit={async (values, actions) => {
+        const crtStorySlug = router.query.slug;
         actions.setSubmitting(true);
         const data = await submitStory(values);
-
+        if (crtStorySlug !== data.story.slug) {
+          router.push(`/me/story/write/${data.story.slug}`, undefined, {
+            shallow: true,
+          });
+        }
         actions.setSubmitting(false);
 
         actions.setValues({
           ...initValues,
-          ...data,
+          ...data.story,
         });
 
         saveToast('Saved Changes.');

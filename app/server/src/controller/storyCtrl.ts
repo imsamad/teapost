@@ -28,6 +28,10 @@ export const createOrUpdateStory = asyncHandler(
       if (req.body.tags) storyExist.tags = req.body.tags;
       if (req.body.body) storyExist.body = req.body.body;
       if (req.body.keywords) storyExist.keywords = req.body.keywords;
+      if (req.body.id) {
+        if (req.body.slug) req.body.slug = storyExist.slug = req.body.slug;
+      }
+
       // explicit
       if (typeof req.body.isPublished && req.body.isPublished === false)
         storyExist.isPublished = false;

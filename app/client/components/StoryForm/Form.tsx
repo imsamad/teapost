@@ -3,7 +3,7 @@ import { Divider, SimpleGrid } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import MyInput from '../FormFields/Input';
 import IsPublished from './IsPublished';
-import Slug from './Slug';
+// import Slug from './Slug';
 import TagSelect from './Tags/TagSelect';
 import AddTags from './Tags/AddTags';
 import TitleImage from './TitleImage';
@@ -20,7 +20,8 @@ const StoryForm = () => {
       <SimpleGrid gap={2}>
         <SimpleGrid columns={[1, 2, 2]} gap={4}>
           <MyInput name="title" placeholder="Title" label="Title" size="sm" />
-          <Slug />
+          <MyInput name="slug" placeholder="Slug" label="Slug" size="sm" />
+          {/* <Slug /> */}
           <TagSelect />
           <AddTags />
           <MyInput

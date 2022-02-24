@@ -19,7 +19,7 @@ export const submitStory = async (val: any) => {
   });
   try {
     const { data } = await axios.post('/story', { ...storyObj });
-    return data.data;
+    return data;
   } catch (err: any) {
     throw err.response.data;
   }

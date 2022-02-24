@@ -59,11 +59,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   };
 
   try {
-    const { data } = await axios(axiosArgs);
+    const {
+      data: { story },
+    } = await axios(axiosArgs);
 
     return {
       props: {
-        story: data.data,
+        story,
       },
     };
   } catch (err) {

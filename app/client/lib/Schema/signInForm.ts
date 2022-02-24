@@ -9,7 +9,7 @@ const usernameField = yup
   .string()
   .trim()
   .required('Username is required')
-  .test('password', 'Username must be above 4 chars', (val) =>
+  .test('username', 'Username must be above 4 chars', (val) =>
     trimExtra(val, 4)
   );
 
@@ -40,4 +40,29 @@ const signInSchema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-export { registerSchema, signInSchema };
+const logInSchema = yup.object({
+  isRegister: yup
+    .boolean()
+    .required('Specify is register or login required')
+    .typeError('Non-boolean not allowed'),
+  username: yup
+    .string()
+    .trim()
+    .when('isRegister', {
+      is: (isRegister: boolean) => isRegister,
+      then: yup
+        .string()
+        .required('Username is required')
+        .test('Username', 'Username must be above 4 chars', (val) =>
+          trimExtra(val, 4)
+        ),
+    }),
+  email: emailField,
+  password: pwdField,
+  passwordConfirmation: yup.string().when('isRegister', {
+    is: (isRegister: boolean) => isRegister,
+    then: pwdConfirmField,
+  }),
+});
+
+export { registerSchema, signInSchema, logInSchema };

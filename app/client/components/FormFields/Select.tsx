@@ -2,11 +2,11 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
-  FormErrorMessage,
   Select,
 } from '@chakra-ui/react';
 import { Field, FieldProps } from 'formik';
-import { typeOf } from '../../lib/utils';
+
+import CustomError from './CustomError';
 
 type Props = {
   label?: string;
@@ -46,14 +46,7 @@ const CustomInput = ({
               <FormHelperText>{helperText}</FormHelperText>
             )}
             {/* @ts-ignore */}
-            {isError && typeOf(meta.error, 'array') && meta?.error.length ? (
-              // @ts-ignore
-              [...new Set(meta?.error)].map((err: string) => (
-                <FormErrorMessage key={err}>{err}</FormErrorMessage>
-              ))
-            ) : (
-              <FormErrorMessage>{meta.error}</FormErrorMessage>
-            )}
+            <CustomError isError={isError} error={meta.error} />
           </FormControl>
         );
       }}

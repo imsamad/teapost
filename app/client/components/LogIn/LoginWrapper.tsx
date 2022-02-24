@@ -1,24 +1,19 @@
 import { Box, Heading, Stack } from '@chakra-ui/react';
 
-const Index = ({
-  children,
-  subtitle,
-}: {
-  children: React.ReactNode;
-  subtitle: string;
-}) => (
-  <Box
+const Index = ({ children }: { children: React.ReactNode }) => (
+  <Stack
     maxW="sm"
+    spacing={4}
     mx="auto"
     py="10"
     px="4"
     border="1px"
     my="4"
     borderRadius="md"
-    shadow="lg"
+    shadow="md"
   >
-    <Stack spacing={4}>{children}</Stack>
-  </Box>
+    {children}
+  </Stack>
 );
 
 export default Index;

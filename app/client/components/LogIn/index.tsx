@@ -1,27 +1,17 @@
-import { useState } from 'react';
-import {
-  Button,
-  Flex,
-  Link,
-  Spacer,
-  Stack,
-  useBoolean,
-} from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { FaUserAlt as UserIcon } from 'react-icons/fa';
-import { MdAlternateEmail as EmailIcon } from 'react-icons/md';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
-import { registerSchema, signInSchema } from '../../lib/Schema/signInForm';
-import MyLink from '../MyLink';
-import FormContainer from '../FormContainer';
+import { logInSchema } from '../../lib/Schema/signInForm';
 import { signUp } from '../../lib/signUp';
 import { typeOf } from '../../lib/utils';
-import HeadMessage, { HeadMessageProps } from './HeadMessage';
 import useUser from '../../lib/useUser';
 
-import CustomInput from '../FormFields/Input';
-import CustomPassword from '../FormFields/Password';
+import FormFields from './FormFields';
+import Footer from './Footer';
+import Header from './Header';
+import LoginWrapper from './LoginWrapper';
+import FormStatus from './FormStatus';
 
 const Index = () => {
   const router = useRouter();
@@ -35,121 +25,73 @@ const Index = () => {
     redirectToIfLoggedIn: true,
   });
 
-  const [registerForm, setRegisterForm] = useBoolean(false);
-  const [headMsg, setHeadMsg] = useState<HeadMessageProps>();
-
   const handleSubmit = async (values: any, action: FormikHelpers<any>) => {
-    setHeadMsg({ isError: false, message: '' });
+    action.setStatus(false);
     action.setSubmitting(true);
     try {
-      const { user, refreshToken, redirectUrl, message }: any = await signUp(
-        values,
-        registerForm
-      );
-      if (registerForm)
-        setHeadMsg({
-          isError: false,
-          redirectUrl: redirectUrl,
-          message: message,
+      const { user, refreshToken, redirectUrl, message, status }: any =
+        await signUp(values);
+
+      if (redirectUrl || message) {
+        action.setStatus({
+          status,
+          redirectUrl,
+          message,
         });
-      else {
+      } else if (user || refreshToken) {
         setCookies(user, refreshToken);
+        action.resetForm();
       }
       action.setSubmitting(false);
-      action.resetForm();
-    } catch (errors: any) {
-      if (typeOf(errors, 'string') || typeOf(errors, 'array')) {
-        setHeadMsg({ isError: true, message: errors });
+    } catch (error: any) {
+      const { message, status } = error;
+
+      if (typeOf(error, 'string') || typeOf(error, 'array')) {
+        action.setStatus({
+          status: status || 'error',
+          message: message || error || 'Invalid data',
+        });
       } else {
-        action.setErrors(errors);
+        action.setErrors(message);
       }
       action.setSubmitting(false);
     }
   };
 
   return (
-    <FormContainer subtitle={registerForm ? 'Register' : 'Log In'}>
-      {headMsg && <HeadMessage headMsg={headMsg} />}
-      <Formik
-        initialValues={{
-          username: 'imsamad',
-          email: 'imsamad00@gmail.com',
-          password: 'Password@1206',
-          passwordConfirmation: 'Password@1206',
-        }}
-        validationSchema={registerForm ? registerSchema : signInSchema}
-        onSubmit={handleSubmit}
-      >
-        {(props: FormikProps<any>) => (
+    <Formik
+      initialValues={{
+        isRegister: false,
+        username: 'imsamad',
+        email: 'imsamad00@gmail.com',
+        password: 'Password@1206',
+        passwordConfirmation: 'Password@1206',
+      }}
+      validationSchema={logInSchema}
+      onSubmit={handleSubmit}
+    >
+      {(formikProps: FormikProps<any>) => {
+        return (
           <Form>
-            <Stack spacing={4}>
-              {registerForm && (
-                <CustomInput
-                  name="username"
-                  placeholder="John Doe"
-                  LeftAddOn={<UserIcon />}
-                />
-              )}
-              <CustomInput
-                name="email"
-                placeholder="johndoe@email.com"
-                LeftAddOn={<EmailIcon />}
-                isRequired={true}
-              />
-              <CustomPassword name="password" />
-              {registerForm && (
-                <CustomPassword
-                  name="passwordConfirmation"
-                  placeholder="Confirm Password"
-                />
-              )}
-              <ExtraStrip
-                registerForm={registerForm}
-                toggle={setRegisterForm.toggle}
-              />
+            <LoginWrapper>
+              <Header />
+              <FormStatus />
+              <FormFields />
               <Button
-                isLoading={props.isSubmitting}
+                isLoading={formikProps.isSubmitting}
                 type="submit"
                 colorScheme="blue"
                 size="sm"
               >
-                {registerForm ? 'Register' : 'Log In'}
+                {formikProps.values.isRegister ? 'Register' : 'Log In'}
               </Button>
-            </Stack>
+              <Footer />
+            </LoginWrapper>
           </Form>
-        )}
-      </Formik>
-    </FormContainer>
+        );
+      }}
+    </Formik>
   );
 };
 
 export default Index;
-
-const ExtraStrip = ({
-  registerForm,
-  toggle,
-}: {
-  registerForm: boolean;
-  toggle: any;
-}) => (
-  <Flex
-    alignItems="center"
-    sx={{
-      fontSize: '12px',
-      color: 'blue',
-      textDecoration: 'underline',
-    }}
-  >
-    {registerForm ? (
-      <Link as="button" type="button" onClick={toggle}>
-        Log In
-      </Link>
-    ) : (
-      <Link as="button" type="button" onClick={toggle}>
-        Register
-      </Link>
-    )}
-    <Spacer />
-    <MyLink href="/auth/register">Forgot Password</MyLink>
-  </Flex>
-);

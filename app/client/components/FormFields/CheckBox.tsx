@@ -1,13 +1,12 @@
 import {
   Checkbox,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Stack,
 } from '@chakra-ui/react';
-import { Field, Formik, FastField, useField } from 'formik';
-import { typeOf } from '../../lib/utils';
+import { FastField, useField } from 'formik';
+import CustomError from './CustomError';
 
 type Direction = 'row' | 'column' | 'row-reverse' | 'column-reverse';
 
@@ -38,14 +37,7 @@ const Index = ({
     <FormControl isInvalid={isError} size={size}>
       {label && <FormLabel>{label}</FormLabel>}
       {/* @ts-ignore */}
-      {isError && typeOf(meta.error, 'array') ? (
-        // @ts-ignore
-        [...new Set(meta?.error)].map((err: string) => (
-          <FormErrorMessage key={err}>{err}</FormErrorMessage>
-        ))
-      ) : (
-        <FormErrorMessage>{meta.error}</FormErrorMessage>
-      )}
+      <CustomError isError={isError} error={meta.error} />
       <Stack direction={direction} wrap={'wrap'}>
         {data.map((option: any) => {
           const value = dataKeys ? option[dataKeys[0]] : option.key,

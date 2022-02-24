@@ -6,10 +6,8 @@ import {
   Input,
   InputRightAddon,
   FormHelperText,
-  FormErrorMessage,
 } from '@chakra-ui/react';
 import { FieldProps, FastField } from 'formik';
-import { typeOf } from '../../lib/utils';
 
 type Props = {
   label?: string;
@@ -21,6 +19,7 @@ type Props = {
   size?: string;
   isRequired?: boolean | false;
 };
+import CustomError from './CustomError';
 
 const CustomInput = ({
   label,
@@ -50,14 +49,7 @@ const CustomInput = ({
               <FormHelperText>{helperText}</FormHelperText>
             )}
             {/* @ts-ignore */}
-            {isError && typeOf(meta.error, 'array') ? (
-              // @ts-ignore
-              [...new Set(meta?.error)].map((err: string) => (
-                <FormErrorMessage key={err}>{err}</FormErrorMessage>
-              ))
-            ) : (
-              <FormErrorMessage>{meta.error}</FormErrorMessage>
-            )}
+            <CustomError errors={meta.error} isError={isError} />
           </FormControl>
         );
       }}

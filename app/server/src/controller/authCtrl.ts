@@ -79,7 +79,7 @@ export const register = asyncHandler(
       message: `Account created successfully, Verify your email sent to ${email}.`,
     };
 
-    if (!isEmailService) resObj = { ...resObj, redirectUrl };
+    // if (!isEmailService) resObj = { ...resObj, redirectUrl };
 
     return res.json(resObj);
   }

@@ -2,6 +2,7 @@
 import axios from '#axios';
 
 export interface LogInFields {
+  isRegister: boolean;
   email: string;
   password: string;
 }
@@ -11,17 +12,14 @@ export interface UserRegisterFields extends LogInFields {
   passwordConfirmation: string;
 }
 
-export const signUp = async (
-  values: UserRegisterFields,
-  isRegister: boolean
-) => {
+export const signUp = async (values: UserRegisterFields) => {
   try {
-    const endPoint = isRegister ? `/auth/register` : `/auth/login`;
+    const endPoint = values.isRegister ? `/auth/register` : `/auth/login`;
 
     const { data } = await axios.post(endPoint, values);
 
     return data;
   } catch (err: any) {
-    throw err?.response?.data?.message || 'Invalid Data';
+    throw err?.response?.data || 'Invalid Data';
   }
 };

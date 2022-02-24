@@ -9,28 +9,30 @@ const usernameField = yup
   .string()
   .trim()
   .required('Username is required')
-  .test('password', 'Username must be above 4 chars.', (val) =>
+  .test('username', 'Username must be above 4 chars.', (val) =>
     trimExtra(val, 4)
   )
-  .label('Username');
+  .label('username');
 
 const emailField = yup
   .string()
   .email('Must be a valid email')
   .required('Email is required')
-  .label('Email');
+  .label('email');
 
 const pwdField = yup
   .string()
   .password()
   .minSymbols(1, 'Password must contain one symbol')
   .minUppercase(1, 'Password must contain one uppercase letter')
-  .required('Password is required')
-  .label('Password');
+  .required('password is required')
+  .label('password');
 
 const pwdConfirmField = yup
   .string()
-  .oneOf([yup.ref('password'), null], 'Passwords must match');
+  .oneOf([yup.ref('password'), null], 'Passwords must match')
+  .label('passwordConfirmation')
+  .typeError('passwordConfirmation must be string');
 
 export const registerSchema = yup.object({
   body: yup.object({
@@ -44,7 +46,7 @@ export const registerSchema = yup.object({
 export const logInSchema = yup.object({
   body: yup.object({
     email: emailField,
-    password: yup.string().required('Password is required').label('Password'),
+    password: yup.string().required('Password is required').label('password'),
   }),
 });
 

@@ -11,6 +11,7 @@ export const changeSlugSchema = object({
     id: string()
       .label('id')
       .required('It is required')
+      .typeError('It must be string')
       .test('id', 'It is not valid id.', (val) => isValidObjectId(val)),
   }),
 });

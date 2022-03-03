@@ -29,12 +29,9 @@ const singleStory = {
     'http://res.cloudinary.com/dnkb5aetl/image/upload/v1645618915/f9vgpm9o8y717ewdnvud.jpg',
   id: '621261a7867845e516a158c5',
 };
+
 const Index = ({ stories = [singleStory] }: any) => {
-  return (
-    <>
-      <HomePage stories={stories} />
-    </>
-  );
+  return <HomePage stories={stories} />;
 };
 
 type storyType = {

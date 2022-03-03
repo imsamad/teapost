@@ -6,7 +6,7 @@ export interface StoryDocument extends Document {
   title?: String;
   titleImage?: String;
   subtitle?: String;
-  slug?: String;
+  slug: string;
   tags?: String[];
   body?: { text: String; html: String };
   keywords?: String;

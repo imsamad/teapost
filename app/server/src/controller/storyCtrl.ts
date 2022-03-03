@@ -10,7 +10,7 @@ import { isAbleToPublished } from '../schema/story';
 // @access    Auth [Reader]
 export const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let query: { _id?: any; slug?: any } = {};
+    let query: Partial<{ _id: any; slug: any }> = {};
 
     if (req.body.id) query._id = req.body.id;
     else query.slug = req.body.slug;
@@ -18,25 +18,36 @@ export const createOrUpdateStory = asyncHandler(
     const storyExist = await StoryModel.findOne(query);
 
     if (storyExist) {
+      let extraMessage: { [name: string]: string[] } = {};
       // @ts-ignore
       if (storyExist.author.toString() !== req.user) {
         return next(ErrorResponse(400, 'this slug already exist'));
       }
+
       if (req.body.title) storyExist.title = req.body.title;
       if (req.body.subtitle) storyExist.title = req.body.subtitle;
       if (req.body.titleImage) storyExist.titleImage = req.body.titleImage;
       if (req.body.tags) storyExist.tags = req.body.tags;
       if (req.body.body) storyExist.body = req.body.body;
       if (req.body.keywords) storyExist.keywords = req.body.keywords;
-      if (req.body.id) {
-        if (req.body.slug) req.body.slug = storyExist.slug = req.body.slug;
+
+      if (req.body.id && req.body.slug && storyExist.slug !== req.body.slug) {
+        const storyExistWithNewSlug = await StoryModel.findOne({
+          slug: req.body.slug,
+        });
+        if (storyExistWithNewSlug) {
+          extraMessage['slug'] = ['This slug already exist.'];
+        } else req.body.slug = storyExist.slug = req.body.slug;
       }
 
       // explicit
-      if (typeof req.body.isPublished && req.body.isPublished === false)
+      if (
+        typeof req.body.isPublished !== 'undefined' &&
+        req.body.isPublished === false
+      )
         storyExist.isPublished = false;
 
-      sendResponse(req.body.isPublished, storyExist, res);
+      sendResponse(req.body.isPublished, storyExist, res, extraMessage);
     } else {
       const { id, isPublished, ...rest } = req.body;
       let newStory = new StoryModel({
@@ -52,7 +63,8 @@ export const createOrUpdateStory = asyncHandler(
 const sendResponse = async (
   isPublished: StoryDocument['isPublished'],
   story: StoryDocument,
-  res: Response
+  res: Response,
+  extraMessage?: any
 ) => {
   if (isPublished) {
     try {
@@ -62,6 +74,7 @@ const sendResponse = async (
       return res.status(200).json({
         status: 'ok',
         story: story,
+        message: extraMessage,
       });
     } catch (err: any) {
       story.isPublished = false;
@@ -75,9 +88,11 @@ const sendResponse = async (
     }
   } else {
     story = await story.save();
+
     return res.status(200).json({
       status: 'ok',
       story,
+      message: extraMessage,
     });
   }
 };

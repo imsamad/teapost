@@ -48,6 +48,7 @@ const Index = ({ story }: any) => {
         const crtStorySlug = router.query.slug;
         actions.setSubmitting(true);
         const data = await submitStory(values);
+        console.log('data ', data);
         if (crtStorySlug !== data.story.slug) {
           router.push(`/me/story/write/${data.story.slug}`, undefined, {
             shallow: true,

@@ -105,7 +105,7 @@ const sendResponse = async (
 export const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const query: any = req.query;
-    console.log('query ', query);
+
     const stories = await StoryModel.find({
       isPublished: true,
       ...query,

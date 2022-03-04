@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "seed:i": "ts-node-dev seeder/index.ts -i"
   },
   "keywords": [],
   "author": "",

@@ -144,8 +144,7 @@ Desktop.ini
 *~
 
 
-# npm 
-package-lock.json
+# npm  
 *.log
 *.gz
 

@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 const connectDB = () => {
-  const mongoUri: string = process.env.MONGO_URI as string;
+  const isProd = process.env.NODE_ENV === 'production';
+
+  const mongoUri: string = isProd
+    ? (process.env.MONGO_URI as string)
+    : (process.env.MONGO_URI_DEV as string);
 
   mongoose.connect(mongoUri);
 

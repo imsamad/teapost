@@ -68,6 +68,10 @@ export const createStorySchema = object({
             .required('It is required')
             .test('id', 'It is not valid id.', (val) => isValidObjectId(val)),
         }),
+      isPublished: boolean()
+        .nullable()
+        .label('isPublished')
+        .typeError('Only boolean values are allowed'),
     },
     [['id', 'slug']]
   ),
@@ -107,7 +111,7 @@ export const isAbleToPublished = object({
     .required('Minimum one tag is required')
     .label('tags')
     .typeError('tags must be array type'),
-  body: stringSchema('body', 2200, Infinity),
+  // body: stringSchema('body', 2200, Infinity),
   keywords: stringSchema('keywords', 10, 150),
 });
 

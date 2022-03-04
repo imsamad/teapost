@@ -1,10 +1,10 @@
 const modules = {
   toolbar: [
     [{ header: '1' }, { header: '2' }],
-    [{ header: [1, 2, 3, 4, 5, 6, 0] }],
+    [{ header: [1, 2, 3, 4, 5, 6] }],
     [{ font: ['Poppin'] }],
     [{ size: ['small', false, 'large', 'huge'] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
     [
       { list: 'ordered' },
       { list: 'bullet' },
@@ -13,11 +13,9 @@ const modules = {
     ],
     ['link', 'image', 'video'],
     ['clean'],
-    ['blockquote', 'code-block'],
     [{ script: 'sub' }, { script: 'super' }],
     [{ align: [] }],
     [{ color: [] }, { background: [] }],
-    // ['undo', 'redo'],
   ],
   clipboard: {
     // toggle to add extra line breaks when pasting HTML:

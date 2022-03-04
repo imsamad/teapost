@@ -24,12 +24,12 @@ export const createOrUpdateStory = asyncHandler(
         return next(ErrorResponse(400, 'this slug already exist'));
       }
 
-      if (req.body.title) storyExist.title = req.body.title;
-      if (req.body.subtitle) storyExist.title = req.body.subtitle;
-      if (req.body.titleImage) storyExist.titleImage = req.body.titleImage;
-      if (req.body.tags) storyExist.tags = req.body.tags;
-      if (req.body.body) storyExist.body = req.body.body;
-      if (req.body.keywords) storyExist.keywords = req.body.keywords;
+      var { id, slug, isPublished, ...rest } = req.body;
+
+      Object.keys(rest).forEach((field: any) => {
+        // @ts-ignore
+        storyExist[field] = req.body[field];
+      });
 
       if (req.body.id && req.body.slug && storyExist.slug !== req.body.slug) {
         const storyExistWithNewSlug = await StoryModel.findOne({
@@ -37,7 +37,7 @@ export const createOrUpdateStory = asyncHandler(
         });
         if (storyExistWithNewSlug) {
           extraMessage['slug'] = ['This slug already exist.'];
-        } else req.body.slug = storyExist.slug = req.body.slug;
+        } else storyExist.slug = req.body.slug;
       }
 
       // explicit
@@ -46,6 +46,8 @@ export const createOrUpdateStory = asyncHandler(
         req.body.isPublished === false
       )
         storyExist.isPublished = false;
+
+      // console.log('story ', storyExist);
 
       sendResponse(req.body.isPublished, storyExist, res, extraMessage);
     } else {
@@ -102,19 +104,21 @@ const sendResponse = async (
 // @access    Public
 export const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const stories = await StoryModel.find({ isPublished: true })
-      .select('-body')
-      .populate([
-        {
-          path: 'author',
-          select: 'username email',
-        },
-        {
-          path: 'tags',
-          select: 'tag',
-        },
-      ]);
-    // .populate();
+    const query: any = req.query;
+    console.log('query ', query);
+    const stories = await StoryModel.find({
+      isPublished: true,
+      ...query,
+    }).populate([
+      {
+        path: 'author',
+        select: 'username email',
+      },
+      {
+        path: 'tags',
+        select: 'tag',
+      },
+    ]);
 
     return res.status(200).json({
       status: 'ok',

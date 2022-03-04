@@ -1,12 +1,12 @@
 import { EmailIcon } from '@chakra-ui/icons';
-import { Flex, Link, Spacer } from '@chakra-ui/react';
+
 import { useField } from 'formik';
 
 import { FaUserAlt as UserIcon } from 'react-icons/fa';
-import CustomInput from '../FormFields/Input';
+import CustomInput from '../../FormFields/Input';
 
-import CustomPassword from '../FormFields/Password';
-const Form = () => {
+import CustomPassword from '../../FormFields/Password';
+const FormFields = () => {
   const [, { value: isRegister }] = useField('isRegister');
   return (
     <>
@@ -34,4 +34,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default FormFields;

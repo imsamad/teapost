@@ -22,19 +22,19 @@ export const isAbleToPublished = object({
   title: stringSchema('title', 10, 90),
   titleImage: string()
     .label('titleImage')
-    .required('titleImage is required.')
-    .url('titleImage must be url')
-    .typeError('titleImage must be url'),
+    .required('TitleImage is required.')
+    .url('TitleImage must be url')
+    .typeError('TitleImage must be url'),
   subtitle: stringSchema('subtitle', 10, 175),
   slug: string()
-    .required('slug is required to create a story')
+    .required('Slug is required to create a story')
     .label('slug')
-    .typeError('slug must be string'),
+    .typeError('Slug must be string'),
   tags: array()
     .min(1, 'Minimum one tag is required.')
     .required('Minimum one tag is required')
     .label('tags')
     .typeError('tags must be array type'),
-  body: stringSchema('body', 2200, Infinity),
-  keywords: stringSchema('keywords', 10, 150),
+  // body: stringSchema('body', 2200, Infinity),
+  keywords: stringSchema('Keywords', 10, 150),
 });

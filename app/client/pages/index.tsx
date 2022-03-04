@@ -31,6 +31,7 @@ const singleStory = {
 };
 
 const Index = ({ stories = [singleStory] }: any) => {
+  // console.log('stories ', stories);
   return <HomePage stories={stories} />;
 };
 
@@ -45,16 +46,16 @@ type storyType = {
   slug: string;
 };
 
-// export const getStaticProps = async () => {
-//   const {
-//     data: { stories },
-//   } = await axios(`${process.env.API_URL}/story`);
+export const getStaticProps = async () => {
+  const {
+    data: { stories },
+  } = await axios(`${process.env.API_URL}/stories`);
 
-//   return {
-//     props: {
-//       stories,
-//     },
-//   };
-// };
+  return {
+    props: {
+      stories,
+    },
+  };
+};
 
 export default Index;

@@ -11,12 +11,22 @@ import { Search2Icon } from '@chakra-ui/icons';
 
 import MyLink from '../MyLink';
 import DarkMode from '../DarkMode';
+import LogInBtn from './LogInBtn';
 
 const Index = () => {
   return (
     <Flex alignItems="center" py={4} as="nav">
       <MyLink href="/">
-        <Heading as="h1" textTransform="uppercase" fontStyle="italic">
+        <Heading
+          as="h1"
+          textTransform="uppercase"
+          // fontStyle="italic"
+          color="black"
+          fontWeight={900}
+          _dark={{
+            color: 'white',
+          }}
+        >
           Teapost
         </Heading>
       </MyLink>
@@ -36,11 +46,7 @@ const Index = () => {
         <Input placeholder="Enter or ctrl + /" variant="filled" />
       </InputGroup>
       <DarkMode />
-      <MyLink href="/auth">
-        <Button size="md" mx={[1, 4]}>
-          Log in
-        </Button>
-      </MyLink>
+      <LogInBtn />
     </Flex>
   );
 };

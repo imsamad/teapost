@@ -1,23 +1,18 @@
-import {
-  Box,
-  HStack,
-  IconButton,
-  Spacer,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import QuillClass from 'quill';
 import 'quill/dist/quill.snow.css';
-import { formats, modules } from '../../../lib/quillConfig';
 import { useFormikContext } from 'formik';
-const ImageCompress = require('quill-image-compress').default;
-QuillClass.register('modules/imageCompress', ImageCompress);
 
 const BlotFormatter = require('quill-blot-formatter').default;
 QuillClass.register('modules/blotFormatter', BlotFormatter);
 
 const MagicUrl = require('quill-magic-url').default;
 QuillClass.register('modules/magicUrl', MagicUrl);
+
+import { formats, modules } from '../../../lib/quillConfig';
+
+import uploadImage from '../../../lib/uploadImage';
 
 const Index = () => {
   const { values, setFieldValue } = useFormikContext();
@@ -30,11 +25,14 @@ const Index = () => {
     const q = new QuillClass(editor, {
       theme: 'snow',
       formats,
-      modules: { ...modules, blotFormatter: {}, magicUrl: true },
+      modules: {
+        ...modules,
+        blotFormatter: {},
+        magicUrl: true,
+      },
       placeholder: 'Write an awesome story...',
-    });
-    // const ImageCompress = require('quill-image-compress').default;
-    // QuillClass.register('modules/blotFormatter', BlotFormatter);
+    }); // @ts-ignore
+    console.log('values.body ', values.body);
     // @ts-ignore
     q.clipboard.dangerouslyPasteHTML(values.body);
     setQuill(q);
@@ -47,20 +45,15 @@ const Index = () => {
   };
 
   const saveToServer = async (file: any) => {
-    const fileReader: FileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onloadend = () => {
-      insertToEditor(fileReader.result);
+    const saveAsDataUrl = (file: any) => {
+      const fileReader: FileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onloadend = () => {
+        insertToEditor(fileReader.result);
+      };
     };
-    return;
-    // const body = new FormData();
-    // const res: any = await fetch('Your Image Server URL', {
-    //   method: 'POST',
-    //   body,
-    // });
-    // const url =
-    //   'https://images.unsplash.com/photo-1642010654640-e7fe3c436423?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60';
-    // insertToEditor(url || res.uploadedImageUrl);
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) insertToEditor(imageUrl);
   };
 
   const selectLocalImage = () => {
@@ -80,6 +73,7 @@ const Index = () => {
     if (quill) {
       quill.on('text-change', () => {
         setFieldValue('body', quill.root.innerHTML);
+        console.log('quill.root.innerHTML ', quill.root.innerHTML);
       });
       quill.getModule('toolbar').addHandler('image', selectLocalImage);
     }

@@ -1,11 +1,13 @@
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
 import { BiLike, BiDislike } from 'react-icons/bi';
+import useUICtx from '../../Context/useUICtx';
 const onClick = (e: any) => {
   e.preventDefault();
   e.stopPropagation();
 };
 const Index = ({ storyId }: { storyId: string }) => {
+  const { login } = useUICtx();
   return (
     <ButtonGroup spacing="2">
       <Button
@@ -13,7 +15,9 @@ const Index = ({ storyId }: { storyId: string }) => {
         size="xs"
         fontSize="10px"
         variant="solid"
-        onClick={onClick}
+        onClick={() => {
+          login.on();
+        }}
       >
         5
       </Button>

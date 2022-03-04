@@ -1,24 +1,26 @@
-import { Button } from '@chakra-ui/react';
+import { Button, useToast } from '@chakra-ui/react';
 import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { useRouter } from 'next/router';
 
-import { logInSchema } from '../../lib/Schema/signInForm';
-import { signUp } from '../../lib/signUp';
-import { typeOf } from '../../lib/utils';
-import useUser from '../../lib/useUser';
+import { logInSchema } from '../../../lib/Schema/signInForm';
+import { signUp } from '../../../lib/signUp';
+import { typeOf } from '../../../lib/utils';
+import useUser from '../../../lib/useUser';
 
 import FormFields from './FormFields';
 import Footer from './Footer';
 import Header from './Header';
 import LoginWrapper from './LoginWrapper';
 import FormStatus from './FormStatus';
+import useUICtx from '../../Context/useUICtx';
 
-const Index = () => {
+const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
-
+  const toast = useToast();
+  const { login } = useUICtx();
   const redirectTo = router.query.redirectTo
     ? (router.query.redirectTo as string)
-    : '/me';
+    : redirectToProp ?? '/me';
 
   const { setCookies } = useUser({
     redirectTo,
@@ -42,6 +44,17 @@ const Index = () => {
         setCookies(user, refreshToken);
         action.resetForm();
       }
+      // If login modal is open
+      if (login.isOpen) {
+        login.off();
+        toast({
+          title: `Successfully logged in`,
+          status: 'success',
+          isClosable: true,
+          duration: 1000,
+        });
+      }
+
       action.setSubmitting(false);
     } catch (error: any) {
       const { message, status } = error;

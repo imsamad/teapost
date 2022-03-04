@@ -13,10 +13,12 @@ export interface StoryDocument extends Document {
   isPublished: Boolean;
   isPublishedByAdmin: Boolean;
   author: UserDocument['_id'];
+  data: Object;
 }
 
 const storySchema = new Schema(
   {
+    data: Object,
     title: {
       type: String,
       trim: true,

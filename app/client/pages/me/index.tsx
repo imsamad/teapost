@@ -1,19 +1,19 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
 import { applyServerSideCookie } from 'next-universal-cookie';
-import React from 'react';
+
 import useUser from '../../lib/useUser';
 
 const Index = () => {
   const { user, logout } = useUser({ redirectTo: '/auth' });
   return (
-    <>
+    <Box maxW="md" mx="auto">
       <h1> {JSON.stringify(user, null, 4)} Profile</h1>
       <br />
       <br />
       <br />
       <Button onClick={() => logout()}> Logout </Button>
-    </>
+    </Box>
   );
 };
 

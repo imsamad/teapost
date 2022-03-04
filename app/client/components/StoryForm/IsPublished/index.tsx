@@ -12,12 +12,12 @@ const Index = () => {
   const sendRequestAndChangeValues = async () => {
     const {
       data, // @ts-ignore
-    } = await axios.put(`/story/published/${values.id}`, {
+    } = await axios.put(`/stories/published/${values.id}`, {
       // @ts-ignore
       isPublished: !values.isPublished,
     });
 
-    setFieldValue('isPublished', data.data.isPublished);
+    setFieldValue('isPublished', data.story.isPublished);
     setFieldTouched('isPublished', true);
   };
   const handleChange = async () => {

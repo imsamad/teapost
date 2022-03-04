@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const axiosArgs: AxiosRequestConfig = {
     method: 'POST',
-    url: process.env.API_URL + '/story',
+    url: process.env.API_URL + '/stories',
     headers: {
       authorization: `Bearer ${accessToken}`,
       'x-ref-token': refToken,

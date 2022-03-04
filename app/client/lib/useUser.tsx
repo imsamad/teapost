@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Router from 'next/router';
 
 import {
@@ -6,9 +6,10 @@ import {
   setCookies as setCookiesCustom,
   deleteCookies,
 } from './getUserFromCookie';
+import useAuthCtx from '../components/Context/useAuthCtx';
 
 const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
-  const { user, refreshToken } = getCookies();
+  const { user, refreshToken, setUser } = useAuthCtx();
 
   const setCookies = (
     userValue: any,
@@ -16,12 +17,21 @@ const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
     customRedirect?: string
   ) => {
     setCookiesCustom(userValue, refToken).finally(() => {
-      if (customRedirect || redirectTo)
-        Router.push(customRedirect || redirectTo);
+      setUser((pre: any) => ({
+        ...pre,
+        user: userValue,
+        refreshToken: refToken,
+      }));
+      if (customRedirect || redirectTo) {
+        const to = customRedirect || redirectTo;
+        Router.push(to);
+      }
     });
   };
 
   const logout = (customRedirect?: string) => {
+    setUser({ user: false, refreshToken: false });
+
     deleteCookies().finally(() => {
       if (customRedirect || redirectTo)
         Router.push(customRedirect || redirectTo);
@@ -29,14 +39,15 @@ const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
   };
 
   useEffect(() => {
-    if (!redirectTo) return;
-
-    if (
-      (redirectTo && !redirectToIfLoggedIn && !user) ||
-      (redirectToIfLoggedIn && user)
-    ) {
+    if (!redirectTo) {
+      return;
+    }
+    const firstCond = redirectTo && !redirectToIfLoggedIn && !user,
+      secondCond = redirectToIfLoggedIn && user;
+    if (firstCond || secondCond) {
       Router.push(redirectTo);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, redirectTo, redirectToIfLoggedIn]);
   return { user, setCookies, refreshToken, logout };
 };

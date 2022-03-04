@@ -26,6 +26,12 @@ router
     handleTags,
     createOrUpdateStory
   )
+  .put(
+    protect,
+    validateSchema(createStorySchema, true),
+    handleTags,
+    createOrUpdateStory
+  )
   .get(getAllStories);
 
 router

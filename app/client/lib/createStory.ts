@@ -13,12 +13,12 @@ export const submitStory = async (val: any) => {
     'additionalTags',
     'titleImage',
   ];
-  let storyObj: any = { isPublished: false };
+  let storyObj: any = { isPublished: val.isPublished };
   storyObjKey.forEach((key: string) => {
     if (val[key]?.length) storyObj[key] = val[key];
   });
   try {
-    const { data } = await axios.post('/story', { ...storyObj });
+    const { data } = await axios.post('/stories', { ...storyObj });
     return data;
   } catch (err: any) {
     throw err.response.data;
@@ -27,7 +27,7 @@ export const submitStory = async (val: any) => {
 
 export const changeSlug = async (reqBody: { id: string; slug: string }) => {
   try {
-    const { data } = await axios.put('/story/changeslug', {
+    const { data } = await axios.put('/stories/changeslug', {
       ...reqBody,
     });
     return data.data;

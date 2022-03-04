@@ -20,14 +20,13 @@ import {
 import { useField } from 'formik';
 import CustomError from '../../FormFields/CustomError';
 
-// @ts-ignore
-import axios from '#axios';
-
+import uploadImage from '../../../lib/uploadImage';
 import { BiImageAdd } from 'react-icons/bi';
 import { useState } from 'react';
+
 const File = () => {
   const [, meta, helpers] = useField('titleImage');
-  const [file, setFile] = useState<any>();
+  const [file, setFile] = useState<File>();
   const titleImage = meta.value;
 
   const isError = Boolean(meta.error && meta.touched);
@@ -38,20 +37,10 @@ const File = () => {
   const [isLoading, setIsLoading] = useBoolean(false);
 
   const handleUpload = async () => {
+    if (!file) return;
     setIsLoading.on();
-    const imageData = new FormData();
-    imageData.append('image', file);
-    try {
-      // @ts-ignore
-      const {
-        data: {
-          data: { imageUrl },
-        },
-      } = await axios.post('/image/upload', imageData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) {
       helpers.setValue(imageUrl);
       toast({
         title: 'Image uploaded',
@@ -61,7 +50,7 @@ const File = () => {
         isClosable: true,
       });
       setIsLoading.off();
-    } catch (err) {
+    } else {
       toast({
         title: 'Image uploading failed',
         position: 'bottom',
@@ -73,7 +62,8 @@ const File = () => {
     }
   };
   const oneMB = 1_000_000;
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
     const selectedFile = e.target.files[0];
 
     if (selectedFile.size < oneMB * 4) {
@@ -81,7 +71,7 @@ const File = () => {
       helpers.setError('');
       setFile(selectedFile);
     } else {
-      setFile('');
+      setFile(undefined);
       helpers.setTouched(true, false);
       helpers.setError('Max image size is 4Mb');
     }

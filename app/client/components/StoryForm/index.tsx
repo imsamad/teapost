@@ -15,10 +15,10 @@ const initValues = {
   tags: [],
   additionalTags: [],
   titleImage: '',
-  isPublished: false,
 };
 
 const Index = ({ story }: any) => {
+  // console.log('story ', story);
   const router = useRouter();
   useEffect(() => {
     const unloadCallback = (event: BeforeUnloadEvent) => {
@@ -48,7 +48,7 @@ const Index = ({ story }: any) => {
         const crtStorySlug = router.query.slug;
         actions.setSubmitting(true);
         const data = await submitStory(values);
-        console.log('data ', data);
+
         if (crtStorySlug !== data.story.slug) {
           router.push(`/me/story/write/${data.story.slug}`, undefined, {
             shallow: true,
@@ -60,11 +60,16 @@ const Index = ({ story }: any) => {
           ...initValues,
           ...data.story,
         });
+        // Object.keys(data.message).forEach((key: any) => {
+        //   actions.setFieldTouched(key, true, false);
+        // });
+        // actions.setErrors(data.message);
 
         saveToast('Saved Changes.');
       }}
     >
       {(formikProps: any) => {
+        // console.log('formikProps ', formikProps);
         return (
           <Form>
             <StoryForm />

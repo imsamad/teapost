@@ -1,6 +1,6 @@
 import { Flex, HStack, Link, Spacer } from '@chakra-ui/react';
 import { useField } from 'formik';
-import MyLink from '../MyLink';
+import MyLink from '../../MyLink';
 const Footer = () => {
   const [, { value: isRegister }, { setValue }] = useField('isRegister');
   return (

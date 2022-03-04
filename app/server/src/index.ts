@@ -40,7 +40,7 @@ app.use(
 app.use(express.static(path.join(__dirname, '../', 'public')));
 
 app.use('/api/v1/auth', authRtr);
-app.use('/api/v1/story', storyRtr);
+app.use('/api/v1/stories', storyRtr);
 app.use('/api/v1/tags', tagRtr);
 app.use('/api/v1/image', imageUploadRtr);
 

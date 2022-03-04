@@ -1,14 +1,8 @@
 import { ExternalLinkIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Collapse,
-  Link,
-  localStorageManager,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Collapse, Link, Text } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
 import React from 'react';
-import { typeOf } from '../../lib/utils';
+import { typeOf } from '../../../lib/utils';
 
 const FormStatus = () => {
   const { status } = useFormikContext();

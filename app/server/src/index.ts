@@ -44,9 +44,12 @@ app.use('/api/v1/stories', storyRtr);
 app.use('/api/v1/tags', tagRtr);
 app.use('/api/v1/image', imageUploadRtr);
 
-// app.get('/', (_req, res) => {
-//   res.send('Hello from TeaPost API...');
-// });
+app.get('/api/v1', (_req, res) => {
+  res.json({
+    dir: __dirname,
+    env: process.env,
+  });
+});
 
 app.use(notFound);
 app.use(errorHandler);

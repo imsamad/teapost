@@ -1,0 +1,16 @@
+version: '3'
+services:
+  backend:
+    build: .
+    image: registry.heroku.com/teapostdock/web:1
+    ports:
+      - 4000:4000
+    container_name: teapost-backend
+    env_file:
+      - ./config/.env
+# heroku apps:create <HEROKU-APP-NAME>
+# heroku container:login
+# docker build registry.heroku.com/<HEROKU-APP-NAME>/web
+# docker push registry.heroku.com/<HEROKU-APP-NAME>/web
+# heroku container:release web -a <HEROKU-APP-NAME>
+# heroku open -a <HEROKU-APP-NAME>

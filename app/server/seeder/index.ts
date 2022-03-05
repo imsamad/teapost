@@ -10,8 +10,10 @@ const setEnv = () =>
 
 import users from './data/users';
 import stories from './data/stories';
+import tags from './data/tags';
 
 import UserModel from '../src/models/UserModel';
+import TagModel from '../src/models/TagModel';
 import StoryModel from '../src/models/StoryModel';
 import dbConnect from '../src/db/connectDB';
 
@@ -19,6 +21,7 @@ const importData = async () => {
   try {
     await UserModel.create(users);
     await StoryModel.create(stories);
+    await TagModel.create(tags);
     console.log('data imported');
     process.exit(1);
   } catch (err) {
@@ -28,8 +31,10 @@ const importData = async () => {
 };
 const deleteData = async () => {
   try {
-    await UserModel.deleteMany(users);
-    await StoryModel.deleteMany(stories);
+    await UserModel.deleteMany();
+    await StoryModel.deleteMany();
+    await TagModel.deleteMany();
+    console.log('data deleted ');
     process.exit(1);
   } catch (err) {
     console.log('delete err ', err);
@@ -38,16 +43,14 @@ const deleteData = async () => {
 };
 setEnv()
   .then(() => {
-    dbConnect();
+    dbConnect(process.env.MONGO_URI);
     return true;
   })
   .then((res) => {
     if (!res) process.exit(1);
     if (process.argv[2] === '-i') {
-      console.log('Import');
       importData();
     } else if (process.argv[2] === '-d') {
-      console.log('Delete');
       deleteData();
     }
   });

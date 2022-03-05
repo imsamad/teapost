@@ -28,7 +28,7 @@ export const trimExtra = (
   let splitted = str.split(' ');
   let filtered = splitted.filter((val: string) => val !== '');
   let joined = filtered.join(join);
-  return joined.length > length ? true : false;
+  return joined.length >= length ? true : false;
 };
 
 export type ErrorResponseType = {

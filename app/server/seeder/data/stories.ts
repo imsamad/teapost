@@ -2,19 +2,8 @@ const stories = [
   {
     _id: '6221becd44eaf2d6fc67b984',
     slug: 'mirqnqmtrrzltqs6_6gds',
-    tags: [
-      {
-        _id: '6221bf0044eaf2d6fc67b995',
-        tag: 'politics',
-        id: '6221bf0044eaf2d6fc67b995',
-      },
-    ],
-    author: {
-      _id: '6221be7444eaf2d6fc67b964',
-      username: 'imsamad',
-      email: 'imsamad00@gmail.com',
-      id: '6221be7444eaf2d6fc67b964',
-    },
+    tags: ['6221bf0044eaf2d6fc67b995'],
+    author: '6221be7444eaf2d6fc67b964',
     isPublished: true,
     createdAt: '2022-03-04T07:25:01.878Z',
     updatedAt: '2022-03-04T07:26:39.220Z',
@@ -31,19 +20,8 @@ const stories = [
   {
     _id: '6221bf3c44eaf2d6fc67b9c5',
     slug: 'mirqnqmtrrzltqs6_',
-    tags: [
-      {
-        _id: '6221bf8144eaf2d6fc67b9ed',
-        tag: 'psychology',
-        id: '6221bf8144eaf2d6fc67b9ed',
-      },
-    ],
-    author: {
-      _id: '6221be7444eaf2d6fc67b964',
-      username: 'imsamad',
-      email: 'imsamad00@gmail.com',
-      id: '6221be7444eaf2d6fc67b964',
-    },
+    tags: ['6221bf8144eaf2d6fc67b9ed'],
+    author: '6221be7444eaf2d6fc67b964',
     isPublished: true,
     createdAt: '2022-03-04T07:26:52.014Z',
     updatedAt: '2022-03-04T07:28:23.311Z',
@@ -58,19 +36,8 @@ const stories = [
   {
     _id: '6221bfde44eaf2d6fc67ba2a',
     slug: '87mmwekellcu-nex4uec7',
-    tags: [
-      {
-        _id: '6221c01544eaf2d6fc67ba46',
-        tag: 'defense',
-        id: '6221c01544eaf2d6fc67ba46',
-      },
-    ],
-    author: {
-      _id: '6221be8f44eaf2d6fc67b96a',
-      username: 'username1',
-      email: 'username1@gmail.com',
-      id: '6221be8f44eaf2d6fc67b96a',
-    },
+    tags: ['6221c01544eaf2d6fc67ba46'],
+    author: '6221be8f44eaf2d6fc67b96a',
     isPublished: true,
     createdAt: '2022-03-04T07:29:34.322Z',
     updatedAt: '2022-03-04T07:31:20.871Z',
@@ -86,19 +53,8 @@ const stories = [
   {
     _id: '6221c05d44eaf2d6fc67ba83',
     slug: '87mmwekellc',
-    tags: [
-      {
-        _id: '6221c0a144eaf2d6fc67baaa',
-        tag: 'geopolitics',
-        id: '6221c0a144eaf2d6fc67baaa',
-      },
-    ],
-    author: {
-      _id: '6221be8f44eaf2d6fc67b96a',
-      username: 'username1',
-      email: 'username1@gmail.com',
-      id: '6221be8f44eaf2d6fc67b96a',
-    },
+    tags: ['6221c0a144eaf2d6fc67baaa'],
+    author: '6221be8f44eaf2d6fc67b96a',
     isPublished: true,
     createdAt: '2022-03-04T07:31:41.867Z',
     updatedAt: '2022-03-04T07:33:15.369Z',
@@ -115,19 +71,8 @@ const stories = [
   {
     _id: '6221c12244eaf2d6fc67baf1',
     slug: 'pg6-epuyzisnstrgiyo1w',
-    tags: [
-      {
-        _id: '6221c15c44eaf2d6fc67bb1b',
-        tag: 'society',
-        id: '6221c15c44eaf2d6fc67bb1b',
-      },
-    ],
-    author: {
-      _id: '6221be9844eaf2d6fc67b96f',
-      username: 'username2',
-      email: 'username2@gmail.com',
-      id: '6221be9844eaf2d6fc67b96f',
-    },
+    tags: ['6221c15c44eaf2d6fc67bb1b'],
+    author: '6221be9844eaf2d6fc67b96f',
     isPublished: true,
     createdAt: '2022-03-04T07:34:58.870Z',
     updatedAt: '2022-03-04T07:35:57.525Z',
@@ -142,19 +87,8 @@ const stories = [
   {
     _id: '6221c1b244eaf2d6fc67bb48',
     slug: 'xydlq9duptxg64yhn8mtc',
-    tags: [
-      {
-        _id: '6221c1ce44eaf2d6fc67bb5e',
-        tag: 'leadership',
-        id: '6221c1ce44eaf2d6fc67bb5e',
-      },
-    ],
-    author: {
-      _id: '6221bea144eaf2d6fc67b974',
-      username: 'username3',
-      email: 'username3@gmail.com',
-      id: '6221bea144eaf2d6fc67b974',
-    },
+    tags: ['6221c1ce44eaf2d6fc67bb5e'],
+    author: '6221bea144eaf2d6fc67b974',
     isPublished: true,
     createdAt: '2022-03-04T07:37:22.677Z',
     updatedAt: '2022-03-04T07:38:40.941Z',
@@ -169,19 +103,8 @@ const stories = [
   {
     _id: '6221c22f44eaf2d6fc67bba3',
     slug: 'xydlq9duptxg6',
-    tags: [
-      {
-        _id: '6221c26a44eaf2d6fc67bbc8',
-        tag: 'health',
-        id: '6221c26a44eaf2d6fc67bbc8',
-      },
-    ],
-    author: {
-      _id: '6221bea144eaf2d6fc67b974',
-      username: 'username3',
-      email: 'username3@gmail.com',
-      id: '6221bea144eaf2d6fc67b974',
-    },
+    tags: ['6221c26a44eaf2d6fc67bbc8'],
+    author: '6221bea144eaf2d6fc67b974',
     isPublished: true,
     createdAt: '2022-03-04T07:39:27.154Z',
     updatedAt: '2022-03-04T07:40:34.804Z',

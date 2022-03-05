@@ -1,5 +1,4 @@
-// @ts-ignore
-import axios from '#axios';
+import axios from './axios';
 
 export interface LogInFields {
   isRegister: boolean;
@@ -14,9 +13,9 @@ export interface UserRegisterFields extends LogInFields {
 
 export const signUp = async (values: UserRegisterFields) => {
   try {
-    const endPoint = values.isRegister ? `/auth/register` : `/auth/login`;
+    const apiUrl = values.isRegister ? `/auth/register` : `/auth/login`;
 
-    const { data } = await axios.post(endPoint, values);
+    const { data } = await axios.post(apiUrl, values);
 
     return data;
   } catch (err: any) {

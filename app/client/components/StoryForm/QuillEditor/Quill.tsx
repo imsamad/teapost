@@ -31,8 +31,7 @@ const Index = () => {
         magicUrl: true,
       },
       placeholder: 'Write an awesome story...',
-    }); // @ts-ignore
-    console.log('values.body ', values.body);
+    });
     // @ts-ignore
     q.clipboard.dangerouslyPasteHTML(values.body);
     setQuill(q);
@@ -73,7 +72,6 @@ const Index = () => {
     if (quill) {
       quill.on('text-change', () => {
         setFieldValue('body', quill.root.innerHTML);
-        console.log('quill.root.innerHTML ', quill.root.innerHTML);
       });
       quill.getModule('toolbar').addHandler('image', selectLocalImage);
     }

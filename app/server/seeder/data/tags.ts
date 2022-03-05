@@ -1,0 +1,60 @@
+const tags = [
+  {
+    _id: '6221bf0044eaf2d6fc67b995',
+    tag: 'politics',
+    createdAt: '2022-03-04T07:25:52.575Z',
+    updatedAt: '2022-03-04T07:25:52.575Z',
+    __v: 0,
+    id: '6221bf0044eaf2d6fc67b995',
+  },
+  {
+    _id: '6221bf8144eaf2d6fc67b9ed',
+    tag: 'psychology',
+    createdAt: '2022-03-04T07:28:01.218Z',
+    updatedAt: '2022-03-04T07:28:01.218Z',
+    __v: 0,
+    id: '6221bf8144eaf2d6fc67b9ed',
+  },
+  {
+    _id: '6221c01544eaf2d6fc67ba46',
+    tag: 'defense',
+    createdAt: '2022-03-04T07:30:29.415Z',
+    updatedAt: '2022-03-04T07:30:29.415Z',
+    __v: 0,
+    id: '6221c01544eaf2d6fc67ba46',
+  },
+  {
+    _id: '6221c0a144eaf2d6fc67baaa',
+    tag: 'geopolitics',
+    createdAt: '2022-03-04T07:32:49.288Z',
+    updatedAt: '2022-03-04T07:32:49.288Z',
+    __v: 0,
+    id: '6221c0a144eaf2d6fc67baaa',
+  },
+  {
+    _id: '6221c15c44eaf2d6fc67bb1b',
+    tag: 'society',
+    createdAt: '2022-03-04T07:35:56.266Z',
+    updatedAt: '2022-03-04T07:35:56.266Z',
+    __v: 0,
+    id: '6221c15c44eaf2d6fc67bb1b',
+  },
+  {
+    _id: '6221c1ce44eaf2d6fc67bb5e',
+    tag: 'leadership',
+    createdAt: '2022-03-04T07:37:50.640Z',
+    updatedAt: '2022-03-04T07:37:50.640Z',
+    __v: 0,
+    id: '6221c1ce44eaf2d6fc67bb5e',
+  },
+  {
+    _id: '6221c26a44eaf2d6fc67bbc8',
+    tag: 'health',
+    createdAt: '2022-03-04T07:40:26.123Z',
+    updatedAt: '2022-03-04T07:40:26.123Z',
+    __v: 0,
+    id: '6221c26a44eaf2d6fc67bbc8',
+  },
+];
+
+export default tags;

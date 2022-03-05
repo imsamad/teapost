@@ -13,7 +13,7 @@ const Index = ({
     <Box p={[0, 4]}>
       <HStack justifyContent="center">
         <Icon as={GiQuill} />
-        <Heading textAlign="center" mx="2" size="lg">
+        <Heading textAlign="center" m="2" size="lg">
           Write a story
         </Heading>
       </HStack>

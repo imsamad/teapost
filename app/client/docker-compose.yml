@@ -1,0 +1,7 @@
+version: '3'
+services:
+  teaspost-client:
+    ports:
+      - '3000:3000'
+    image: teapost-client
+    container_name: teapost-client

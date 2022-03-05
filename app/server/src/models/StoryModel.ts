@@ -14,6 +14,8 @@ export interface StoryDocument extends Document {
   isPublishedByAdmin: Boolean;
   author: UserDocument['_id'];
   data: Object;
+  like: number;
+  dislike: number;
 }
 
 const storySchema = new Schema(
@@ -69,6 +71,8 @@ const storySchema = new Schema(
       default: true,
       select: false,
     },
+    like: { type: Number, default: 0 },
+    dislike: { type: Number, default: 0 },
   },
   {
     timestamps: true,

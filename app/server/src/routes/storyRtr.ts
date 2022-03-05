@@ -4,6 +4,7 @@ import {
   changeSlug,
   createOrUpdateStory,
   getAllStories,
+  gradeStory,
   handleTags,
   publishedStory,
 } from '../controller/storyCtrl';
@@ -13,6 +14,7 @@ import validateSchema from '../middleware/validateSchema';
 import {
   changeSlugSchema,
   createStorySchema,
+  gradeStorySchema,
   publishedStorySchema,
 } from '../schema/story';
 
@@ -42,7 +44,16 @@ router
   .route('/published/:storyId')
   .put(protect, validateSchema(publishedStorySchema), publishedStory);
 
+router
+  .route('/like/:storyId')
+  .put(protect, validateSchema(gradeStorySchema), gradeStory(true));
+
+router
+  .route('/dislike/:storyId')
+  .put(protect, validateSchema(gradeStorySchema), gradeStory(false));
+
 export default router;
+
 /*
    (req: Request, _res: Response, next: NextFunction) => {
     console.log(

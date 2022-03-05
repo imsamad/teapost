@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
 import { asyncHandler, ErrorResponse, validateYupSchema } from '../lib/utils';
+import GradeModel from '../models/LikeModel';
 import StoryModel, { StoryDocument } from '../models/StoryModel';
 import TagModel, { TagModelDocument } from '../models/TagModel';
 import { isAbleToPublished } from '../schema/story';
@@ -107,7 +108,7 @@ export const getAllStories = asyncHandler(
     const query: any = req.query;
 
     const stories = await StoryModel.find({
-      isPublished: true,
+      // isPublished: true,
       ...query,
     }).populate([
       {
@@ -224,3 +225,90 @@ export const publishedStory = asyncHandler(
     }
   }
 );
+
+// @desc      Like/Dislike story
+// @route     PUT /api/v1/story/like/:storyId
+// @route     PUT /api/v1/story/dislike/:storyId
+// @access    Auth [Reader]
+export const gradeStory = (isLike = true) =>
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const storyId = req.params.storyId as StoryDocument['id'];
+    let story = await StoryModel.findById(storyId);
+
+    if (!story) return next(ErrorResponse(400, 'Resource not found'));
+    // @ts-ignore
+    let grade = await GradeModel.findOne({ user: req.user });
+    if (!grade) {
+      let newGrade = new GradeModel({
+        // @ts-ignore
+        user: req.user,
+      });
+      console.log('newGrade ', newGrade);
+      if (isLike) {
+        newGrade.likeStories.push(storyId);
+        story.like++;
+      } else {
+        newGrade.dislikeStories.push(storyId);
+        story.dislike++;
+      }
+
+      story = await story.save();
+      newGrade = await newGrade.save();
+      return res.json({
+        status: 'ok',
+        // grade: newGrade,
+        story,
+      });
+    }
+    if (isLike) {
+      const alreadyLiked = grade.likeStories.indexOf(storyId);
+      if (alreadyLiked > -1) {
+        grade.likeStories.splice(alreadyLiked, 1);
+        story.like--;
+        grade = await grade.save();
+        story = await story.save();
+        return res.json({
+          status: 'ok',
+          // grade,
+          story,
+        });
+      }
+
+      const hasBeenDisliked = grade.dislikeStories.indexOf(storyId);
+
+      if (hasBeenDisliked > -1) {
+        grade.dislikeStories.splice(hasBeenDisliked, 1);
+        story.dislike--;
+      }
+      grade.likeStories.push(storyId);
+      story.like++;
+    } else if (!isLike) {
+      const alreadyDisliked = grade.dislikeStories.indexOf(storyId);
+      if (alreadyDisliked > -1) {
+        grade.dislikeStories.splice(alreadyDisliked, 1);
+        story.dislike--;
+        grade = await grade.save();
+        story = await story.save();
+        return res.json({
+          status: 'ok',
+          // grade,
+          story,
+        });
+      }
+
+      const hasBeenLiked = grade.likeStories.indexOf(storyId);
+      if (hasBeenLiked > -1) {
+        grade.likeStories.splice(hasBeenLiked, 1);
+        story.like--;
+      }
+      grade.dislikeStories.push(storyId);
+      story.dislike++;
+    }
+    story = await story.save();
+    grade = await grade.save();
+    res.json({
+      status: 'ok',
+      // grade,
+      story,
+    });
+  });

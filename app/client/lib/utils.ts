@@ -16,6 +16,7 @@ export const typeOf = (
   val: any,
   type: string | 'string' | 'array' | 'object'
 ) => val?.constructor?.name?.toLowerCase() === type.toLowerCase();
+
 export const validateYupSchema = async (
   schema: AnySchema,
   data: any,

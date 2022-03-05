@@ -77,6 +77,18 @@ export const createStorySchema = object({
   ),
 });
 
+export const gradeStorySchema = object({
+  params: object({
+    storyId: string()
+      .label('storyId')
+      .required('Story Id is required')
+      .typeError('Story Id must be string')
+      .test('storyId', 'StoryId is not valid id.', (val) =>
+        isValidObjectId(val)
+      ),
+  }),
+});
+
 const stringSchema = (label: string, minLength: number, maxLength: number) => {
   let minLengthMsg = `Min length for ${label} is ${minLength} chars`;
   let maxLengthMsg = `Max length ${label} is ${maxLength} chars`;

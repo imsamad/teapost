@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
-import { isValidObjectId } from 'mongoose';
-import { asyncHandler, ErrorResponse, validateYupSchema } from '../lib/utils';
-import GradeModel from '../models/LikeModel';
-import StoryModel, { StoryDocument } from '../models/StoryModel';
-import TagModel, { TagModelDocument } from '../models/TagModel';
-import { isAbleToPublished } from '../schema/story';
+import { Request, Response, NextFunction } from "express";
+import { isValidObjectId } from "mongoose";
+import { asyncHandler, ErrorResponse, validateYupSchema } from "../lib/utils";
+import GradeModel from "../models/GradeModel";
+import StoryModel, { StoryDocument } from "../models/StoryModel";
+import TagModel, { TagModelDocument } from "../models/TagModel";
+import { isAbleToPublished } from "../schema/story";
 
 // @desc      Create a story
 // @route     POST /api/v1/story
@@ -22,7 +22,7 @@ export const createOrUpdateStory = asyncHandler(
       let extraMessage: { [name: string]: string[] } = {};
       // @ts-ignore
       if (storyExist.author.toString() !== req.user) {
-        return next(ErrorResponse(400, 'this slug already exist'));
+        return next(ErrorResponse(400, "this slug already exist"));
       }
 
       var { id, slug, isPublished, ...rest } = req.body;
@@ -37,13 +37,13 @@ export const createOrUpdateStory = asyncHandler(
           slug: req.body.slug,
         });
         if (storyExistWithNewSlug) {
-          extraMessage['slug'] = ['This slug already exist.'];
+          extraMessage["slug"] = ["This slug already exist."];
         } else storyExist.slug = req.body.slug;
       }
 
       // explicit
       if (
-        typeof req.body.isPublished !== 'undefined' &&
+        typeof req.body.isPublished !== "undefined" &&
         req.body.isPublished === false
       )
         storyExist.isPublished = false;
@@ -64,7 +64,7 @@ export const createOrUpdateStory = asyncHandler(
 );
 
 const sendResponse = async (
-  isPublished: StoryDocument['isPublished'],
+  isPublished: StoryDocument["isPublished"],
   story: StoryDocument,
   res: Response,
   extraMessage?: any
@@ -75,7 +75,7 @@ const sendResponse = async (
       story.isPublished = true;
       story = await story.save();
       return res.status(200).json({
-        status: 'ok',
+        status: "ok",
         story: story,
         message: extraMessage,
       });
@@ -84,7 +84,7 @@ const sendResponse = async (
       story = await story.save();
 
       return res.status(200).json({
-        status: 'ok',
+        status: "ok",
         story,
         message: err,
       });
@@ -93,7 +93,7 @@ const sendResponse = async (
     story = await story.save();
 
     return res.status(200).json({
-      status: 'ok',
+      status: "ok",
       story,
       message: extraMessage,
     });
@@ -112,17 +112,17 @@ export const getAllStories = asyncHandler(
       ...query,
     }).populate([
       {
-        path: 'author',
-        select: 'username email',
+        path: "author",
+        select: "username email",
       },
       {
-        path: 'tags',
-        select: 'tag',
+        path: "tags",
+        select: "tag",
       },
     ]);
 
     return res.status(200).json({
-      status: 'ok',
+      status: "ok",
       stories,
     });
   }
@@ -135,7 +135,7 @@ export const handleTags = asyncHandler(
       return next();
     }
 
-    let alreadyExistedTags: StoryDocument['_id'] = [];
+    let alreadyExistedTags: StoryDocument["_id"] = [];
     let newTags: any = [];
 
     req.body?.tags?.forEach((tag: string) => {
@@ -147,7 +147,7 @@ export const handleTags = asyncHandler(
       });
 
     req.body.tags = [];
-    req.body.additionalTags = '';
+    req.body.additionalTags = "";
     if (!newTags.length) {
       req.body.tags = alreadyExistedTags;
       return next();
@@ -190,14 +190,14 @@ export const changeSlug = asyncHandler(
       return next(ErrorResponse(400, `Story not found for ${req.body.id} `));
     if (req.body.slug === story.slug)
       return res.status(200).json({
-        status: 'ok',
+        status: "ok",
         story,
       });
 
     story.slug = req.body.slug;
     await story.save();
     return res.status(200).json({
-      status: 'ok',
+      status: "ok",
       story,
     });
   }
@@ -211,7 +211,7 @@ export const publishedStory = asyncHandler(
     let story = await StoryModel.findById(req.params.storyId);
 
     if (!story)
-      return next(ErrorResponse(400, 'No resources found with this id.'));
+      return next(ErrorResponse(400, "No resources found with this id."));
 
     try {
       await validateYupSchema(isAbleToPublished, story);
@@ -219,7 +219,7 @@ export const publishedStory = asyncHandler(
       story.isPublished = req.body.isPublished ?? true;
       story = await story.save();
 
-      return res.status(200).json({ status: 'ok', story });
+      return res.status(200).json({ status: "ok", story });
     } catch (err: any) {
       return next(ErrorResponse(400, err));
     }
@@ -232,10 +232,10 @@ export const publishedStory = asyncHandler(
 // @access    Auth [Reader]
 export const gradeStory = (isLike = true) =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const storyId = req.params.storyId as StoryDocument['id'];
+    const storyId = req.params.storyId as StoryDocument["id"];
     let story = await StoryModel.findById(storyId);
 
-    if (!story) return next(ErrorResponse(400, 'Resource not found'));
+    if (!story) return next(ErrorResponse(400, "Resource not found"));
     // @ts-ignore
     let grade = await GradeModel.findOne({ user: req.user });
     if (!grade) {
@@ -243,7 +243,7 @@ export const gradeStory = (isLike = true) =>
         // @ts-ignore
         user: req.user,
       });
-      console.log('newGrade ', newGrade);
+      console.log("newGrade ", newGrade);
       if (isLike) {
         newGrade.likeStories.push(storyId);
         story.like++;
@@ -255,7 +255,7 @@ export const gradeStory = (isLike = true) =>
       story = await story.save();
       newGrade = await newGrade.save();
       return res.json({
-        status: 'ok',
+        status: "ok",
         // grade: newGrade,
         story,
       });
@@ -268,7 +268,7 @@ export const gradeStory = (isLike = true) =>
         grade = await grade.save();
         story = await story.save();
         return res.json({
-          status: 'ok',
+          status: "ok",
           // grade,
           story,
         });
@@ -290,7 +290,7 @@ export const gradeStory = (isLike = true) =>
         grade = await grade.save();
         story = await story.save();
         return res.json({
-          status: 'ok',
+          status: "ok",
           // grade,
           story,
         });
@@ -307,7 +307,7 @@ export const gradeStory = (isLike = true) =>
     story = await story.save();
     grade = await grade.save();
     res.json({
-      status: 'ok',
+      status: "ok",
       // grade,
       story,
     });

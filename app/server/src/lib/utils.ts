@@ -1,32 +1,32 @@
-import { NextFunction, Request, Response } from 'express';
-import slugify from 'slugify';
-import crypto from 'crypto';
-import path from 'path';
-import { nanoid } from 'nanoid';
-import { AnySchema } from 'yup';
+import { NextFunction, Request, Response } from "express";
+import slugify from "slugify";
+import crypto from "crypto";
+import path from "path";
+import { nanoid } from "nanoid";
+import { AnySchema } from "yup";
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
 export const randomBytes = (num = 20) =>
-  crypto.randomBytes(num).toString('hex');
+  crypto.randomBytes(num).toString("hex");
 
 export const createHash = (str: string) =>
-  crypto.createHash('sha256').update(str).digest('hex');
+  crypto.createHash("sha256").update(str).digest("hex");
 
 export const typeOf = (
   val: any,
-  type: string | 'string' | 'array' | 'object'
+  type: string | "string" | "array" | "object"
 ) => val.constructor.name.toLowerCase() === type.toLowerCase();
 
 export const trimExtra = (
   str: string | any,
   length: number,
-  join = ' '
+  join = " "
 ): boolean => {
   if (!str) return false;
-  let splitted = str.split(' ');
-  let filtered = splitted.filter((val: string) => val !== '');
+  let splitted = str.split(" ");
+  let filtered = splitted.filter((val: string) => val !== "");
   let joined = filtered.join(join);
   return joined.length >= length ? true : false;
 };
@@ -61,8 +61,9 @@ export const validateYupSchema = async (
   try {
     const res = await schema.validate(data, { abortEarly });
     if (res) return true;
-    else throw new Error('Provide proper data');
+    else throw new Error("Provide proper data");
   } catch (yupError: any) {
+    console.log("yupError ", yupError);
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
 
@@ -114,7 +115,7 @@ export const validateYupSchema = async (
       });
     }
 
-    throw Object.keys(finalError).length ? finalError : 'Provide proper data';
+    throw Object.keys(finalError).length ? finalError : "Provide proper data";
   }
 };
 
@@ -125,10 +126,10 @@ export const saveImageLocally = async (file: any, appUrl: string) => {
 
     const savePath = path.join(
       __dirname,
-      '../../',
-      'public',
-      'uploads',
-      'image',
+      "../../",
+      "public",
+      "uploads",
+      "image",
       fileName
     );
 

@@ -1,31 +1,31 @@
-import { Schema, model, Document } from 'mongoose';
-import { StoryDocument } from './StoryModel';
-import { UserDocument } from './UserModel';
+import { Schema, model, Document } from "mongoose";
+import { StoryDocument } from "./StoryModel";
+import { UserDocument } from "./UserModel";
 
 export interface GradeDocument extends Document {
-  user: UserDocument['id'];
-  likeStories: StoryDocument['id'][];
-  dislikeStories: StoryDocument['id'][];
+  user: UserDocument["_id"];
+  likeStories: StoryDocument["_id"][];
+  dislikeStories: StoryDocument["_id"][];
 }
 
 const gradeSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      required: [true, 'User is required.'],
-      ref: 'User',
+      required: [true, "User is required."],
+      ref: "User",
       unique: true,
     },
     likeStories: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Story',
+        ref: "Story",
       },
     ],
     dislikeStories: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Story',
+        ref: "Story",
       },
     ],
   },
@@ -36,6 +36,6 @@ const gradeSchema = new Schema(
   }
 );
 
-const GradeModel = model<GradeDocument>('Grade', gradeSchema);
+const GradeModel = model<GradeDocument>("Grade", gradeSchema);
 
 export default GradeModel;

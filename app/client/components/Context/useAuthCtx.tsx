@@ -1,15 +1,16 @@
-import React, { createContext, useContext, useState } from 'react';
-import { getCookies } from '../../lib/getUserFromCookie';
+import React, { createContext, useContext, useState } from "react";
+import { getCookies } from "../../lib/getUserFromCookie";
 
-const AuthCtx = createContext<{
-  user: any;
-  refreshToken: string;
-  setUser?: any;
-}>(getCookies());
+const AuthCtx = createContext<
+  Partial<{
+    user: any;
+    refreshToken: string;
+    setUser?: any;
+  }>
+>(getCookies());
 
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const [{ user, refreshToken }, setUser] = useState<any>(getCookies());
-
   return (
     <AuthCtx.Provider value={{ user, refreshToken, setUser }}>
       {children}

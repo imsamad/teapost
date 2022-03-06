@@ -1,9 +1,10 @@
-import { Button } from '@chakra-ui/react';
+import { Button } from "@chakra-ui/react";
 
-import useAuthCtx from '../Context/useAuthCtx';
-import MyLink from '../MyLink';
+import useAuthCtx from "../Context/useAuthCtx";
+import MyLink from "../MyLink";
 
 const LogInBtn = () => {
+  console.log("LogInBtn");
   const { user } = useAuthCtx();
   return user ? (
     <MyLink href="/me">

@@ -1,24 +1,46 @@
-import { Button } from "@chakra-ui/react";
+import {
+  Button,
+  Menu,
+  MenuButton,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
+import useUser from "../../lib/useUser";
+import { useUICtx } from "../Context";
 
 import useAuthCtx from "../Context/useAuthCtx";
 import MyLink from "../MyLink";
-
+import { RiLogoutCircleRLine } from "react-icons/ri";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 const LogInBtn = () => {
-  console.log("LogInBtn");
-  const { user } = useAuthCtx();
+  const { user, logout } = useUser();
+  const { login } = useUICtx();
   return user ? (
-    <MyLink href="/me">
-      <Button size="md" mx={[1, 4]}>
+    <Menu>
+      <MenuButton mx={[1, 4]} as={Button} rightIcon={<ChevronDownIcon />}>
         Profile
-      </Button>
-    </MyLink>
+      </MenuButton>
+      <MenuList>
+        <MenuGroup title="Profile">
+          <MyLink href="/me">
+            <MenuItem>My Account </MenuItem>
+          </MyLink>
+
+          <MenuItem
+            onClick={() => logout()}
+            icon={<RiLogoutCircleRLine />}
+            color="red.500"
+          >
+            Logout
+          </MenuItem>
+        </MenuGroup>
+      </MenuList>
+    </Menu>
   ) : (
-    <MyLink href="/auth">
-      <Button size="md" mx={[1, 4]}>
-        Login
-      </Button>
-    </MyLink>
+    <Button size="md" mx={[1, 4]} onClick={() => login.onOpen()}>
+      Login
+    </Button>
   );
 };
-
 export default LogInBtn;

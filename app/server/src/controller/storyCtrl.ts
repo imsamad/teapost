@@ -264,7 +264,7 @@ export const gradeStory = (isLike = true) =>
       const alreadyLiked = grade.likeStories.indexOf(storyId);
       if (alreadyLiked > -1) {
         grade.likeStories.splice(alreadyLiked, 1);
-        story.like--;
+        story.like = story.like <= 1 ? 0 : story.like - 1;
         grade = await grade.save();
         story = await story.save();
         return res.json({
@@ -278,7 +278,7 @@ export const gradeStory = (isLike = true) =>
 
       if (hasBeenDisliked > -1) {
         grade.dislikeStories.splice(hasBeenDisliked, 1);
-        story.dislike--;
+        story.dislike = story.dislike <= 1 ? 0 : story.dislike - 1;
       }
       grade.likeStories.push(storyId);
       story.like++;
@@ -286,12 +286,12 @@ export const gradeStory = (isLike = true) =>
       const alreadyDisliked = grade.dislikeStories.indexOf(storyId);
       if (alreadyDisliked > -1) {
         grade.dislikeStories.splice(alreadyDisliked, 1);
-        story.dislike--;
+        story.dislike = story.dislike <= 1 ? 0 : story.dislike - 1;
         grade = await grade.save();
         story = await story.save();
         return res.json({
           status: "ok",
-          // grade,
+
           story,
         });
       }
@@ -299,7 +299,7 @@ export const gradeStory = (isLike = true) =>
       const hasBeenLiked = grade.likeStories.indexOf(storyId);
       if (hasBeenLiked > -1) {
         grade.likeStories.splice(hasBeenLiked, 1);
-        story.like--;
+        story.like = story.like <= 1 ? 0 : story.like - 1;
       }
       grade.dislikeStories.push(storyId);
       story.dislike++;

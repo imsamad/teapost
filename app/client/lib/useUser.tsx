@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import Router from 'next/router';
+import { useEffect } from "react";
+import Router from "next/router";
 
 import {
-  getCookies,
   setCookies as setCookiesCustom,
   deleteCookies,
-} from './getUserFromCookie';
-import useAuthCtx from '../components/Context/useAuthCtx';
+} from "./getUserFromCookie";
 
-const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
+import { useAuthCtx } from "../components/Context";
+
+const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
   const { user, refreshToken, setUser } = useAuthCtx();
 
   const setCookies = (

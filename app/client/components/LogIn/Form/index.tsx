@@ -1,18 +1,19 @@
-import { Button, useToast } from '@chakra-ui/react';
-import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
-import { useRouter } from 'next/router';
+import { Button, useToast } from "@chakra-ui/react";
+import { Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { useRouter } from "next/router";
 
-import { logInSchema } from '../../../lib/Schema/signInForm';
-import { signUp } from '../../../lib/signUp';
-import { typeOf } from '../../../lib/utils';
-import useUser from '../../../lib/useUser';
+import { logInSchema } from "../../../lib/Schema/signInForm";
+import { signUp } from "../../../lib/signUp";
+import { typeOf } from "../../../lib/utils";
+import useUser from "../../../lib/useUser";
 
-import FormFields from './FormFields';
-import Footer from './Footer';
-import Header from './Header';
-import LoginWrapper from './LoginWrapper';
-import FormStatus from './FormStatus';
-import useUICtx from '../../Context/useUICtx';
+import FormFields from "./FormFields";
+import Footer from "./Footer";
+import Header from "./Header";
+import LoginWrapper from "./LoginWrapper";
+import FormStatus from "./FormStatus";
+import useUICtx from "../../Context/useUICtx";
+import { useSWRConfig } from "swr";
 
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
@@ -20,13 +21,13 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const { login } = useUICtx();
   const redirectTo = router.query.redirectTo
     ? (router.query.redirectTo as string)
-    : redirectToProp ?? '/me';
+    : redirectToProp ?? "/me";
 
   const { setCookies } = useUser({
     redirectTo,
     redirectToIfLoggedIn: true,
   });
-
+  const { mutate } = useSWRConfig();
   const handleSubmit = async (values: any, action: FormikHelpers<any>) => {
     action.setStatus(false);
     action.setSubmitting(true);
@@ -43,13 +44,14 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
       } else if (user || refreshToken) {
         setCookies(user, refreshToken);
         action.resetForm();
+        mutate(`${process.env.NEXT_PUBLIC_API_URL}/profile/${user.id}`);
       }
       // If login modal is open
       if (login.isOpen) {
-        login.off();
+        login.onClose();
         toast({
           title: `Successfully logged in`,
-          status: 'success',
+          status: "success",
           isClosable: true,
           duration: 1000,
         });
@@ -59,10 +61,10 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     } catch (error: any) {
       const { message, status } = error;
 
-      if (typeOf(error, 'string') || typeOf(error, 'array')) {
+      if (typeOf(error, "string") || typeOf(error, "array")) {
         action.setStatus({
-          status: status || 'error',
-          message: message || error || 'Invalid data',
+          status: status || "error",
+          message: message || error || "Invalid data",
         });
       } else {
         action.setErrors(message);
@@ -75,10 +77,10 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     <Formik
       initialValues={{
         isRegister: false,
-        username: 'imsamad',
-        email: 'imsamad00@gmail.com',
-        password: 'Password@1206',
-        passwordConfirmation: 'Password@1206',
+        username: "imsamad",
+        email: "imsamad00@gmail.com",
+        password: "Password@1206",
+        passwordConfirmation: "Password@1206",
       }}
       validationSchema={logInSchema}
       onSubmit={handleSubmit}
@@ -96,7 +98,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
                 colorScheme="blue"
                 size="sm"
               >
-                {formikProps.values.isRegister ? 'Register' : 'Log In'}
+                {formikProps.values.isRegister ? "Register" : "Log In"}
               </Button>
               <Footer />
             </LoginWrapper>

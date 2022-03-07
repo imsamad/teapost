@@ -18,6 +18,7 @@ export const getProfile = asyncHandler(
 
     return res.json({
       status: "ok",
+      user: user,
       likeStories: grade?.likeStories ?? [],
       dislikeStories: grade?.dislikeStories ?? [],
     });

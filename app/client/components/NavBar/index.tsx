@@ -6,12 +6,25 @@ import {
   InputGroup,
   InputLeftElement,
   Spacer,
-} from '@chakra-ui/react';
-import { Search2Icon } from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { Search2Icon } from "@chakra-ui/icons";
+import dynamic from "next/dynamic";
+import MyLink from "../MyLink";
+import DarkMode from "../DarkMode";
 
-import MyLink from '../MyLink';
-import DarkMode from '../DarkMode';
-import LogInBtn from './LogInBtn';
+const LogInBtn = dynamic(() => import("./LogInBtn"), {
+  loading: () =>
+    true ? (
+      <p>loading...</p>
+    ) : (
+      <MyLink href="/auth">
+        <Button size="md" mx={[1, 4]}>
+          Login
+        </Button>
+      </MyLink>
+    ),
+  ssr: false,
+});
 
 const Index = () => {
   return (
@@ -24,7 +37,7 @@ const Index = () => {
           color="black"
           fontWeight={900}
           _dark={{
-            color: 'white',
+            color: "white",
           }}
         >
           Teapost
@@ -36,7 +49,7 @@ const Index = () => {
         size="md"
         overflow="hidden"
         mx={[1, 4]}
-        display={['none', 'none', 'flex']}
+        display={["none", "none", "flex"]}
       >
         <InputLeftElement
           pointerEvents="none"

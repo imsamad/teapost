@@ -8,7 +8,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import fileUpload from "express-fileupload";
-
+import rateLimit from "express-rate-limit";
 import connectDB from "./db/connectDB";
 
 import errorHandler from "./middleware/errorHandler";
@@ -21,8 +21,12 @@ import imageUploadRtr from "./routes/imageUploadRtr";
 import profileRtr from "./routes/profileRtr";
 
 const app = express();
-
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 mins
+  max: 100,
+});
 app.use(cors());
+// app.use(limiter);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(
@@ -39,6 +43,8 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, "../", "public")));
+
+// app.use(checkTemp());
 
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);

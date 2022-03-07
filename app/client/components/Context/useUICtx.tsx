@@ -1,9 +1,13 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from "react";
 
-import { useDisclosure } from '@chakra-ui/react';
-import LogInModal from '../LogIn/LogInModal';
+import { useDisclosure } from "@chakra-ui/react";
+import LogInModal from "../LogIn/LogInModal";
 
-const UICtx = createContext<any>(undefined);
+const UICtx = createContext<{
+  login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
+}>({
+  login: { isOpen: false, onOpen: () => {}, onClose: () => {} },
+});
 
 const UICtxProvider = ({ children }: { children: React.ReactNode }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

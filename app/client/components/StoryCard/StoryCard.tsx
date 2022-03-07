@@ -1,6 +1,6 @@
-import StoryWrapper from './StoryWrapper';
-import StoryMeta from './StoryMeta';
-import StoryDetailsAndAction from './StoryDetails';
+import StoryWrapper from "./StoryWrapper";
+import StoryMeta from "./StoryMeta";
+import StoryDetailsAndAction from "./StoryDetails";
 
 const Index = ({ story }: any) => {
   return (
@@ -17,6 +17,8 @@ const Index = ({ story }: any) => {
         title={story.title}
         subtitle={story.subtitle}
         slug={story.slug}
+        like={story.like}
+        dislike={story.dislike}
       />
     </StoryWrapper>
   );

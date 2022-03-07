@@ -1,37 +1,103 @@
-import { Button, ButtonGroup } from '@chakra-ui/react';
-import { ChatIcon } from '@chakra-ui/icons';
-import { BiLike, BiDislike } from 'react-icons/bi';
-import useUICtx from '../../Context/useUICtx';
-const onClick = (e: any) => {
-  e.preventDefault();
-  e.stopPropagation();
-};
-const Index = ({ storyId }: { storyId: string }) => {
+import { useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Heading,
+  HStack,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { ChatIcon } from "@chakra-ui/icons";
+import { BiLike, BiDislike } from "react-icons/bi";
+import { useSWRConfig } from "swr";
+
+import { useProfile, useUICtx } from "../../Context";
+
+import { gradeStory } from "../../../lib/createStory";
+
+const Index = ({ storyId, like, dislike }: any) => {
+  const {
+    profile: { user, likeStories, dislikeStories },
+  } = useProfile();
+
+  const [grade, setGrade] = useState({
+    like,
+    dislike,
+    isLiked: likeStories?.includes(storyId),
+    isDisliked: dislikeStories?.includes(storyId),
+  });
+
+  const loading = useDisclosure();
+  const { mutate } = useSWRConfig();
+  const toast = useToast();
   const { login } = useUICtx();
+  const handleGrade = async (isLike = true) => {
+    if (!user) {
+      toast({
+        duration: 2000,
+        isClosable: true,
+        render: customToast(login.onOpen),
+      });
+      return;
+    }
+    loading.onOpen();
+    const data = await gradeStory(storyId, isLike);
+    if (data) {
+      await mutate(`${process.env.NEXT_PUBLIC_API_URL}/profile/${user}`).then(
+        (res) => {
+          setGrade({
+            like: data.story.like,
+            dislike: data.story.dislike,
+            isLiked:
+              isLike && !grade.isLiked && data.story.like !== 0 ? true : false,
+            isDisliked:
+              !isLike && !grade.isDisliked && data.story.dislike !== 0
+                ? true
+                : false,
+          });
+          loading.onClose();
+        }
+      );
+    } else loading.onClose();
+  };
+
   return (
-    <ButtonGroup spacing="2">
+    <ButtonGroup spacing={3}>
       <Button
+        onClick={() => handleGrade(true)}
+        isDisabled={loading.isOpen}
+        isActive={grade.isLiked}
+        _active={{
+          border: "1px solid blue",
+          color: "blue",
+        }}
         leftIcon={<BiLike />}
         size="xs"
         fontSize="10px"
         variant="solid"
-        onClick={() => {
-          login.on();
-        }}
       >
-        5
+        {grade.like}
       </Button>
+
       <Button
-        onClick={onClick}
+        isDisabled={loading.isOpen}
+        isActive={grade.isDisliked}
+        _active={{
+          border: "1px solid blue",
+          color: "blue",
+        }}
         leftIcon={<BiDislike />}
         size="xs"
         fontSize="10px"
         variant="solid"
+        onClick={() => handleGrade(false)}
       >
-        5
+        {grade.dislike}
       </Button>
       <Button
-        onClick={onClick}
+        onClick={() => {
+          login.onOpen();
+        }}
         leftIcon={<ChatIcon />}
         size="xs"
         fontSize="10px"
@@ -44,3 +110,28 @@ const Index = ({ storyId }: { storyId: string }) => {
 };
 
 export default Index;
+
+// eslint-disable-next-line react/display-name
+const customToast = (onClick: any) => () => {
+  return (
+    <HStack
+      bgColor="gray.300"
+      border="1px solid #ddd"
+      p="8px"
+      borderRadius="md"
+      justifyContent="space-between"
+    >
+      <Heading
+        fontSize="sm"
+        _dark={{
+          color: "black",
+        }}
+      >
+        You are not logged in.
+      </Heading>
+      <Button size="sm" color="white" p={3} bg="blue.500" onClick={onClick}>
+        Login
+      </Button>
+    </HStack>
+  );
+};

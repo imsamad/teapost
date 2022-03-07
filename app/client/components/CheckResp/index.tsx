@@ -1,5 +1,6 @@
-import { Box, Text, useMediaQuery } from '@chakra-ui/react';
-import { useTheme } from '@emotion/react';
+import { Box, Text, useMediaQuery } from "@chakra-ui/react";
+import { useTheme } from "@emotion/react";
+import { useProfile } from "../Context";
 const Index = () => {
   const theme: any = useTheme();
   const { base, sm, md, lg, xl } = theme?.breakpoints;
@@ -8,10 +9,11 @@ const Index = () => {
   const [isLargerThanMD] = useMediaQuery(`(min-width: ${md})`);
   const [isLargerThanSM] = useMediaQuery(`(min-width: ${sm})`);
   const [isLargerThanBASE] = useMediaQuery(`(min-width: ${base})`);
+  const profile = useProfile();
   return (
     <Box
       width="100%"
-      bgColor={['red', 'green', 'aqua', 'gray.200']}
+      bgColor={["red", "green", "aqua", "gray.200"]}
       resize="both"
       my={4}
     >
@@ -44,6 +46,9 @@ const Index = () => {
           </>
         )
       )}
+      <Box maxW="400px" mx="auto">
+        {JSON.stringify(profile, null, 4)}
+      </Box>
     </Box>
   );
 };

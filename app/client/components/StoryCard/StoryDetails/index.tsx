@@ -1,10 +1,18 @@
-import { Box, Center, Flex, Heading, HStack, Stack } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, HStack, Stack } from "@chakra-ui/react";
 // @ts-ignore
-import { Image } from 'cloudinary-react';
-import StoryActions from '../StoryActions';
-import MyLink from '../../MyLink';
+import { Image } from "cloudinary-react";
+import StoryActions from "../StoryActions";
+import MyLink from "../../MyLink";
 
-const index = ({ id, titleImage, title, subtitle, slug }: any) => {
+const index = ({
+  id,
+  titleImage,
+  title,
+  subtitle,
+  slug,
+  like,
+  dislike,
+}: any) => {
   return (
     <HStack>
       <Stack pr="15px" flex="1">
@@ -19,14 +27,14 @@ const index = ({ id, titleImage, title, subtitle, slug }: any) => {
               textOverflow="ellipsis"
               noOfLines={[3, 2]}
               _dark={{
-                color: 'gray.200',
+                color: "gray.200",
               }}
-              _groupHover={{ color: 'rgba(41,41,41,0.8)' }}
+              _groupHover={{ color: "rgba(41,41,41,0.8)" }}
             >
               {title}
             </Heading>
 
-            <Box display={['none', 'none', '-webkit-box']}>
+            <Box display={["none", "none", "-webkit-box"]}>
               <Heading
                 my="8px"
                 as="h1"
@@ -36,23 +44,23 @@ const index = ({ id, titleImage, title, subtitle, slug }: any) => {
                 noOfLines={[0, 1, 2]}
                 textOverflow="ellipsis"
                 _dark={{
-                  color: 'gray.300',
+                  color: "gray.300",
                 }}
-                _groupHover={{ color: 'rgba(117,117,117,0.7)' }}
+                _groupHover={{ color: "rgba(117,117,117,0.7)" }}
               >
                 {subtitle}
               </Heading>
             </Box>
           </Stack>
         </MyLink>
-        <StoryActions storyId={id} />
+        <StoryActions storyId={id} like={like} dislike={dislike} />
       </Stack>
       <MyLink href={`/story/${slug}`}>
-        <Center minW="85px" w={['110px', '120px', '200px']}>
+        <Center minW="85px" w={["110px", "120px", "200px"]}>
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image
             cloudName="dnkb5aetl"
-            publicId={titleImage.split('/').pop().split('.')[0]}
+            publicId={titleImage.split("/").pop().split(".")[0]}
             width={200}
             height={134}
             crop="scale"

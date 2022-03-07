@@ -1,9 +1,7 @@
-import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
-import { SWRConfig } from 'swr';
-
-import Layout from '../components/Layout';
-import axios from 'axios';
+import type { AppProps } from "next/app";
+import { ChakraProvider } from "@chakra-ui/react";
+import Layout from "../components/Layout";
+import SWR from "../components/SWR";
 function MyApp({ Component, pageProps }: AppProps) {
   /**
    * TODO
@@ -21,15 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider>
-      <SWRConfig
-        value={{
-          refreshInterval: 3000,
-          fetcher: (resource, init) =>
-            axios(resource, init).then(({ data }) => data),
-        }}
-      >
+      <SWR>
         <Layout>{getContainer(<Component {...pageProps} />)}</Layout>
-      </SWRConfig>
+      </SWR>
     </ChakraProvider>
   );
 }

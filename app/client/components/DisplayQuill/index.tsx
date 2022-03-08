@@ -1,5 +1,5 @@
-import { Box, Theme } from '@chakra-ui/react';
-import { useTheme } from '@emotion/react';
+import { Box } from "@chakra-ui/react";
+import { useTheme } from "@emotion/react";
 
 const Index = ({ html }: any) => {
   const theme: any = useTheme();
@@ -14,7 +14,7 @@ const Index = ({ html }: any) => {
       />
       <style jsx>{`
         h1 {
-          font-size: ${theme.fontSizes['3xl']};
+          font-size: ${theme.fontSizes["3xl"]};
         }
       `}</style>
     </Box>

@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, { Router } from "express";
 
 import {
   changeSlug,
@@ -7,21 +7,21 @@ import {
   gradeStory,
   handleTags,
   publishedStory,
-} from '../controller/storyCtrl';
+} from "../controller/storyCtrl";
 
-import { protect } from '../middleware/auth';
-import validateSchema from '../middleware/validateSchema';
+import { protect } from "../middleware/auth";
+import validateSchema from "../middleware/validateSchema";
 import {
   changeSlugSchema,
   createStorySchema,
   gradeStorySchema,
   publishedStorySchema,
-} from '../schema/story';
+} from "../schema/story";
 
 const router: Router = express();
 
 router
-  .route('/')
+  .route("/")
   .post(
     protect,
     validateSchema(createStorySchema, true),
@@ -37,32 +37,19 @@ router
   .get(getAllStories);
 
 router
-  .route('/changeslug')
+  .route("/changeslug")
   .put(protect, validateSchema(changeSlugSchema), changeSlug);
 
 router
-  .route('/published/:storyId')
+  .route("/published/:storyId")
   .put(protect, validateSchema(publishedStorySchema), publishedStory);
 
 router
-  .route('/like/:storyId')
+  .route("/like/:storyId")
   .put(protect, validateSchema(gradeStorySchema), gradeStory(true));
 
 router
-  .route('/dislike/:storyId')
+  .route("/dislike/:storyId")
   .put(protect, validateSchema(gradeStorySchema), gradeStory(false));
 
 export default router;
-
-/*
-   (req: Request, _res: Response, next: NextFunction) => {
-    console.log(
-      'req.body.isPublishedreq.body.isPublished ',
-      req.body.isPublished
-    ); // @ts-ignore
-    req.__YUP_SCHEMA__ = req.body.isPublished
-      ? isAbleToPublished
-      : createStorySchema;
-    next();
-  },
- */

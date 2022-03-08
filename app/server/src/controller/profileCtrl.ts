@@ -15,11 +15,10 @@ export const getProfile = asyncHandler(
     if (req.query.populateStory) query.populate("likeStories dislikeStories");
 
     const grade = await query;
-
     return res.json({
       status: "ok",
       user: {
-        id: user,
+        user,
         likeStories: grade?.likeStories ?? [],
         dislikeStories: grade?.dislikeStories ?? [],
       },

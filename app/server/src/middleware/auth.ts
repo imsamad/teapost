@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
-import { decodeJwt } from '../lib/jwt';
-import { ErrorResponse } from '../lib/utils';
+import { NextFunction, Request, Response } from "express";
+import { decodeJwt } from "../lib/jwt";
+import { ErrorResponse } from "../lib/utils";
 
 export const protect = async (
   req: Request,
@@ -9,8 +9,8 @@ export const protect = async (
 ) => {
   // console.log('req.headers ', req.headers);
   let token: any;
-  if (req.headers?.authorization?.startsWith('Bearer '))
-    token = req.headers.authorization.split(' ')[1];
+  if (req.headers?.authorization?.startsWith("Bearer "))
+    token = req.headers.authorization.split(" ")[1];
 
   // console.log('first ', token);
   if (!token)
@@ -18,11 +18,10 @@ export const protect = async (
 
   // this is user info
   token = decodeJwt(token);
-  // console.log('second ', token);
   if (!token)
     return next(ErrorResponse(400, `Not authorized to access this route two`));
 
   // @ts-ignore
-  req.user = token.userId;
+  req.user = token.user;
   next();
 };

@@ -11,35 +11,30 @@ import { ChatIcon } from "@chakra-ui/icons";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useSWRConfig } from "swr";
 
-import { useAuthCtx, useProfile, useUICtx } from "../../Context";
+import { useUICtx, useProfile } from "../../Context";
 
 import { gradeStory } from "../../../lib/createStory";
 
 const Index = ({ storyId, like, dislike }: any) => {
-  const {
-    profile: { likeStories, dislikeStories },
-  } = useProfile();
-  const { user } = useAuthCtx();
+  const { profile, mutateProfile } = useProfile();
+
   const initGrades = {
-    like: likeStories?.includes(storyId) && like === 0 ? 1 : like,
-    dislike: dislikeStories?.includes(storyId) && dislike === 0 ? 1 : dislike,
-    // @ts-ignore
-    isLiked: likeStories?.includes(storyId),
-    // @ts-ignore
-    isDisliked: dislikeStories?.includes(storyId),
+    like: profile?.likeStories?.includes(storyId) && like === 0 ? 1 : like,
+    dislike:
+      profile?.dislikeStories?.includes(storyId) && dislike === 0 ? 1 : dislike,
+    isLiked: profile?.likeStories?.includes(storyId),
+    isDisliked: profile?.dislikeStories?.includes(storyId),
   };
   const [grade, setGrade] = useState(initGrades);
   useEffect(() => {
     setGrade(initGrades);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [likeStories, dislikeStories]);
-
+  }, [profile]);
   const loading = useDisclosure();
-  const { mutate } = useSWRConfig();
   const toast = useToast();
   const { login } = useUICtx();
   const handleGrade = async (isLike = true) => {
-    if (!user) {
+    if (!profile.user) {
       toast({
         duration: 2000,
         isClosable: true,
@@ -50,21 +45,8 @@ const Index = ({ storyId, like, dislike }: any) => {
     loading.onOpen();
     const data = await gradeStory(storyId, isLike);
     if (data) {
-      await mutate(
-        `${process.env.NEXT_PUBLIC_API_URL}/profile/${user?.id}`
-      ).then((res) => {
-        setGrade({
-          like: data.story.like,
-          dislike: data.story.dislike,
-          isLiked:
-            isLike && !grade.isLiked && data.story.like !== 0 ? true : false,
-          isDisliked:
-            !isLike && !grade.isDisliked && data.story.dislike !== 0
-              ? true
-              : false,
-        });
-        loading.onClose();
-      });
+      const res = await mutateProfile();
+      loading.onClose();
     } else loading.onClose();
   };
 

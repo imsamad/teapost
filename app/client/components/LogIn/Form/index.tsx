@@ -13,7 +13,6 @@ import Header from "./Header";
 import LoginWrapper from "./LoginWrapper";
 import FormStatus from "./FormStatus";
 import useUICtx from "../../Context/useUICtx";
-import { useSWRConfig } from "swr";
 
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
@@ -32,21 +31,21 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     action.setStatus(false);
     action.setSubmitting(true);
     try {
-      const { user, refreshToken, redirectUrl, message, status }: any =
-        await signUp(values);
+      const dataSubmit: any = await signUp(values);
 
+      const { user, redirectUrl, message, status } = dataSubmit;
       if (redirectUrl || message) {
         action.setStatus({
           status,
           redirectUrl,
           message,
         });
-      } else if (user || refreshToken) {
-        setCookies(user, refreshToken);
+      } else if (user) {
+        setCookies(user);
         action.resetForm();
       }
       // If login modal is open
-      if (login.isOpen) {
+      if (login.isOpen && !values.isRegister) {
         login.onClose();
         toast({
           title: `Successfully logged in`,
@@ -55,7 +54,6 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
           duration: 1000,
         });
       }
-
       action.setSubmitting(false);
     } catch (error: any) {
       const { message, status } = error;

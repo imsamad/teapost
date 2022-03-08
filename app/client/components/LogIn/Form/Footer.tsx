@@ -1,15 +1,18 @@
-import { Flex, HStack, Link, Spacer } from '@chakra-ui/react';
-import { useField } from 'formik';
-import MyLink from '../../MyLink';
+import { HStack, Link, Spacer } from "@chakra-ui/react";
+import { useField } from "formik";
+import MyLink from "../../MyLink";
 const Footer = () => {
-  const [, { value: isRegister }, { setValue }] = useField('isRegister');
+  const [, { value: isRegister }, { setValue }] = useField("isRegister");
+
   return (
     <HStack
-      fontSize="sm"
-      my="4px"
+      fontSize="md"
       sx={{
-        color: 'blue',
-        textDecoration: 'underline',
+        color: "blue.600",
+        textDecoration: "underline",
+      }}
+      _dark={{
+        color: "teal.400",
       }}
     >
       <Link
@@ -17,16 +20,18 @@ const Footer = () => {
         type="button"
         onClick={() => setValue(!isRegister)}
         _visited={{
-          outline: 'none',
+          outline: "none",
+          color: "blue.400",
         }}
         _focus={{
-          outline: 'none',
+          outline: "none",
+          color: "blue.300",
         }}
         _hover={{
-          color: 'blue.500',
+          color: "blue.500",
         }}
       >
-        {isRegister ? 'Log In' : 'Register'}
+        {isRegister ? "Log In" : "Register"}
       </Link>
 
       <Spacer />

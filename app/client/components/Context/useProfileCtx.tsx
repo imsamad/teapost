@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import useSWR from "swr";
 
 import useAuthCtx from "./useAuthCtx";
+
 type ProfileType = {
   user: string;
   likeStories: string[];
@@ -9,16 +10,19 @@ type ProfileType = {
 };
 
 const ProfileCtx = createContext<{
+  mutateProfile: () => void | Promise<{ user: ProfileType }>;
   profile: Partial<ProfileType>;
-}>({ profile: {} });
+}>({ profile: {}, mutateProfile: () => {} });
 
 const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthCtx();
-  const swrData = useSWR<ProfileType>(() => user?.id && `/profile/${user?.id}`);
-
-  const { data: profile = {} } = swrData;
+  const { data, mutate }: any = useSWR<ProfileType>(
+    () => user?.id && `/profile/${user?.id}`
+  );
   return (
-    <ProfileCtx.Provider value={{ profile }}>{children}</ProfileCtx.Provider>
+    <ProfileCtx.Provider value={{ profile: data?.user, mutateProfile: mutate }}>
+      {children}
+    </ProfileCtx.Provider>
   );
 };
 

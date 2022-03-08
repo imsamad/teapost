@@ -1,32 +1,32 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  deleteCookies,
-  getCookies,
-  setCookies,
-} from "../../lib/getUserFromCookie";
-import { USE_INFORM_COOKIE_CHANGE } from "../SWR";
+import { createContext, useContext, useEffect, useState } from "react";
+import { deleteCookies, getCookies, setCookies } from "../../lib/cookies";
 
-const AuthCtx = createContext<
-  Partial<{
-    user: any;
-    refreshToken: string;
-    setUser?: any;
-  }>
->(getCookies());
+type UserType = {
+  id?: string;
+  email?: string;
+  username?: string;
+  role?: string;
+};
+
+const AuthCtx = createContext<{
+  user: Partial<UserType>;
+  setUser: (props: Partial<UserType>) => void;
+}>({ user: getCookies(), setUser: () => {} });
 
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
-  const [{ user, refreshToken }, setUser] = useState<any>(getCookies());
-  const { INFORM_COOKIE_CHANGE } = USE_INFORM_COOKIE_CHANGE();
+  const [user, setUserDis] = useState<any>(getCookies());
+
+  const setUser = (val: UserType) => {
+    if (!Object.keys(val).length) setUserDis(null);
+    else setUserDis((pre: UserType) => ({ ...pre, ...val }));
+  };
+
   useEffect(() => {
-    if (user || refreshToken) {
-      setCookies(user, refreshToken).finally(() => INFORM_COOKIE_CHANGE());
-    } else deleteCookies().finally(() => INFORM_COOKIE_CHANGE());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, refreshToken]);
+    if (!user) deleteCookies();
+    else setCookies(user);
+  }, [user]);
   return (
-    <AuthCtx.Provider value={{ user, refreshToken, setUser }}>
-      {children}
-    </AuthCtx.Provider>
+    <AuthCtx.Provider value={{ user, setUser }}>{children}</AuthCtx.Provider>
   );
 };
 

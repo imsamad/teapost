@@ -1,6 +1,6 @@
-import { Box } from '@chakra-ui/react';
+import { Box } from "@chakra-ui/react";
 
-import Form from './Form';
+import Form from "./Form";
 
 const LogInPage = () => {
   return (
@@ -14,7 +14,7 @@ const LogInPage = () => {
       borderColor="gray.400"
       my="4"
     >
-      <Form />
+      <Form redirectTo="/me" />
     </Box>
   );
 };

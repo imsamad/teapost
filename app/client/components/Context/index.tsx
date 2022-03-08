@@ -1,7 +1,7 @@
 import useAuthCtx, { AuthCtxProvider } from "./useAuthCtx";
 import useUICtx, { UICtxProvider } from "./useUICtx";
 import useProfile, { ProfileCtxProvider } from "./useProfileCtx";
-
+import SWR from "../SWR";
 const Index = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthCtxProvider>

@@ -1,33 +1,34 @@
 /** @type {import('next').NextConfig} */
-const path = require('path');
+
+const path = require("path");
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   async redirects() {
     return [
       {
-        source: '/home',
-        destination: '/',
+        source: "/home",
+        destination: "/",
         permanent: true,
       },
       {
-        source: '/index',
-        destination: '/',
+        source: "/index",
+        destination: "/",
         permanent: true,
       },
       {
-        source: '/auth/login',
-        destination: '/auth',
+        source: "/auth/login",
+        destination: "/auth",
         permanent: true,
       },
       {
-        source: '/login',
-        destination: '/auth',
+        source: "/login",
+        destination: "/auth",
         permanent: true,
       },
     ];
   },
   webpack: (config) => {
-    config.resolve.alias['#axios'] = path.join(__dirname, 'lib/axios');
+    config.resolve.alias["#axios"] = path.join(__dirname, "lib/axios");
     return config;
   },
 };

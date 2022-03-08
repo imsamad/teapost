@@ -1,5 +1,6 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
 import { nanoid } from "nanoid";
+import useSWR from "swr";
 import StoryCard from "../StoryCard";
 
 const Index = ({ stories }: any) => {

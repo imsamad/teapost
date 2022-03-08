@@ -27,7 +27,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     redirectTo,
     redirectToIfLoggedIn: true,
   });
-  const { mutate } = useSWRConfig();
+
   const handleSubmit = async (values: any, action: FormikHelpers<any>) => {
     action.setStatus(false);
     action.setSubmitting(true);
@@ -44,7 +44,6 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
       } else if (user || refreshToken) {
         setCookies(user, refreshToken);
         action.resetForm();
-        mutate(`${process.env.NEXT_PUBLIC_API_URL}/profile/${user.id}`);
       }
       // If login modal is open
       if (login.isOpen) {

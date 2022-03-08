@@ -19,6 +19,7 @@ import storyRtr from "./routes/storyRtr";
 import tagRtr from "./routes/tagRtr";
 import imageUploadRtr from "./routes/imageUploadRtr";
 import profileRtr from "./routes/profileRtr";
+import checkTemp from "./middleware/checkTemp";
 
 const app = express();
 const limiter = rateLimit({
@@ -44,7 +45,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "../", "public")));
 
-// app.use(checkTemp());
+app.use(checkTemp());
 
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);

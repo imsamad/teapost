@@ -1,4 +1,4 @@
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 // const getCookies = () =>
@@ -18,8 +18,8 @@ const getCookies = () => {
   const refreshToken = cookies.get(refreshTokenCookie);
 
   return {
-    user: user ?? false,
-    refreshToken: refreshToken ?? false,
+    user: user,
+    refreshToken: refreshToken,
   };
 };
 

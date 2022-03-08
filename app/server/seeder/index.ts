@@ -22,7 +22,7 @@ import dbConnect from "../src/db/connectDB";
 const importData = async () => {
   try {
     await UserModel.create(users);
-    await StoryModel.create([stories[0], stories[1]]);
+    await StoryModel.create([stories[0]]);
     await TagModel.create(tags);
     console.log("data imported");
     process.exit(1);

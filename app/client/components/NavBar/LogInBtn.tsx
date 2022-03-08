@@ -9,7 +9,6 @@ import {
 import useUser from "../../lib/useUser";
 import { useUICtx } from "../Context";
 
-import useAuthCtx from "../Context/useAuthCtx";
 import MyLink from "../MyLink";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { ChevronDownIcon } from "@chakra-ui/icons";

@@ -6,10 +6,9 @@ import emailVerifyMessage from "../lib/sendVerifyEmail";
 import { ErrorResponse, createHash, randomBytes } from "../lib/utils";
 import { decodeJwt, signJwt } from "../lib/jwt";
 import Token from "../models/TokenModel";
-import { signTokens } from "../lib/signTokens";
 // @desc      Register new user
-// @route     '${' GET | POST | PUT | PATCH | DELETE '|}' /api/v1/story
-// @access    Auth/Public/Admin
+// @route     POST /api/v1/story
+// @access    Public
 export const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password } = req.body;
@@ -153,18 +152,20 @@ const sendTokens = async (
   statusCode: number,
   res: Response
 ) => {
-  const { accessToken, refreshToken } = await signTokens(user);
-  // console.table({ accessToken, refreshToken });
   const resData = {
     status: "ok",
     user: {
       id: user._id || user.id,
       email: user.email,
-      accessToken,
+      accessToken: signJwt(
+        { user: user.id || user._id },
+        {
+          expiresIn: "7d",
+        }
+      ),
       username: user.username,
       role: user.role,
     },
-    refreshToken,
   };
 
   return res.status(statusCode).json(resData);

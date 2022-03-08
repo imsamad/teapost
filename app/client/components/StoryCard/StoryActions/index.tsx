@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useEffect } from "react";
 import {
   Button,
   ButtonGroup,
@@ -11,21 +11,28 @@ import { ChatIcon } from "@chakra-ui/icons";
 import { BiLike, BiDislike } from "react-icons/bi";
 import { useSWRConfig } from "swr";
 
-import { useProfile, useUICtx } from "../../Context";
+import { useAuthCtx, useProfile, useUICtx } from "../../Context";
 
 import { gradeStory } from "../../../lib/createStory";
 
 const Index = ({ storyId, like, dislike }: any) => {
   const {
-    profile: { user, likeStories, dislikeStories },
+    profile: { likeStories, dislikeStories },
   } = useProfile();
-
-  const [grade, setGrade] = useState({
-    like,
-    dislike,
+  const { user } = useAuthCtx();
+  const initGrades = {
+    like: likeStories?.includes(storyId) && like === 0 ? 1 : like,
+    dislike: dislikeStories?.includes(storyId) && dislike === 0 ? 1 : dislike,
+    // @ts-ignore
     isLiked: likeStories?.includes(storyId),
+    // @ts-ignore
     isDisliked: dislikeStories?.includes(storyId),
-  });
+  };
+  const [grade, setGrade] = useState(initGrades);
+  useEffect(() => {
+    setGrade(initGrades);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [likeStories, dislikeStories]);
 
   const loading = useDisclosure();
   const { mutate } = useSWRConfig();
@@ -43,21 +50,21 @@ const Index = ({ storyId, like, dislike }: any) => {
     loading.onOpen();
     const data = await gradeStory(storyId, isLike);
     if (data) {
-      await mutate(`${process.env.NEXT_PUBLIC_API_URL}/profile/${user}`).then(
-        (res) => {
-          setGrade({
-            like: data.story.like,
-            dislike: data.story.dislike,
-            isLiked:
-              isLike && !grade.isLiked && data.story.like !== 0 ? true : false,
-            isDisliked:
-              !isLike && !grade.isDisliked && data.story.dislike !== 0
-                ? true
-                : false,
-          });
-          loading.onClose();
-        }
-      );
+      await mutate(
+        `${process.env.NEXT_PUBLIC_API_URL}/profile/${user?.id}`
+      ).then((res) => {
+        setGrade({
+          like: data.story.like,
+          dislike: data.story.dislike,
+          isLiked:
+            isLike && !grade.isLiked && data.story.like !== 0 ? true : false,
+          isDisliked:
+            !isLike && !grade.isDisliked && data.story.dislike !== 0
+              ? true
+              : false,
+        });
+        loading.onClose();
+      });
     } else loading.onClose();
   };
 
@@ -83,8 +90,8 @@ const Index = ({ storyId, like, dislike }: any) => {
         isDisabled={loading.isOpen}
         isActive={grade.isDisliked}
         _active={{
-          border: "1px solid blue",
-          color: "blue",
+          border: "1px solid pink",
+          color: "pink",
         }}
         leftIcon={<BiDislike />}
         size="xs"
@@ -109,7 +116,7 @@ const Index = ({ storyId, like, dislike }: any) => {
   );
 };
 
-export default Index;
+export default memo(Index);
 
 // eslint-disable-next-line react/display-name
 const customToast = (onClick: any) => () => {

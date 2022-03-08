@@ -11,20 +11,20 @@ import { Search2Icon } from "@chakra-ui/icons";
 import dynamic from "next/dynamic";
 import MyLink from "../MyLink";
 import DarkMode from "../DarkMode";
-
-const LogInBtn = dynamic(() => import("./LogInBtn"), {
-  loading: () =>
-    true ? (
-      <p>loading...</p>
-    ) : (
-      <MyLink href="/auth">
-        <Button size="md" mx={[1, 4]}>
-          Login
-        </Button>
-      </MyLink>
-    ),
-  ssr: false,
-});
+import LogInBtn from "./LogInBtn";
+// const LogInBtn = dynamic(() => import("./LogInBtn"), {
+//   loading: () =>
+//     true ? (
+//       <p>loading...</p>
+//     ) : (
+//       <MyLink href="/auth">
+//         <Button size="md" mx={[1, 4]}>
+//           Login
+//         </Button>
+//       </MyLink>
+//     ),
+//   ssr: false,
+// });
 
 const Index = () => {
   return (

@@ -63,7 +63,6 @@ export const validateYupSchema = async (
     if (res) return true;
     else throw new Error("Provide proper data");
   } catch (yupError: any) {
-    console.log("yupError ", yupError);
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
 

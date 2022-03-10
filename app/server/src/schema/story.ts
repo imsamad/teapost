@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { array, boolean, object, string } from "yup";
+import { array, boolean, number, object, string } from "yup";
 import { trimExtra } from "../lib/utils";
 
 export const changeSlugSchema = object({
@@ -81,6 +81,25 @@ export const gradeStorySchema = object({
         isValidObjectId(val)
       ),
   }),
+  body: object().shape(
+    {
+      like: number()
+        .label("like")
+        .typeError("Express like in number(1,-1)")
+        .when("dislike", {
+          is: (dislike: any) => typeof dislike === "undefined",
+          then: number().required("Like or dislike is required"),
+        }),
+      dislike: number()
+        .label("dislike")
+        .typeError("Express dislike in number(1,-1)")
+        .when("like", {
+          is: (like: any) => typeof like === "undefined",
+          then: number().required("Like or dislike is required"),
+        }),
+    },
+    [["like", "dislike"]]
+  ),
 });
 
 const stringSchema = (label: string, minLength: number, maxLength: number) => {

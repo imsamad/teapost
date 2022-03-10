@@ -6,8 +6,10 @@ services:
     ports:
       - "4000:4000"
     container_name: teapost-backend
-    env_file:
-      - ./config/.env
+    # environment:
+    #   - MONGO_URI=mongodb+srv://teapost:teapost@mongodb-practice.gimw9.mongodb.net/teapost?authSource=admin
+    # env_file:
+    #   - ./config/.env
 # heroku apps:create <HEROKU-APP-NAME>
 # heroku container:login
 # docker build registry.heroku.com/<HEROKU-APP-NAME>/web

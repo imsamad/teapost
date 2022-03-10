@@ -34,12 +34,11 @@ export const changeSlug = async (reqBody: { id: string; slug: string }) => {
     throw err.response.data;
   }
 };
+type axiosObjType = Partial<{ like: number; dislike: number }>;
 
-export const gradeStory = async (storyId: string, isLike = true) => {
+export const gradeStory = async (storyId: string, axiosObj: axiosObjType) => {
   try {
-    const { data } = await axios.put(
-      `/stories/${isLike ? "like" : "dislike"}/${storyId}`
-    );
+    const { data } = await axios.put(`/stories/grade/${storyId}`, axiosObj);
     return data;
   } catch (err: any) {
     // throw err.response.data;

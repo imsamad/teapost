@@ -1,7 +1,6 @@
 import express, { Router } from "express";
 
 import {
-  changeSlug,
   createOrUpdateStory,
   getAllStories,
   gradeStory,
@@ -12,7 +11,6 @@ import {
 import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 import {
-  changeSlugSchema,
   createStorySchema,
   gradeStorySchema,
   publishedStorySchema,
@@ -37,19 +35,11 @@ router
   .get(getAllStories);
 
 router
-  .route("/changeslug")
-  .put(protect, validateSchema(changeSlugSchema), changeSlug);
-
-router
   .route("/published/:storyId")
   .put(protect, validateSchema(publishedStorySchema), publishedStory);
 
 router
-  .route("/like/:storyId")
-  .put(protect, validateSchema(gradeStorySchema), gradeStory(true));
-
-router
-  .route("/dislike/:storyId")
-  .put(protect, validateSchema(gradeStorySchema), gradeStory(false));
+  .route("/grade/:storyId")
+  .put(protect, validateSchema(gradeStorySchema), gradeStory);
 
 export default router;

@@ -3,12 +3,12 @@ import * as dotenv from "dotenv";
 dotenv.config({
   path: path.join(__dirname, "../", `config`, ".env"),
 });
-
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import fileUpload from "express-fileupload";
 import rateLimit from "express-rate-limit";
+
 import connectDB from "./db/connectDB";
 
 import errorHandler from "./middleware/errorHandler";
@@ -45,7 +45,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "../", "public")));
 
-app.use(checkTemp());
+// app.use(checkTemp());
 
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);
@@ -66,9 +66,6 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, async () => {
   connectDB();
-  /*
-   * appTopUrl :- Set as env dynamically ssh script
-   * image storing folder path
-   */
+
   console.log(`Listening on http://localhost:${PORT}`);
 });

@@ -1,6 +1,6 @@
-import { Document, model, Schema } from 'mongoose';
+import { Document, model, Schema } from "mongoose";
 
-export interface TagModelDocument extends Document {
+export interface TagDocument extends Document {
   tag: String;
 }
 
@@ -8,7 +8,7 @@ const tagSchema = new Schema(
   {
     tag: {
       type: String,
-      required: [true, 'This tag already exist'],
+      required: [true, "This tag already exist"],
       unique: true,
       trim: true,
       lowercase: true,
@@ -21,6 +21,6 @@ const tagSchema = new Schema(
   }
 );
 
-const TagModel = model('Tag', tagSchema);
+const TagModel = model("Tag", tagSchema);
 
 export default TagModel;

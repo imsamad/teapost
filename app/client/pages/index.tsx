@@ -1,4 +1,4 @@
-import CheckResp from "../components/CheckResp";
+// import CheckResp from "../components/CheckResp";
 import HomePage from "../components/HomePage";
 import axios from "axios";
 const singleStory = {
@@ -32,7 +32,6 @@ const singleStory = {
 };
 
 const Index = ({ stories = [singleStory] }: any) => {
-  // console.log('stories ', stories);
   return (
     <>
       {/* <CheckResp /> */}

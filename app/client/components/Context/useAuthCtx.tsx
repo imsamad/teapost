@@ -18,7 +18,12 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
 
   const setUser = (val: UserType) => {
     if (!Object.keys(val).length) setUserDis(null);
-    else setUserDis((pre: UserType) => ({ ...pre, ...val }));
+    else {
+      // @ts-ignore
+      setCookies(val).finally(() => {
+        setUserDis((pre: UserType) => ({ ...pre, ...val }));
+      });
+    }
   };
 
   useEffect(() => {

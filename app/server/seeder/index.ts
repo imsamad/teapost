@@ -15,15 +15,18 @@ import tags from "./data/tags";
 import UserModel from "../src/models/UserModel";
 import TagModel from "../src/models/TagModel";
 import StoryModel from "../src/models/StoryModel";
-import GradeModel from "../src/models/GradeModel";
+import StoryMetaModel from "../src/models/StoryMetaModel";
+import ProfileModel from "../src/models/ProfileModel";
 
 import dbConnect from "../src/db/connectDB";
 
 const importData = async () => {
   try {
     await UserModel.create(users);
-    await StoryModel.create([stories[0]]);
+    await StoryModel.create(stories);
     await TagModel.create(tags);
+    await StoryMetaModel.create(stories.map((s) => ({ _id: s._id })));
+    await ProfileModel.create(users.map((user) => ({ _id: user._id })));
     console.log("data imported");
     process.exit(1);
   } catch (err) {
@@ -31,12 +34,14 @@ const importData = async () => {
     process.exit(1);
   }
 };
+
 const deleteData = async () => {
   try {
     await UserModel.deleteMany();
     await StoryModel.deleteMany();
     await TagModel.deleteMany();
-    await GradeModel.deleteMany();
+    await ProfileModel.deleteMany();
+    await StoryMetaModel.deleteMany();
     console.log("data deleted ");
     process.exit(1);
   } catch (err) {

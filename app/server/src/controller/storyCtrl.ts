@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import { isValidObjectId } from "mongoose";
 import { asyncHandler, ErrorResponse, validateYupSchema } from "../lib/utils";
-import GradeModel from "../models/GradeModel";
+import ProfileModel from "../models/ProfileModel";
+import StoryMetaModel from "../models/StoryMetaModel";
 import StoryModel, { StoryDocument } from "../models/StoryModel";
-import TagModel, { TagModelDocument } from "../models/TagModel";
+import TagModel, { TagDocument } from "../models/TagModel";
+import { UserDocument } from "../models/UserModel";
 import { isAbleToPublished } from "../schema/story";
 
 // @desc      Create a story
-// @route     POST /api/v1/story
+// @route     POST / PUT /api/v1/story
 // @access    Auth [Reader]
 export const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -21,7 +23,7 @@ export const createOrUpdateStory = asyncHandler(
     if (storyExist) {
       let extraMessage: { [name: string]: string[] } = {};
       // @ts-ignore
-      if (storyExist.author.toString() !== req.user) {
+      if (storyExist.author.toString() !== req.user._id.toString()) {
         return next(ErrorResponse(400, "this slug already exist"));
       }
 
@@ -56,8 +58,9 @@ export const createOrUpdateStory = asyncHandler(
       let newStory = new StoryModel({
         ...rest,
         // @ts-ignore
-        author: req.user,
+        author: req.user._id,
       });
+      await StoryMetaModel.create({ _id: newStory.id });
       sendResponse(isPublished, newStory, res);
     }
   }
@@ -111,6 +114,7 @@ export const getAllStories = asyncHandler(
       // isPublished: true,
       ...query,
     }).populate([
+      { path: "meta" },
       {
         path: "author",
         select: "username email",
@@ -162,7 +166,7 @@ export const handleTags = asyncHandler(
         .catch((err) => {
           oldTags.push(
             TagModel.findOne({ tag })
-              .then((oldTag: TagModelDocument) => {
+              .then((oldTag: TagDocument) => {
                 alreadyExistedTags.push(oldTag.id || oldTag._id);
               })
               .catch((err) => {})
@@ -176,29 +180,6 @@ export const handleTags = asyncHandler(
         req.body.tags = alreadyExistedTags;
         next();
       });
-    });
-  }
-);
-
-// @desc      Change slug story
-// @route     PUT /api/v1/story/changeslug
-// @access    Auth [Reader]
-export const changeSlug = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const story = await StoryModel.findById(req.body.id);
-    if (!story)
-      return next(ErrorResponse(400, `Story not found for ${req.body.id} `));
-    if (req.body.slug === story.slug)
-      return res.status(200).json({
-        status: "ok",
-        story,
-      });
-
-    story.slug = req.body.slug;
-    await story.save();
-    return res.status(200).json({
-      status: "ok",
-      story,
     });
   }
 );
@@ -230,85 +211,70 @@ export const publishedStory = asyncHandler(
 // @route     PUT /api/v1/story/like/:storyId
 // @route     PUT /api/v1/story/dislike/:storyId
 // @access    Auth [Reader]
-export const gradeStory = (isLike = true) =>
-  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const gradeStory = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const isLike = typeof req.body.like !== "undefined" ? true : false;
+    const gradeCount = isLike
+      ? parseInt(req.body.like)
+      : parseInt(req.body.dislike);
     const storyId = req.params.storyId as StoryDocument["id"];
     let story = await StoryModel.findById(storyId);
 
     if (!story) return next(ErrorResponse(400, "Resource not found"));
+
     // @ts-ignore
-    let grade = await GradeModel.findOne({ user: req.user });
-    if (!grade) {
-      let newGrade = new GradeModel({
-        // @ts-ignore
-        user: req.user,
-      });
-      console.log("newGrade ", newGrade);
-      if (isLike) {
-        newGrade.likeStories.push(storyId);
-        story.like++;
-      } else {
-        newGrade.dislikeStories.push(storyId);
-        story.dislike++;
-      }
+    const user: UserDocument["_id"] = req.user._id.toString();
 
-      story = await story.save();
-      newGrade = await newGrade.save();
-      return res.json({
-        status: "ok",
-        // grade: newGrade,
-        story,
-      });
-    }
-    if (isLike) {
-      const alreadyLiked = grade.likeStories.indexOf(storyId);
-      if (alreadyLiked > -1) {
-        grade.likeStories.splice(alreadyLiked, 1);
-        story.like = story.like <= 1 ? 0 : story.like - 1;
-        grade = await grade.save();
-        story = await story.save();
-        return res.json({
-          status: "ok",
-          // grade,
-          story,
-        });
-      }
+    /*
+    like i.e like > 0  then, push likedStories,pull from dislikedStories(in case had been disliked)
+    revert i.e. like <=0 then,  pull from likedStories
+    
+    dislike i.e. dislike > 0 then, push dislikedStories,pull from likedStories(in case had been liked)
+    revert dislike => pull from didikeStories
+    
+    */
+    const profile = await ProfileModel.findByIdAndUpdate(
+      user,
+      isLike
+        ? gradeCount > 0
+          ? {
+              _id: user,
+              $addToSet: { likedStories: storyId },
+              $pull: { dislikedStories: storyId },
+            }
+          : { _id: user, $pull: { likedStories: storyId } }
+        : gradeCount > 0
+        ? {
+            _id: user,
+            $addToSet: { dislikedStories: storyId },
+            $pull: { likedStories: storyId },
+          }
+        : { _id: user, $pull: { dislikedStories: storyId } },
+      { upsert: true, new: true }
+    );
+    const storyMeta = await StoryMetaModel.findByIdAndUpdate(
+      storyId,
+      isLike
+        ? gradeCount > 0
+          ? {
+              _id: storyId,
+              $addToSet: { likedBy: user },
+              $pull: { dislikedBy: user },
+            }
+          : { _id: storyId, $pull: { likedBy: user } }
+        : gradeCount > 0
+        ? {
+            _id: storyId,
+            $addToSet: { dislikedBy: user },
+            $pull: { likedBy: user },
+          }
+        : { _id: storyId, $pull: { dislikedBy: user } },
 
-      const hasBeenDisliked = grade.dislikeStories.indexOf(storyId);
-
-      if (hasBeenDisliked > -1) {
-        grade.dislikeStories.splice(hasBeenDisliked, 1);
-        story.dislike = story.dislike <= 1 ? 0 : story.dislike - 1;
-      }
-      grade.likeStories.push(storyId);
-      story.like++;
-    } else if (!isLike) {
-      const alreadyDisliked = grade.dislikeStories.indexOf(storyId);
-      if (alreadyDisliked > -1) {
-        grade.dislikeStories.splice(alreadyDisliked, 1);
-        story.dislike = story.dislike <= 1 ? 0 : story.dislike - 1;
-        grade = await grade.save();
-        story = await story.save();
-        return res.json({
-          status: "ok",
-
-          story,
-        });
-      }
-
-      const hasBeenLiked = grade.likeStories.indexOf(storyId);
-      if (hasBeenLiked > -1) {
-        grade.likeStories.splice(hasBeenLiked, 1);
-        story.like = story.like <= 1 ? 0 : story.like - 1;
-      }
-      grade.dislikeStories.push(storyId);
-      story.dislike++;
-    }
-    story = await story.save();
-    grade = await grade.save();
+      { upsert: true, new: true }
+    );
     res.json({
       status: "ok",
-      // grade,
-      story,
+      storyMeta,
     });
-  });
+  }
+);

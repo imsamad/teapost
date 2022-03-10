@@ -5,8 +5,8 @@ import useAuthCtx from "./useAuthCtx";
 
 type ProfileType = {
   user: string;
-  likeStories: string[];
-  dislikeStories: string[];
+  likedStories: string[];
+  dislikedStories: string[];
 };
 
 const ProfileCtx = createContext<{
@@ -17,10 +17,12 @@ const ProfileCtx = createContext<{
 const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthCtx();
   const { data, mutate }: any = useSWR<ProfileType>(
-    () => user?.id && `/profile/${user?.id}`
+    () => user?.id && `/auth/me`
   );
   return (
-    <ProfileCtx.Provider value={{ profile: data?.user, mutateProfile: mutate }}>
+    <ProfileCtx.Provider
+      value={{ profile: data?.profile, mutateProfile: mutate }}
+    >
       {children}
     </ProfileCtx.Provider>
   );

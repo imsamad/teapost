@@ -6,6 +6,8 @@ import emailVerifyMessage from "../lib/sendVerifyEmail";
 import { ErrorResponse, createHash, randomBytes } from "../lib/utils";
 import { decodeJwt, signJwt } from "../lib/jwt";
 import Token from "../models/TokenModel";
+import ProfileModel from "../models/ProfileModel";
+
 // @desc      Register new user
 // @route     POST /api/v1/story
 // @access    Public
@@ -75,12 +77,13 @@ export const register = asyncHandler(
       }
     }
 
+    await ProfileModel.create({ _id: user._id });
     let resObj: any = {
       status: "ok",
       message: `Account created successfully, Verify your email sent to ${email}.`,
     };
 
-    // if (!isEmailService) resObj = { ...resObj, redirectUrl };
+    if (!isEmailService) resObj = { ...resObj, redirectUrl };
 
     return res.json(resObj);
   }
@@ -158,7 +161,7 @@ const sendTokens = async (
       id: user._id || user.id,
       email: user.email,
       accessToken: signJwt(
-        { user: user.id || user._id },
+        { user: user._id },
         {
           expiresIn: "7d",
         }
@@ -170,3 +173,26 @@ const sendTokens = async (
 
   return res.status(statusCode).json(resData);
 };
+
+// @desc      Profile of logged in user.
+// @route     GET /api/v1/auth/me
+// @access    Auth,Public
+export const getMe = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore
+    const user = req.user._id;
+    let query = ProfileModel.findById(user).lean();
+
+    if (req.query.populateStory) query.populate("likedStories dislikedStories");
+
+    const profile = await query;
+    return res.json({
+      status: "ok",
+      profile: {
+        user: profile?._id || profile?.id,
+        likedStories: profile?.likedStories,
+        dislikedStories: profile?.dislikedStories,
+      },
+    });
+  }
+);

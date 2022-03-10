@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { ChatIcon } from "@chakra-ui/icons";
 import { BiLike, BiDislike } from "react-icons/bi";
-import { useSWRConfig } from "swr";
 
 import { useUICtx, useProfile } from "../../Context";
 
@@ -18,23 +17,46 @@ import { gradeStory } from "../../../lib/createStory";
 const Index = ({ storyId, like, dislike }: any) => {
   const { profile, mutateProfile } = useProfile();
 
-  const initGrades = {
-    like: profile?.likeStories?.includes(storyId) && like === 0 ? 1 : like,
-    dislike:
-      profile?.dislikeStories?.includes(storyId) && dislike === 0 ? 1 : dislike,
-    isLiked: profile?.likeStories?.includes(storyId),
-    isDisliked: profile?.dislikeStories?.includes(storyId),
+  const init = () => {
+    return {
+      like: profile?.likedStories?.includes(storyId) && like === 0 ? 1 : like,
+      dislike:
+        profile?.dislikedStories?.includes(storyId) && dislike === 0
+          ? 1
+          : dislike,
+      hadBeenLiked: profile?.likedStories?.includes(storyId),
+      hadBeenDisLiked: profile?.dislikedStories?.includes(storyId),
+    };
   };
-  const [grade, setGrade] = useState(initGrades);
+
+  const [grade, setGrade] = useState(init());
+
   useEffect(() => {
-    setGrade(initGrades);
+    setGrade((pre: any) => ({
+      ...pre,
+      hadBeenLiked: profile?.likedStories?.includes(storyId),
+      hadBeenDisLiked: profile?.dislikedStories?.includes(storyId),
+    }));
+
+    if (profile?.likedStories?.includes(storyId) && like === 0) {
+      setGrade((pre: any) => ({
+        ...pre,
+        like: 1,
+      }));
+    }
+    if (profile?.dislikedStories?.includes(storyId) && dislike === 0) {
+      setGrade((pre: any) => ({
+        ...pre,
+        dislike: 1,
+      }));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
   const loading = useDisclosure();
   const toast = useToast();
   const { login } = useUICtx();
-  const handleGrade = async (isLike = true) => {
-    if (!profile.user) {
+  const handleGrade = async (isActionTypeLike = true) => {
+    if (!profile?.user) {
       toast({
         duration: 2000,
         isClosable: true,
@@ -43,8 +65,21 @@ const Index = ({ storyId, like, dislike }: any) => {
       return;
     }
     loading.onOpen();
-    const data = await gradeStory(storyId, isLike);
+    const axiosData = isActionTypeLike
+      ? {
+          like: grade.hadBeenLiked ? 0 : 1,
+        }
+      : {
+          dislike: grade.hadBeenDisLiked ? 0 : 1,
+        };
+    const data = await gradeStory(storyId, axiosData);
+
     if (data) {
+      setGrade((pre: any) => ({
+        ...pre,
+        like: data.storyMeta.like,
+        dislike: data.storyMeta.dislike,
+      }));
       const res = await mutateProfile();
       loading.onClose();
     } else loading.onClose();
@@ -55,7 +90,7 @@ const Index = ({ storyId, like, dislike }: any) => {
       <Button
         onClick={() => handleGrade(true)}
         isDisabled={loading.isOpen}
-        isActive={grade.isLiked}
+        isActive={grade.hadBeenLiked}
         _active={{
           border: "1px solid blue",
           color: "blue",
@@ -70,7 +105,7 @@ const Index = ({ storyId, like, dislike }: any) => {
 
       <Button
         isDisabled={loading.isOpen}
-        isActive={grade.isDisliked}
+        isActive={grade.hadBeenDisLiked}
         _active={{
           border: "1px solid pink",
           color: "pink",

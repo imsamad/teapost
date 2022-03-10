@@ -1,6 +1,7 @@
-import { Document, model, Schema } from 'mongoose';
-import { ErrorResponse } from '../lib/utils';
-import { UserDocument } from './UserModel';
+import { Document, model, Schema } from "mongoose";
+import { ErrorResponse } from "../lib/utils";
+import { StoryMetaDocument } from "./StoryMetaModel";
+import { UserDocument } from "./UserModel";
 
 export interface StoryDocument extends Document {
   title?: String;
@@ -12,10 +13,9 @@ export interface StoryDocument extends Document {
   keywords?: String;
   isPublished: Boolean;
   isPublishedByAdmin: Boolean;
-  author: UserDocument['_id'];
+  author: UserDocument["_id"];
   data: Object;
-  like: number;
-  dislike: number;
+  meta?: StoryMetaDocument;
 }
 
 const storySchema = new Schema(
@@ -42,7 +42,7 @@ const storySchema = new Schema(
         {
           type: Schema.Types.ObjectId,
           required: true,
-          ref: 'Tag',
+          ref: "Tag",
         },
       ],
     },
@@ -54,8 +54,8 @@ const storySchema = new Schema(
     },
     author: {
       type: Schema.Types.ObjectId,
-      required: [true, 'Author of story is required.'],
-      ref: 'User',
+      required: [true, "Author of story is required."],
+      ref: "User",
     },
     isPublished: {
       type: Boolean,
@@ -66,13 +66,11 @@ const storySchema = new Schema(
       type: Boolean,
       require: [
         true,
-        'Specifying the story, Is published or not is compulsary.',
+        "Specifying the story, Is published or not is compulsary.",
       ],
       default: true,
       select: false,
     },
-    like: { type: Number, default: 0 },
-    dislike: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -81,8 +79,8 @@ const storySchema = new Schema(
   }
 );
 
-storySchema.post(['save', 'updateOne'], errorHandlerMdlwr);
-storySchema.post('findOneAndUpdate', errorHandlerMdlwr);
+storySchema.post(["save", "updateOne"], errorHandlerMdlwr);
+storySchema.post("findOneAndUpdate", errorHandlerMdlwr);
 
 async function errorHandlerMdlwr(error: any, doc: StoryDocument, next: any) {
   if (error) {
@@ -93,13 +91,20 @@ async function errorHandlerMdlwr(error: any, doc: StoryDocument, next: any) {
         })
       );
     } else {
-      next(ErrorResponse(400, 'Invalid data.'));
+      next(ErrorResponse(400, "Invalid data."));
     }
   } else {
     next(error);
   }
 }
 
-const StoryModel = model<StoryDocument>('Story', storySchema);
+storySchema.virtual("meta", {
+  ref: "StoryMeta",
+  localField: "_id",
+  foreignField: "_id",
+  justOne: true,
+});
+
+const StoryModel = model<StoryDocument>("Story", storySchema);
 
 export default StoryModel;

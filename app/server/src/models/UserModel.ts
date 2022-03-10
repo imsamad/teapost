@@ -1,6 +1,6 @@
-import mongoose, { Date } from 'mongoose';
-import { ErrorResponse } from '../lib/utils';
-import bcrypt from 'bcrypt';
+import mongoose, { Date } from "mongoose";
+import { ErrorResponse } from "../lib/utils";
+import bcrypt from "bcrypt";
 
 export interface UserDocument extends mongoose.Document {
   email: string;
@@ -8,7 +8,7 @@ export interface UserDocument extends mongoose.Document {
   password: string;
   isEmailVerified: boolean;
   isAuthorised: boolean;
-  role: string | 'admin' | 'reader' | 'author';
+  role: string | "admin" | "reader" | "author";
   matchPassword(candidatePassword: string): Promise<boolean>;
   createdAt?: Date;
   updatedAt?: Date;
@@ -18,28 +18,28 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: [true, 'Please add a name'],
+      required: [true, "Please add a name"],
       minlength: [5, "Username's minimum length must be 5."],
     },
     email: {
       type: String,
-      required: [true, 'Please add an email'],
+      required: [true, "Please add an email"],
       unique: true,
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        'Please add a valid email',
+        "Please add a valid email",
       ],
     },
     password: {
       type: String,
-      required: [true, 'Please add a password'],
+      required: [true, "Please add a password"],
       minlength: [6, "Password's minimum length must be 6."],
       select: false,
     },
     role: {
       type: String,
-      enum: ['admin', 'reader', 'author'],
-      default: 'reader',
+      enum: ["admin", "reader", "author"],
+      default: "reader",
     },
     isEmailVerified: {
       type: Boolean,
@@ -64,11 +64,11 @@ const UserSchema = new mongoose.Schema(
 
 // UserSchema.post<Query<UserDocument, UserDocument>>(
 
-UserSchema.post('save', function (error: any, doc: UserDocument, next: any) {
+UserSchema.post("save", function (error: any, doc: UserDocument, next: any) {
   if (error?.code === 11000) {
     next(
       ErrorResponse(400, {
-        email: `${doc.email || 'This email'} already registered.`,
+        email: `${doc.email || "This email"} already registered.`,
       })
     );
   } else {
@@ -76,10 +76,10 @@ UserSchema.post('save', function (error: any, doc: UserDocument, next: any) {
   }
 });
 
-UserSchema.pre('save', async function (next) {
+UserSchema.pre("save", async function (next) {
   const user = this as UserDocument;
 
-  if (!user.isModified('password')) return next();
+  if (!user.isModified("password")) return next();
 
   const saltFactor: number = Number(process.env.SALT_FACTOR) || 10;
 
@@ -93,11 +93,11 @@ UserSchema.pre('save', async function (next) {
 });
 
 UserSchema.methods.matchPassword = async function (
-  enterPassword: UserDocument['password']
+  enterPassword: UserDocument["password"]
 ) {
   return await bcrypt.compare(enterPassword, this.password);
 };
 
-const User = mongoose.model<UserDocument>('User', UserSchema);
+const User = mongoose.model<UserDocument>("User", UserSchema);
 
 export default User;

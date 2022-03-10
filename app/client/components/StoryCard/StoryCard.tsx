@@ -17,8 +17,8 @@ const Index = ({ story }: any) => {
         title={story.title}
         subtitle={story.subtitle}
         slug={story.slug}
-        like={story.like}
-        dislike={story.dislike}
+        like={story.meta.like}
+        dislike={story.meta.dislike}
       />
     </StoryWrapper>
   );

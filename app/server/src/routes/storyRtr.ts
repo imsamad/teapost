@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express, { Request, Router } from "express";
 
 import {
   createOrUpdateStory,
@@ -13,6 +13,7 @@ import validateSchema from "../middleware/validateSchema";
 import {
   createStorySchema,
   gradeStorySchema,
+  likeOrDislikeSchema,
   publishedStorySchema,
 } from "../schema/story";
 
@@ -37,9 +38,26 @@ router
 router
   .route("/published/:storyId")
   .put(protect, validateSchema(publishedStorySchema), publishedStory);
-
 router
-  .route("/grade/:storyId")
-  .put(protect, validateSchema(gradeStorySchema), gradeStory);
+  .route("/grade:storyId")
+  .put(protect, validateSchema(gradeStorySchema), (req: Request) => {
+    const isLike = typeof req.body.like !== "undefined" ? true : false;
+    const gradeCount = isLike
+      ? parseInt(req.body.like)
+      : parseInt(req.body.dislike);
+    return gradeStory(isLike, gradeCount);
+  });
+router
+  .route("/like/undo/:storyId")
+  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(true, 0));
+router
+  .route("/dislike/:storyId")
+  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(false, 1));
+router
+  .route("/like/:storyId")
+  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(true, 1));
+router
+  .route("/dislike/undo/:storyId")
+  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(false, 0));
 
 export default router;

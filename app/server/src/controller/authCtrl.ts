@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import { asyncHandler } from "../lib/utils";
-import User, { UserDocument } from "../models/UserModel";
+import UserModel, { UserDocument } from "../models/UserModel";
 import emailVerifyMessage from "../lib/sendVerifyEmail";
 import { ErrorResponse, createHash, randomBytes } from "../lib/utils";
 import { decodeJwt, signJwt } from "../lib/jwt";
@@ -15,7 +15,7 @@ export const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password } = req.body;
 
-    const alreadyExist = await User.findOne({ email });
+    const alreadyExist = await UserModel.findOne({ email });
     if (alreadyExist)
       next(
         ErrorResponse(400, {
@@ -23,7 +23,7 @@ export const register = asyncHandler(
         })
       );
 
-    const newUser = new User({
+    const newUser = new UserModel({
       username,
       email,
       password,
@@ -93,7 +93,7 @@ export const logIn = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
-    let user = await User.findOne({ email }).select("+password");
+    let user = await UserModel.findOne({ email }).select("+password");
 
     if (!user)
       return next(ErrorResponse(400, { email: "Email not registered." }));
@@ -134,7 +134,7 @@ export const verifyEmail = asyncHandler(
 
     const userId: string = token.userId;
 
-    const user = await User.findById(userId);
+    const user = await UserModel.findById(userId);
 
     if (!user) return next(malliciousReq);
 
@@ -196,3 +196,35 @@ export const getMe = asyncHandler(
     });
   }
 );
+
+// @desc      Follow author
+// @route     GET /api/v1/auth/follow/:authorId
+// @access    Auth
+export const followAuthor = (toDoFollow: boolean) =>
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    let author = await ProfileModel.findById(req.params.authorId);
+    // @ts-ignore
+    const userId = req.user._id.toString();
+    if (!author || author._id.toString() == userId) {
+      return next(ErrorResponse(400, "No resouce found"));
+    }
+    const user = await ProfileModel.findByIdAndUpdate(
+      userId,
+      toDoFollow
+        ? { $addToSet: { following: author._id } }
+        : { $pull: { following: author._id } },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    author = await author.update(
+      toDoFollow
+        ? { $addToSet: { followers: user._id } }
+        : { $pull: { followers: user._id } }
+    );
+    return res.json({
+      status: "ok",
+      profile: user,
+    });
+  });

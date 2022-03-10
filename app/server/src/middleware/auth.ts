@@ -21,7 +21,7 @@ export const protect = async (
   if (!token)
     return next(ErrorResponse(400, `Not authorized to access this route.`));
 
-  const user = await UserModel.findById(token.user);
+  const user = await UserModel.findById(token.user).lean();
   if (!user)
     return next(ErrorResponse(400, `Not authorized to access this route.`));
   // @ts-ignore

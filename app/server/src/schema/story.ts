@@ -71,6 +71,18 @@ export const createStorySchema = object({
   ),
 });
 
+export const likeOrDislikeSchema = object({
+  params: object({
+    storyId: string()
+      .label("storyId")
+      .required("Story Id is required")
+      .typeError("Story Id must be string")
+      .test("storyId", "StoryId is not valid id.", (val) =>
+        isValidObjectId(val)
+      ),
+  }),
+});
+
 export const gradeStorySchema = object({
   params: object({
     storyId: string()

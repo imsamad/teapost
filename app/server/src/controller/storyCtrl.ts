@@ -209,14 +209,12 @@ export const publishedStory = asyncHandler(
 
 // @desc      Like/Dislike story
 // @route     PUT /api/v1/story/like/:storyId
+// @route     PUT /api/v1/story/like/undo/:storyId
 // @route     PUT /api/v1/story/dislike/:storyId
+// @route     PUT /api/v1/story/dislike/undo/:storyId
 // @access    Auth [Reader]
-export const gradeStory = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const isLike = typeof req.body.like !== "undefined" ? true : false;
-    const gradeCount = isLike
-      ? parseInt(req.body.like)
-      : parseInt(req.body.dislike);
+export const gradeStory = (isLike: boolean, gradeCount: number) =>
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const storyId = req.params.storyId as StoryDocument["id"];
     let story = await StoryModel.findById(storyId);
 
@@ -230,9 +228,9 @@ export const gradeStory = asyncHandler(
     revert i.e. like <=0 then,  pull from likedStories
     
     dislike i.e. dislike > 0 then, push dislikedStories,pull from likedStories(in case had been liked)
-    revert dislike => pull from didikeStories
-    
+    revert dislike => pull from didikeStories    
     */
+
     const profile = await ProfileModel.findByIdAndUpdate(
       user,
       isLike
@@ -276,5 +274,4 @@ export const gradeStory = asyncHandler(
       status: "ok",
       storyMeta,
     });
-  }
-);
+  });

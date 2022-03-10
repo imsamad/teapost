@@ -6,30 +6,27 @@ import {
   HStack,
   useDisclosure,
   useToast,
+  IconButton,
 } from "@chakra-ui/react";
-import { ChatIcon } from "@chakra-ui/icons";
+
 import { BiLike, BiDislike } from "react-icons/bi";
-
+import { AiFillFileAdd } from "react-icons/ai";
+import { FiFileMinus } from "react-icons/fi";
 import { useUICtx, useProfile } from "../../Context";
-
 import { gradeStory } from "../../../lib/createStory";
 
 const Index = ({ storyId, like, dislike }: any) => {
   const { profile, mutateProfile } = useProfile();
 
-  const init = () => {
-    return {
-      like: profile?.likedStories?.includes(storyId) && like === 0 ? 1 : like,
-      dislike:
-        profile?.dislikedStories?.includes(storyId) && dislike === 0
-          ? 1
-          : dislike,
-      hadBeenLiked: profile?.likedStories?.includes(storyId),
-      hadBeenDisLiked: profile?.dislikedStories?.includes(storyId),
-    };
-  };
-
-  const [grade, setGrade] = useState(init());
+  const [grade, setGrade] = useState({
+    like: profile?.likedStories?.includes(storyId) && like === 0 ? 1 : like,
+    dislike:
+      profile?.dislikedStories?.includes(storyId) && dislike === 0
+        ? 1
+        : dislike,
+    hadBeenLiked: profile?.likedStories?.includes(storyId),
+    hadBeenDisLiked: profile?.dislikedStories?.includes(storyId),
+  });
 
   useEffect(() => {
     setGrade((pre: any) => ({
@@ -86,7 +83,7 @@ const Index = ({ storyId, like, dislike }: any) => {
   };
 
   return (
-    <ButtonGroup spacing={3}>
+    <ButtonGroup spacing={3} alignItems="center">
       <Button
         onClick={() => handleGrade(true)}
         isDisabled={loading.isOpen}
@@ -94,6 +91,15 @@ const Index = ({ storyId, like, dislike }: any) => {
         _active={{
           border: "1px solid blue",
           color: "blue",
+        }}
+        _focus={{
+          border: "1px solid gray",
+          bgColor: "transparent",
+          boxShadow: "none",
+          WebkitTapHighlightColor: "none",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          MozBackfaceVisibility: "hidden",
         }}
         leftIcon={<BiLike />}
         size="xs"
@@ -110,6 +116,15 @@ const Index = ({ storyId, like, dislike }: any) => {
           border: "1px solid pink",
           color: "pink",
         }}
+        _focus={{
+          border: "1px solid gray",
+          bgColor: "transparent",
+          boxShadow: "none",
+          WebkitTapHighlightColor: "transparent",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          MozBackfaceVisibility: "hidden",
+        }}
         leftIcon={<BiDislike />}
         size="xs"
         fontSize="10px"
@@ -118,17 +133,23 @@ const Index = ({ storyId, like, dislike }: any) => {
       >
         {grade.dislike}
       </Button>
-      <Button
-        onClick={() => {
-          login.onOpen();
+      <IconButton
+        _active={{
+          outline: "none",
         }}
-        leftIcon={<ChatIcon />}
+        _focus={{
+          border: "1px solid gray",
+          bgColor: "transparent",
+          boxShadow: "none",
+          WebkitTapHighlightColor: "transparent",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          MozBackfaceVisibility: "hidden",
+        }}
+        icon={<AiFillFileAdd fontSize="19px" />}
         size="xs"
-        fontSize="10px"
-        variant="solid"
-      >
-        5
-      </Button>
+        aria-label="add to reading list"
+      />
     </ButtonGroup>
   );
 };

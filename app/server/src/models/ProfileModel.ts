@@ -3,13 +3,14 @@ import { StoryDocument } from "./StoryModel";
 import { UserDocument } from "./UserModel";
 
 export interface ProfileDocument extends Document {
-  _id: UserDocument["_id"];
-  id: UserDocument["_id"];
+  id: UserDocument["id"];
   likedStories: Types.Array<StoryDocument["_id"]>;
   dislikedStories: Types.Array<StoryDocument["_id"]>;
+  following: Types.Array<UserDocument["_id"]>;
+  followers: Types.Array<UserDocument["_id"]>;
 }
 
-const gradeSchema = new Schema(
+const profileSchema = new Schema(
   {
     _id: {
       type: Schema.Types.ObjectId,
@@ -28,6 +29,18 @@ const gradeSchema = new Schema(
         ref: "Story",
       },
     ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -36,6 +49,6 @@ const gradeSchema = new Schema(
   }
 );
 
-const ProfileModel = model<ProfileDocument>("Profile", gradeSchema);
+const ProfileModel = model<ProfileDocument>("Profile", profileSchema);
 
 export default ProfileModel;

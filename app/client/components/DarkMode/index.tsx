@@ -1,5 +1,5 @@
-import { useColorMode, IconButton } from '@chakra-ui/react';
-import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { useColorMode, IconButton } from "@chakra-ui/react";
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 const Index = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -7,7 +7,7 @@ const Index = () => {
     <IconButton
       onClick={toggleColorMode}
       aria-label="change-theme"
-      icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+      icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
     />
   );
 };

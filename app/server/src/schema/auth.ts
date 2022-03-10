@@ -1,5 +1,5 @@
 import * as yup from "yup";
-
+import { isValidObjectId } from "mongoose";
 import YupPassword from "yup-password";
 YupPassword(yup); // extend yup
 
@@ -53,5 +53,16 @@ export const logInSchema = yup.object({
 export const verifyEmailSchema = yup.object({
   query: yup.object({
     token: yup.string().required("Mallicious request.").label("data"),
+  }),
+});
+
+export const followSchema = yup.object({
+  params: yup.object({
+    authorId: yup
+      .string()
+      .label("authorId")
+      .required("Author is required")
+      .typeError("Author Id must be string")
+      .test("authorId", "Author is not valid.", (val) => isValidObjectId(val)),
   }),
 });

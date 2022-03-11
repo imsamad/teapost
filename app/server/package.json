@@ -9,7 +9,7 @@
     "build": "tsc",
     "seed:i": "ts-node-dev seeder/index.ts -i",
     "seed:d": "ts-node-dev seeder/index.ts -d",
-    "deploy": "heroku container:login && docker build -t registry.heroku.com/teapost/web:2 . && docker push registry.heroku.com/teapost/web:2 && heroku container:push web --app teapost && heroku container:release web -a teapost"
+    "deploy": "heroku container:login && docker build -t registry.heroku.com/teapost/web:3 . && docker push registry.heroku.com/teapost/web:3 && heroku container:push web --app teapost && heroku container:release web -a teapost"
   },
   "keywords": [],
   "author": "",

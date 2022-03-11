@@ -14,10 +14,11 @@ import { AiFillFileAdd } from "react-icons/ai";
 import { FiFileMinus } from "react-icons/fi";
 import { useUICtx, useProfile } from "../../Context";
 import { gradeStory } from "../../../lib/createStory";
+import customToast from "../customToast";
 
 const Index = ({ storyId, like, dislike }: any) => {
   const { profile, mutateProfile } = useProfile();
-
+  // console.log("profile ", profile);
   const [grade, setGrade] = useState({
     like: profile?.likedStories?.includes(storyId) && like === 0 ? 1 : like,
     dislike:
@@ -53,7 +54,7 @@ const Index = ({ storyId, like, dislike }: any) => {
   const toast = useToast();
   const { login } = useUICtx();
   const handleGrade = async (isActionTypeLike = true) => {
-    if (!profile?.user) {
+    if (!profile?.id) {
       toast({
         duration: 2000,
         isClosable: true,
@@ -155,28 +156,3 @@ const Index = ({ storyId, like, dislike }: any) => {
 };
 
 export default memo(Index);
-
-// eslint-disable-next-line react/display-name
-const customToast = (onClick: any) => () => {
-  return (
-    <HStack
-      bgColor="gray.300"
-      border="1px solid #ddd"
-      p="8px"
-      borderRadius="md"
-      justifyContent="space-between"
-    >
-      <Heading
-        fontSize="sm"
-        _dark={{
-          color: "black",
-        }}
-      >
-        You are not logged in.
-      </Heading>
-      <Button size="sm" color="white" p={3} bg="blue.500" onClick={onClick}>
-        Login
-      </Button>
-    </HStack>
-  );
-};

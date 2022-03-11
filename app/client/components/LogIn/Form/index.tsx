@@ -3,7 +3,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useRouter } from "next/router";
 
 import { logInSchema } from "../../../lib/Schema/signInForm";
-import { signUp } from "../../../lib/signUp";
+import { signUp } from "../../../lib/authApi";
 import { typeOf } from "../../../lib/utils";
 import useUser from "../../../lib/useUser";
 

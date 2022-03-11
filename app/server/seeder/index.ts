@@ -51,7 +51,7 @@ const deleteData = async () => {
 };
 setEnv()
   .then(() => {
-    dbConnect(process.env.MONGO_URI);
+    dbConnect(process.env.MONGO_URI_DEV);
     return true;
   })
   .then((res) => {

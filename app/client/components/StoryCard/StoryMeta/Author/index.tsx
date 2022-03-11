@@ -1,7 +1,18 @@
-import { Avatar, HStack, IconButton, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  HStack,
+  IconButton,
+  Text,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { BiBellPlus, BiBellMinus } from "react-icons/bi";
 import MyLink from "../../../MyLink";
-import { useRouter } from "next/router";
+import { useProfile, useUICtx } from "../../../Context";
+import { useEffect, useState } from "react";
+import { followAuthor } from "../../../../lib/authApi";
+import customToast from "../../customToast";
+
 type propTypes = {
   username: string;
   email: string;
@@ -9,7 +20,42 @@ type propTypes = {
 };
 
 const Index = ({ author }: any) => {
-  const router = useRouter();
+  const { profile, mutateProfile } = useProfile();
+  const [stats, setStats] = useState({
+    // @ts-ignore
+    hasBeenFollowing: false,
+    isItselfAuthor: false,
+  });
+  useEffect(() => {
+    setStats({
+      // @ts-ignore
+      hasBeenFollowing: profile?.following?.indexOf(author?.id) > -1,
+      isItselfAuthor: profile.id?.toString() == author.id,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile]);
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const { login } = useUICtx();
+  const toast = useToast();
+  const handleFollowing = async () => {
+    onOpen();
+    if (!profile?.id) {
+      toast({
+        duration: 2000,
+        isClosable: true,
+        render: customToast(login.onOpen),
+      });
+      return;
+      onClose();
+    }
+    const data = await followAuthor(author.id, stats.hasBeenFollowing);
+    if (data) {
+      await mutateProfile();
+      onClose();
+    } else onClose();
+  };
+
   return (
     <HStack>
       <MyLink
@@ -27,9 +73,12 @@ const Index = ({ author }: any) => {
         </HStack>
       </MyLink>
       <IconButton
+        isActive={stats.hasBeenFollowing}
         _active={{
-          outline: "none",
+          border: "2px solid rgba(0,0,255,0.4)",
         }}
+        isLoading={isOpen}
+        isDisabled={stats.isItselfAuthor}
         _focus={{
           border: "1px solid gray",
           bgColor: "transparent",
@@ -39,9 +88,16 @@ const Index = ({ author }: any) => {
           WebkitBackfaceVisibility: "hidden",
           MozBackfaceVisibility: "hidden",
         }}
-        icon={<BiBellPlus fontSize="19px" />}
+        icon={
+          stats.hasBeenFollowing ? (
+            <BiBellMinus color="rgba(0,0,255,0.6)" fontSize="19px" />
+          ) : (
+            <BiBellPlus fontSize="19px" />
+          )
+        }
         size="xs"
         isRound
+        onClick={handleFollowing}
         aria-label={`follow ${author.username}`}
       />
     </HStack>

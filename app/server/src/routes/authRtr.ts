@@ -18,7 +18,7 @@ router.get("/verifyemail", verifyEmail);
 router.get("/me", protect, getMe);
 
 router
-  .route("/follow/undo/:authorId")
+  .route("/unfollow/:authorId")
   .put(protect, validateSchema(followSchema), followAuthor(false));
 
 router

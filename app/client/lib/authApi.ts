@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios from "./axios";
 
 export interface LogInFields {
   isRegister: boolean;
@@ -19,6 +19,20 @@ export const signUp = async (values: UserRegisterFields) => {
 
     return data;
   } catch (err: any) {
-    throw err?.response?.data || 'Invalid Data';
+    throw err?.response?.data || "Invalid Data";
+  }
+};
+
+export const followAuthor = async (
+  authorId: string,
+  hasBeenFollowing: boolean
+) => {
+  try {
+    const { data } = await axios.put(
+      `/auth/${hasBeenFollowing ? "unfollow" : "follow"}/${authorId}`
+    );
+    return data;
+  } catch (err: any) {
+    throw err?.response?.data || "Invalid Data";
   }
 };

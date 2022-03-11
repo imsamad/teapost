@@ -4,9 +4,10 @@ import useSWR from "swr";
 import useAuthCtx from "./useAuthCtx";
 
 type ProfileType = {
-  user: string;
+  id: string;
   likedStories: string[];
   dislikedStories: string[];
+  following: string[];
 };
 
 const ProfileCtx = createContext<{
@@ -21,7 +22,10 @@ const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
   );
   return (
     <ProfileCtx.Provider
-      value={{ profile: data?.profile, mutateProfile: mutate }}
+      value={{
+        profile: { id: user?.id, ...data?.profile },
+        mutateProfile: mutate,
+      }}
     >
       {children}
     </ProfileCtx.Provider>

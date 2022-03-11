@@ -188,11 +188,13 @@ export const getMe = asyncHandler(
     const profile = await query;
     return res.json({
       status: "ok",
-      profile: {
-        user: profile?._id || profile?.id,
-        likedStories: profile?.likedStories,
-        dislikedStories: profile?.dislikedStories,
-      },
+      profile: profile?._id
+        ? profile
+        : {
+            _id: profile?._id || profile?.id,
+            likedStories: profile?.likedStories,
+            dislikedStories: profile?.dislikedStories,
+          },
     });
   }
 );

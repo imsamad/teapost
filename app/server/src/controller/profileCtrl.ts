@@ -13,8 +13,8 @@ export const getProfile = asyncHandler(
     let query = ProfileModel.findOne({ user });
 
     if (req.query.populateStory) query.populate("likedStories dislikedStories");
-
     const profile = await query;
+    console.log("profile ", profile);
     return res.json({
       status: "ok",
       profile,

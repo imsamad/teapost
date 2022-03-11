@@ -7,10 +7,16 @@ import {
   verifyEmail,
   getMe,
   followAuthor,
+  addToCollection,
 } from "../controller/authCtrl";
 import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
-import { followSchema, logInSchema, registerSchema } from "../schema/auth";
+import {
+  addToCollectionSchema,
+  followSchema,
+  logInSchema,
+  registerSchema,
+} from "../schema/auth";
 
 router.post("/login", validateSchema(logInSchema), logIn);
 router.post("/register", validateSchema(registerSchema), register);
@@ -24,5 +30,9 @@ router
 router
   .route("/follow/:authorId")
   .put(protect, validateSchema(followSchema), followAuthor(true));
+
+router
+  .route("/collection/add/:storyId")
+  .put(protect, validateSchema(addToCollectionSchema), addToCollection);
 
 export default router;

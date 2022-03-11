@@ -7,6 +7,8 @@ import { ErrorResponse, createHash, randomBytes } from "../lib/utils";
 import { decodeJwt, signJwt } from "../lib/jwt";
 import Token from "../models/TokenModel";
 import ProfileModel from "../models/ProfileModel";
+import StoryModel from "../models/StoryModel";
+import StoryCollectionModel from "../models/StoryCollectionModel";
 
 // @desc      Register new user
 // @route     POST /api/v1/story
@@ -183,7 +185,8 @@ export const getMe = asyncHandler(
     const user = req.user._id;
     let query = ProfileModel.findById(user).lean();
 
-    if (req.query.populateStory) query.populate("likedStories dislikedStories");
+    if (req.query.populateStory)
+      query.populate("likedStories dislikedStories storyCollections");
 
     const profile = await query;
     return res.json({
@@ -230,3 +233,66 @@ export const followAuthor = (toDoFollow: boolean) =>
       profile: user,
     });
   });
+
+// @desc      Create Collection
+// @route     GET /api/v1/auth/collection/add/:storyId
+// @access    Auth,Public
+export const addToCollection = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore
+    const user = req.user._id;
+    const story = await StoryModel.findById(req.params.storyId);
+    if (!story) return next(ErrorResponse(400, "No resource found"));
+
+    const { addToDefault, removeFromDefault, addTo, removeFrom } = req.body;
+
+    let updatePromise: any = [];
+    if (addToDefault || removeFromDefault) {
+      const defaultCollection = StoryCollectionModel.findOneAndUpdate(
+        {
+          user,
+          title: new RegExp("^" + "read later" + "$", "i"),
+        },
+        addToDefault
+          ? { user, $addToSet: { stories: story._id } }
+          : { user, $pull: { stories: story._id } },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
+      updatePromise.push(defaultCollection);
+    }
+    if (addTo) {
+      addTo.forEach((collId: string) => {
+        const collections = StoryCollectionModel.findOneAndUpdate(
+          { _id: collId, user },
+          {
+            $push: { stories: story._id },
+          },
+          { new: true }
+        );
+        updatePromise.push(collections);
+      });
+    }
+    if (removeFrom) {
+      removeFrom.forEach((collId: string) => {
+        const collections = StoryCollectionModel.findOneAndUpdate(
+          { _id: collId, user },
+          {
+            $pull: { stories: story._id },
+          },
+          { new: true }
+        );
+        updatePromise.push(collections);
+      });
+    }
+
+    Promise.allSettled(updatePromise)
+      .then((upRes) => {})
+      .catch((err: any) => {})
+      .finally(() => {
+        res.json({ status: "ok" });
+      });
+  }
+);

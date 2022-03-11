@@ -17,6 +17,7 @@ import TagModel from "../src/models/TagModel";
 import StoryModel from "../src/models/StoryModel";
 import StoryMetaModel from "../src/models/StoryMetaModel";
 import ProfileModel from "../src/models/ProfileModel";
+import StoryCollection from "../src/models/StoryCollectionModel";
 
 import dbConnect from "../src/db/connectDB";
 
@@ -42,6 +43,7 @@ const deleteData = async () => {
     await TagModel.deleteMany();
     await ProfileModel.deleteMany();
     await StoryMetaModel.deleteMany();
+    await StoryCollection.deleteMany();
     console.log("data deleted ");
     process.exit(1);
   } catch (err) {
@@ -51,7 +53,7 @@ const deleteData = async () => {
 };
 setEnv()
   .then(() => {
-    dbConnect(process.env.MONGO_URI_DEV);
+    dbConnect(process.env.MONGO_URI);
     return true;
   })
   .then((res) => {

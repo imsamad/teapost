@@ -3,7 +3,7 @@ import { isValidObjectId } from "mongoose";
 import YupPassword from "yup-password";
 YupPassword(yup); // extend yup
 
-import { trimExtra } from "../lib/utils";
+import { trimExtra, typeOf } from "../lib/utils";
 
 const usernameField = yup
   .string()
@@ -65,4 +65,86 @@ export const followSchema = yup.object({
       .typeError("Author Id must be string")
       .test("authorId", "Author is not valid.", (val) => isValidObjectId(val)),
   }),
+});
+
+export const addToCollectionSchema = yup.object({
+  body: yup
+    .object()
+    .shape({
+      addTo: yup
+        .array()
+        .min(1)
+        .label("addTo")
+        .typeError("Provide list of collection")
+        .test("addTo", "Provide valid collections", (val: any) => {
+          console.log("addTo");
+          return !val
+            ? true
+            : typeOf(val, "array")
+            ? new Set(val).size === val.length &&
+              val.every((v: any) => isValidObjectId(v))
+            : false;
+        }),
+      removeFrom: yup
+        .array()
+        .min(1)
+        .label("removeFrom")
+        .typeError("Provide list of collection toremove from")
+        .test("removeFrom", "Provide valid collections", (val: any) => {
+          return !val
+            ? true
+            : typeOf(val, "array")
+            ? new Set(val).size === val.length &&
+              val.every((v: any) => isValidObjectId(v))
+            : false;
+        }),
+      addToDefault: yup
+        .boolean()
+        .label("addToDefault")
+        .typeError("Express addToDefault in boolean"),
+      removeFromDefault: yup
+        .boolean()
+        .label("removeFromDefault")
+        .typeError("Express removeFromDefault in boolean"),
+    })
+    .label("body")
+    .test(
+      "body ",
+      "Provide valid & unique collections list to add & remove",
+      (val: any) => {
+        /**
+         * a.) If boths important fields are not present
+         * b.) If present then it must array
+         * c.) If both present then both must be unique
+         * a.) If any field is present it must array, length > 0 with distinct ids
+         * b.) String in both array must be distinct
+         */
+
+        if (
+          typeof val?.addTo === "undefined" &&
+          typeof val?.removeFrom === "undefined" &&
+          typeof val?.addToDefault === "undefined" &&
+          typeof val?.removeFromDefault === "undefined"
+        )
+          return false;
+
+        let isAddArray = typeOf(val?.addTo, "array"),
+          isRemoveArray = typeOf(val?.removeFrom, "array");
+
+        // if (typeof val?.addTo !== "undefined" && !isAddArray) {
+        //   return false;
+        // }
+
+        // if (typeof val?.removeFrom !== "undefined" && !isRemoveArray) {
+        //   return false;
+        // }
+
+        if (isAddArray && isRemoveArray)
+          return (
+            new Set([...val.addTo, ...val.removeFrom]).size ===
+            val.removeFrom?.length + val.addTo?.length
+          );
+        return true;
+      }
+    ),
 });

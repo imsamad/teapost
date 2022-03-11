@@ -19,6 +19,7 @@ import storyRtr from "./routes/storyRtr";
 import tagRtr from "./routes/tagRtr";
 import imageUploadRtr from "./routes/imageUploadRtr";
 import profileRtr from "./routes/profileRtr";
+import collectionRtr from "./routes/collectionRtr";
 import checkTemp from "./middleware/checkTemp";
 
 const app = express();
@@ -52,6 +53,7 @@ app.use("/api/v1/stories", storyRtr);
 app.use("/api/v1/tags", tagRtr);
 app.use("/api/v1/image", imageUploadRtr);
 app.use("/api/v1/profile", profileRtr);
+app.use("/api/v1/collection", collectionRtr);
 
 app.get("/api/v1", (_req, res) => {
   res.json({

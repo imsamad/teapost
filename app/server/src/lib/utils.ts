@@ -17,7 +17,7 @@ export const createHash = (str: string) =>
 export const typeOf = (
   val: any,
   type: string | "string" | "array" | "object"
-) => val.constructor.name.toLowerCase() === type.toLowerCase();
+) => (!val ? false : val.constructor.name.toLowerCase() === type.toLowerCase());
 
 export const trimExtra = (
   str: string | any,
@@ -63,6 +63,7 @@ export const validateYupSchema = async (
     if (res) return true;
     else throw new Error("Provide proper data");
   } catch (yupError: any) {
+    // console.log("yupErroryupError ", yupError);
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
 

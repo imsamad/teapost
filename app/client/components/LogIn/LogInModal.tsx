@@ -13,9 +13,9 @@ import { useUICtx } from "../Context";
 const LoginModal = ({ isOpen, onClose }: any) => {
   const { login } = useUICtx();
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="sm">
+    <Modal isOpen={isOpen} onClose={onClose} size="xs">
       <ModalOverlay />
-      <ModalContent borderRadius="lg" mx="3">
+      <ModalContent borderRadius="lg" py="5">
         <ModalCloseButton />
         <ModalBody borderRadius="lg">
           <Form redirectTo="" />

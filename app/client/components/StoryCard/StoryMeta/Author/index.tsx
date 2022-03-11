@@ -46,8 +46,8 @@ const Index = ({ author }: any) => {
         isClosable: true,
         render: customToast(login.onOpen),
       });
-      return;
       onClose();
+      return;
     }
     const data = await followAuthor(author.id, stats.hasBeenFollowing);
     if (data) {

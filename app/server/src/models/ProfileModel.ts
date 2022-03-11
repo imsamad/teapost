@@ -49,6 +49,13 @@ const profileSchema = new Schema(
   }
 );
 
+profileSchema.virtual("storyCollections", {
+  ref: "StoryCollection",
+  localField: "_id",
+  foreignField: "user",
+  justOne: false,
+});
+
 const ProfileModel = model<ProfileDocument>("Profile", profileSchema);
 
 export default ProfileModel;

@@ -11,27 +11,27 @@ import {
   TagCloseButton,
   TagLabel,
   Text,
-} from '@chakra-ui/react';
-import { useField } from 'formik';
-import React, { useRef } from 'react';
-import { useState } from 'react';
+} from "@chakra-ui/react";
+import { useField } from "formik";
+import React, { useRef } from "react";
+import { useState } from "react";
 
-import { trimExtra } from '../../../lib/utils';
+import { trimExtra } from "@lib/utils";
 
 const AddTags = () => {
   const ref = useRef<HTMLInputElement>();
   const [isError, setIsError] = useState<boolean | string>(false);
-  const [fieldProps, meta, helpers] = useField('additionalTags');
+  const [fieldProps, meta, helpers] = useField("additionalTags");
 
   const handleClick = () => {
     // @ts-ignore
     const val: string = ref.current.value;
-    if (val.length < 4 || !trimExtra(val, 4, ''))
-      setIsError('Must be above 4 char');
+    if (val.length < 4 || !trimExtra(val, 4, ""))
+      setIsError("Must be above 4 char");
     else {
       const newVal = meta.value ? [...meta.value, val] : [val];
       // @ts-ignore
-      ref.current.value = '';
+      ref.current.value = "";
       helpers.setValue(newVal);
     }
   };

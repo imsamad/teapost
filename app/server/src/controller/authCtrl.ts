@@ -161,7 +161,7 @@ const sendTokens = async (
   const resData = {
     status: "ok",
     user: {
-      id: user._id || user.id,
+      _id: user._id,
       email: user.email,
       accessToken: signJwt(
         { user: user._id },

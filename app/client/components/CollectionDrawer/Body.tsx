@@ -1,11 +1,13 @@
 import { Box, Divider, Heading } from "@chakra-ui/react";
-import React, { ChangeEvent } from "react";
-import { useProfile } from "../Context";
+import { ChangeEvent } from "react";
 
+import { useProfile } from "../Context";
 import NewCollection from "../NewCollection";
 import CollectionRow from "./CollectionRow";
+
 const Body = ({ storySelected, sendObj, setSendObj }: any) => {
   const { profile } = useProfile();
+
   const handleChange =
     (collId: string) => (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked) {
@@ -22,6 +24,7 @@ const Body = ({ storySelected, sendObj, setSendObj }: any) => {
         }));
       }
     };
+
   return (
     <>
       <NewCollection />
@@ -30,17 +33,15 @@ const Body = ({ storySelected, sendObj, setSendObj }: any) => {
       </Heading>
       <Divider />
       <Box p="2">
-        {profile.storyCollections?.map(
-          (collection: { _id: string; title: string; stories: string[] }) => (
-            <CollectionRow
-              sendObj={sendObj}
-              storySelected={storySelected}
-              handleChange={handleChange(collection._id)}
-              key={collection._id}
-              collection={collection}
-            />
-          )
-        )}
+        {profile.storyCollections?.map((collection) => (
+          <CollectionRow
+            sendObj={sendObj}
+            storySelected={storySelected}
+            handleChange={handleChange(collection._id)}
+            key={collection._id}
+            collection={collection}
+          />
+        ))}
       </Box>
     </>
   );

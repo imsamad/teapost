@@ -2,18 +2,15 @@ import { useState, memo, useEffect } from "react";
 import {
   Button,
   ButtonGroup,
-  Heading,
-  HStack,
   useDisclosure,
   useToast,
   IconButton,
 } from "@chakra-ui/react";
-
 import { BiLike, BiDislike } from "react-icons/bi";
 import { AiFillFileAdd } from "react-icons/ai";
-import { FiFileMinus } from "react-icons/fi";
-import { useUICtx, useProfile, useAuthCtx } from "../../Context";
-import { gradeStory } from "../../../lib/createStory";
+
+import { useUICtx, useProfile, useAuthCtx } from "@compo/Context";
+import { gradeStory } from "@lib/api/storyApi";
 import customToast from "../customToast";
 
 const Index = ({ storyId, like, dislike }: any) => {
@@ -34,7 +31,7 @@ const Index = ({ storyId, like, dislike }: any) => {
       hadBeenLiked: profile?.likedStories?.includes(storyId),
       hadBeenDisLiked: profile?.dislikedStories?.includes(storyId),
     }));
-
+    // These two coditron in case if story render with like or dislike 0 , user liked then before it data revalidate set like or dislike 1
     if (profile?.likedStories?.includes(storyId) && like === 0) {
       setGrade((pre: any) => ({
         ...pre,
@@ -49,12 +46,13 @@ const Index = ({ storyId, like, dislike }: any) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
+
   const loading = useDisclosure();
   const toast = useToast();
   const { login } = useAuthCtx();
   const { drawer } = useUICtx();
   const handleGrade = async (isActionTypeLike = true) => {
-    if (!profile?.id) {
+    if (!profile?._id) {
       toast({
         duration: 2000,
         isClosable: true,

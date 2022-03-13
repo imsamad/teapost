@@ -1,8 +1,8 @@
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { Box, Collapse, Link, Text } from '@chakra-ui/react';
-import { useFormikContext } from 'formik';
-import React from 'react';
-import { typeOf } from '../../../lib/utils';
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { Box, Collapse, Link, Text } from "@chakra-ui/react";
+import { useFormikContext } from "formik";
+
+import { typeOf } from "@lib/utils";
 
 const FormStatus = () => {
   const { status } = useFormikContext();
@@ -19,13 +19,13 @@ const FormStatus = () => {
           >
             {status.message} <ExternalLinkIcon mx="2px" />
           </Link>
-        ) : typeOf(status?.message, 'array') ? (
+        ) : typeOf(status?.message, "array") ? (
           status.message.map((msg: any) => {
             return (
               <Text
                 key={msg}
                 fontSize="xs"
-                color={status.status !== 'ok' ? 'red.500' : 'green.500'}
+                color={status.status !== "ok" ? "red.500" : "green.500"}
               >
                 {msg}
               </Text>
@@ -34,7 +34,7 @@ const FormStatus = () => {
         ) : (
           <Text
             fontSize="xs"
-            color={status?.status !== 'ok' ? 'red.500' : 'green.500'}
+            color={status?.status !== "ok" ? "red.500" : "green.500"}
           >
             {status?.message}
           </Text>

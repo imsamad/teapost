@@ -13,7 +13,7 @@ import {
   createCollectionSchema,
   removeCollectionSchema,
   updateCollectionSchema,
-} from "../schema/collection";
+} from "../lib/schema/collection";
 
 router.post(
   "/",

@@ -1,18 +1,22 @@
-import { Box, Center, Flex, Heading, HStack, Stack } from "@chakra-ui/react";
+import { Box, Center, Heading, HStack, Stack } from "@chakra-ui/react";
 // @ts-ignore
 import { Image } from "cloudinary-react";
 import StoryActions from "../StoryActions";
 import MyLink from "../../MyLink";
+import storyType from "@lib/types/storyType";
 
 const index = ({
-  id,
-  titleImage,
-  title,
-  subtitle,
-  slug,
-  like,
-  dislike,
-}: any) => {
+  story: {
+    _id,
+    titleImage,
+    title,
+    subtitle,
+    slug,
+    meta: { likedBy, dislikedBy },
+  },
+}: {
+  story: storyType;
+}) => {
   return (
     <HStack>
       <Stack pr="15px" flex="1">
@@ -53,14 +57,19 @@ const index = ({
             </Box>
           </Stack>
         </MyLink>
-        <StoryActions storyId={id} like={like} dislike={dislike} />
+        <StoryActions
+          storyId={_id}
+          like={likedBy.length}
+          dislike={dislikedBy.length}
+        />
       </Stack>
       <MyLink href={`/story/${slug}`}>
         <Center minW="85px" w={["110px", "120px", "200px"]}>
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image
-            cloudName="dnkb5aetl"
-            publicId={titleImage.split("/").pop().split(".")[0]}
+            cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
+            // @ts-ignore
+            publicId={titleImage?.split("/").pop().split(".")[0]}
             width={200}
             height={134}
             crop="scale"

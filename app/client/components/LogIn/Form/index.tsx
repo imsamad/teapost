@@ -2,18 +2,26 @@ import { Button, useToast } from "@chakra-ui/react";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useRouter } from "next/router";
 
-import { logInSchema } from "../../../lib/Schema/signInForm";
-import { signUp } from "../../../lib/authApi";
-import { typeOf } from "../../../lib/utils";
-import useUser from "../../../lib/useUser";
+import { logInSchema } from "@lib/schema/auth";
+import { signUp } from "@lib/api/authApi";
+import { typeOf } from "@lib/utils";
+import useUser from "@lib/useUser";
 
-import FormFields from "./FormFields";
+import FormFields from "./FormBody";
 import Footer from "./Footer";
 import Header from "./Header";
 import LoginWrapper from "./LoginWrapper";
 import FormStatus from "./FormStatus";
 
-import { useAuthCtx } from "../../Context";
+import { useAuthCtx } from "@compo/Context";
+
+type AuthType = {
+  isRegister: boolean;
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+};
 
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
@@ -28,13 +36,16 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     redirectToIfLoggedIn: true,
   });
 
-  const handleSubmit = async (values: any, action: FormikHelpers<any>) => {
+  const handleSubmit = async (
+    values: AuthType,
+    action: FormikHelpers<AuthType>
+  ) => {
     action.setStatus(false);
     action.setSubmitting(true);
-    try {
-      const dataSubmit: any = await signUp(values);
 
-      const { user, redirectUrl, message, status } = dataSubmit;
+    try {
+      const { user, redirectUrl, message, status }: any = await signUp(values);
+
       if (redirectUrl || message) {
         action.setStatus({
           status,
@@ -83,7 +94,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
       validationSchema={logInSchema}
       onSubmit={handleSubmit}
     >
-      {(formikProps: FormikProps<any>) => {
+      {(formikProps: FormikProps<AuthType>) => {
         return (
           <Form>
             <LoginWrapper>

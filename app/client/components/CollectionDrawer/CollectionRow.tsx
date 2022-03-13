@@ -9,27 +9,27 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
-import { deleteCollection } from "../../lib/collectionApi";
+
+import storyCollectionType from "@lib/types/storyCollectionType";
+import { deleteCollection } from "@lib/api/collectionApi";
 import { useProfile } from "../Context";
+
+type CollRowProps = {
+  collection: storyCollectionType;
+  sendObj: { addTo: string[]; removeFrom: string[] };
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  storySelected: string;
+};
 
 const CollectionRow = ({
   collection,
   handleChange,
   sendObj,
   storySelected,
-}: {
-  collection: {
-    _id: string;
-    title: string;
-    stories: string[];
-  };
-  sendObj: { addTo: string[]; removeFrom: string[] };
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  storySelected: string;
-}) => {
+}: CollRowProps) => {
   const { mutateProfile } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const handleClick = () => {
+  const handleDelete = () => {
     onOpen();
     deleteCollection(collection._id).finally(() => {
       mutateProfile();
@@ -63,7 +63,7 @@ const CollectionRow = ({
           isLoading={isOpen}
           size="xs"
           icon={<DeleteIcon color="red.500" />}
-          onClick={handleClick}
+          onClick={handleDelete}
         />
       )}
 

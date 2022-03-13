@@ -9,10 +9,11 @@ import {
   useBoolean,
   useToast,
   UseToastOptions,
-} from '@chakra-ui/react';
-import { changeSlug } from '../../../lib/createStory';
-import { useRouter } from 'next/router';
-import { FastField, FieldProps } from 'formik';
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { FastField, FieldProps } from "formik";
+
+import { changeSlug } from "@lib/api/storyApi";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useBoolean(false);
@@ -21,8 +22,8 @@ const Index = () => {
   const toast = useToast();
   const triggerToast = (options: UseToastOptions) => {
     toast({
-      position: 'bottom',
-      status: 'success',
+      position: "bottom",
+      status: "success",
       duration: 1000,
       isClosable: true,
       ...options,
@@ -38,17 +39,17 @@ const Index = () => {
         });
         setIsLoading.off();
         triggerToast({
-          title: 'Slug Changed.',
-          position: 'top-right',
-          status: 'success',
+          title: "Slug Changed.",
+          position: "top-right",
+          status: "success",
         });
         setIsLoading.off();
       } catch (err) {
         triggerToast({
-          title: 'This slug already existed.',
-          status: 'error',
-          position: 'top-right',
-          variant: 'subtle',
+          title: "This slug already existed.",
+          status: "error",
+          position: "top-right",
+          variant: "subtle",
         });
         setIsLoading.off();
       }
@@ -79,7 +80,7 @@ const Index = () => {
               </InputRightElement>
             </InputGroup>
             {/* @ts-ignore */}
-            {isError && typeOf(meta.error, 'array') ? (
+            {isError && typeOf(meta.error, "array") ? (
               // @ts-ignore
               [...new Set(meta?.error)].map((err: string) => (
                 <FormErrorMessage key={err}>{err}</FormErrorMessage>

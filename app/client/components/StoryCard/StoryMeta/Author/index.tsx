@@ -8,9 +8,9 @@ import {
 } from "@chakra-ui/react";
 import { BiBellPlus, BiBellMinus } from "react-icons/bi";
 import MyLink from "../../../MyLink";
-import { useAuthCtx, useProfile, useUICtx } from "../../../Context";
+import { useAuthCtx, useProfile } from "../../../Context";
 import { useEffect, useState } from "react";
-import { followAuthor } from "../../../../lib/authApi";
+import { followAuthor } from "@lib/api/authApi";
 import customToast from "../../customToast";
 
 type propTypes = {
@@ -22,15 +22,14 @@ type propTypes = {
 const Index = ({ author }: any) => {
   const { profile, mutateProfile } = useProfile();
   const [stats, setStats] = useState({
-    // @ts-ignore
     hasBeenFollowing: false,
     isItselfAuthor: false,
   });
   useEffect(() => {
     setStats({
       // @ts-ignore
-      hasBeenFollowing: profile?.following?.indexOf(author?.id) > -1,
-      isItselfAuthor: profile.id?.toString() == author.id,
+      hasBeenFollowing: profile?.following?.indexOf(author?._id) > -1,
+      isItselfAuthor: profile._id?.toString() == author.id,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
@@ -40,7 +39,7 @@ const Index = ({ author }: any) => {
   const toast = useToast();
   const handleFollowing = async () => {
     onOpen();
-    if (!profile?.id) {
+    if (!profile?._id) {
       toast({
         duration: 2000,
         isClosable: true,

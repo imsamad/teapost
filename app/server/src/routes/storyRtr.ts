@@ -15,7 +15,7 @@ import {
   gradeStorySchema,
   likeOrDislikeSchema,
   publishedStorySchema,
-} from "../schema/story";
+} from "../lib/schema/story";
 
 const router: Router = express();
 

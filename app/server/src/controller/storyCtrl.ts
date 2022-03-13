@@ -6,7 +6,7 @@ import StoryMetaModel from "../models/StoryMetaModel";
 import StoryModel, { StoryDocument } from "../models/StoryModel";
 import TagModel, { TagDocument } from "../models/TagModel";
 import { UserDocument } from "../models/UserModel";
-import { isAbleToPublished } from "../schema/story";
+import { isAbleToPublished } from "../lib/schema/story";
 
 // @desc      Create a story
 // @route     POST / PUT /api/v1/story

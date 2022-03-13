@@ -1,7 +1,7 @@
 import { SWRConfig } from "swr";
 import axios from "axios";
 
-import { getCookies } from "../../lib/cookies";
+import { getCookies } from "@lib/cookies";
 
 const SWRGlobal = ({ children }: { children: React.ReactNode }) => {
   return (

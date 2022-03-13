@@ -16,7 +16,7 @@ import {
   followSchema,
   logInSchema,
   registerSchema,
-} from "../schema/auth";
+} from "../lib/schema/auth";
 
 router.post("/login", validateSchema(logInSchema), logIn);
 router.post("/register", validateSchema(registerSchema), register);

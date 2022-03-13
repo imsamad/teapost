@@ -1,10 +1,10 @@
-import { Flex, HStack, Switch, Text } from '@chakra-ui/react';
-import { useFormikContext } from 'formik';
-import { isAbleToPublished } from '../../../lib/Schema/storySchema';
-import { validateYupSchema } from '../../../lib/utils';
+import { Flex, HStack, Switch, Text } from "@chakra-ui/react";
+import { useFormikContext } from "formik";
 
-// @ts-ignore
-import axios from '#axios';
+import { isAbleToPublished } from "@lib/schema/story";
+import { validateYupSchema } from "@lib/utils";
+import axios from "@lib/axios";
+
 const Index = () => {
   const { values, setFieldValue, setFieldTouched, setErrors } =
     useFormikContext();
@@ -17,8 +17,8 @@ const Index = () => {
       isPublished: !values.isPublished,
     });
 
-    setFieldValue('isPublished', data.story.isPublished);
-    setFieldTouched('isPublished', true);
+    setFieldValue("isPublished", data.story.isPublished);
+    setFieldTouched("isPublished", true);
   };
   const handleChange = async () => {
     // @ts-ignore

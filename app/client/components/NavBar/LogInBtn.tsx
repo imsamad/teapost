@@ -6,16 +6,15 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import useUser from "../../lib/useUser";
-import { useAuthCtx } from "../Context";
-
-import MyLink from "../MyLink";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+
+import { useAuthCtx } from "../Context";
+import MyLink from "../MyLink";
+
 const LogInBtn = () => {
-  const { user, logout } = useUser();
-  const { login } = useAuthCtx();
-  return user ? (
+  const { login, user, setUser } = useAuthCtx();
+  return user?._id ? (
     <Menu>
       <MenuButton mx={[1, 4]} as={Button} rightIcon={<ChevronDownIcon />}>
         Profile
@@ -27,7 +26,7 @@ const LogInBtn = () => {
           </MyLink>
 
           <MenuItem
-            onClick={() => logout()}
+            onClick={() => setUser({})}
             icon={<RiLogoutCircleRLine />}
             color="red.500"
           >

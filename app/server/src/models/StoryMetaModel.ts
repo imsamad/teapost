@@ -4,7 +4,6 @@ import { UserDocument } from "./UserModel";
 
 export interface StoryMetaDocument extends Document {
   _id: StoryDocument["_id"];
-  id: StoryDocument["_id"];
   views: number;
   comments: number;
   likedBy: Types.Array<UserDocument["_id"]>;

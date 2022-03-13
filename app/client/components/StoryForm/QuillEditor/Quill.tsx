@@ -1,36 +1,36 @@
-import { Box } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
-import QuillClass from 'quill';
-import 'quill/dist/quill.snow.css';
-import { useFormikContext } from 'formik';
+import { Box } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import QuillClass from "quill";
+import "quill/dist/quill.snow.css";
+import { useFormikContext } from "formik";
 
-const BlotFormatter = require('quill-blot-formatter').default;
-QuillClass.register('modules/blotFormatter', BlotFormatter);
+const BlotFormatter = require("quill-blot-formatter").default;
+QuillClass.register("modules/blotFormatter", BlotFormatter);
 
-const MagicUrl = require('quill-magic-url').default;
-QuillClass.register('modules/magicUrl', MagicUrl);
+const MagicUrl = require("quill-magic-url").default;
+QuillClass.register("modules/magicUrl", MagicUrl);
 
-import { formats, modules } from '../../../lib/quillConfig';
+import { formats, modules } from "../../../lib/quillConfig";
 
-import uploadImage from '../../../lib/uploadImage';
+import uploadImage from "@lib/api/uploadImage";
 
 const Index = () => {
   const { values, setFieldValue } = useFormikContext();
   const [quill, setQuill] = useState<any>();
   const editorRef = useCallback((wrapper: any) => {
     if (!wrapper) return;
-    wrapper.innerHTML = '';
-    const editor = document.createElement('div');
+    wrapper.innerHTML = "";
+    const editor = document.createElement("div");
     wrapper.append(editor);
     const q = new QuillClass(editor, {
-      theme: 'snow',
+      theme: "snow",
       formats,
       modules: {
         ...modules,
         blotFormatter: {},
         magicUrl: true,
       },
-      placeholder: 'Write an awesome story...',
+      placeholder: "Write an awesome story...",
     });
     // @ts-ignore
     q.clipboard.dangerouslyPasteHTML(values.body);
@@ -40,7 +40,7 @@ const Index = () => {
 
   const insertToEditor = (url: any) => {
     const range = quill.getSelection();
-    quill.insertEmbed(range.index, 'image', url);
+    quill.insertEmbed(range.index, "image", url);
   };
 
   const saveToServer = async (file: any) => {
@@ -56,9 +56,9 @@ const Index = () => {
   };
 
   const selectLocalImage = () => {
-    const input = document.createElement('input') as HTMLInputElement;
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
+    const input = document.createElement("input") as HTMLInputElement;
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
     input.click();
 
     input.onchange = () => {
@@ -70,10 +70,10 @@ const Index = () => {
 
   useEffect(() => {
     if (quill) {
-      quill.on('text-change', () => {
-        setFieldValue('body', quill.root.innerHTML);
+      quill.on("text-change", () => {
+        setFieldValue("body", quill.root.innerHTML);
       });
-      quill.getModule('toolbar').addHandler('image', selectLocalImage);
+      quill.getModule("toolbar").addHandler("image", selectLocalImage);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quill]);

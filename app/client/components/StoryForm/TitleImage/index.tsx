@@ -16,16 +16,16 @@ import {
   useBoolean,
   useDisclosure,
   useToast,
-} from '@chakra-ui/react';
-import { useField } from 'formik';
-import CustomError from '../../FormFields/CustomError';
+} from "@chakra-ui/react";
+import { useField } from "formik";
+import { BiImageAdd } from "react-icons/bi";
+import { useState } from "react";
 
-import uploadImage from '../../../lib/uploadImage';
-import { BiImageAdd } from 'react-icons/bi';
-import { useState } from 'react';
+import { CustomError } from "../../FormFields";
+import uploadImage from "@lib/api/uploadImage";
 
 const File = () => {
-  const [, meta, helpers] = useField('titleImage');
+  const [, meta, helpers] = useField("titleImage");
   const [file, setFile] = useState<File>();
   const titleImage = meta.value;
 
@@ -43,19 +43,19 @@ const File = () => {
     if (imageUrl) {
       helpers.setValue(imageUrl);
       toast({
-        title: 'Image uploaded',
-        position: 'bottom',
-        variant: 'subtle',
-        status: 'success',
+        title: "Image uploaded",
+        position: "bottom",
+        variant: "subtle",
+        status: "success",
         isClosable: true,
       });
       setIsLoading.off();
     } else {
       toast({
-        title: 'Image uploading failed',
-        position: 'bottom',
-        variant: 'subtle',
-        status: 'error',
+        title: "Image uploading failed",
+        position: "bottom",
+        variant: "subtle",
+        status: "error",
         isClosable: true,
       });
       setIsLoading.off();
@@ -68,15 +68,15 @@ const File = () => {
 
     if (selectedFile.size < oneMB * 4) {
       helpers.setTouched(false, false);
-      helpers.setError('');
+      helpers.setError("");
       setFile(selectedFile);
     } else {
       setFile(undefined);
       helpers.setTouched(true, false);
-      helpers.setError('Max image size is 4Mb');
+      helpers.setError("Max image size is 4Mb");
     }
   };
-  const size = 'sm';
+  const size = "sm";
   return (
     <FormControl isInvalid={isError} size="sm">
       <FormLabel>Upload Title Image</FormLabel>
@@ -90,14 +90,14 @@ const File = () => {
               alignItems="center"
               w="100%"
               _hover={{
-                bgColor: '#ddd',
+                bgColor: "#ddd",
               }}
               transition="background"
             >
               <input
                 type="file"
                 onChange={handleChange}
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 id="imageUpload"
                 accept="image/*"
                 multiple={false}
@@ -111,7 +111,7 @@ const File = () => {
                 isTruncated
               >
                 {/* @ts-ignore */}
-                {file?.name || 'Select Image'}
+                {file?.name || "Select Image"}
               </Text>
             </Flex>
           </InputGroup>

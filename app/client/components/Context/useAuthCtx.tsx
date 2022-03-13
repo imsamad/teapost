@@ -1,20 +1,17 @@
 import { useDisclosure } from "@chakra-ui/react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { deleteCookies, getCookies, setCookies } from "../../lib/cookies";
-import LoginModal from "../LogIn/LogInModal";
 
-type UserType = {
-  id?: string;
-  email?: string;
-  username?: string;
-  role?: string;
+import { deleteCookies, getCookies, setCookies } from "@lib/cookies";
+import LoginModal from "../LogIn/LogInModal";
+import userType from "@lib/types/userType";
+
+type AuthCtxType = {
+  user: Partial<userType>;
+  setUser: (props: Partial<userType>) => void;
+  login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
 };
 
-const AuthCtx = createContext<{
-  user: Partial<UserType>;
-  setUser: (props: Partial<UserType>) => void;
-  login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
-}>({
+const AuthCtx = createContext<AuthCtxType>({
   user: getCookies(),
   setUser: () => {},
   login: { isOpen: false, onOpen: () => {}, onClose: () => {} },
@@ -23,12 +20,11 @@ const AuthCtx = createContext<{
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUserDis] = useState<any>(getCookies());
 
-  const setUser = (val: UserType) => {
+  const setUser = (val: Partial<userType>) => {
     if (!Object.keys(val).length) setUserDis(null);
     else {
-      // @ts-ignore
       setCookies(val).finally(() => {
-        setUserDis((pre: UserType) => ({ ...pre, ...val }));
+        setUserDis((pre: userType) => ({ ...pre, ...val }));
       });
     }
   };

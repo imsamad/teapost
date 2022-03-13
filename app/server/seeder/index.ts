@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import path from "path";
+
 const setEnv = () =>
   new Promise((resolve, reject) => {
     dotenv.config({
@@ -24,13 +25,17 @@ import dbConnect from "../src/db/connectDB";
 const importData = async () => {
   try {
     await UserModel.create(users);
-    await StoryModel.create(stories);
-    await TagModel.create(tags);
-    await StoryMetaModel.create(stories.map((s) => ({ _id: s._id })));
     await ProfileModel.create(users.map((user) => ({ _id: user._id })));
+
+    await TagModel.create(tags);
+
+    await StoryModel.create(stories);
+    await StoryMetaModel.create(stories.map((s) => ({ _id: s._id })));
+
     await StoryCollection.create(
       users.map((user) => ({ user: user._id, title: "Read Later" }))
     );
+
     console.log("data imported");
     process.exit(1);
   } catch (err) {

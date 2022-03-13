@@ -1,20 +1,21 @@
-import { Button, HStack, Text, useToast } from '@chakra-ui/react';
-import { Form, Formik } from 'formik';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { Button, HStack, Text, useToast } from "@chakra-ui/react";
+import { Form, Formik } from "formik";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-import { submitStory } from '../../lib/createStory';
-import StoryForm from './Form';
+import { submitStory } from "@lib/api/storyApi";
+
+import StoryForm from "./Form";
 
 const initValues = {
-  title: '',
-  slug: '',
-  subtitle: '',
-  body: '',
-  keywords: '',
+  title: "",
+  slug: "",
+  subtitle: "",
+  body: "",
+  keywords: "",
   tags: [],
   additionalTags: [],
-  titleImage: '',
+  titleImage: "",
 };
 
 const Index = ({ story }: any) => {
@@ -23,8 +24,8 @@ const Index = ({ story }: any) => {
   useEffect(() => {
     const unloadCallback = (event: BeforeUnloadEvent) => {
       event.preventDefault();
-      event.returnValue = '';
-      return '';
+      event.returnValue = "";
+      return "";
     };
     // window.addEventListener('beforeunload', unloadCallback);
     // return () => window.removeEventListener('beforeunload', unloadCallback);
@@ -33,10 +34,10 @@ const Index = ({ story }: any) => {
   const saveToast = (title: string, position?: any) =>
     toast({
       title,
-      status: 'success',
+      status: "success",
       duration: 1000,
       isClosable: true,
-      position: position || 'bottom',
+      position: position || "bottom",
     });
   return (
     <Formik
@@ -65,7 +66,7 @@ const Index = ({ story }: any) => {
         // });
         // actions.setErrors(data.message);
 
-        saveToast('Saved Changes.');
+        saveToast("Saved Changes.");
       }}
     >
       {(formikProps: any) => {

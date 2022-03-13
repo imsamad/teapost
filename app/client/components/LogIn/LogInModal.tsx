@@ -7,9 +7,11 @@ import {
   ModalFooter,
   Divider,
 } from "@chakra-ui/react";
+
 import Form from "./Form";
 import MyLink from "../MyLink";
 import { useAuthCtx } from "../Context";
+
 const LoginModal = ({ isOpen, onClose }: any) => {
   const { login } = useAuthCtx();
   return (

@@ -2,9 +2,6 @@ import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Button,
   Stack,
-  Box,
-  FormLabel,
-  Textarea,
   HStack,
   Collapse,
   useDisclosure,
@@ -14,11 +11,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
-import { createCollection } from "../../lib/collectionApi";
-import { trimExtra, typeOf } from "../../lib/utils";
+
+import { createCollection } from "@lib/api/collectionApi";
+import { trimExtra } from "@lib/utils";
 import { useProfile } from "../Context";
-import Input from "../FormFields/Input";
-import TextArea from "../FormFields/TextArea";
+import { TPInput, TPTextarea } from "../FormFields";
+
 const Index = () => {
   const { isOpen, onClose, onToggle } = useDisclosure();
   const { profile, mutateProfile } = useProfile();
@@ -97,14 +95,14 @@ const Index = () => {
                       Create new collection
                     </Heading>
                     <Divider />
-                    <Input
+                    <TPInput
                       isRequired={true}
                       label="Title"
                       name="title"
                       placeholder="Enter unique title"
                       size="sm"
                     />
-                    <TextArea
+                    <TPTextarea
                       name="description"
                       placeholder="Write a short & sweet description..."
                       label="Description"

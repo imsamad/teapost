@@ -1,10 +1,10 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text } from "@chakra-ui/react";
+import { memo } from "react";
+import useSWR from "swr";
 
-import { memo } from 'react';
-import useSWR from 'swr';
-import CheckBox from '../../FormFields/CheckBox';
+import { TPCheckBox } from "../../FormFields";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL + '/tags';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/tags";
 const TagSelect = () => {
   const { data } = useSWR(apiUrl);
   return (
@@ -23,10 +23,10 @@ const TagSelect = () => {
         {!data ? (
           <>Loading tags...</>
         ) : data.data.length ? (
-          <CheckBox
+          <TPCheckBox
             name="tags"
             data={data?.data}
-            dataKeys={['_id', 'tag']}
+            dataKeys={["_id", "tag"]}
             size="lg"
           />
         ) : (

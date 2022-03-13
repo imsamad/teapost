@@ -1,17 +1,10 @@
 import mongoose, { Date } from "mongoose";
 import { ErrorResponse } from "../lib/utils";
 import bcrypt from "bcrypt";
+import UserType from "../lib/types/userType";
 
-export interface UserDocument extends mongoose.Document {
-  email: string;
-  username: string;
-  password: string;
-  isEmailVerified: boolean;
-  isAuthorised: boolean;
-  role: string | "admin" | "reader" | "author";
+export interface UserDocument extends Omit<UserType, "_id">, mongoose.Document {
   matchPassword(candidatePassword: string): Promise<boolean>;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 const UserSchema = new mongoose.Schema(

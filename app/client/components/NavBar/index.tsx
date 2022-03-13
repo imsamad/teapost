@@ -7,9 +7,11 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
+
 import MyLink from "../MyLink";
 import DarkMode from "../DarkMode";
 import LogInBtn from "./LogInBtn";
+
 const Index = () => {
   return (
     <Flex alignItems="center" py={4} as="nav">

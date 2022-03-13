@@ -27,8 +27,4 @@ module.exports = {
       },
     ];
   },
-  webpack: (config) => {
-    config.resolve.alias["#axios"] = path.join(__dirname, "lib/axios");
-    return config;
-  },
 };

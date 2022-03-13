@@ -2,19 +2,12 @@ import { Document, model, Schema } from "mongoose";
 import { ErrorResponse } from "../lib/utils";
 import { StoryMetaDocument } from "./StoryMetaModel";
 import { UserDocument } from "./UserModel";
+import StoryType from "../lib/types/storyType";
 
-export interface StoryDocument extends Document {
-  title?: String;
-  titleImage?: String;
-  subtitle?: String;
-  slug: string;
-  tags?: String[];
-  body?: { text: String; html: String };
-  keywords?: String;
-  isPublished: Boolean;
-  isPublishedByAdmin: Boolean;
+export interface StoryDocument
+  extends Omit<StoryType, "_id" | "meta">,
+    Document {
   author: UserDocument["_id"];
-  data: Object;
   meta?: StoryMetaDocument;
 }
 

@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { BiBellPlus, BiBellMinus } from "react-icons/bi";
 import MyLink from "../../../MyLink";
-import { useProfile, useUICtx } from "../../../Context";
+import { useAuthCtx, useProfile, useUICtx } from "../../../Context";
 import { useEffect, useState } from "react";
 import { followAuthor } from "../../../../lib/authApi";
 import customToast from "../../customToast";
@@ -36,7 +36,7 @@ const Index = ({ author }: any) => {
   }, [profile]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { login } = useUICtx();
+  const { login } = useAuthCtx();
   const toast = useToast();
   const handleFollowing = async () => {
     onOpen();

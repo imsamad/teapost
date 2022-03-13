@@ -12,12 +12,13 @@ import Footer from "./Footer";
 import Header from "./Header";
 import LoginWrapper from "./LoginWrapper";
 import FormStatus from "./FormStatus";
-import useUICtx from "../../Context/useUICtx";
+
+import { useAuthCtx } from "../../Context";
 
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
   const toast = useToast();
-  const { login } = useUICtx();
+  const { login } = useAuthCtx();
   const redirectTo = router.query.redirectTo
     ? (router.query.redirectTo as string)
     : redirectToProp ?? "/me";

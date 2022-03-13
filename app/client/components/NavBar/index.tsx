@@ -1,5 +1,4 @@
 import {
-  Button,
   Flex,
   Heading,
   Input,
@@ -8,24 +7,9 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { Search2Icon } from "@chakra-ui/icons";
-import dynamic from "next/dynamic";
 import MyLink from "../MyLink";
 import DarkMode from "../DarkMode";
 import LogInBtn from "./LogInBtn";
-// const LogInBtn = dynamic(() => import("./LogInBtn"), {
-//   loading: () =>
-//     true ? (
-//       <p>loading...</p>
-//     ) : (
-//       <MyLink href="/auth">
-//         <Button size="md" mx={[1, 4]}>
-//           Login
-//         </Button>
-//       </MyLink>
-//     ),
-//   ssr: false,
-// });
-
 const Index = () => {
   return (
     <Flex alignItems="center" py={4} as="nav">

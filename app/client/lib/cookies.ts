@@ -16,7 +16,6 @@ const setCookies = (user: string) =>
       maxAge: oneDay,
       sameSite: "strict",
       encode: (val: any) => {
-        // console.log("val ", val);
         return val;
       },
     });

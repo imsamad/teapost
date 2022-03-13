@@ -80,6 +80,7 @@ export const register = asyncHandler(
     }
 
     await ProfileModel.create({ _id: user._id });
+    await StoryCollectionModel.create({ user: user._id, title: "Read Later" });
     let resObj: any = {
       status: "ok",
       message: `Account created successfully, Verify your email sent to ${email}.`,
@@ -183,12 +184,17 @@ export const getMe = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
-    let query = ProfileModel.findById(user).lean();
+    let query = ProfileModel.findById(user).populate("storyCollections");
+    // .populate({
+    //   path: "storyCollections",
+    //   select: "_id ",
+    // });
+    // .select("storyCollections");
+    // ;
 
-    if (req.query.populateStory)
-      query.populate("likedStories dislikedStories storyCollections");
+    if (req.query.populateStory) query.populate("likedStories dislikedStories");
 
-    const profile = await query;
+    const profile = await query.lean();
     return res.json({
       status: "ok",
       profile: profile?._id
@@ -248,43 +254,46 @@ export const addToCollection = asyncHandler(
 
     let updatePromise: any = [];
     if (addToDefault || removeFromDefault) {
-      const defaultCollection = StoryCollectionModel.findOneAndUpdate(
-        {
-          user,
-          title: new RegExp("^" + "read later" + "$", "i"),
-        },
-        addToDefault
-          ? { user, $addToSet: { stories: story._id } }
-          : { user, $pull: { stories: story._id } },
-        {
-          new: true,
-          upsert: true,
-        }
+      updatePromise.push(
+        StoryCollectionModel.findOneAndUpdate(
+          {
+            user,
+            title: new RegExp("^" + "read later" + "$", "i"),
+          },
+          addToDefault
+            ? { user, $addToSet: { stories: story._id } }
+            : { user, $pull: { stories: story._id } },
+          {
+            new: true,
+            upsert: true,
+          }
+        )
       );
-      updatePromise.push(defaultCollection);
     }
     if (addTo) {
       addTo.forEach((collId: string) => {
-        const collections = StoryCollectionModel.findOneAndUpdate(
-          { _id: collId, user },
-          {
-            $push: { stories: story._id },
-          },
-          { new: true }
+        updatePromise.push(
+          StoryCollectionModel.findOneAndUpdate(
+            { _id: collId, user },
+            {
+              $push: { stories: story._id },
+            },
+            { new: true }
+          )
         );
-        updatePromise.push(collections);
       });
     }
     if (removeFrom) {
       removeFrom.forEach((collId: string) => {
-        const collections = StoryCollectionModel.findOneAndUpdate(
-          { _id: collId, user },
-          {
-            $pull: { stories: story._id },
-          },
-          { new: true }
+        updatePromise.push(
+          StoryCollectionModel.findOneAndUpdate(
+            { _id: collId, user },
+            {
+              $pull: { stories: story._id },
+            },
+            { new: true }
+          )
         );
-        updatePromise.push(collections);
       });
     }
 

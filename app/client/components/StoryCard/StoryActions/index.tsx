@@ -12,13 +12,12 @@ import {
 import { BiLike, BiDislike } from "react-icons/bi";
 import { AiFillFileAdd } from "react-icons/ai";
 import { FiFileMinus } from "react-icons/fi";
-import { useUICtx, useProfile } from "../../Context";
+import { useUICtx, useProfile, useAuthCtx } from "../../Context";
 import { gradeStory } from "../../../lib/createStory";
 import customToast from "../customToast";
 
 const Index = ({ storyId, like, dislike }: any) => {
   const { profile, mutateProfile } = useProfile();
-  // console.log("profile ", profile);
   const [grade, setGrade] = useState({
     like: profile?.likedStories?.includes(storyId) && like === 0 ? 1 : like,
     dislike:
@@ -52,7 +51,8 @@ const Index = ({ storyId, like, dislike }: any) => {
   }, [profile]);
   const loading = useDisclosure();
   const toast = useToast();
-  const { login } = useUICtx();
+  const { login } = useAuthCtx();
+  const { drawer } = useUICtx();
   const handleGrade = async (isActionTypeLike = true) => {
     if (!profile?.id) {
       toast({
@@ -135,6 +135,9 @@ const Index = ({ storyId, like, dislike }: any) => {
         {grade.dislike}
       </Button>
       <IconButton
+        onClick={() => {
+          drawer.onOpen(storyId);
+        }}
         _active={{
           outline: "none",
         }}

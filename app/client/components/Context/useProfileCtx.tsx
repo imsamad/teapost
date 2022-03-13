@@ -8,6 +8,7 @@ type ProfileType = {
   likedStories: string[];
   dislikedStories: string[];
   following: string[];
+  storyCollections: { _id: string; title: string; stories: string[] }[];
 };
 
 const ProfileCtx = createContext<{

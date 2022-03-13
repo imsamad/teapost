@@ -28,6 +28,9 @@ const importData = async () => {
     await TagModel.create(tags);
     await StoryMetaModel.create(stories.map((s) => ({ _id: s._id })));
     await ProfileModel.create(users.map((user) => ({ _id: user._id })));
+    await StoryCollection.create(
+      users.map((user) => ({ user: user._id, title: "Read Later" }))
+    );
     console.log("data imported");
     process.exit(1);
   } catch (err) {

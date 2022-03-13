@@ -15,9 +15,9 @@ export const createCollectionSchema = yup.object({
       .string()
       .label("description")
       .typeError("Description must be string.")
-      .test("description", "Description must be above 1 chars.", (val) =>
-        typeof val === "undefined" ? true : trimExtra(val, 1)
-      ),
+      .test("description", "Description must be above 1 chars.", (val) => {
+        return typeof val === "undefined" ? true : trimExtra(val, 1);
+      }),
     isPublic: yup
       .boolean()
       .label("isPublic")
@@ -63,7 +63,6 @@ export const updateCollectionSchema = yup.object({
     })
     .label("body")
     .test("body", "Provide respective data", (val: any) => {
-      console.log("val ", val);
       return val?.title ||
         val?.description ||
         typeOf(val?.stories, "array") ||

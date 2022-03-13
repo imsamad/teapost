@@ -1,26 +1,41 @@
-import { createContext, useContext } from "react";
-
+import { createContext, useContext, useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
-import LogInModal from "../LogIn/LogInModal";
+
+import CollectionDrawer from "../CollectionDrawer";
 
 const UICtx = createContext<{
-  login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
+  drawer: {
+    isOpen: boolean;
+    onOpen: (story: string) => void;
+    onClose: () => void;
+  };
 }>({
-  login: { isOpen: false, onOpen: () => {}, onClose: () => {} },
+  drawer: { isOpen: false, onOpen: (story: string) => {}, onClose: () => {} },
 });
 
 const UICtxProvider = ({ children }: { children: React.ReactNode }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const login = {
-    isOpen,
-    on: onOpen,
-    off: onClose,
-    onOpen,
-    onClose,
+  const [storySelected, setStorySelected] = useState<string>("");
+  const drawerStates = useDisclosure();
+  const drawer = {
+    // @ts-ignore
+    onOpen: (story?: string) => {
+      setStorySelected(story ?? "");
+      drawerStates.onOpen();
+    },
+    // @ts-ignore
+    onClose: () => {
+      setStorySelected("");
+      drawerStates.onClose();
+    },
+    isOpen: drawerStates.isOpen,
   };
   return (
-    <UICtx.Provider value={{ login }}>
-      <LogInModal isOpen={isOpen} onClose={onClose} />
+    <UICtx.Provider value={{ drawer }}>
+      <CollectionDrawer
+        isOpen={drawer.isOpen}
+        onClose={drawer.onClose}
+        storySelected={storySelected}
+      />
       {children}
     </UICtx.Provider>
   );

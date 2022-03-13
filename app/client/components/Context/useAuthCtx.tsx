@@ -1,5 +1,7 @@
+import { useDisclosure } from "@chakra-ui/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { deleteCookies, getCookies, setCookies } from "../../lib/cookies";
+import LoginModal from "../LogIn/LogInModal";
 
 type UserType = {
   id?: string;
@@ -11,7 +13,12 @@ type UserType = {
 const AuthCtx = createContext<{
   user: Partial<UserType>;
   setUser: (props: Partial<UserType>) => void;
-}>({ user: getCookies(), setUser: () => {} });
+  login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
+}>({
+  user: getCookies(),
+  setUser: () => {},
+  login: { isOpen: false, onOpen: () => {}, onClose: () => {} },
+});
 
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUserDis] = useState<any>(getCookies());
@@ -26,12 +33,24 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const login = {
+    isOpen,
+    on: onOpen,
+    off: onClose,
+    onOpen,
+    onClose,
+  };
+
   useEffect(() => {
     if (!user) deleteCookies();
     else setCookies(user);
   }, [user]);
   return (
-    <AuthCtx.Provider value={{ user, setUser }}>{children}</AuthCtx.Provider>
+    <AuthCtx.Provider value={{ user, setUser, login }}>
+      <LoginModal isOpen={isOpen} onClose={onClose} />
+      {children}
+    </AuthCtx.Provider>
   );
 };
 

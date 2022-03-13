@@ -68,16 +68,22 @@ export const followSchema = yup.object({
 });
 
 export const addToCollectionSchema = yup.object({
+  params: yup.object({
+    storyId: yup
+      .string()
+      .required("Story Id is required")
+      .label("storyId")
+      .typeError("StoryId must valid string")
+      .test("storyId", "Story is not valid", (val) => isValidObjectId(val)),
+  }),
   body: yup
     .object()
     .shape({
       addTo: yup
         .array()
-        .min(1)
         .label("addTo")
         .typeError("Provide list of collection")
         .test("addTo", "Provide valid collections", (val: any) => {
-          console.log("addTo");
           return !val
             ? true
             : typeOf(val, "array")
@@ -87,7 +93,6 @@ export const addToCollectionSchema = yup.object({
         }),
       removeFrom: yup
         .array()
-        .min(1)
         .label("removeFrom")
         .typeError("Provide list of collection toremove from")
         .test("removeFrom", "Provide valid collections", (val: any) => {

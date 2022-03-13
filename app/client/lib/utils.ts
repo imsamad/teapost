@@ -1,20 +1,20 @@
-import { AnySchema } from 'yup';
+import { AnySchema } from "yup";
 
 export const trimExtra = (
   str: string | any,
   length: number,
-  join = ' '
+  join = " "
 ): boolean => {
   if (!str) return false;
-  let splitted = str.split(' ');
-  let filtered = splitted.filter((val: string) => val !== '');
+  let splitted = str.split(" ");
+  let filtered = splitted.filter((val: string) => val !== "");
   let joined = filtered.join(join);
   return joined.length >= length ? true : false;
 };
 
 export const typeOf = (
   val: any,
-  type: string | 'string' | 'array' | 'object'
+  type: string | "string" | "array" | "object"
 ) => val?.constructor?.name?.toLowerCase() === type.toLowerCase();
 
 export const validateYupSchema = async (
@@ -25,7 +25,7 @@ export const validateYupSchema = async (
   try {
     const res = await schema.validate(data, { abortEarly });
     if (res) return true;
-    else throw new Error('Provide proper data');
+    else throw new Error("Provide proper data");
   } catch (yupError: any) {
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
@@ -77,6 +77,6 @@ export const validateYupSchema = async (
         }
       });
     }
-    throw Object.keys(finalError).length ? finalError : 'Provide proper data';
+    throw Object.keys(finalError).length ? finalError : "Provide proper data";
   }
 };

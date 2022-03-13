@@ -7,14 +7,14 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import useUser from "../../lib/useUser";
-import { useUICtx } from "../Context";
+import { useAuthCtx } from "../Context";
 
 import MyLink from "../MyLink";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 const LogInBtn = () => {
   const { user, logout } = useUser();
-  const { login } = useUICtx();
+  const { login } = useAuthCtx();
   return user ? (
     <Menu>
       <MenuButton mx={[1, 4]} as={Button} rightIcon={<ChevronDownIcon />}>

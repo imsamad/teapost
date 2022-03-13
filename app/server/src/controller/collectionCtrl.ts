@@ -57,6 +57,9 @@ export const removeCollection = asyncHandler(
       // @ts-ignore
       user: req.user,
     });
+    // @ts-ignore
+    if (collection?.title.toLowerCase() == "read later")
+      return next(ErrorResponse(402, "Read more cannot be removed"));
     if (!collection) return next(ErrorResponse(400, "Resource not found."));
     await collection.delete();
 

@@ -9,9 +9,9 @@ import {
 } from "@chakra-ui/react";
 import Form from "./Form";
 import MyLink from "../MyLink";
-import { useUICtx } from "../Context";
+import { useAuthCtx } from "../Context";
 const LoginModal = ({ isOpen, onClose }: any) => {
-  const { login } = useUICtx();
+  const { login } = useAuthCtx();
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xs">
       <ModalOverlay />

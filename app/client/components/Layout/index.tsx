@@ -14,7 +14,7 @@ const Index = ({ children }: LayoutProps) => {
       <Context>
         <Flex direction="column" w="100%" minH="100vh" overflow="hidden">
           <NavBar />
-          <Divider />
+          <Divider my="2" />
 
           <Box flexGrow="1" as="main">
             {children}

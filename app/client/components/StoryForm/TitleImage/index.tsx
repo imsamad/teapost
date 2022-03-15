@@ -61,12 +61,13 @@ const File = () => {
       setIsLoading.off();
     }
   };
+
   const oneMB = 1_000_000;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // @ts-ignore
     const selectedFile = e.target.files[0];
 
-    if (selectedFile.size < oneMB * 4) {
+    if (selectedFile?.size < oneMB * 4) {
       helpers.setTouched(false, false);
       helpers.setError("");
       setFile(selectedFile);
@@ -76,6 +77,7 @@ const File = () => {
       helpers.setError("Max image size is 4Mb");
     }
   };
+
   const size = "sm";
   return (
     <FormControl isInvalid={isError} size="sm">

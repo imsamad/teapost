@@ -17,7 +17,11 @@ export const createHash = (str: string) =>
 export const typeOf = (
   val: any,
   type: string | "string" | "array" | "object"
-) => (!val ? false : val.constructor.name.toLowerCase() === type.toLowerCase());
+) => {
+  return !val
+    ? false
+    : val.constructor.name.toLowerCase() === type.toLowerCase();
+};
 
 export const trimExtra = (
   str: string | any,

@@ -39,7 +39,7 @@ const StoryForm = () => {
           size="sm"
         />
 
-        <QuillEditor />
+        {/* <QuillEditor /> */}
       </SimpleGrid>
     </>
   );

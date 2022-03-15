@@ -56,6 +56,7 @@ app.use("/api/v1/profile", profileRtr);
 app.use("/api/v1/collection", collectionRtr);
 
 app.get("/api/v1", (_req, res) => {
+  console.log("req.query ", _req.query);
   res.json({
     dir: __dirname,
     env: process.env,

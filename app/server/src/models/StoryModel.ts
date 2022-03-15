@@ -43,7 +43,6 @@ const storySchema = new Schema(
     keywords: {
       type: String,
       trim: true,
-      // unique: true,
     },
     author: {
       type: Schema.Types.ObjectId,

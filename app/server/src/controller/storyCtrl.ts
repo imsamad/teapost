@@ -1,12 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { isValidObjectId } from "mongoose";
-import { asyncHandler, ErrorResponse, validateYupSchema } from "../lib/utils";
+import {
+  asyncHandler,
+  ErrorResponse,
+  typeOf,
+  validateYupSchema,
+} from "../lib/utils";
 import ProfileModel from "../models/ProfileModel";
 import StoryMetaModel from "../models/StoryMetaModel";
 import StoryModel, { StoryDocument } from "../models/StoryModel";
 import TagModel, { TagDocument } from "../models/TagModel";
 import { UserDocument } from "../models/UserModel";
 import { isAbleToPublished } from "../lib/schema/story";
+import * as yup from "yup";
 
 // @desc      Create a story
 // @route     POST / PUT /api/v1/story
@@ -108,12 +114,7 @@ const sendResponse = async (
 // @access    Public
 export const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const query: any = req.query;
-
-    const stories = await StoryModel.find({
-      // isPublished: true,
-      ...query,
-    }).populate([
+    const stories = await StoryModel.find(req.query).populate([
       { path: "meta" },
       {
         path: "author",

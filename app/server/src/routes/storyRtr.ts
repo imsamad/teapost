@@ -16,6 +16,7 @@ import {
   likeOrDislikeSchema,
   publishedStorySchema,
 } from "../lib/schema/story";
+import { filter } from "../middleware/getStoriesFilter";
 
 const router: Router = express();
 
@@ -66,5 +67,5 @@ router
     handleTags,
     createOrUpdateStory
   )
-  .get(getAllStories);
+  .get(filter, getAllStories);
 export default router;

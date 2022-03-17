@@ -6,14 +6,13 @@ import {
   typeOf,
   validateYupSchema,
 } from "../lib/utils";
-import ProfileModel from "../models/ProfileModel";
-import StoryMetaModel from "../models/StoryMetaModel";
-import StoryModel, { StoryDocument } from "../models/StoryModel";
-import TagModel, { TagDocument } from "../models/TagModel";
-import { UserDocument } from "../models/UserModel";
+import Profile from "../models/Profile";
+import StoryMeta from "../models/StoryMeta";
+import Story, { StoryDocument } from "../models/Story";
+import TagModel, { TagDocument } from "../models/Tag";
+import { UserDocument } from "../models/User";
 import { isAbleToPublished } from "../lib/schema/story";
-import * as yup from "yup";
-
+import Primary from "../models/Comment/Primary";
 // @desc      Create a story
 // @route     POST / PUT /api/v1/story
 // @access    Auth [Reader]
@@ -24,7 +23,7 @@ export const createOrUpdateStory = asyncHandler(
     if (req.body.id) query._id = req.body.id;
     else query.slug = req.body.slug;
 
-    const storyExist = await StoryModel.findOne(query);
+    const storyExist = await Story.findOne(query);
 
     if (storyExist) {
       let extraMessage: { [name: string]: string[] } = {};
@@ -41,7 +40,7 @@ export const createOrUpdateStory = asyncHandler(
       });
 
       if (req.body.id && req.body.slug && storyExist.slug !== req.body.slug) {
-        const storyExistWithNewSlug = await StoryModel.findOne({
+        const storyExistWithNewSlug = await Story.findOne({
           slug: req.body.slug,
         });
         if (storyExistWithNewSlug) {
@@ -61,12 +60,12 @@ export const createOrUpdateStory = asyncHandler(
       sendResponse(req.body.isPublished, storyExist, res, extraMessage);
     } else {
       const { id, isPublished, ...rest } = req.body;
-      let newStory = new StoryModel({
+      let newStory = new Story({
         ...rest,
         // @ts-ignore
         author: req.user._id,
       });
-      await StoryMetaModel.create({ _id: newStory.id });
+      await StoryMeta.create({ _id: newStory.id });
       sendResponse(isPublished, newStory, res);
     }
   }
@@ -114,7 +113,7 @@ const sendResponse = async (
 // @access    Public
 export const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const stories = await StoryModel.find(req.query).populate([
+    let stories: any = Story.find(req.query).populate([
       { path: "meta" },
       {
         path: "author",
@@ -125,7 +124,39 @@ export const getAllStories = asyncHandler(
         select: "tag",
       },
     ]);
+    // @ts-ignore
+    if (req.query?.select?.includes("comments")) {
+      stories.populate({
+        path: "comments",
+        populate: [
+          {
+            path: "meta",
+          },
+          {
+            path: "user",
+            select: "username email",
+          },
+          {
+            path: "secondary",
+            populate: [
+              {
+                path: "meta",
+              },
+              {
+                path: "user",
+                select: "username email",
+              },
+              {
+                path: "replyToSecondaryUser",
+                select: "username email",
+              },
+            ],
+          },
+        ],
+      });
+    }
 
+    stories = await stories.lean();
     return res.status(200).json({
       status: "ok",
       stories,
@@ -190,7 +221,7 @@ export const handleTags = asyncHandler(
 // @access    Auth [Reader]
 export const publishedStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let story = await StoryModel.findById(req.params.storyId);
+    let story = await Story.findById(req.params.storyId);
 
     if (!story)
       return next(ErrorResponse(400, "No resources found with this id."));
@@ -214,10 +245,16 @@ export const publishedStory = asyncHandler(
 // @route     PUT /api/v1/story/dislike/:storyId
 // @route     PUT /api/v1/story/dislike/undo/:storyId
 // @access    Auth [Reader]
-export const gradeStory = (isLike: boolean, gradeCount: number) =>
+export const gradeStory = ({
+  isLike,
+  undo,
+}: {
+  isLike: boolean;
+  undo: boolean;
+}) =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const storyId = req.params.storyId as StoryDocument["id"];
-    let story = await StoryModel.findById(storyId);
+    let story = await Story.findById(storyId);
 
     if (!story) return next(ErrorResponse(400, "Resource not found"));
 
@@ -232,36 +269,36 @@ export const gradeStory = (isLike: boolean, gradeCount: number) =>
     revert dislike => pull from didikeStories    
     */
 
-    const profile = await ProfileModel.findByIdAndUpdate(
+    const profile = await Profile.findByIdAndUpdate(
       user,
       isLike
-        ? gradeCount > 0
-          ? {
+        ? undo
+          ? { _id: user, $pull: { likedStories: storyId } }
+          : {
               _id: user,
               $addToSet: { likedStories: storyId },
               $pull: { dislikedStories: storyId },
             }
-          : { _id: user, $pull: { likedStories: storyId } }
-        : gradeCount > 0
-        ? {
+        : undo
+        ? { _id: user, $pull: { dislikedStories: storyId } }
+        : {
             _id: user,
             $addToSet: { dislikedStories: storyId },
             $pull: { likedStories: storyId },
-          }
-        : { _id: user, $pull: { dislikedStories: storyId } },
+          },
       { upsert: true, new: true }
     );
-    const storyMeta = await StoryMetaModel.findByIdAndUpdate(
+    const storyMeta = await StoryMeta.findByIdAndUpdate(
       storyId,
       isLike
-        ? gradeCount > 0
+        ? !undo
           ? {
               _id: storyId,
               $addToSet: { likedBy: user },
               $pull: { dislikedBy: user },
             }
           : { _id: storyId, $pull: { likedBy: user } }
-        : gradeCount > 0
+        : !undo
         ? {
             _id: storyId,
             $addToSet: { dislikedBy: user },
@@ -276,3 +313,43 @@ export const gradeStory = (isLike: boolean, gradeCount: number) =>
       storyMeta,
     });
   });
+
+// @desc      Comment on story
+// @route     GET /api/v1/stories/comment/:storyId
+// @access    Auth,Admin
+export const commentStory = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // @ts-ignore
+    const user = req.user._id;
+    const storyExist = await Story.findById(req.params.storyId).lean();
+    if (!storyExist) {
+      return next(ErrorResponse(400, "Resource not found"));
+    }
+    const primaryComment = await Primary.create({
+      user,
+      text: req.body.text,
+      story: storyExist._id,
+    });
+    return res.json({
+      status: "ok",
+      comment: primaryComment,
+    });
+  }
+);
+
+// @desc      Delete story
+// @route     DELETE /api/v1/story/:storyId
+// @access    Auth,Admin
+
+export const deleteStory = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const story = await Story.findById(req.params.storyId);
+    if (!story) {
+      return next(ErrorResponse(400, "Resource not found"));
+    }
+    await story.remove();
+    return res.json({
+      status: "deleted",
+    });
+  }
+);

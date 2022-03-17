@@ -177,3 +177,18 @@ function notRequiredStringSchema(
 function stringLength(str: any, min: number, max: number) {
   return !str ? false : str.length < max && str.length > min;
 }
+
+export const commentStorySchema = object({
+  body: object({
+    text: string()
+      .typeError("Text is required")
+      .label("text")
+      .test("text", "Empty is not allowed", (val: string) => trimExtra(val, 1)),
+  }),
+  params: object({
+    storyId: string()
+      .label("storyId")
+      .required("Story id is required")
+      .test("storyId", "story id is invalid.", (val) => isValidObjectId(val)),
+  }),
+});

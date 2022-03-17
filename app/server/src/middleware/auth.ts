@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { decodeJwt } from "../lib/jwt";
 import { ErrorResponse } from "../lib/utils";
-import UserModel from "../models/UserModel";
+import User from "../models/User";
 export const protect = async (
   req: Request,
   res: Response,
@@ -21,7 +21,7 @@ export const protect = async (
   if (!token)
     return next(ErrorResponse(400, `Not authorized to access this route.`));
 
-  const user = await UserModel.findById(token.user).lean();
+  const user = await User.findById(token.user).lean();
   if (!user)
     return next(ErrorResponse(400, `Not authorized to access this route.`));
   // @ts-ignore

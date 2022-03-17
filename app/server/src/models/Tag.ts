@@ -21,6 +21,6 @@ const tagSchema = new Schema(
   }
 );
 
-const TagModel = model("Tag", tagSchema);
+const Tag = model("Tag", tagSchema);
 
-export default TagModel;
+export default Tag;

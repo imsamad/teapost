@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from "mongoose";
-import { StoryDocument } from "./StoryModel";
-import { UserDocument } from "./UserModel";
+import { StoryDocument } from "./Story";
+import { UserDocument } from "./User";
 
 export interface ProfileDocument extends Document {
   id: UserDocument["id"];
@@ -56,6 +56,6 @@ profileSchema.virtual("storyCollections", {
   justOne: false,
 });
 
-const ProfileModel = model<ProfileDocument>("Profile", profileSchema);
+const Profile = model<ProfileDocument>("Profile", profileSchema);
 
-export default ProfileModel;
+export default Profile;

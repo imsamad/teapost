@@ -1,8 +1,8 @@
-import mongoose, { Date, Document, Schema } from 'mongoose';
-import { UserDocument } from './UserModel';
+import mongoose, { Date, Document, Schema } from "mongoose";
+import { UserDocument } from "./User";
 
 export interface RefreshTokenDocument extends Document {
-  userId: UserDocument['_id'];
+  userId: UserDocument["_id"];
   token: String;
   createdAt: Date;
   updatedAt: Date;
@@ -15,7 +15,7 @@ const refreshTokenSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'User',
+      ref: "User",
       unique: true,
     },
   },
@@ -27,24 +27,24 @@ const refreshTokenSchema = new Schema(
 );
 
 refreshTokenSchema.post(
-  'save',
+  "save",
   function (error: any, doc: RefreshTokenDocument, next: any) {
     if (error?.code === 11000) {
-      next('Duplicated');
+      next("Duplicated");
     } else {
       next(error);
     }
   }
 );
 
-refreshTokenSchema.virtual('timsestamp_ms').get(function (this: UserDocument) {
+refreshTokenSchema.virtual("timsestamp_ms").get(function (this: UserDocument) {
   let createdYear: any = this.updatedAt;
   createdYear = Date.parse(createdYear);
   return createdYear;
 });
 
 const RefreshToken = mongoose.model<RefreshTokenDocument>(
-  'RefreshToken',
+  "RefreshToken",
   refreshTokenSchema
 );
 

@@ -1,6 +1,6 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { StoryDocument } from "./StoryModel";
-import { UserDocument } from "./UserModel";
+import { StoryDocument } from "./Story";
+import { UserDocument } from "./User";
 
 export interface StoryMetaDocument extends Document {
   _id: StoryDocument["_id"];

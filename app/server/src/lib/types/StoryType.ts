@@ -1,5 +1,5 @@
-import StoryMeta from "./storyMetaType";
-import Tag from "./tagType";
+import StoryMeta from "./StoryMetaType";
+import Tag from "./TagType";
 import mongoose from "mongoose";
 
 interface Story {

@@ -15,16 +15,13 @@ import {
   updateCollectionSchema,
 } from "../lib/schema/collection";
 
-router.post(
-  "/",
-  protect,
-  validateSchema(createCollectionSchema),
-  createCollection
-);
+router.use(protect);
+
+router.post("/", validateSchema(createCollectionSchema), createCollection);
 
 router
   .route("/:collectionId")
-  .put(protect, validateSchema(updateCollectionSchema), updateCollection)
-  .delete(protect, validateSchema(removeCollectionSchema), removeCollection);
+  .put(validateSchema(updateCollectionSchema), updateCollection)
+  .delete(validateSchema(removeCollectionSchema), removeCollection);
 
 export default router;

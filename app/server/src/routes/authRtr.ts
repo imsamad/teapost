@@ -21,18 +21,19 @@ import {
 router.post("/login", validateSchema(logInSchema), logIn);
 router.post("/register", validateSchema(registerSchema), register);
 router.get("/verifyemail", verifyEmail);
-router.get("/me", protect, getMe);
+router.use(protect);
+router.get("/me", getMe);
 
 router
   .route("/unfollow/:authorId")
-  .put(protect, validateSchema(followSchema), followAuthor(false));
+  .put(validateSchema(followSchema), followAuthor(false));
 
 router
   .route("/follow/:authorId")
-  .put(protect, validateSchema(followSchema), followAuthor(true));
+  .put(validateSchema(followSchema), followAuthor(true));
 
 router
   .route("/collection/add/:storyId")
-  .put(protect, validateSchema(addToCollectionSchema), addToCollection);
+  .put(validateSchema(addToCollectionSchema), addToCollection);
 
 export default router;

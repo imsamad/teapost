@@ -1,7 +1,9 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 
 import {
+  commentStory,
   createOrUpdateStory,
+  deleteStory,
   getAllStories,
   gradeStory,
   handleTags,
@@ -11,6 +13,7 @@ import {
 import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 import {
+  commentStorySchema,
   createStorySchema,
   gradeStorySchema,
   likeOrDislikeSchema,
@@ -33,25 +36,50 @@ router
       const gradeCount = isLike
         ? parseInt(req.body.like)
         : parseInt(req.body.dislike);
-      return gradeStory(isLike, gradeCount)(req, res, next);
+      return gradeStory({ isLike, undo: gradeCount > 0 ? false : true })(
+        req,
+        res,
+        next
+      );
     }
   );
 
 router
   .route("/like/undo/:storyId")
-  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(true, 0));
+  .put(
+    protect,
+    validateSchema(likeOrDislikeSchema),
+    gradeStory({ isLike: true, undo: true })
+  );
 
 router
   .route("/dislike/:storyId")
-  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(false, 1));
+  .put(
+    protect,
+    validateSchema(likeOrDislikeSchema),
+    gradeStory({ isLike: false, undo: false })
+  );
 
 router
   .route("/like/:storyId")
-  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(true, 1));
+  .put(
+    protect,
+    validateSchema(likeOrDislikeSchema),
+    gradeStory({ isLike: true, undo: false })
+  );
 
 router
   .route("/dislike/undo/:storyId")
-  .put(protect, validateSchema(likeOrDislikeSchema), gradeStory(false, 0));
+  .put(
+    protect,
+    validateSchema(likeOrDislikeSchema),
+    gradeStory({ isLike: false, undo: true })
+  );
+router
+  .route("/comment/:storyId")
+  .put(protect, validateSchema(commentStorySchema), commentStory);
+
+router.route("/:storyId").delete(deleteStory);
 
 router
   .route("/")

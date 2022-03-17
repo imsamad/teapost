@@ -1,4 +1,4 @@
-import User from "./userType";
+import User from "./UserType";
 
 import { ObjectId } from "mongoose";
 interface StoryMeta {

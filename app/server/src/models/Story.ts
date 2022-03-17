@@ -1,8 +1,8 @@
 import { Document, model, Schema } from "mongoose";
 import { ErrorResponse } from "../lib/utils";
-import { StoryMetaDocument } from "./StoryMetaModel";
-import { UserDocument } from "./UserModel";
-import StoryType from "../lib/types/storyType";
+import { StoryMetaDocument } from "./StoryMeta";
+import { UserDocument } from "./User";
+import StoryType from "../lib/types/StoryType";
 
 export interface StoryDocument
   extends Omit<StoryType, "_id" | "meta">,
@@ -95,6 +95,34 @@ storySchema.virtual("meta", {
   localField: "_id",
   foreignField: "_id",
   justOne: true,
+});
+
+storySchema.virtual("comments", {
+  ref: "Primary",
+  localField: "_id",
+  foreignField: "story",
+  justOne: false,
+});
+
+storySchema.pre("remove", async function (next) {
+  await this.model("StoryMeta").findByIdAndRemove(this._id);
+
+  let deletedPrimary: any = await this.model("Primary").find({
+    story: this._id,
+  });
+
+  let deletedPrimaryPromise: any = deletedPrimary.map(
+    (primary: any, index: any) => primary.remove()
+  );
+
+  Promise.allSettled(deletedPrimaryPromise)
+    .then((res: any) => {
+      console.log("result from storySchema", res);
+    })
+    .finally(() => {
+      console.log("finnaly  from storySchema");
+      next();
+    });
 });
 
 const StoryModel = model<StoryDocument>("Story", storySchema);

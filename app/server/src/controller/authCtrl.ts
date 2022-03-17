@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 
 import { asyncHandler } from "../lib/utils";
-import UserModel, { UserDocument } from "../models/UserModel";
+import User, { UserDocument } from "../models/User";
 import emailVerifyMessage from "../lib/sendVerifyEmail";
 import { ErrorResponse, createHash, randomBytes } from "../lib/utils";
 import { decodeJwt, signJwt } from "../lib/jwt";
-import Token from "../models/TokenModel";
-import ProfileModel from "../models/ProfileModel";
-import StoryModel from "../models/StoryModel";
-import StoryCollectionModel from "../models/StoryCollectionModel";
+import Token from "../models/Token";
+import Profile from "../models/Profile";
+import Story from "../models/Story";
+import StoryCollection from "../models/StoryCollection";
 
 // @desc      Register new user
 // @route     POST /api/v1/story
@@ -17,7 +17,7 @@ export const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password } = req.body;
 
-    const alreadyExist = await UserModel.findOne({ email });
+    const alreadyExist = await User.findOne({ email });
     if (alreadyExist)
       next(
         ErrorResponse(400, {
@@ -25,7 +25,7 @@ export const register = asyncHandler(
         })
       );
 
-    const newUser = new UserModel({
+    const newUser = new User({
       username,
       email,
       password,
@@ -79,8 +79,8 @@ export const register = asyncHandler(
       }
     }
 
-    await ProfileModel.create({ _id: user._id });
-    await StoryCollectionModel.create({ user: user._id, title: "Read Later" });
+    await Profile.create({ _id: user._id });
+    await StoryCollection.create({ user: user._id, title: "Read Later" });
     let resObj: any = {
       status: "ok",
       message: `Account created successfully, Verify your email sent to ${email}.`,
@@ -96,7 +96,7 @@ export const logIn = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
-    let user = await UserModel.findOne({ email }).select("+password");
+    let user = await User.findOne({ email }).select("+password");
 
     if (!user)
       return next(ErrorResponse(400, { email: "Email not registered." }));
@@ -137,7 +137,7 @@ export const verifyEmail = asyncHandler(
 
     const userId: string = token.userId;
 
-    const user = await UserModel.findById(userId);
+    const user = await User.findById(userId);
 
     if (!user) return next(malliciousReq);
 
@@ -184,7 +184,7 @@ export const getMe = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
-    let query = ProfileModel.findById(user).populate("storyCollections");
+    let query = Profile.findById(user).populate("storyCollections");
     // .populate({
     //   path: "storyCollections",
     //   select: "_id ",
@@ -213,13 +213,13 @@ export const getMe = asyncHandler(
 // @access    Auth
 export const followAuthor = (toDoFollow: boolean) =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    let author = await ProfileModel.findById(req.params.authorId);
+    let author = await Profile.findById(req.params.authorId);
     // @ts-ignore
     const userId = req.user._id.toString();
     if (!author || author._id.toString() == userId) {
       return next(ErrorResponse(400, "No resouce found"));
     }
-    const user = await ProfileModel.findByIdAndUpdate(
+    const user = await Profile.findByIdAndUpdate(
       userId,
       toDoFollow
         ? { $addToSet: { following: author._id } }
@@ -247,7 +247,7 @@ export const addToCollection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
-    const story = await StoryModel.findById(req.params.storyId);
+    const story = await Story.findById(req.params.storyId);
     if (!story) return next(ErrorResponse(400, "No resource found"));
 
     const { addToDefault, removeFromDefault, addTo, removeFrom } = req.body;
@@ -255,7 +255,7 @@ export const addToCollection = asyncHandler(
     let updatePromise: any = [];
     if (addToDefault || removeFromDefault) {
       updatePromise.push(
-        StoryCollectionModel.findOneAndUpdate(
+        StoryCollection.findOneAndUpdate(
           {
             user,
             title: new RegExp("^" + "read later" + "$", "i"),
@@ -273,7 +273,7 @@ export const addToCollection = asyncHandler(
     if (addTo) {
       addTo.forEach((collId: string) => {
         updatePromise.push(
-          StoryCollectionModel.findOneAndUpdate(
+          StoryCollection.findOneAndUpdate(
             { _id: collId, user },
             {
               $push: { stories: story._id },
@@ -286,7 +286,7 @@ export const addToCollection = asyncHandler(
     if (removeFrom) {
       removeFrom.forEach((collId: string) => {
         updatePromise.push(
-          StoryCollectionModel.findOneAndUpdate(
+          StoryCollection.findOneAndUpdate(
             { _id: collId, user },
             {
               $pull: { stories: story._id },

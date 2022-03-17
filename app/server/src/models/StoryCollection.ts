@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 
-import { StoryDocument } from "./StoryModel";
-import { UserDocument } from "./UserModel";
+import { StoryDocument } from "./Story";
+import { UserDocument } from "./User";
 
 export interface CollectionDocument extends Document {
   user: UserDocument["id"];

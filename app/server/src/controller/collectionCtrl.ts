@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler, ErrorResponse } from "../lib/utils";
-import StoryCollectionModel from "../models/StoryCollectionModel";
+import StoryCollection from "../models/StoryCollection";
 
 // @desc      Create Collection
 // @route     POST /api/v1/collection
@@ -9,7 +9,7 @@ export const createCollection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     //   @ts-ignore
     const user = req.user._id;
-    const isExist = await StoryCollectionModel.find({
+    const isExist = await StoryCollection.find({
       title: new RegExp("^" + req.body.title + "$", "i"),
       user,
     });
@@ -18,7 +18,7 @@ export const createCollection = asyncHandler(
         ErrorResponse(400, `Already exist with title ${req.body.title}`)
       );
 
-    const collection = await StoryCollectionModel.create({
+    const collection = await StoryCollection.create({
       user,
       ...req.body,
     });
@@ -33,7 +33,7 @@ export const updateCollection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     //   @ts-ignore
     const user = req.user._id;
-    let collection = await StoryCollectionModel.findOne({
+    let collection = await StoryCollection.findOne({
       _id: req.params.collectionId,
       user,
     });
@@ -52,7 +52,7 @@ export const updateCollection = asyncHandler(
 // @access    Auth,Public,Admin
 export const removeCollection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const collection = await StoryCollectionModel.findOne({
+    const collection = await StoryCollection.findOne({
       _id: req.params.collectionId,
       // @ts-ignore
       user: req.user,

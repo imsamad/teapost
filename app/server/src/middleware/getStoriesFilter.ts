@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { isValidObjectId } from "mongoose";
 import { typeOf } from "../lib/utils";
-import StoryMetaModel from "../models/StoryMetaModel";
+import StoryMeta from "../models/StoryMeta";
 
 export const filter = async (
   req: Request,
@@ -11,6 +11,7 @@ export const filter = async (
 ) => {
   let reqQuery: Partial<{
     title: string;
+    slug: string;
     subtitle: string;
     like: Partial<{ gt: number; lt: number; gte: number; lte: number }>;
     dislike: Partial<{ gt: number; lt: number; gte: number; lte: number }>;
@@ -21,6 +22,7 @@ export const filter = async (
   let allowedFields = [
     { key: "title", type: "string" },
     { key: "subtitle", type: "string" },
+    { key: "slug", type: "string" },
     { key: "like", type: "object" },
     { key: "dislike", type: "object" },
     { key: "tags", type: "stringArr" },
@@ -67,7 +69,7 @@ export const filter = async (
       query[`dislikedBy.${Number(like.lte)}`] = notExist;
 
     if (Object.keys(query).length)
-      likeOrDislike = StoryMetaModel.find(query).select("_id").lean();
+      likeOrDislike = StoryMeta.find(query).select("_id").lean();
   }
 
   const finalQuery = () =>
@@ -77,6 +79,7 @@ export const filter = async (
         obj.tags = {};
         obj.tags.$in = reqQuery.tags;
       }
+      if (reqQuery.slug) obj.slug = reqQuery.slug;
       if (reqQuery.title) obj.title = new RegExp(`${reqQuery.title}`, "gi");
       if (reqQuery.subtitle)
         obj.subtitle = new RegExp(`${reqQuery.subtitle}`, "gi");
@@ -102,9 +105,11 @@ export const filter = async (
         resolve(obj);
       }
     });
-
+  //   @ts-ignore
+  const toSelectComment = req.query?.select?.includes("comments");
   req.query = {};
   //   @ts-ignore
   req.query = await finalQuery();
+  if (toSelectComment) req.query.select = "comments";
   next();
 };

@@ -12,30 +12,46 @@ const setEnv = () =>
 import users from "./data/users";
 import stories from "./data/stories";
 import tags from "./data/tags";
+import primaries from "./data/primaries";
+import secondaries from "./data/secondaries";
 
-import UserModel from "../src/models/UserModel";
-import TagModel from "../src/models/TagModel";
-import StoryModel from "../src/models/StoryModel";
-import StoryMetaModel from "../src/models/StoryMetaModel";
-import ProfileModel from "../src/models/ProfileModel";
-import StoryCollection from "../src/models/StoryCollectionModel";
+import User from "../src/models/User";
+import Tag from "../src/models/Tag";
+import Story from "../src/models/Story";
+import StoryMeta from "../src/models/StoryMeta";
+import Profile from "../src/models/Profile";
+import StoryCollection from "../src/models/StoryCollection";
+import Primary from "../src/models/Comment/Primary";
+import Secondary from "../src/models/Comment/Secondary";
+import CommentMeta from "../src/models/Comment/CommentMeta";
 
 import dbConnect from "../src/db/connectDB";
 
 const importData = async () => {
   try {
-    await UserModel.create(users);
-    await ProfileModel.create(users.map((user) => ({ _id: user._id })));
+    await Tag.create(tags);
 
-    await TagModel.create(tags);
-
-    await StoryModel.create(stories);
-    await StoryMetaModel.create(stories.map((s) => ({ _id: s._id })));
-
+    await User.create(users);
+    await Profile.create(users.map((user) => ({ _id: user._id })));
     await StoryCollection.create(
       users.map((user) => ({ user: user._id, title: "Read Later" }))
     );
 
+    await Story.create(stories);
+    await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
+
+    await Primary.create(primaries);
+    await CommentMeta.create(
+      primaries.map((primary) => ({
+        _id: primary._id,
+      }))
+    );
+    await Secondary.create(secondaries);
+    await CommentMeta.create(
+      secondaries.map((secondary) => ({
+        _id: secondary._id,
+      }))
+    );
     console.log("data imported");
     process.exit(1);
   } catch (err) {
@@ -46,12 +62,15 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    await UserModel.deleteMany();
-    await StoryModel.deleteMany();
-    await TagModel.deleteMany();
-    await ProfileModel.deleteMany();
-    await StoryMetaModel.deleteMany();
+    await User.deleteMany();
+    await Story.deleteMany();
+    await Tag.deleteMany();
+    await Profile.deleteMany();
+    await StoryMeta.deleteMany();
     await StoryCollection.deleteMany();
+    await Primary.deleteMany();
+    await Secondary.deleteMany();
+    await CommentMeta.deleteMany();
     console.log("data deleted ");
     process.exit(1);
   } catch (err) {

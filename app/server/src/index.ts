@@ -1,8 +1,10 @@
 import path from "path";
 import * as dotenv from "dotenv";
+
 dotenv.config({
   path: path.join(__dirname, "../", `config`, ".env"),
 });
+
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -20,7 +22,7 @@ import tagRtr from "./routes/tagRtr";
 import imageUploadRtr from "./routes/imageUploadRtr";
 import profileRtr from "./routes/profileRtr";
 import collectionRtr from "./routes/collectionRtr";
-import checkTemp from "./middleware/checkTemp";
+import commentRtr from "./routes/commentRtr";
 
 const app = express();
 const limiter = rateLimit({
@@ -54,7 +56,7 @@ app.use("/api/v1/tags", tagRtr);
 app.use("/api/v1/image", imageUploadRtr);
 app.use("/api/v1/profile", profileRtr);
 app.use("/api/v1/collection", collectionRtr);
-
+app.use("/api/v1/comments", commentRtr);
 app.get("/api/v1", (_req, res) => {
   console.log("req.query ", _req.query);
   res.json({

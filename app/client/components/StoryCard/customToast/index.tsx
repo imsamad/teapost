@@ -1,4 +1,5 @@
 import { Button, Heading, HStack } from "@chakra-ui/react";
+import { useAuthCtx } from "@compo/Context";
 // eslint-disable-next-line react/display-name
 const CustomToast = (onClick: any) => () => {
   return (

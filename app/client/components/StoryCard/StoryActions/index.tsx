@@ -6,7 +6,7 @@ import {
   useToast,
   IconButton,
 } from "@chakra-ui/react";
-import { BiLike, BiDislike } from "react-icons/bi";
+import { BiLike, BiDislike, BiCommentAdd } from "react-icons/bi";
 import { AiFillFileAdd } from "react-icons/ai";
 
 import { useUICtx, useProfile, useAuthCtx } from "@compo/Context";
@@ -49,15 +49,11 @@ const Index = ({ storyId, like, dislike }: any) => {
 
   const loading = useDisclosure();
   const toast = useToast();
-  const { login } = useAuthCtx();
-  const { drawer } = useUICtx();
+  const { openLoginToast } = useAuthCtx();
+  const { drawer, comment } = useUICtx();
   const handleGrade = async (isActionTypeLike = true) => {
     if (!profile?._id) {
-      toast({
-        duration: 2000,
-        isClosable: true,
-        render: customToast(login.onOpen),
-      });
+      openLoginToast();
       return;
     }
     loading.onOpen();
@@ -151,6 +147,12 @@ const Index = ({ storyId, like, dislike }: any) => {
         icon={<AiFillFileAdd fontSize="19px" />}
         size="xs"
         aria-label="add to reading list"
+      />
+      <IconButton
+        aria-label="comment"
+        size="xs"
+        icon={<BiCommentAdd />}
+        onClick={() => comment.onOpen(storyId)}
       />
     </ButtonGroup>
   );

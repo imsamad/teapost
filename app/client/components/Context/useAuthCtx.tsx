@@ -1,19 +1,22 @@
-import { useDisclosure } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { deleteCookies, getCookies, setCookies } from "@lib/cookies";
 import LoginModal from "../LogIn/LogInModal";
-import userType from "@lib/types/userType";
+import userType from "@lib/types/UserType";
+import CustomToast from "@compo/StoryCard/customToast";
 
 type AuthCtxType = {
   user: Partial<userType>;
   setUser: (props: Partial<userType>) => void;
   login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
+  openLoginToast: () => void;
 };
 
 const AuthCtx = createContext<AuthCtxType>({
   user: getCookies(),
   setUser: () => {},
+  openLoginToast: () => {},
   login: { isOpen: false, onOpen: () => {}, onClose: () => {} },
 });
 
@@ -37,13 +40,21 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
     onOpen,
     onClose,
   };
+  const toast = useToast();
+
+  const openLoginToast = () =>
+    toast({
+      duration: 2000,
+      isClosable: true,
+      render: CustomToast(onOpen),
+    });
 
   useEffect(() => {
     if (!user) deleteCookies();
     else setCookies(user);
   }, [user]);
   return (
-    <AuthCtx.Provider value={{ user, setUser, login }}>
+    <AuthCtx.Provider value={{ user, setUser, login, openLoginToast }}>
       <LoginModal isOpen={isOpen} onClose={onClose} />
       {children}
     </AuthCtx.Provider>

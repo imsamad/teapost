@@ -56,10 +56,6 @@ primaryCommentSchema.pre("remove", async function (next) {
   let deleteCommentMeta = await this.model("CommentMeta").findByIdAndRemove(
     this._id
   );
-  console.log(
-    "delete commentMeta from primaryCommentSchema ",
-    deleteCommentMeta._id
-  );
 
   let secondaryComments = await this.model("Secondary").find({
     replyToPrimary: this._id,
@@ -70,11 +66,8 @@ primaryCommentSchema.pre("remove", async function (next) {
   );
 
   Promise.allSettled(secondaryCommentsPromise)
-    .then((res: any) => {
-      console.log("result from primaryCommentSchema", res);
-    })
+    .then((res: any) => {})
     .finally(() => {
-      console.log("finnaly  from primaryCommentSchema");
       next();
     });
 });

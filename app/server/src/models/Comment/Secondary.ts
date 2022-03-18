@@ -1,5 +1,4 @@
 import { Document, model, Schema } from "mongoose";
-import { StoryDocument } from "../Story";
 
 import { UserDocument } from "../User";
 import { SecondaryComment as SecondaryCommentType } from "../../lib/types/CommentTypes";
@@ -8,7 +7,7 @@ import { PrimaryCommentDocument } from "./Primary";
 
 export interface SecondaryCommentDocument
   extends Document,
-    Omit<SecondaryCommentType, "_id"> {
+    Omit<SecondaryCommentType, "_id" | "replyToPrimary" | "replyToSecondary"> {
   //
   user: UserDocument["_id"];
   replyToPrimary: PrimaryCommentDocument["_id"];
@@ -65,10 +64,7 @@ secondaryCommentSchema.pre("remove", async function (next) {
   const deleteCommentMeta = await this.model("CommentMeta").findByIdAndRemove(
     this._id
   );
-  console.log(
-    "deleted commentMeta from secondaryCommentSchema ",
-    deleteCommentMeta._id
-  );
+
   next();
 });
 const Secondary = model<SecondaryCommentDocument>(

@@ -9,7 +9,7 @@ const secondaries = [
     _id: "62319aaa73ec61adcafb714b",
     user: "6221be7444eaf2d6fc67b964",
     replyToPrimary: "62319a8a73ec61adcafb713c",
-    text: "Second Awesome",
+    text: "Second Awesome ",
   },
   {
     _id: "62319ab773ec61adcafb714f",

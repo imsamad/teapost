@@ -1,6 +1,6 @@
-import StoryCollectionType from "./storyCollectionType";
-import Story from "./storyType";
-import User from "./userType";
+import StoryCollectionType from "./StoryCollectionType";
+import Story from "./StoryType";
+import User from "./UserType";
 
 interface ProfileType {
   _id: string;

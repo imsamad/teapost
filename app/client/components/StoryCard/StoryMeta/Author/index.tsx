@@ -64,7 +64,7 @@ const Index = ({ author }: any) => {
         }}
       >
         <HStack>
-          <Avatar size="2xs" name={author.username} src={author.profilePic} />
+          <Avatar size="2xs" name={author.username} src={author?.profilePic} />
 
           <Text fontWeight={600} fontSize="sm" ml={1}>
             {author.username}

@@ -45,3 +45,19 @@ export const gradeStory = async (storyId: string, axiosObj: axiosObjType) => {
     return false;
   }
 };
+
+export const commentOnStory = async ({
+  storyId,
+  text,
+}: {
+  storyId: string;
+  text: string;
+}) => {
+  try {
+    const { data } = await axios.put(`/stories/comment/${storyId}`, { text });
+    return data;
+  } catch (err) {
+    console.log("Error from api commentOnStory", err);
+    return false;
+  }
+};

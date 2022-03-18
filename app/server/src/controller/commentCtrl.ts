@@ -91,6 +91,34 @@ export const getStoryComment = asyncHandler(
   }
 );
 
+// @desc      Get comments of secondary of primary
+// @route     GET /api/v1/comments/replyof/:primaryId
+// @access    Auth,Public,Admin
+export const getSecondaries = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const comments = await Secondary.find({
+      replyToPrimary: req.params.primaryId,
+    })
+      .populate([
+        { path: "meta" },
+        {
+          path: "user",
+          select: "email username",
+        },
+        {
+          path: "replyToSecondaryUser",
+          select: "username email",
+        },
+      ])
+      .lean();
+
+    res.json({
+      staus: "ok",
+      comments,
+    });
+  }
+);
+
 // @desc      Update Or Delete Comment
 // @route     PUT /api/v1/comment/primary:commentId
 // @route     DELETE /api/v1/comment/primary:commentId
@@ -104,6 +132,7 @@ export const updateOrDeleteComment = ({ isPrimary = true, isDelete = false }) =>
     const user = req.user._id;
     let comment: any = isPrimary ? Primary : Secondary;
     comment = await comment.findById(req.params.commentId);
+    console.log("comment ", comment);
     if (!comment || comment.user.toString() != user)
       return next(ErrorResponse(400, "No resource found"));
     if (isDelete) {

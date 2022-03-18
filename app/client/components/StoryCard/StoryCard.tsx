@@ -1,9 +1,9 @@
 import StoryWrapper from "./StoryWrapper";
 import StoryMeta from "./StoryMeta";
 import StoryDetailsAndAction from "./StoryDetails";
-import storyType from "@lib/types/storyType";
+import StoryType from "@lib/types/StoryType";
 
-const Index = ({ story }: { story: storyType }) => {
+const Index = ({ story }: { story: StoryType }) => {
   return (
     <StoryWrapper>
       <StoryMeta story={story} />

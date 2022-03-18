@@ -1,7 +1,7 @@
-import StoryMeta from "./storyMetaType";
-import Tag from "./tagType";
+import StoryMeta from "./StoryMetaType";
+import Tag from "./TagType";
 
-interface Story {
+interface StoryType {
   _id: string;
   title: string;
   titleImage: string;
@@ -19,4 +19,4 @@ interface Story {
   createdAt: Date;
 }
 
-export default Story;
+export default StoryType;

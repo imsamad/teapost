@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
 
-import storyCollectionType from "@lib/types/storyCollectionType";
+import StoryCollectionType from "@lib/types/StoryCollectionType";
 import { deleteCollection } from "@lib/api/collectionApi";
 import { useProfile } from "../Context";
 
 type CollRowProps = {
-  collection: storyCollectionType;
+  collection: StoryCollectionType;
   sendObj: { addTo: string[]; removeFrom: string[] };
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   storySelected: string;

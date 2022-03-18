@@ -2,7 +2,7 @@
 import HomePage from "../components/HomePage";
 import axios from "axios";
 import { InferGetStaticPropsType } from "next";
-import storyType from "../lib/types/storyType";
+import storyType from "../lib/types/StoryType";
 
 export const getStaticProps = async () => {
   const {

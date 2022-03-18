@@ -15,7 +15,7 @@ export const replyToSchema = object({
     text: string()
       .typeError("Text is required")
       .label("text")
-      .test("text", "Empty is not allowed", (val: string) => trimExtra(val, 1)),
+      .test("text", "Empty is not allowed", (val: any) => trimExtra(val, 1)),
   }),
   params: reqParams("commentId"),
 });
@@ -25,6 +25,9 @@ export const reqStoryParams = object({
 });
 export const reqCommentParams = object({
   params: reqParams("commentId"),
+});
+export const reqPrimaryIdSchema = object({
+  params: reqParams("primaryId"),
 });
 
 export const likeOrDislikeSchema = object({

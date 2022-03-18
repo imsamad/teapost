@@ -15,7 +15,7 @@ import {
 import { Search2Icon } from "@chakra-ui/icons";
 import { ChangeEvent, useCallback, useState } from "react";
 import axios from "axios";
-import storyType from "@lib/types/storyType";
+import StoryType from "@lib/types/StoryType";
 import MyLink from "../MyLink";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
 const TSSearch = ({ size }: any) => {
@@ -97,7 +97,7 @@ const TSSearch = ({ size }: any) => {
           </Collapse>
           <Collapse in={!isFetching.isOpen || results}>
             {results?.length ? (
-              results.map((story: storyType) => (
+              results.map((story: StoryType) => (
                 <MyLink key={story._id} href={`/story/${story.slug}`}>
                   <Box
                     color="blue.500"

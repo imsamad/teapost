@@ -116,11 +116,8 @@ storySchema.pre("remove", async function (next) {
   );
 
   Promise.allSettled(deletedPrimaryPromise)
-    .then((res: any) => {
-      console.log("result from storySchema", res);
-    })
+    .then((res: any) => {})
     .finally(() => {
-      console.log("finnaly  from storySchema");
       next();
     });
 });

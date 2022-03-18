@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 
-import storyType from "../../lib/types/storyType";
+import storyType from "../../lib/types/StoryType";
 import StoryCard from "../StoryCard";
 
 const Index = ({ stories }: { stories: storyType[] }) => {

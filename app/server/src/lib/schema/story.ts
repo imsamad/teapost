@@ -183,7 +183,7 @@ export const commentStorySchema = object({
     text: string()
       .typeError("Text is required")
       .label("text")
-      .test("text", "Empty is not allowed", (val: string) => trimExtra(val, 1)),
+      .test("text", "Empty is not allowed", (val: any) => trimExtra(val, 1)),
   }),
   params: object({
     storyId: string()

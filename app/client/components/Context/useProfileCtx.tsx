@@ -1,17 +1,17 @@
 import { createContext, useContext } from "react";
 import useSWR from "swr";
 
-import profileType from "@lib/types/profileType";
+import ProfileType from "@lib/types/ProfileType";
 import useAuthCtx from "./useAuthCtx";
 
 const ProfileCtx = createContext<{
-  mutateProfile: () => void | Promise<{ user: profileType }>;
-  profile: Partial<profileType>;
+  mutateProfile: () => void | Promise<{ user: ProfileType }>;
+  profile: Partial<ProfileType>;
 }>({ profile: {}, mutateProfile: () => {} });
 
 const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthCtx();
-  const { data, mutate }: any = useSWR<profileType>(
+  const { data, mutate }: any = useSWR<ProfileType>(
     () => user?._id && `/auth/me`
   );
 

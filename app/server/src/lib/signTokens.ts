@@ -1,7 +1,7 @@
-import { UserDocument } from '../models/UserModel';
-import { signJwt } from './jwt';
-import RefreshTokenModel from '../models/RefreshTokenModel';
-import ms from 'ms';
+import { UserDocument } from "../models/User";
+import { signJwt } from "./jwt";
+import RefreshTokenModel from "../models/RefreshToken";
+import ms from "ms";
 
 type Token = {
   accessToken: String;
@@ -9,7 +9,7 @@ type Token = {
 };
 
 export const signTokens = async (user: UserDocument): Promise<Token> => {
-  const userId: UserDocument['_id'] = user.id || user._id;
+  const userId: UserDocument["_id"] = user.id || user._id;
 
   // let refreshToken: String;
   // const alreadyExist = await RefreshTokenModel.findOne({ userId });
@@ -44,10 +44,10 @@ export const signTokens = async (user: UserDocument): Promise<Token> => {
     accessToken: signJwt(
       { userId },
       {
-        expiresIn: '7d',
+        expiresIn: "7d",
       }
     ),
-    refreshToken: 'RefreshToken',
+    refreshToken: "RefreshToken",
   };
 
   return tokens;

@@ -33,7 +33,7 @@ const Body = ({ storySelected, sendObj, setSendObj }: any) => {
       </Heading>
       <Divider />
       <Box p="2">
-        {profile.storyCollections?.map((collection) => (
+        {profile?.storyCollections?.map((collection) => (
           <CollectionRow
             sendObj={sendObj}
             storySelected={storySelected}

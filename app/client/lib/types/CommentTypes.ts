@@ -3,7 +3,7 @@ import UserType from "./UserType";
 
 export interface PrimaryComment {
   _id: string;
-  user: UserType["_id"] | UserType;
+  user: UserType;
   story: StoryType["_id"];
   text: string;
   meta?: CommentMeta;
@@ -12,10 +12,10 @@ export interface PrimaryComment {
 
 export interface SecondaryComment {
   _id: string;
-  user: UserType["_id"] | UserType;
+  user: UserType;
   replyToPrimary: PrimaryComment["_id"] | PrimaryComment;
   text: string;
-  replyToSecondaryUser?: UserType["_id"] | UserType;
+  replyToSecondaryUser?: UserType;
   replyToSecondary?: SecondaryComment["_id"];
   meta?: CommentMeta;
 }

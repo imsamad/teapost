@@ -1,5 +1,5 @@
-import storyType from "./storyType";
-import User from "./userType";
+import storyType from "./StoryType";
+import User from "./UserType";
 
 interface StoryCollectionType {
   _id: string;

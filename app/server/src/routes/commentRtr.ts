@@ -1,5 +1,6 @@
 import express, { Router } from "express";
 import {
+  getSecondaries,
   getStoryComment,
   likeOrDislike,
   replyToPrimary,
@@ -10,6 +11,7 @@ import {
   likeOrDislikeSchema,
   replyToSchema,
   reqCommentParams,
+  reqPrimaryIdSchema,
   reqStoryParams,
 } from "../lib/schema/comment";
 
@@ -21,6 +23,12 @@ const router: Router = express();
 router
   .route("/story/:storyId")
   .get(validateSchema(reqStoryParams), getStoryComment);
+
+router.get(
+  "/replyof/:primaryId",
+  validateSchema(reqPrimaryIdSchema),
+  getSecondaries
+);
 
 router.use(protect);
 

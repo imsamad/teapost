@@ -1,7 +1,7 @@
-import Story from "./storyType";
-import User from "./userType";
+import Story from "./StoryType";
+import User from "./UserType";
 import { ObjectId } from "mongoose";
-import StoryCollectionType from "./storyCollectionType";
+import StoryCollectionType from "./StoryCollectionType";
 interface ProfileType {
   _id: string | ObjectId;
   likedStories: Story["_id"][] | Story[];

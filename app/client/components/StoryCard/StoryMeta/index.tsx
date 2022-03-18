@@ -1,5 +1,5 @@
 import { HStack, Spacer } from "@chakra-ui/react";
-import storyType from "../../../lib/types/storyType";
+import storyType from "../../../lib/types/StoryType";
 
 import Author from "./Author";
 import StoryInfo from "./StoryInfo";

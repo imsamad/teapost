@@ -41,17 +41,17 @@ const importData = async () => {
     await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
 
     await Primary.create(primaries);
-    await CommentMeta.create(
-      primaries.map((primary) => ({
-        _id: primary._id,
-      }))
-    );
+    // await CommentMeta.create(
+    //   primaries.map((primary) => ({
+    //     _id: primary._id,
+    //   }))
+    // );
     await Secondary.create(secondaries);
-    await CommentMeta.create(
-      secondaries.map((secondary) => ({
-        _id: secondary._id,
-      }))
-    );
+    // await CommentMeta.create(
+    //   secondaries.map((secondary) => ({
+    //     _id: secondary._id,
+    //   }))
+    // );
     console.log("data imported");
     process.exit(1);
   } catch (err) {

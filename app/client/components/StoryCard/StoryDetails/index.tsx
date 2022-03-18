@@ -3,7 +3,7 @@ import { Box, Center, Heading, HStack, Stack } from "@chakra-ui/react";
 import { Image } from "cloudinary-react";
 import StoryActions from "../StoryActions";
 import MyLink from "../../MyLink";
-import storyType from "@lib/types/storyType";
+import StoryType from "@lib/types/StoryType";
 
 const index = ({
   story: {
@@ -15,7 +15,7 @@ const index = ({
     meta: { likedBy, dislikedBy },
   },
 }: {
-  story: storyType;
+  story: StoryType;
 }) => {
   return (
     <HStack>

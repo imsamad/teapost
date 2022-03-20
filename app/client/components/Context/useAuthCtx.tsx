@@ -1,14 +1,14 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 import { deleteCookies, getCookies, setCookies } from "@lib/cookies";
 import LoginModal from "../LogIn/LogInModal";
-import userType from "@lib/types/UserType";
-import CustomToast from "@compo/StoryCard/customToast";
+import { AuthUser } from "@lib/types/UserType";
+import CustomToast from "@compo/UI/customToast";
 
 type AuthCtxType = {
-  user: Partial<userType>;
-  setUser: (props: Partial<userType>) => void;
+  user: Partial<AuthUser>;
+  setUser: (props: Partial<AuthUser>) => void;
   login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
   openLoginToast: () => void;
 };
@@ -23,11 +23,15 @@ const AuthCtx = createContext<AuthCtxType>({
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUserDis] = useState<any>(getCookies());
 
-  const setUser = (val: Partial<userType>) => {
-    if (!Object.keys(val).length) setUserDis(null);
+  const setUser = (val: Partial<AuthUser>) => {
+    if (!Object.keys(val).length) deleteCookies().then(() => setUserDis(null));
     else {
+      /*
+       * Have to set cookies asyncronously , to make sure they have been set bcoz ,
+       * in useProfile() immediatley related profile would be fetched
+       */
       setCookies(val).finally(() => {
-        setUserDis((pre: userType) => ({ ...pre, ...val }));
+        setUserDis((pre: AuthUser) => ({ ...pre, ...val }));
       });
     }
   };
@@ -49,10 +53,11 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
       render: CustomToast(onOpen),
     });
 
-  useEffect(() => {
-    if (!user) deleteCookies();
-    else setCookies(user);
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) deleteCookies();
+  //   else setCookies(user);
+  // }, [user]);
+
   return (
     <AuthCtx.Provider value={{ user, setUser, login, openLoginToast }}>
       <LoginModal isOpen={isOpen} onClose={onClose} />

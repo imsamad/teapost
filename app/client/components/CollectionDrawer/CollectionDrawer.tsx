@@ -6,7 +6,7 @@ import {
   DrawerCloseButton,
 } from "@chakra-ui/react";
 
-import Content from "./Content";
+import CollectionContent from "./CollectionContent";
 
 const Index = ({
   storySelected,
@@ -25,7 +25,7 @@ const Index = ({
         <DrawerHeader borderBottomWidth="1px">
           My Story collections
         </DrawerHeader>
-        <Content storySelected={storySelected} />
+        <CollectionContent storySelected={storySelected} />
       </DrawerContent>
     </Drawer>
   );

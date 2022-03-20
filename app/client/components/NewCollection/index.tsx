@@ -22,7 +22,7 @@ const Index = () => {
   const { profile, mutateProfile } = useProfile();
 
   const alreadyCreatedCollections = profile.storyCollections?.map(
-    (collection) => collection.title.toLowerCase()
+    (collection) => collection?.title?.toLowerCase()
   );
   const toast = useToast();
 

@@ -9,6 +9,7 @@ import {
   followAuthor,
   addToCollection,
 } from "../controller/authCtrl";
+
 import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 import {

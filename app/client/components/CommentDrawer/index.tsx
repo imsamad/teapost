@@ -57,7 +57,7 @@ const Index = ({
               fontStyle="italic"
               color="green.600"
             >
-              No comments , be first one to comment
+              No comments, be first one to comment
             </Heading>
           )}
         </DrawerBody>

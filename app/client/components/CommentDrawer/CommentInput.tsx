@@ -26,7 +26,7 @@ interface InputProps
         isPrimary: boolean;
         type: "edit" | "delete" | "reply";
         commentId: string;
-        editValue?: "";
+        editValue?: string;
       };
     }> {}
 

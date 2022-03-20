@@ -7,7 +7,7 @@ export interface PrimaryComment {
   story: StoryType["_id"];
   text: string;
   meta?: CommentMeta;
-  secondary?: SecondaryComment[];
+  secondary: SecondaryComment[];
 }
 
 export interface SecondaryComment {
@@ -25,3 +25,12 @@ export interface CommentMeta {
   likedBy: UserType["_id"][];
   dislikedBy: UserType["_id"][];
 }
+interface PickSecondary
+  extends Pick<
+    SecondaryComment,
+    "replyToPrimary" | "replyToSecondary" | "replyToSecondaryUser"
+  > {}
+
+export interface CommentForDisplay
+  extends Omit<PrimaryComment, "story">,
+    Partial<PickSecondary> {}

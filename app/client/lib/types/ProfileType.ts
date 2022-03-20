@@ -4,11 +4,13 @@ import User from "./UserType";
 
 interface ProfileType {
   _id: string;
-  likedStories: Story["_id"][] | Story[];
-  dislikedStories: Story["_id"][] | Story[];
-  following: User["_id"][] | User[];
-  followers: User["_id"][] | User[];
-  storyCollections: StoryCollectionType[];
+  fullName: string;
+
+  likedStories?: Story["_id"][];
+  dislikedStories?: Story["_id"][];
+  following?: User["_id"][];
+  followers?: User["_id"][] | User[];
+  storyCollections?: StoryCollectionType[];
 }
 
 export default ProfileType;

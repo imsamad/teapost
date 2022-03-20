@@ -24,9 +24,11 @@ const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
     if (!redirectTo) {
       return;
     }
-    const firstCond = redirectTo && !redirectToIfLoggedIn && !user,
-      secondCond = redirectToIfLoggedIn && user;
-    if (firstCond || secondCond) {
+    const haveToRediectButUserNotLoggedIn =
+        redirectTo && !redirectToIfLoggedIn && !user,
+      redirectToIfUserLoggedIn = redirectToIfLoggedIn && user;
+
+    if (haveToRediectButUserNotLoggedIn || redirectToIfUserLoggedIn) {
       Router.push(redirectTo);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -47,7 +47,9 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, "../", "public")));
-
+app.get("/ok", (req, res) => {
+  res.sendFile(path.join(__dirname, "../", "public", "ok.html"));
+});
 // app.use(checkTemp());
 
 app.use("/api/v1/auth", authRtr);
@@ -58,8 +60,7 @@ app.use("/api/v1/profile", profileRtr);
 app.use("/api/v1/collection", collectionRtr);
 app.use("/api/v1/comments", commentRtr);
 app.get("/api/v1", (_req, res) => {
-  console.log("req.query ", _req.query);
-  res.json({
+  return res.json({
     dir: __dirname,
     env: process.env,
   });

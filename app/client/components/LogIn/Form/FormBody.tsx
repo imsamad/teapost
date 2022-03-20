@@ -9,11 +9,19 @@ const FormBody = () => {
   return (
     <>
       {isRegister && (
-        <TPInput
-          name="username"
-          placeholder="John Doe"
-          LeftAddOn={<UserIcon />}
-        />
+        <>
+          <TPInput
+            name="fullName"
+            placeholder="Full Name"
+            // LeftAddOn={<user/>}
+            // LeftAddOn={<UserIcon />}
+          />
+          <TPInput
+            name="username"
+            placeholder="John Doe"
+            LeftAddOn={<UserIcon />}
+          />
+        </>
       )}
       <TPInput
         name="email"

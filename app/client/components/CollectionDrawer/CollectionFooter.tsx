@@ -3,7 +3,7 @@ import React from "react";
 
 import { useUICtx } from "../Context";
 
-const Footer = ({
+const CollectionFooter = ({
   handleSubmit,
   isOpen,
 }: {
@@ -29,4 +29,4 @@ const Footer = ({
   );
 };
 
-export default Footer;
+export default CollectionFooter;

@@ -1,24 +1,24 @@
-// import CheckResp from "../components/CheckResp";
-import HomePage from "../components/HomePage";
 import axios from "axios";
 import { InferGetStaticPropsType } from "next";
-import storyType from "../lib/types/StoryType";
+
+import Stories from "../components/Stories";
+import storyType from "@lib/types/StoryType";
+
+const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => (
+  <Stories stories={stories} />
+);
 
 export const getStaticProps = async () => {
-  const {
-    data: { stories },
-  }: { data: { stories: storyType[] } } = await axios(
+  const { data } = await axios.get<{ stories: storyType[] }>(
     `${process.env.API_URL}/stories`
   );
 
   return {
     props: {
-      stories,
+      stories: data.stories,
     },
     revalidate: 10,
   };
 };
-const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <HomePage stories={stories} />;
-};
+
 export default Index;

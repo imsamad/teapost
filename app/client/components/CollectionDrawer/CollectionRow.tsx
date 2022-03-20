@@ -16,16 +16,16 @@ import { useProfile } from "../Context";
 
 type CollRowProps = {
   collection: StoryCollectionType;
-  sendObj: { addTo: string[]; removeFrom: string[] };
+  sendObj: { partOf: string[]; removeFrom: string[] };
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  storySelected: string;
+  isDisabled: boolean;
 };
 
 const CollectionRow = ({
+  isDisabled,
   collection,
   handleChange,
   sendObj,
-  storySelected,
 }: CollRowProps) => {
   const { mutateProfile } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -36,17 +36,18 @@ const CollectionRow = ({
       onClose();
     });
   };
+
   return (
     <HStack mb="2">
       <HStack flex="1" overflow="hidden">
         <Checkbox
-          isChecked={sendObj.addTo.includes(collection._id)}
-          isDisabled={!storySelected}
+          isChecked={sendObj.partOf.includes(collection._id)}
+          onChange={handleChange}
+          isDisabled={isDisabled}
           icon={<CustomIcon />}
           colorScheme="cyan"
           size="lg"
           w="full"
-          onChange={handleChange}
         >
           <Text color="black" fontWeight={500} fontSize="md" noOfLines={1}>
             {collection.title}
@@ -54,7 +55,7 @@ const CollectionRow = ({
         </Checkbox>
       </HStack>
 
-      {collection.title.toLowerCase() != "read later" && (
+      {collection?.title?.toLowerCase() != "read later" && (
         <IconButton
           variant="outline"
           colorScheme="teal"

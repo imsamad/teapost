@@ -5,10 +5,9 @@ import { applyServerSideCookie } from "next-universal-cookie";
 
 import StoryForm from "../../../../components/StoryForm";
 import axios, { AxiosRequestConfig } from "axios";
-
-const Index = ({
-  story,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+import StoryType from "@lib/types/StoryType";
+// InferGetServerSidePropsType<typeof getServerSideProps>)
+const Index = ({ story }: { story: StoryType }) => {
   return (
     <Box p={[0, 4]}>
       <HStack justifyContent="center">
@@ -26,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   res,
   params,
-}): Promise<any> => {
+}) => {
   console.log("getServerSidePropsgetServerSideProps");
   applyServerSideCookie(req, res);
   const allCookies = req.cookies;
@@ -46,8 +45,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   const accessToken = JSON.parse(allCookies[userAuthCookie]).accessToken;
 
   const axiosArgs: AxiosRequestConfig = {
-    method: "POST",
-    url: process.env.API_URL + "/stories",
     headers: {
       authorization: `Bearer ${accessToken}`,
     },
@@ -59,7 +56,10 @@ export const getServerSideProps: GetServerSideProps = async ({
   try {
     const {
       data: { story },
-    } = await axios(axiosArgs);
+    } = await axios.post<{ story: StoryType }>(
+      `${process.env.API_URL}/stories`,
+      axiosArgs
+    );
 
     return {
       props: {

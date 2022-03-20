@@ -36,9 +36,18 @@ export const changeSlug = async (reqBody: { id: string; slug: string }) => {
 };
 type axiosObjType = Partial<{ like: number; dislike: number }>;
 
-export const gradeStory = async (storyId: string, axiosObj: axiosObjType) => {
+type gradeStoryType = {
+  storyId: string;
+  isLike: boolean;
+  undo: boolean;
+};
+
+export const likeOrDislikeStory = async (props: gradeStoryType) => {
   try {
-    const { data } = await axios.put(`/stories/grade/${storyId}`, axiosObj);
+    let endpoint = props.isLike ? "/stories/like/" : "/stories/dislike/";
+    endpoint += props.undo ? `undo/${props.storyId}` : props.storyId;
+
+    const { data } = await axios.put(`${endpoint}`);
     return data;
   } catch (err: any) {
     // throw err.response.data;

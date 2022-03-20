@@ -6,7 +6,7 @@ interface StoryCollectionType {
   user: User["_id"];
   description: string;
   title: string;
-  stories: storyType["_id"] | storyType[];
+  stories: storyType["_id"];
   isPublic: boolean;
 }
 

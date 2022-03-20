@@ -5,47 +5,49 @@ import {
   useDisclosure,
   useToast,
   VStack,
+  Divider,
 } from "@chakra-ui/react";
 import { useAuthCtx, useProfile } from "@compo/Context";
 import { addToCollection } from "@lib/api/authApi";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
-import Body from "./Body";
-import Footer from "./Footer";
+import CollectionFooter from "./CollectionFooter";
 
+import NewCollection from "../NewCollection";
+import CollectionRow from "./CollectionRow";
 const Content = ({ storySelected }: { storySelected: string }) => {
   const { profile } = useProfile();
-  //   extract collId of which crtSelectStory is part of
-  const partOf: any =
-    storySelected && profile._id
+  //   extract collId of which current SelectStory is part of
+
+  const partOf: string[] =
+    //  If story is selected , plus logged in
+    storySelected && profile?._id
       ? profile?.storyCollections
-          ?.filter(
-            (
-              collection // @ts-ignore
-            ) => collection.stories.includes(storySelected) && collection._id
-          )
-          .map((coll) => coll._id)
+        ? profile?.storyCollections
+            ?.filter((collection) => collection.stories.includes(storySelected))
+            .map((coll) => coll._id)
+        : []
       : [];
 
   const [sendObj, setSendObj] = useState<{
-    addTo: string[];
+    partOf: string[];
     removeFrom: string[];
   }>({
-    addTo: partOf,
+    partOf,
     removeFrom: [],
   });
-
   // useEffect(() => {
   //   setSendObj({ removeFrom: [], addTo: partOf });
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [storySelected]);
 
-  const savingStates = useDisclosure();
+  const loadingState = useDisclosure();
 
   const toast = useToast();
+
   const handleSubmit = async () => {
     const finalObj = {
-      addTo: sendObj.addTo.filter((coll) => !partOf.includes(coll)),
+      addTo: sendObj.partOf.filter((coll) => !partOf.includes(coll)),
       removeFrom: sendObj.removeFrom.filter((coll) => partOf.includes(coll)),
     };
     if (!finalObj.addTo.length && !finalObj.removeFrom.length) {
@@ -57,7 +59,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
         variant: "top-accent",
       });
     } else {
-      savingStates.onOpen();
+      loadingState.onOpen();
       addToCollection(finalObj, storySelected)
         .then(() => {
           toast({
@@ -67,7 +69,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
             title: "Saved",
             variant: "top-accent",
           });
-          savingStates.onClose();
+          loadingState.onClose();
         })
         .catch(() => {
           toast({
@@ -77,12 +79,28 @@ const Content = ({ storySelected }: { storySelected: string }) => {
             title: "Unable tosave, please try again",
             variant: "top-accent",
           });
-          savingStates.onClose();
+          loadingState.onClose();
         });
     }
   };
 
   const { login } = useAuthCtx();
+  const handleChange =
+    (collId: string) => (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked) {
+        setSendObj((pre) => ({
+          ...pre,
+          removeFrom: pre.removeFrom.filter((coll: string) => coll != collId),
+          partOf: [...pre.partOf, collId],
+        }));
+      } else {
+        setSendObj((pre) => ({
+          ...pre,
+          partOf: pre.partOf.filter((coll: string) => coll != collId),
+          removeFrom: [...pre.removeFrom, collId],
+        }));
+      }
+    };
 
   return (
     <>
@@ -95,16 +113,30 @@ const Content = ({ storySelected }: { storySelected: string }) => {
             </Button>
           </VStack>
         ) : (
-          <Body
-            sendObj={sendObj}
-            storySelected={storySelected}
-            setSendObj={setSendObj}
-          />
+          <>
+            <NewCollection />
+            <Heading fontSize="md" textAlign="center" my="2">
+              Add To
+            </Heading>
+            <Divider />
+            {profile?.storyCollections?.map((collection) => (
+              <CollectionRow
+                key={collection._id}
+                sendObj={sendObj}
+                isDisabled={!storySelected}
+                handleChange={handleChange(collection._id)}
+                collection={collection}
+              />
+            ))}
+          </>
         )}
       </DrawerBody>
 
       {profile._id && (
-        <Footer handleSubmit={handleSubmit} isOpen={savingStates.isOpen} />
+        <CollectionFooter
+          handleSubmit={handleSubmit}
+          isOpen={loadingState.isOpen}
+        />
       )}
     </>
   );

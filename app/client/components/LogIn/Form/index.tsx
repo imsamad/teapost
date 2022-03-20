@@ -7,7 +7,7 @@ import { signUp } from "@lib/api/authApi";
 import { typeOf } from "@lib/utils";
 import useUser from "@lib/useUser";
 
-import FormFields from "./FormBody";
+import FormBody from "./FormBody";
 import Footer from "./Footer";
 import Header from "./Header";
 import LoginWrapper from "./LoginWrapper";
@@ -15,7 +15,8 @@ import FormStatus from "./FormStatus";
 
 import { useAuthCtx } from "@compo/Context";
 
-type AuthType = {
+export type AuthType = {
+  fullName: string;
   isRegister: boolean;
   username: string;
   email: string;
@@ -26,15 +27,20 @@ type AuthType = {
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
   const toast = useToast();
-  const { login } = useAuthCtx();
+
+  // Get redirectUrl if present
   const redirectTo = router.query.redirectTo
     ? (router.query.redirectTo as string)
     : redirectToProp ?? "/me";
 
+  // Check if already login ,
   const { setCookies } = useUser({
     redirectTo,
     redirectToIfLoggedIn: true,
   });
+
+  // login modal in case login form is on, & have to off after logged in.
+  const { login } = useAuthCtx();
 
   const handleSubmit = async (
     values: AuthType,
@@ -46,17 +52,20 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     try {
       const { user, redirectUrl, message, status }: any = await signUp(values);
 
+      // if registering user , it will api payload send back {redirectUrl Or message}>
       if (redirectUrl || message) {
+        // show status in header of form
         action.setStatus({
           status,
           redirectUrl,
           message,
         });
       } else if (user) {
+        // set cookies
         setCookies(user);
         action.resetForm();
       }
-      // If login modal is open
+      // If login modal is open i.e logging in via modal
       if (login.isOpen && !values.isRegister) {
         login.onClose();
         toast({
@@ -85,6 +94,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   return (
     <Formik
       initialValues={{
+        fullName: "Abdus Samad",
         isRegister: false,
         username: "imsamad",
         email: "imsamad00@gmail.com",
@@ -100,7 +110,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
             <LoginWrapper>
               <Header />
               <FormStatus />
-              <FormFields />
+              <FormBody />
               <Button
                 isLoading={formikProps.isSubmitting}
                 type="submit"

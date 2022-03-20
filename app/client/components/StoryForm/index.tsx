@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { submitStory } from "@lib/api/storyApi";
 
 import StoryForm from "./Form";
+import StoryType from "@lib/types/StoryType";
 
 const initValues = {
   title: "",
@@ -18,7 +19,7 @@ const initValues = {
   titleImage: "",
 };
 
-const Index = ({ story }: any) => {
+const Index = ({ story }: { story: StoryType }) => {
   // console.log('story ', story);
   const router = useRouter();
   useEffect(() => {

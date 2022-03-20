@@ -2,6 +2,7 @@ interface User {
   _id: string;
   email: string;
   username: string;
+  profilePic: string;
   password: string;
   isEmailVerified: boolean;
   isAuthorised: boolean;

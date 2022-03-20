@@ -3,7 +3,7 @@ import { Schema, model, Document, Types } from "mongoose";
 import { StoryDocument } from "./Story";
 import { UserDocument } from "./User";
 
-export interface CollectionDocument extends Document {
+export interface StoryCollectionDocument extends Document {
   user: UserDocument["id"];
   description: string;
   title: string;
@@ -24,7 +24,7 @@ const storyCollectionSchema = new Schema(
         ref: "Story",
       },
     ],
-    title: { type: String, dropDups: true },
+    title: { type: String, dropDups: true, required: true },
     description: String,
     isPublic: {
       type: Boolean,
@@ -44,9 +44,9 @@ storyCollectionSchema.index(
   { partialFilterExpression: { isPublic: true }, unique: true }
 );
 
-const StoryCollectionModel = model<CollectionDocument>(
+const StoryCollection = model<StoryCollectionDocument>(
   "StoryCollection",
   storyCollectionSchema
 );
 
-export default StoryCollectionModel;
+export default StoryCollection;

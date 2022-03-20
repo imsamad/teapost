@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "../lib/utils";
-import { UserDocument } from "../models/User";
-import Profile from "../models/Profile";
+import { asyncHandler } from "../../lib/utils";
+import { UserDocument } from "../../models/User";
+import Profile from "../../models/Profile";
 
 // @desc      Get profile a user
 // @route     GET /api/v1/profile/:userId
 // @access    Admin
-export const getProfile = asyncHandler(
+const getProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id as UserDocument["_id"];
@@ -21,3 +21,5 @@ export const getProfile = asyncHandler(
     });
   }
 );
+
+export default getProfile;

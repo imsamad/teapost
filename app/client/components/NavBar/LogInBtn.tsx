@@ -1,5 +1,6 @@
 import {
   Button,
+  Divider,
   Menu,
   MenuButton,
   MenuGroup,
@@ -13,23 +14,20 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useAuthCtx } from "../Context";
 import MyLink from "../MyLink";
 import { nanoid } from "nanoid";
+import { BiUser } from "react-icons/bi";
 
 const LogInBtn = ({ size }: { size: any }) => {
   const { login, user, setUser } = useAuthCtx();
   return user?._id ? (
     <Menu>
-      <MenuButton
-        mx={[1, 4]}
-        as={Button}
-        rightIcon={<ChevronDownIcon />}
-        size={size}
-      >
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />} size={size}>
         Profile
       </MenuButton>
       <MenuList>
         <MenuGroup title="Profile">
+          <Divider />
           <MyLink href="/me">
-            <MenuItem>My Account </MenuItem>
+            <MenuItem icon={<BiUser />}>My Account </MenuItem>
           </MyLink>
           <MyLink href={`/me/story/write/${nanoid(10)}`}>
             <MenuItem icon={<FaPenNib />} color="green.600">

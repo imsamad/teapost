@@ -1,5 +1,6 @@
 import StoryMeta from "./StoryMetaType";
 import Tag from "./TagType";
+import UserType from "./UserType";
 
 interface StoryType {
   _id: string;
@@ -13,8 +14,8 @@ interface StoryType {
   isPublished: boolean;
   isPublishedByAdmin: boolean;
   data: Object;
-  author: string;
-  meta: StoryMeta;
+  author: UserType;
+  meta?: StoryMeta;
   updatedAt: Date;
   createdAt: Date;
 }

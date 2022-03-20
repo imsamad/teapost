@@ -1,9 +1,8 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
-import ms from 'ms';
+import jwt, { SignOptions } from "jsonwebtoken";
+import ms from "ms";
 
 const jwtSecret = process.env.JWT_SECRET as string;
 const jwtExpire = process.env.JWT_EXPIRE as string;
-const jwtExpireRefresh = process.env.JWT_EXPIRE_REFRESH as string;
 const jwtIssuer = process.env.JWT_ISSUER as string;
 
 const jwtGlobalOptions = (expiresIn?: string): SignOptions => {
@@ -13,8 +12,12 @@ const jwtGlobalOptions = (expiresIn?: string): SignOptions => {
   };
 };
 
-export const signJwt = (data: any, options?: SignOptions): string => {
-  return jwt.sign(data, jwtSecret, {
+export const signJwt = (
+  data: any,
+  options?: SignOptions,
+  secret?: string
+): string => {
+  return jwt.sign(data, secret || jwtSecret, {
     ...jwtGlobalOptions(options?.expiresIn as string),
     ...options,
   });
@@ -22,16 +25,17 @@ export const signJwt = (data: any, options?: SignOptions): string => {
 
 export const decodeJwt = (
   token: string,
-  options?: SignOptions
+  options?: SignOptions,
+  secret?: string
 ): object | boolean => {
   try {
-    const decoded: {} = jwt.verify(token, jwtSecret, {
+    const decoded: {} = jwt.verify(token, secret || jwtSecret, {
       ...jwtGlobalOptions(options?.expiresIn as string),
       ...options,
     });
     return decoded;
   } catch (error) {
-    console.log('Error from jwt decode ', error);
+    console.log("Error from jwt decode ", error);
     return false;
   }
 };

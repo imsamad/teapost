@@ -1,10 +1,16 @@
 import { HStack, Link, Spacer } from "@chakra-ui/react";
-import { useField } from "formik";
+import { useField, useFormikContext } from "formik";
 
 import MyLink from "../../MyLink";
+import { AuthType } from "./index";
 const Footer = () => {
-  const [, { value: isRegister }, { setValue }] = useField("isRegister");
-
+  // const [, { value: isRegister }, { setValue }] = useField("isRegister");
+  const {
+    values: { isRegister },
+    setStatus,
+    setErrors,
+    setFieldValue,
+  } = useFormikContext<AuthType>();
   return (
     <HStack
       fontSize="md"
@@ -19,7 +25,11 @@ const Footer = () => {
       <Link
         as="button"
         type="button"
-        onClick={() => setValue(!isRegister)}
+        onClick={() => {
+          setFieldValue("isRegister", !isRegister, false);
+          setErrors({});
+          setStatus(null);
+        }}
         _visited={{
           outline: "none",
           color: "blue.400",

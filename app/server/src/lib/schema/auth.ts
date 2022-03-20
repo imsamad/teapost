@@ -13,6 +13,14 @@ const usernameField = yup
   .test("username", "Username must be above 4 chars.", (val) =>
     trimExtra(val, 4)
   );
+const fullNameField = yup
+  .string()
+  .typeError("Full Name must be string")
+  .label("fullName")
+  .required("Full Name is required")
+  .test("fullName", "Full Name must be above 4 chars.", (val) =>
+    trimExtra(val, 4)
+  );
 
 const emailField = yup
   .string()
@@ -37,6 +45,7 @@ const pwdConfirmField = yup
 export const registerSchema = yup.object({
   body: yup.object({
     username: usernameField,
+    fullName: fullNameField,
     email: emailField,
     password: pwdField,
     passwordConfirmation: pwdConfirmField,
@@ -88,7 +97,7 @@ export const addToCollectionSchema = yup.object({
             ? true
             : typeOf(val, "array")
             ? new Set(val).size === val.length &&
-              val.every((v: any) => isValidObjectId(v))
+              val.every((v: string) => isValidObjectId(v))
             : false;
         }),
       removeFrom: yup

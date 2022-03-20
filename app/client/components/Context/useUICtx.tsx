@@ -6,29 +6,32 @@ import CommentDrawer from "../CommentDrawer";
 const UICtx = createContext<{
   drawer: {
     isOpen: boolean;
-    onOpen: (story: string) => void;
+    onOpen: (storyId: string) => void;
     onClose: () => void;
   };
   comment: {
     isOpen: boolean;
-    onOpen: (story: string) => void;
+    onOpen: (storyId: string) => void;
     onClose: () => void;
   };
 }>({
-  drawer: { isOpen: false, onOpen: (story: string) => {}, onClose: () => {} },
-  comment: { isOpen: false, onOpen: (story: string) => {}, onClose: () => {} },
+  drawer: { isOpen: false, onOpen: (storyId: string) => {}, onClose: () => {} },
+  comment: {
+    isOpen: false,
+    onOpen: (storyId: string) => {},
+    onClose: () => {},
+  },
 });
 
 const UICtxProvider = ({ children }: { children: React.ReactNode }) => {
   const [storySelected, setStorySelected] = useState<string>("");
+
   const drawerStates = useDisclosure();
   const drawer = {
-    // @ts-ignore
-    onOpen: (story?: string) => {
-      setStorySelected(story ?? "");
+    onOpen: (storyId?: string) => {
+      setStorySelected(storyId ?? "");
       drawerStates.onOpen();
     },
-    // @ts-ignore
     onClose: () => {
       setStorySelected("");
       drawerStates.onClose();
@@ -39,8 +42,8 @@ const UICtxProvider = ({ children }: { children: React.ReactNode }) => {
   const commentDrawerState = useDisclosure();
   const comment = {
     isOpen: commentDrawerState.isOpen,
-    onOpen: (story: string) => {
-      setStorySelected(story ?? "");
+    onOpen: (storyId: string) => {
+      setStorySelected(storyId ?? "");
       commentDrawerState.onOpen();
     },
     onClose: () => {

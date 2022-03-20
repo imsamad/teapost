@@ -38,7 +38,7 @@ const importData = async () => {
     );
 
     await Story.create(stories);
-    await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
+    // await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
 
     await Primary.create(primaries);
     // await CommentMeta.create(

@@ -1,23 +1,21 @@
-import { Badge, HStack, Text } from '@chakra-ui/react';
+import { Badge, HStack, Text } from "@chakra-ui/react";
 const month = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'June',
-  'July',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
-import MyLink from '../../../MyLink';
-import { useRouter } from 'next/router';
+import MyLink from "../../../MyLink";
 
 const StoryInfo = ({ tag, createdAt }: any) => {
-  const router = useRouter();
   let date: any = new Date(createdAt);
   date = `${date.getDate()} ${month[date.getMonth()]}`;
   return (
@@ -28,7 +26,7 @@ const StoryInfo = ({ tag, createdAt }: any) => {
       >
         |
       </MySmText>
-      <MySmText>6 min</MySmText>
+      <MySmText>6 min read</MySmText>
       <MySmText>~</MySmText>
       <MyLink href={`/q?tag=${tag.tag}`}>
         <Badge
@@ -38,7 +36,7 @@ const StoryInfo = ({ tag, createdAt }: any) => {
           // bgColor="gray.400"
           fontStyle="italic"
           _dark={{
-            color: 'gray.900',
+            color: "gray.900",
           }}
           textTransform="capitalize"
         >
@@ -62,7 +60,7 @@ const MySmText = ({ children, ...rest }: { children: React.ReactNode }) => {
       // fontSize={13}
       fontWeight={300}
       _dark={{
-        color: 'gray.300',
+        color: "gray.300",
       }}
       {...rest}
     >

@@ -1,19 +1,15 @@
 import { HStack, Spacer } from "@chakra-ui/react";
-import storyType from "../../../lib/types/StoryType";
+import storyType from "@lib/types/StoryType";
 
 import Author from "./Author";
 import StoryInfo from "./StoryInfo";
 
-const index = ({
-  story: { author, tags, createdAt },
-}: {
-  story: storyType;
-}) => {
+const index = ({ story }: { story: storyType }) => {
   return (
     <HStack>
-      <Author author={author} />
+      <Author author={story.author} />
       <Spacer />
-      <StoryInfo tag={tags[0]} createdAt={createdAt} />
+      <StoryInfo tag={story.tags[0]} createdAt={story.createdAt} />
     </HStack>
   );
 };

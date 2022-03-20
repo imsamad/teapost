@@ -1,13 +1,16 @@
 import { Schema, model, Document, Types } from "mongoose";
+
 import { StoryDocument } from "./Story";
 import { UserDocument } from "./User";
-
+import { StoryCollectionDocument } from "./StoryCollection";
 export interface ProfileDocument extends Document {
   id: UserDocument["id"];
+  fullName: string;
   likedStories: Types.Array<StoryDocument["_id"]>;
   dislikedStories: Types.Array<StoryDocument["_id"]>;
   following: Types.Array<UserDocument["_id"]>;
   followers: Types.Array<UserDocument["_id"]>;
+  storyCollections: Types.Array<StoryCollectionDocument>;
 }
 
 const profileSchema = new Schema(
@@ -16,6 +19,10 @@ const profileSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: [true, "User is required."],
       ref: "User",
+    },
+    fullName: {
+      type: String,
+      required: true,
     },
     likedStories: [
       {

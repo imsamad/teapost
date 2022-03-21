@@ -23,6 +23,9 @@ const publishedStory = asyncHandler(
 
       story.isPublished = req.body.isPublished ?? true;
       story = await story.save();
+      /**
+       * Send Email To Followers of story.author
+       *****************************************************/
 
       return res.status(200).json({ status: "ok", story });
     } catch (err: any) {

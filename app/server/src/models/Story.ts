@@ -13,7 +13,6 @@ export interface StoryDocument
 
 const storySchema = new Schema(
   {
-    data: Object,
     title: {
       type: String,
       trim: true,
@@ -54,6 +53,7 @@ const storySchema = new Schema(
       require: true,
       default: false,
     },
+    readingTime: { type: Number, default: 0 },
     isPublishedByAdmin: {
       type: Boolean,
       require: [

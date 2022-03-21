@@ -29,9 +29,9 @@ export const trimExtra = (
   join = " "
 ): boolean => {
   if (!str) return false;
-  let splitted = str.split(" ");
-  let filtered = splitted.filter((val: string) => val !== "");
-  let joined = filtered.join(join);
+  let splitted = str.split(/\s/g);
+  let filteredVoidStr = splitted.filter((val: string) => val !== "");
+  let joined = filteredVoidStr.join(join);
   return joined.length >= length ? true : false;
 };
 
@@ -67,7 +67,7 @@ export const validateYupSchema = async (
     if (res) return true;
     else throw new Error("Provide proper data");
   } catch (yupError: any) {
-    // console.log("yupErroryupError ", yupError);
+    console.log("yupErroryupError ", yupError);
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
 

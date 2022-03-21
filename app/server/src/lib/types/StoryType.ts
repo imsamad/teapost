@@ -16,6 +16,7 @@ interface Story {
   data: Object;
   author: string;
   meta: StoryMeta;
+  readingTime: number;
 }
 
 export default Story;

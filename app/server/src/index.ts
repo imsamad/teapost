@@ -19,10 +19,11 @@ import notFound from "./middleware/notFound";
 import authRtr from "./routes/authRtr";
 import storyRtr from "./routes/storyRtr";
 import tagRtr from "./routes/tagRtr";
-import imageUploadRtr from "./routes/imageUploadRtr";
+import imageRtr from "./routes/imageRtr";
 import profileRtr from "./routes/profileRtr";
 import collectionRtr from "./routes/collectionRtr";
 import commentRtr from "./routes/commentRtr";
+// import checkTemp from "./middleware/checkTemp";
 
 const app = express();
 const limiter = rateLimit({
@@ -55,7 +56,7 @@ app.get("/ok", (req, res) => {
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);
 app.use("/api/v1/tags", tagRtr);
-app.use("/api/v1/image", imageUploadRtr);
+app.use("/api/v1/image", imageRtr);
 app.use("/api/v1/profile", profileRtr);
 app.use("/api/v1/collection", collectionRtr);
 app.use("/api/v1/comments", commentRtr);

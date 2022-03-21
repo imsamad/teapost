@@ -13,7 +13,10 @@ import { isAbleToPublished } from "../../lib/schema/story";
 // @access    Auth [Reader]
 const createOrUpdateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let query: Partial<{ _id: any; slug: any }> = {};
+    let query: Partial<{
+      _id: StoryDocument["_id"];
+      slug: StoryDocument["slug"];
+    }> = {};
 
     if (req.body.id) query._id = req.body.id;
     else query.slug = req.body.slug;
@@ -29,39 +32,39 @@ const createOrUpdateStory = asyncHandler(
 
       var { id, slug, isPublished, ...rest } = req.body;
 
-      Object.keys(rest).forEach((field: any) => {
-        // @ts-ignore
-        storyExist[field] = req.body[field];
-      });
+      for (var key in rest) storyExist[key] = req.body[key];
 
-      if (req.body.id && req.body.slug && storyExist.slug !== req.body.slug) {
-        const storyExistWithNewSlug = await Story.findOne({
+      if (id && slug && storyExist.slug !== slug) {
+        const isStoryExistWithNewSlug = await Story.findOne({
           slug: req.body.slug,
         });
-        if (storyExistWithNewSlug) {
+        if (isStoryExistWithNewSlug) {
           extraMessage["slug"] = ["This slug already exist."];
         } else storyExist.slug = req.body.slug;
       }
 
-      // explicit
-      if (
-        typeof req.body.isPublished !== "undefined" &&
-        req.body.isPublished === false
-      )
+      if (typeof isPublished !== "undefined" && req.body.isPublished === false)
         storyExist.isPublished = false;
-
-      // console.log('story ', storyExist);
-
-      sendResponse(req.body.isPublished, storyExist, res, extraMessage);
-    } else {
-      const { id, isPublished, ...rest } = req.body;
-      let newStory = new Story({
-        ...rest,
-        // @ts-ignore
-        author: req.user._id,
+      storyExist.readingTime = 10;
+      return res.status(200).json({
+        status: "ok",
+        story: await storyExist.save(),
+        message: extraMessage,
       });
+      // sendResponse(req.body.isPublished, storyExist, res, extraMessage);
+    } else {
+      return res.status(200).json({
+        status: "ok",
+        story: await Story.create({
+          ...req.body,
+          // @ts-ignore
+          author: req.user._id,
+          isPublished: false,
+        }),
+      });
+
       // await StoryMeta.create({ _id: newStory.id });
-      sendResponse(isPublished, newStory, res);
+      // sendResponse(isPublished, newStory, res);
     }
   }
 );

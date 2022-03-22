@@ -1,28 +1,34 @@
 import { useColorModeValue } from "@chakra-ui/react";
+import Head from "next/head";
 
 const Render = ({ value }: { value: string }) => {
   const color = useColorModeValue("#1A202C", "#FFFFFFEB");
   return (
     <>
-      <div
-        dangerouslySetInnerHTML={{ __html: value }}
-        className="content"
-        style={{
-          border: "2px solid #ddd",
-          borderRadius: "2rem",
-          padding: "1rem",
-          margin: "1rem",
-        }}
-      />
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        <link
+          href={`https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap`}
+          rel="stylesheet"
+        />
+      </Head>
+      <div dangerouslySetInnerHTML={{ __html: value }} className="content" />
       <style global jsx>{`
         .content h1,
         .content h2,
         .content h3,
         .content h4,
         .content h5,
-        .content h6 {
+        .content h6,
+        .content p {
           font-weight: normal;
           color: ${color};
+          font-family: "Nunito", "Times New Roman", Times, serif;
         }
 
         .content h1 {

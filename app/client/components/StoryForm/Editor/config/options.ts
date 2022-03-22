@@ -26,8 +26,10 @@ export const setOptions = (): SetOptions => {
     // toolbarContainer: "div",
     // fullScreenOffset: 10,
     defaultStyle:
-      "border:2px solid #eee; padding:20px 10px 100px 20px;z-index:-1",
+      "border:2px solid #eee; padding:20px 10px 100px 20px;z-index:-1,font-family:Nunito, 'Times New Roman', Times, serif",
     // stickyToolbar: 1,
+    // paragraphStyles: ["font-family:Nunito, 'Times New Roman', Times, serif"],
+    // textStyles: ["font-family:Nunito, 'Times New Roman', Times, serif"],
     resizingBar: true,
     resizeEnable: true,
     charCounterLabel: "Total char",
@@ -43,7 +45,7 @@ export const setOptions = (): SetOptions => {
     charCounter: true,
     charCounterType: "char",
 
-    font: fonts,
+    font: ["Nunito", ...fonts],
 
     mediaAutoSelect: true,
 
@@ -52,12 +54,12 @@ export const setOptions = (): SetOptions => {
     },
     imageUploadSizeLimit: oneMB * 4,
     imageMultipleFile: true,
-    imageUploadUrl: "http://localhost:4000/api/v1/image/upload",
+    imageUploadUrl: `${process.env.NEXT_PUBLIC_API_URL}/image/upload`,
     imageGalleryHeader: {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     imageGalleryUrl:
-      "http://localhost:4000/api/v1/image" ||
+      `${process.env.NEXT_PUBLIC_API_URL}/image` ||
       "https://fake-images.glitch.me?limit=100",
     imageFileInput: true,
     imageUrlInput: true,
@@ -72,7 +74,7 @@ export const setOptions = (): SetOptions => {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     videoUploadUrl:
-      "http://localhost:4000/api/v1/image" ||
+      `${process.env.NEXT_PUBLIC_API_URL}/image` ||
       "https://fake-images.glitch.me?limit=100",
     videoUploadSizeLimit: 4 * oneMB,
     videoMultipleFile: true,
@@ -83,7 +85,7 @@ export const setOptions = (): SetOptions => {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     audioUploadUrl:
-      "http://localhost:4000/api/v1/image" ||
+      `${process.env.NEXT_PUBLIC_API_URL}/image` ||
       "https://fake-images.glitch.me?limit=100",
     audioUploadSizeLimit: 4 * oneMB,
     audioMultipleFile: true,

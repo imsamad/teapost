@@ -16,7 +16,7 @@ const getAllStories = asyncHandler(
       },
       {
         path: "tags",
-        select: "tag",
+        select: "title",
       },
     ]);
     // @ts-ignore

@@ -1,27 +1,18 @@
 import { Box, Collapse, Text } from "@chakra-ui/react";
-import { nanoid } from "nanoid";
+
 import { typeOf } from "../../lib/utils";
 
-const Error = ({
-  errors,
-  isError,
-}: {
-  isError: boolean;
-  errors: string | string[];
-}) => {
+const Error = ({ errors, isError }: { isError: boolean; errors: any }) => {
   return (
-    // @ts-ignore
     <Collapse in={isError} animateOpacity>
-      <Box color="red.600">
-        {isError && typeOf(errors, "array") ? (
+      <Box color="red.500" my="1" fontSize="md">
+        {isError && typeOf(errors, "object") ? (
           // @ts-ignore
-          [...new Set(errors)].map((err: string) => (
-            <Text fontSize="md" key={err || nanoid(10)} color="red.500">
-              {err}
-            </Text>
-          ))
-        ) : isError ? (
-          <Text fontSize="md">{errors}</Text>
+          <RenderObjectErrors errors={errors} />
+        ) : typeOf(errors, "array") ? (
+          <RenderArrayOfErrors errors={errors} />
+        ) : typeOf(errors, "string") ? (
+          <RenderStringError error={errors} />
         ) : null}
       </Box>
     </Collapse>
@@ -29,3 +20,40 @@ const Error = ({
 };
 
 export default Error;
+const RenderObjectErrors = ({ errors }: { errors: Object }) => {
+  return (
+    <>
+      {Object.keys(errors).map((field: any) =>
+        // @ts-ignore
+        typeOf(errors[field], "array") ? ( // @ts-ignore
+          <RenderArrayOfErrors errors={errors[field]} />
+        ) : (
+          // @ts-ignore
+          <RenderStringError error={errors} />
+        )
+      )}
+    </>
+  );
+  // for (var key in errors) {
+  //   // @ts-ignore
+  //   return typeOf(errors[key], "array") ? ( // @ts-ignore
+  //     <RenderArrayOfErrors errors={errors[key]} />
+  //   ) : (
+  //     // @ts-ignore
+  //     <RenderStringError error={errors} />
+  //   );
+  // }
+};
+const RenderArrayOfErrors = ({ errors }: { errors: string[] }) => {
+  return (
+    <>
+      {/* @ts-ignore */}
+      {[...new Set(errors)].map((err: string) => (
+        <RenderStringError error={err} key={err} />
+      ))}
+    </>
+  );
+};
+const RenderStringError = ({ error }: { error: string }) => {
+  return <Text>{error}</Text>;
+};

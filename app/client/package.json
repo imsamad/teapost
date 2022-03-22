@@ -25,6 +25,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
+    "suneditor-react": "^3.4.0",
     "swr": "^1.2.1",
     "universal-cookie": "^4.0.4",
     "yup": "^0.32.11",

@@ -1,38 +1,32 @@
 import { Flex, HStack, Switch, Text } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
+import { memo } from "react";
 
 import { isAbleToPublished } from "@lib/schema/story";
 import { validateYupSchema } from "@lib/utils";
-import axios from "@lib/axios";
+import { StoryFormType } from "@lib/types/StoryType";
+import { publishedStory } from "@lib/api/storyApi";
 
 const Index = () => {
   const { values, setFieldValue, setFieldTouched, setErrors } =
-    useFormikContext();
+    useFormikContext<StoryFormType>();
 
-  const sendRequestAndChangeValues = async () => {
-    const {
-      data, // @ts-ignore
-    } = await axios.put(`/stories/published/${values.id}`, {
-      // @ts-ignore
-      isPublished: !values.isPublished,
-    });
-
-    setFieldValue("isPublished", data.story.isPublished);
-    setFieldTouched("isPublished", true);
-  };
   const handleChange = async () => {
-    // @ts-ignore
     if (values.isPublished == true) {
-      await sendRequestAndChangeValues();
-    }
-    // @ts-ignore
-    else
+      await publishedStory({ isPublished: false, storyId: values._id });
+    } else
       validateYupSchema(isAbleToPublished, values)
         .then(async (res) => {
-          await sendRequestAndChangeValues();
+          const data = await publishedStory({
+            isPublished: true,
+            storyId: values._id,
+          });
+          setFieldValue("isPublished", data.story.isPublished);
+          setFieldTouched("isPublished", true);
         })
         .catch((err) => {
           // setStatus(true);
+          console.log("err ", err);
           Object.keys(err).forEach((key: any) => {
             setFieldTouched(key, true, false);
           });
@@ -45,10 +39,9 @@ const Index = () => {
         <Text size="md" mx="4">
           Published
         </Text>
-        <Switch // @ts-ignore
+        <Switch
           isChecked={values?.isPublished}
-          // @ts-ignore
-          value={values?.isPublished}
+          value={values?.isPublished ? 1 : 0}
           onChange={handleChange}
         />
       </Flex>
@@ -56,4 +49,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default memo(Index);

@@ -1,5 +1,5 @@
-import { array, object, string } from 'yup';
-import { trimExtra } from '../utils';
+import { array, object, string } from "yup";
+import { trimExtra } from "../utils";
 
 const stringSchema = (label: string, minLength: number, maxLength: number) => {
   let minLengthMsg = `Min length for ${label} is ${minLength} chars`;
@@ -19,22 +19,22 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 };
 
 export const isAbleToPublished = object({
-  title: stringSchema('title', 10, 90),
+  title: stringSchema("title", 10, 90),
   titleImage: string()
-    .label('titleImage')
-    .required('TitleImage is required.')
-    .url('TitleImage must be url')
-    .typeError('TitleImage must be url'),
-  subtitle: stringSchema('subtitle', 10, 175),
+    .label("titleImage")
+    .required("TitleImage is required.")
+    .url("TitleImage must be url")
+    .typeError("TitleImage must be url"),
+  subtitle: stringSchema("subtitle", 10, 175),
   slug: string()
-    .required('Slug is required to create a story')
-    .label('slug')
-    .typeError('Slug must be string'),
+    .required("Slug is required to create a story")
+    .label("slug")
+    .typeError("Slug must be string"),
   tags: array()
-    .min(1, 'Minimum one tag is required.')
-    .required('Minimum one tag is required')
-    .label('tags')
-    .typeError('tags must be array type'),
-  // body: stringSchema('body', 2200, Infinity),
-  keywords: stringSchema('Keywords', 10, 150),
+    .min(1, "Minimum one tag is required.")
+    .required("Minimum one tag is required")
+    .label("tags")
+    .typeError("tags must be array type"),
+  content: stringSchema("content", 2200, Infinity),
+  keywords: stringSchema("Keywords", 10, 150),
 });

@@ -1,5 +1,5 @@
 interface TagType {
   _id: string;
-  tag: string;
+  title: string;
 }
 export default TagType;

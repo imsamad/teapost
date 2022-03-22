@@ -5,7 +5,8 @@ const TSButton = ({ children, ...rest }: ButtonProps) => {
     <Button
       _focus={{
         border: "1px solid gray",
-        bgColor: "transparent",
+        // bgColor: "transparent",
+        outline: "none",
         boxShadow: "none",
         WebkitTapHighlightColor: "none",
         backfaceVisibility: "hidden",

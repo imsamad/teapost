@@ -38,7 +38,7 @@ const storySchema = new Schema(
         },
       ],
     },
-    body: String,
+    content: String,
     keywords: {
       type: String,
       trim: true,

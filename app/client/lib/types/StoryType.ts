@@ -9,15 +9,28 @@ interface StoryType {
   subtitle: string;
   slug: string;
   tags: Tag["_id"] | Tag[];
-  body: { text: string; html: string };
+  content: string;
   keywords: string;
   isPublished: boolean;
+
   isPublishedByAdmin: boolean;
-  data: Object;
+  readingTime: number;
+
   author: UserType;
   meta?: StoryMeta;
   updatedAt: Date;
   createdAt: Date;
 }
-
+export interface StoryFormType
+  extends Omit<
+    StoryType,
+    | "isPublishedByAdmin"
+    | "readingTime"
+    | "author"
+    | "meta"
+    | "updatedAt"
+    | "createdAt"
+  > {
+  additionalTags: string[];
+}
 export default StoryType;

@@ -1,12 +1,11 @@
 import { Box, Heading, HStack, Icon } from "@chakra-ui/react";
 import { GiQuill } from "react-icons/gi";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { applyServerSideCookie } from "next-universal-cookie";
+import { GetServerSideProps } from "next";
+import axios from "axios";
 
 import StoryForm from "../../../../components/StoryForm";
-import axios, { AxiosRequestConfig } from "axios";
 import StoryType from "@lib/types/StoryType";
-// InferGetServerSidePropsType<typeof getServerSideProps>)
+
 const Index = ({ story }: { story: StoryType }) => {
   return (
     <Box p={[0, 4]}>
@@ -26,39 +25,43 @@ export const getServerSideProps: GetServerSideProps = async ({
   res,
   params,
 }) => {
-  console.log("getServerSidePropsgetServerSideProps");
-  applyServerSideCookie(req, res);
-  const allCookies = req.cookies;
-  const userAuthCookie = process.env.AUTH_SESSION as string;
+  const userAuthCookie: string = process.env.AUTH_SESSION!;
+
+  let accessToken: any = () =>
+    new Promise((resolve, reject) => {
+      let token: any = req.cookies?.[userAuthCookie];
+      if (!token) reject(false);
+      token = JSON.parse(token).accessToken;
+      if (!token) reject(false);
+
+      resolve(token);
+    });
 
   // @ts-ignore
   const slug = params.slug;
-  if (!allCookies[userAuthCookie]) {
+  if (!(await accessToken())) {
     return {
       redirect: {
         destination: `/auth?redirectTo=/me/stories/write/${slug}`,
-        permanent: false,
+        permanent: true,
       },
     };
   }
-  // @ts-ignore
-  const accessToken = JSON.parse(allCookies[userAuthCookie]).accessToken;
-
-  const axiosArgs: AxiosRequestConfig = {
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-    },
-    data: {
-      slug,
-    },
-  };
-
+  accessToken = await accessToken();
   try {
     const {
       data: { story },
     } = await axios.post<{ story: StoryType }>(
       `${process.env.API_URL}/stories`,
-      axiosArgs
+      {
+        slug,
+      },
+      {
+        headers: {
+          // @ts-ignore
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
     return {
@@ -67,9 +70,13 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
     };
   } catch (err) {
-    console.log("err ", err);
+    // console.log("err ", err);
     return {
       notFound: true,
+      // redirect: {
+      //   destination: "/404",
+      //   permanent: true,
+      // },
     };
   }
 };

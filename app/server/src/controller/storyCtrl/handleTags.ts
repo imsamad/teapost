@@ -30,7 +30,7 @@ const handleTags = asyncHandler(
     }
     let oldTags: any = [];
     newTags = newTags.map((tag: String) =>
-      TagModel.create({ tag })
+      TagModel.create({ title: tag })
         .then((res) => {
           alreadyExistedTags?.push(res.id || res._id);
           return res;

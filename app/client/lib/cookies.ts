@@ -1,7 +1,7 @@
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION as string;
+const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION!;
 
 const getCookies = () => {
   return cookies.get(userAuthCookie);

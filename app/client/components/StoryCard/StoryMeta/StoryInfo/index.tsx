@@ -28,7 +28,7 @@ const StoryInfo = ({ tag, createdAt }: any) => {
       </MySmText>
       <MySmText>6 min read</MySmText>
       <MySmText>~</MySmText>
-      <MyLink href={`/q?tag=${tag.tag}`}>
+      <MyLink href={`/q?tag=${tag?.title || "tech"}`}>
         <Badge
           textDecor="underline"
           variant="solid"
@@ -40,7 +40,7 @@ const StoryInfo = ({ tag, createdAt }: any) => {
           }}
           textTransform="capitalize"
         >
-          {tag.tag}
+          {tag?.title || "tech"}
         </Badge>
       </MyLink>
       <MySmText>~</MySmText>

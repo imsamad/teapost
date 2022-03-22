@@ -1,9 +1,9 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import ms from "ms";
 
-const jwtSecret = process.env.JWT_SECRET as string;
-const jwtExpire = process.env.JWT_EXPIRE as string;
-const jwtIssuer = process.env.JWT_ISSUER as string;
+const jwtSecret = process.env.JWT_SECRET!,
+  jwtExpire = process.env.JWT_EXPIRE!,
+  jwtIssuer = process.env.JWT_ISSUER!;
 
 const jwtGlobalOptions = (expiresIn?: string): SignOptions => {
   return {

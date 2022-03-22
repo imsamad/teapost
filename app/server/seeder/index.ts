@@ -32,7 +32,9 @@ const importData = async () => {
     await Tag.create(tags);
 
     await User.create(users);
-    await Profile.create(users.map((user) => ({ _id: user._id })));
+    await Profile.create(
+      users.map((user) => ({ _id: user._id, fullName: "fullName" }))
+    );
     await StoryCollection.create(
       users.map((user) => ({ user: user._id, title: "Read Later" }))
     );
@@ -80,7 +82,7 @@ const deleteData = async () => {
 };
 setEnv()
   .then(() => {
-    dbConnect(process.env.MONGO_URI);
+    dbConnect();
     return true;
   })
   .then((res) => {

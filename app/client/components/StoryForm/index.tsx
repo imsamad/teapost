@@ -5,21 +5,27 @@ import { useRouter } from "next/router";
 
 import { submitStory } from "@lib/api/storyApi";
 
-import StoryForm from "./Form";
-import StoryType from "@lib/types/StoryType";
+import FormBody from "./FormBody";
+import StoryType, { StoryFormType } from "@lib/types/StoryType";
+import { mutate } from "swr";
 
-const initValues = {
+const initValues: StoryFormType = {
+  _id: "",
   title: "",
-  slug: "",
+  titleImage: "",
   subtitle: "",
-  body: "",
+  slug: "",
   keywords: "",
+
+  content: "",
+
   tags: [],
   additionalTags: [],
-  titleImage: "",
+
+  isPublished: false,
 };
 
-const Index = ({ story }: { story: StoryType }) => {
+const Index = ({ story }: { story: Partial<StoryType> }) => {
   // console.log('story ', story);
   const router = useRouter();
   useEffect(() => {
@@ -49,13 +55,14 @@ const Index = ({ story }: { story: StoryType }) => {
       onSubmit={async (values, actions) => {
         const crtStorySlug = router.query.slug;
         actions.setSubmitting(true);
-        const data = await submitStory(values);
-
+        const data = await submitStory({ values, type: "meta" });
+        await mutate(`${process.env.NEXT_PUBLIC_API_URL}/tags`);
         if (crtStorySlug !== data.story.slug) {
           router.push(`/me/story/write/${data.story.slug}`, undefined, {
             shallow: true,
           });
         }
+
         actions.setSubmitting(false);
 
         actions.setValues({
@@ -70,37 +77,9 @@ const Index = ({ story }: { story: StoryType }) => {
         saveToast("Saved Changes.");
       }}
     >
-      {(formikProps: any) => {
-        // console.log('formikProps ', formikProps);
-        return (
-          <Form>
-            <StoryForm />
-            <HStack
-              position="fixed"
-              bottom="0"
-              right="0"
-              px="2rem"
-              py="1rem"
-              bgColor="gray.400"
-              borderTopLeftRadius="3xl"
-              shadow="lg"
-            >
-              <Text>Save Changes</Text>
-              <Button
-                variant="solid"
-                colorScheme="blue"
-                disabled={!formikProps.dirty}
-                isLoading={formikProps.isSubmitting}
-                loadingText="Submitting"
-                type="submit"
-                size="sm"
-              >
-                Submit
-              </Button>
-            </HStack>
-          </Form>
-        );
-      }}
+      <Form>
+        <FormBody />
+      </Form>
     </Formik>
   );
 };

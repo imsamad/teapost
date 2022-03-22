@@ -31,13 +31,14 @@ const createOrUpdateStory = asyncHandler(
       }
 
       var { id, slug, isPublished, ...rest } = req.body;
-
+      // @ts-ignore
       for (var key in rest) storyExist[key] = req.body[key];
 
       if (id && slug && storyExist.slug !== slug) {
         const isStoryExistWithNewSlug = await Story.findOne({
           slug: req.body.slug,
         });
+
         if (isStoryExistWithNewSlug) {
           extraMessage["slug"] = ["This slug already exist."];
         } else storyExist.slug = req.body.slug;

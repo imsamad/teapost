@@ -4,7 +4,7 @@ import Router from "next/router";
 import { useAuthCtx } from "../components/Context";
 
 const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
-  const { user, setUser } = useAuthCtx();
+  const { user, setUser, logout: logOutUser } = useAuthCtx();
 
   const setCookies = (user: any, customRedirect?: string) => {
     setUser(user);
@@ -16,7 +16,7 @@ const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
   };
 
   const logout = (customRedirect?: string) => {
-    setUser({});
+    logOutUser();
     if (customRedirect || redirectTo) Router.push(customRedirect || redirectTo);
   };
 

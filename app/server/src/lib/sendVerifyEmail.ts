@@ -1,7 +1,7 @@
-import { MailDataRequired } from '@sendgrid/mail';
-import sendEmail from './sendEmail';
+import { MailDataRequired } from "@sendgrid/mail";
+import sendEmail from "./sendEmail";
 
-const brandName = process.env.BRAND_NAME as string;
+const brandName = process.env.BRAND_NAME!;
 
 const sendVerifyEmail = async (to: string, redirectUrl: string) => {
   const message: MailDataRequired = {
@@ -21,12 +21,12 @@ export default sendVerifyEmail;
 
 function html(redirectUrl: string, brandName: string) {
   // Some simple styling options
-  const backgroundColor = '#f9f9f9';
-  const textColor = '#444444';
-  const mainBackgroundColor = '#ffffff';
-  const buttonBackgroundColor = '#346df1';
-  const buttonBorderColor = '#346df1';
-  const buttonTextColor = '#ffffff';
+  const backgroundColor = "#f9f9f9";
+  const textColor = "#444444";
+  const mainBackgroundColor = "#ffffff";
+  const buttonBackgroundColor = "#346df1";
+  const buttonBorderColor = "#346df1";
+  const buttonTextColor = "#ffffff";
 
   return `
 <body style="background: ${backgroundColor};">

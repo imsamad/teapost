@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
 interface Tag {
   _id: string | ObjectId;
-  tag: string;
+  title: string;
 }
 export default Tag;

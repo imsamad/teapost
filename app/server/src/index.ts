@@ -33,6 +33,7 @@ const limiter = rateLimit({
 app.use(cors());
 // app.use(limiter);
 app.use(express.json());
+app.use(express.text());
 app.use(morgan("dev"));
 app.use(
   fileUpload({

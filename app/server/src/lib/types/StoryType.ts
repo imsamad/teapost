@@ -9,7 +9,7 @@ interface Story {
   subtitle: string;
   slug: string;
   tags: Tag["_id"] | Tag[];
-  body: { text: string; html: string };
+  content: { text: string; html: string };
   keywords: string;
   isPublished: boolean;
   isPublishedByAdmin: boolean;

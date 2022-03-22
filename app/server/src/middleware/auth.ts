@@ -7,12 +7,12 @@ export const protect = async (
   res: Response,
   next: NextFunction
 ) => {
-  // console.log('req.headers ', req.headers);
+  // console.log("from auth req.headers ", req.headers);
   let token: any;
   if (req.headers?.authorization?.startsWith("Bearer "))
     token = req.headers.authorization.split(" ")[1];
 
-  // console.log('first ', token);
+  // console.log("req.headers ", req.headers);
   if (!token)
     return next(ErrorResponse(400, `Not authorized to access this route one`));
 
@@ -22,6 +22,7 @@ export const protect = async (
     return next(ErrorResponse(400, `Not authorized to access this route.`));
 
   const user = await User.findById(token.user).lean();
+
   if (!user)
     return next(ErrorResponse(400, `Not authorized to access this route.`));
   // @ts-ignore

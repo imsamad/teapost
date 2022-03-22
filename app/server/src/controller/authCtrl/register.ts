@@ -51,7 +51,7 @@ const register = asyncHandler(
     const jwtVerifyToken = signJwt(
       { token: verifyToken },
       {},
-      process.env.JWT_VERIFY_SECRET as string
+      process.env.JWT_TOKEN_SECRET!
     );
     // jwt of hashed of randomBytes
     const token = await Token.create({
@@ -74,8 +74,7 @@ const register = asyncHandler(
       "host"
     )}/api/v1/auth/verifyemail?token=${jwtVerifyToken}`;
 
-    let isEmailService: boolean =
-      "true" === (process.env.IS_EMAIL_SERVICE as string);
+    let isEmailService: boolean = "true" === process.env.IS_EMAIL_SERVICE!;
 
     // isEmailService = isEmailService === "true";
 

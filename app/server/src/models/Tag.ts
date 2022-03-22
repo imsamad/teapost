@@ -1,12 +1,12 @@
 import { Document, model, Schema } from "mongoose";
 
 export interface TagDocument extends Document {
-  tag: String;
+  title: String;
 }
 
 const tagSchema = new Schema(
   {
-    tag: {
+    title: {
       type: String,
       required: [true, "This tag already exist"],
       unique: true,

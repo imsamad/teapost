@@ -1,24 +1,42 @@
+import { StoryFormType } from "@lib/types/StoryType";
 import axios from "../axios";
 
-export const submitStory = async (val: any) => {
-  let storyObjKey: any = [
+export const submitStory = async ({
+  values,
+  type,
+}: {
+  values: Partial<StoryFormType>;
+  type: "additionalTags" | "meta" | "content";
+}) => {
+  let allowedFields = [
     "id",
     "title",
     "subtitle",
     "slug",
-    "tags",
-    "body",
     "keywords",
-    "additionalTags",
     "titleImage",
+    "additionalTags",
   ];
-  let storyObj: any = { isPublished: val.isPublished };
-  storyObjKey.forEach((key: string) => {
-    if (val[key]?.length) storyObj[key] = val[key];
-  });
+  let data: any = {};
+
+  // if (type == "additionalTags") {
+  //   data.additionalTags = values.additionalTags;
+  // } else
+
+  if (type == "content") {
+    values._id && (data.id = values._id);
+    values.slug && (data.slug = values.slug);
+    data.content = values.content;
+  } else {
+    allowedFields.forEach((key: string) => {
+      // @ts-ignore
+      if (values?.[key]?.length) data[key] = values[key];
+    });
+    data.tags = values.tags;
+  }
   try {
-    const { data } = await axios.post("/stories", { ...storyObj });
-    return data;
+    const res = await axios.post("/stories", data);
+    return res.data;
   } catch (err: any) {
     throw err.response.data;
   }
@@ -68,5 +86,22 @@ export const commentOnStory = async ({
   } catch (err) {
     console.log("Error from api commentOnStory", err);
     return false;
+  }
+};
+
+export const publishedStory = async ({
+  isPublished,
+  storyId,
+}: {
+  isPublished: boolean;
+  storyId: string;
+}) => {
+  try {
+    const { data } = await axios.put(`/stories/published/${storyId}`, {
+      isPublished,
+    });
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
   }
 };

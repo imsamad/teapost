@@ -17,7 +17,7 @@ import { ChangeEvent, useCallback, useState } from "react";
 import axios from "axios";
 import StoryType from "@lib/types/StoryType";
 import MyLink from "../MyLink";
-const apiUrl = process.env.NEXT_PUBLIC_API_URL as string;
+const apiUrl = process.env.NEXT_PUBLIC_API_URL!;
 const TSSearch = ({ size }: any) => {
   const [results, setResults] = useState<any>(null);
   const [isQuery, setIsQuery] = useState("");

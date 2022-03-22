@@ -4,9 +4,9 @@ import { InferGetStaticPropsType } from "next";
 import Stories from "../components/Stories";
 import storyType from "@lib/types/StoryType";
 
-const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => (
-  <Stories stories={stories} />
-);
+const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  return <Stories stories={stories} />;
+};
 
 export const getStaticProps = async () => {
   const { data } = await axios.get<{ stories: storyType[] }>(

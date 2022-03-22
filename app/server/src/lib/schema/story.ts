@@ -63,7 +63,10 @@ export const createStorySchema = object({
         .label("slug")
         .typeError("Slug must be string type")
         .when("id", {
-          is: (id: string) => !id,
+          is: (id: string) => {
+            console.log("ID ", id);
+            return !id;
+          },
           then: string().required("Slug is required"),
         }),
     },
@@ -148,7 +151,7 @@ export const isAbleToPublished = object({
     .required("Minimum one tag is required")
     .label("tags")
     .typeError("tags must be array type"),
-  // body: stringSchema('body', 2200, Infinity),
+  content: stringSchema("content", 2200, Infinity),
   keywords: stringSchema("keywords", 10, 150),
 });
 

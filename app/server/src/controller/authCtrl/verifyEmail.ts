@@ -17,7 +17,7 @@ const verifyEmail = asyncHandler(
     const { token: decodedVerifyToken }: any = decodeJwt(
       jwtCodedToken,
       {},
-      process.env.JWT_VERIFY_SECRET as string
+      process.env.JWT_TOKEN_SECRET as string
     );
 
     if (!decodedVerifyToken) return next(malliciousReq);

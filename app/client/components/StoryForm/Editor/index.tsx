@@ -21,14 +21,15 @@ export default function App() {
 
   const [{ value }, { error, touched }, { setValue, setError }] =
     useField<string>("content");
-
+  const [{ value: _id }] = useField<string>("_id");
   const toast = useToast();
   const onSave = async (ctx: string) => {
     isLoading.onOpen();
     submitStory({
       values: {
         content: ctx,
-        slug: Router.query.slug as string,
+        _id,
+        // slug: Router.query.slug as string,
       },
       type: "content",
     })

@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { UploadedFile } from "express-fileupload";
+import { resolve } from "path";
 import { uploadImageToCloudinary } from "../../lib/cloudinary";
+import { ImageUrlType } from "../../lib/types/ImageType";
 import { asyncHandler, ErrorResponse, saveImageLocally } from "../../lib/utils";
+import Image from "../../models/Image";
 
 // @desc      Upload photo
 // @route     POST /api/v1/image/upload
@@ -27,21 +30,46 @@ const imageUpload = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.files) return next(ErrorResponse(400, "Provide data"));
 
-    let uploadImages: Promise<any>[] = Object.keys(req.files).map((file) =>
+    let uploadImages = Object.keys(req.files).map((file) =>
       // @ts-ignore
-      uploadImageToCloudinary(req.files[file].tempFilePath)
+      uploadImageToCloudinary(req.files?.[file]?.tempFilePath!)
     );
-    Promise.allSettled(uploadImages).then((response) => {
-      const urls = response.map((res: any, index: number) => ({
-        url: res.value.url,
-        id: index,
-        caption: res.value.url.split("/").pop(),
-      }));
-      return res.status(200).json({ result: urls });
-    });
-    // return next(ErrorResponse(400, "Unable to upload Image"));
 
-    // res.status(200).json({ status: "ok", data: { imageUrl: response.url } });
+    const response = await Promise.allSettled(uploadImages);
+    console.log("response ", response);
+
+    let urls: ImageUrlType[] | (() => Promise<ImageUrlType[]>) = () =>
+      new Promise((resolve) => {
+        let urls: ImageUrlType[] = []; // @ts-ignore
+        response.forEach(({ value: { result, resource } }, index: number) => {
+          if (result)
+            urls.push({
+              url: resource.url,
+              id: index,
+              caption: resource.url.split("/").pop(),
+            });
+        });
+        if (!urls.length) resolve([]);
+        resolve(urls);
+      });
+    urls = await urls();
+    if (!urls.length)
+      return res.status(400).json({
+        status: "error",
+        message: "Unable to Upload please try again",
+      });
+    // @ts-ignore
+    const user = req.user._id;
+
+    await Image.findByIdAndUpdate(
+      user,
+      {
+        _id: user,
+        $push: { urls: urls.map(({ url }) => url) },
+      },
+      { upsert: true, new: true }
+    );
+    return res.status(200).json({ result: urls });
   }
 );
 export default imageUpload;

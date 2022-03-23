@@ -6,7 +6,7 @@ export const submitStory = async ({
   type,
 }: {
   values: Partial<StoryFormType>;
-  type: "additionalTags" | "meta" | "content";
+  type: "additionalTags" | "meta" | "content" | "image";
 }) => {
   let allowedFields = [
     "id",
@@ -27,6 +27,10 @@ export const submitStory = async ({
     values._id && (data.id = values._id);
     values.slug && (data.slug = values.slug);
     data.content = values.content;
+  } else if (type == "image") {
+    values._id && (data.id = values._id);
+    values.slug && (data.slug = values.slug);
+    data.titleImage = values.titleImage;
   } else {
     allowedFields.forEach((key: string) => {
       // @ts-ignore

@@ -17,9 +17,6 @@ const saveButtonStyles = () => {
         />
       </Head>
       <style global jsx>{`
-        * {
-          font-family: "Nunito", "Times New Roman", Times, serif;
-        }
         .se-container {
           font-family: "Nunito", "Times New Roman", Times, serif;
         }

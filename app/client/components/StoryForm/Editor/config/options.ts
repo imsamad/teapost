@@ -123,6 +123,7 @@ function buttonList(): ButtonListItem {
       "preview",
       "print",
       "table",
+      "image",
       "imageGallery",
       "video",
       "audio",

@@ -18,7 +18,7 @@ const Index = ({ story }: { story: StoryType }) => {
       <Heading my="4" size="md" fontWeight={800} color="rgba(41,41,41,0.4)">
         {story.subtitle}
       </Heading>
-      <Renderer value={story.content} />
+      {story.content && <Renderer value={story.content} />}
     </Box>
   );
 };
@@ -31,7 +31,7 @@ export const getStaticPaths = async () => {
   } = await axios.get(`${apiUrl}/stories`);
 
   const paths = stories.map((story: any) => ({
-    params: { slug: story._id },
+    params: { slug: story.slug },
   }));
 
   return { paths, fallback: true };

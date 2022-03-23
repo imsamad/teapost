@@ -97,7 +97,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
         fullName: "Abdus Samad",
         isRegister: false,
         username: "imsamad",
-        email: "imsamad00@gmail.com",
+        email: "imsamad@gmail.com",
         password: "Password@1206",
         passwordConfirmation: "Password@1206",
       }}

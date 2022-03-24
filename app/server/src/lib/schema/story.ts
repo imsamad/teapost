@@ -20,8 +20,11 @@ export const publishedStorySchema = object({
   params: object({
     storyId: string()
       .label("storyId")
-      .required("Story id is required")
-      .test("id", "story id is invalid.", (val) => isValidObjectId(val)),
+      .required("Story Id is required")
+      .typeError("Story Id must be string")
+      .test("storyId", "StoryId is not valid id.", (val) =>
+        isValidObjectId(val)
+      ),
   }),
   body: object({
     isPublished: boolean()
@@ -64,7 +67,6 @@ export const createStorySchema = object({
         .typeError("Slug must be string type")
         .when("id", {
           is: (id: string) => {
-            console.log("ID ", id);
             return !id;
           },
           then: string().required("Slug is required"),
@@ -193,5 +195,20 @@ export const commentStorySchema = object({
       .label("storyId")
       .required("Story id is required")
       .test("storyId", "story id is invalid.", (val) => isValidObjectId(val)),
+  }),
+});
+
+export const storyHistoryByIdScheme = object({
+  params: object({
+    storyId: string()
+      .label("storyId")
+      .required("Story id is required")
+      .test("storyId", "story id is invalid.", (val) => isValidObjectId(val)),
+    historyId: string()
+      .label("historyId")
+      .required("History id is required")
+      .test("historyId", "History id is invalid.", (val) =>
+        isValidObjectId(val)
+      ),
   }),
 });

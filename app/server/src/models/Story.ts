@@ -9,6 +9,7 @@ export interface StoryDocument
     Document {
   author: UserDocument["_id"];
   meta?: StoryMetaDocument;
+  emailToFollowers?: boolean;
 }
 
 const storySchema = new Schema(
@@ -54,6 +55,11 @@ const storySchema = new Schema(
       default: false,
     },
     readingTime: { type: Number, default: 0 },
+    emailToFollowers: {
+      type: Boolean,
+      default: false,
+      select: false,
+    },
     isPublishedByAdmin: {
       type: Boolean,
       require: [
@@ -110,6 +116,9 @@ storySchema.pre("remove", async function (next) {
   let deletedPrimary: any = await this.model("Primary").find({
     story: this._id,
   });
+  let deleteStoryHistory: any = await this.model(
+    "StoryHistory"
+  ).findByIdAndRemove(this._id);
 
   let deletedPrimaryPromise: any = deletedPrimary.map(
     (primary: any, index: any) => primary.remove()
@@ -122,6 +131,6 @@ storySchema.pre("remove", async function (next) {
     });
 });
 
-const StoryModel = model<StoryDocument>("Story", storySchema);
+const Story = model<StoryDocument>("Story", storySchema);
 
-export default StoryModel;
+export default Story;

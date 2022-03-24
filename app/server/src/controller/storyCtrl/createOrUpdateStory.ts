@@ -7,6 +7,7 @@ import {
 } from "../../lib/utils";
 import Story, { StoryDocument } from "../../models/Story";
 import { isAbleToPublished } from "../../lib/schema/story";
+import StoryHistory from "../../models/StoryHistory";
 
 // @desc      Create a story
 // @route     POST / PUT /api/v1/story
@@ -47,21 +48,49 @@ const createOrUpdateStory = asyncHandler(
       if (typeof isPublished !== "undefined" && req.body.isPublished === false)
         storyExist.isPublished = false;
       storyExist.readingTime = 10;
+      const storyInstance = (await storyExist.save()).toJSON();
+      await StoryHistory.findByIdAndUpdate(
+        storyExist._id,
+        {
+          _id: storyExist._id,
+          $push: {
+            instances: {
+              story: JSON.stringify(storyInstance),
+              createdAt: Date.now(),
+            },
+          },
+        },
+        { upsert: true }
+      );
+      console.log("first", JSON.parse(JSON.stringify(storyInstance)));
       return res.status(200).json({
         status: "ok",
-        story: await storyExist.save(),
+        story: storyInstance,
         message: extraMessage,
       });
       // sendResponse(req.body.isPublished, storyExist, res, extraMessage);
     } else {
-      return res.status(200).json({
-        status: "ok",
-        story: await Story.create({
+      const story = (
+        await Story.create({
           ...req.body,
           // @ts-ignore
           author: req.user._id,
           isPublished: false,
-        }),
+        })
+      ).toJSON();
+      await StoryHistory.findByIdAndUpdate(
+        story._id,
+        {
+          _id: story._id,
+          $push: {
+            instances: { story: JSON.stringify(story), createdAt: Date.now() },
+          },
+        },
+        { upsert: true }
+      );
+      return res.status(200).json({
+        status: "ok",
+        story,
       });
 
       // await StoryMeta.create({ _id: newStory.id });

@@ -7,8 +7,8 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
-import { memo, useState } from "react";
-import IsPublished from "./IsPublished";
+import { memo } from "react";
+import StoryActions from "./StoryActions";
 
 import MetaFields from "./MetaFields";
 
@@ -19,12 +19,12 @@ const Editor = dynamic(() => import("./Editor"), {
 const FormBody = () => {
   // return (
   //   <>
-  //     <IsPublished setExpand={setExpand} /> <MetaFields /> <Editor />
+  //     <StoryActions setExpand={setExpand} /> <MetaFields /> <Editor />
   //   </>
   // );
   return (
     <>
-      <IsPublished />
+      <StoryActions />
       <Accordion defaultIndex={[0]} allowToggle allowMultiple>
         <AccordionItem border="1px" isFocusable>
           <AccordionButton

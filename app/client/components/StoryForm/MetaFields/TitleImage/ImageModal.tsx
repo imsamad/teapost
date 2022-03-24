@@ -4,6 +4,7 @@ import {
   Button,
   ButtonGroup,
   FormLabel,
+  Grid,
   GridItem,
   IconButton,
   Image,
@@ -58,6 +59,7 @@ const ImageModal = ({
   };
   return (
     <Modal
+      scrollBehavior="inside"
       isOpen={isOpen}
       onClose={() => onClose()}
       closeOnOverlayClick={false}
@@ -67,13 +69,13 @@ const ImageModal = ({
         <ModalHeader>Title Image</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Box boxSize="sm">
+          <Grid gridColumn="repeat(1,1fr)">
             <Image
               src={URL.createObjectURL(file)}
               alt="Dan Abramov"
               fallbackSrc="https://bit.ly/dan-abramov"
             />
-          </Box>
+          </Grid>
         </ModalBody>
         <ModalFooter>
           <Button

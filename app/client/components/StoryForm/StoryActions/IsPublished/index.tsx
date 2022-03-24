@@ -1,4 +1,4 @@
-import { Flex, HStack, Switch, Text } from "@chakra-ui/react";
+import { Heading, HStack, Switch } from "@chakra-ui/react";
 import { useFormikContext } from "formik";
 import { memo } from "react";
 
@@ -34,17 +34,14 @@ const Index = () => {
         });
   };
   return (
-    <HStack justifyContent="flex-end" my="4">
-      <Flex justifyContent="center" alignItems="center">
-        <Text size="md" mx="4">
-          Published
-        </Text>
-        <Switch
-          isChecked={values?.isPublished}
-          value={values?.isPublished ? 1 : 0}
-          onChange={handleChange}
-        />
-      </Flex>
+    <HStack>
+      <Heading size="sm">Published</Heading>
+      <Switch
+        size="lg"
+        isChecked={values?.isPublished}
+        value={values?.isPublished ? 1 : 0}
+        onChange={handleChange}
+      />
     </HStack>
   );
 };

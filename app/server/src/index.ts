@@ -18,6 +18,7 @@ import notFound from "./middleware/notFound";
 
 import authRtr from "./routes/authRtr";
 import storyRtr from "./routes/storyRtr";
+import storyHistoryRtr from "./routes/storyHistoryRtr";
 import tagRtr from "./routes/tagRtr";
 import imageRtr from "./routes/imageRtr";
 import profileRtr from "./routes/profileRtr";
@@ -56,6 +57,7 @@ app.get("/ok", (req, res) => {
 
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);
+app.use("/api/v1/storyhistory", storyHistoryRtr);
 app.use("/api/v1/tags", tagRtr);
 app.use("/api/v1/image", imageRtr);
 app.use("/api/v1/profile", profileRtr);

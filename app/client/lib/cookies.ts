@@ -1,6 +1,7 @@
 import Cookies from "universal-cookie";
-const cookies = new Cookies();
 
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
+const cookies = new Cookies();
 const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION!;
 
 const getCookies = () => {
@@ -29,4 +30,13 @@ const deleteCookies = () =>
     resolve(true);
   });
 
-export { getCookies, setCookies, deleteCookies };
+const getCookieFromServer = (cookies: NextApiRequestCookies): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const userAuthCookie: string = process.env.AUTH_SESSION!;
+    let token: any = cookies?.[userAuthCookie];
+    if (!token) reject("");
+    token = JSON.parse(token).accessToken;
+    if (!token) reject("");
+    resolve(token);
+  });
+export { getCookies, setCookies, deleteCookies, getCookieFromServer };

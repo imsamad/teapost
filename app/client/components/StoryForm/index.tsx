@@ -26,7 +26,6 @@ const initValues: StoryFormType = {
 };
 
 const Index = ({ story }: { story: Partial<StoryType> }) => {
-  // console.log('story ', story);
   const router = useRouter();
   useEffect(() => {
     const unloadCallback = (event: BeforeUnloadEvent) => {
@@ -46,6 +45,7 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
       isClosable: true,
       position: position || "bottom",
     });
+
   return (
     <Formik
       initialValues={{
@@ -55,9 +55,16 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
       onSubmit={async (values, actions) => {
         const crtStorySlug = router.query.slug;
         actions.setSubmitting(true);
+
         const data = await submitStory({ values, type: "meta" });
-        await mutate(`${process.env.NEXT_PUBLIC_API_URL}/tags`);
-        if (crtStorySlug !== data.story.slug) {
+
+        if (values.additionalTags.length) {
+          await mutate(`${process.env.NEXT_PUBLIC_API_URL}/tags`);
+        }
+        if (
+          router.route == "/me/story/write/[slug]" &&
+          crtStorySlug !== data.story.slug
+        ) {
           router.push(`/me/story/write/${data.story.slug}`, undefined, {
             shallow: true,
           });
@@ -69,6 +76,10 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
           ...initValues,
           ...data.story,
         });
+        if (data?.message?.slug) {
+          actions.setFieldError("slug", data.message.slug);
+          actions.setFieldTouched("slug", true);
+        }
         // Object.keys(data.message).forEach((key: any) => {
         //   actions.setFieldTouched(key, true, false);
         // });

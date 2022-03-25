@@ -34,46 +34,28 @@ export const publishedStorySchema = object({
   }),
 });
 
-export const createStorySchema = object({
-  body: object().shape(
-    {
-      title: string().label("title").typeError("title must be string"),
-      subtitle: string().label("subtitle").typeError("subtitle must be string"),
-      body: string().label("body").typeError("body must be string"),
-      titleImage: string()
-        .label("titleImage")
-        .url("titleImage must be url")
-        .typeError("titleImage must be url"),
-      keywords: string().label("keywords").typeError("keyword must be string"),
-      tags: array().label("tags").typeError("tags must be array"),
-      additionalTags: array()
-        .label("additionalTags")
-        .typeError("additionalTags must be array of string"),
-      id: string()
-        .label("id")
-        .when("slug", {
-          is: (slug: string) => !slug,
-          then: string()
-            .required("id is required")
-            .test("id", "It is not valid id.", (val) => isValidObjectId(val)),
-        }),
-      isPublished: boolean()
-        .nullable()
-        .label("isPublished")
-        .typeError("Only boolean values are allowed"),
-
-      slug: string()
-        .label("slug")
-        .typeError("Slug must be string type")
-        .when("id", {
-          is: (id: string) => {
-            return !id;
-          },
-          then: string().required("Slug is required"),
-        }),
-    },
-    [["slug", "id"]]
-  ),
+export const updateStorySchema = object({
+  params: object({
+    storyId: string()
+      .label("storyId")
+      .required("storyId is required")
+      .test("storyId", "It is not valid id.", (val) => isValidObjectId(val)),
+  }),
+  body: object().shape({
+    title: string().label("title").typeError("title must be string"),
+    subtitle: string().label("subtitle").typeError("subtitle must be string"),
+    body: string().label("body").typeError("body must be string"),
+    titleImage: string()
+      .label("titleImage")
+      .url("titleImage must be url")
+      .typeError("titleImage must be url"),
+    keywords: string().label("keywords").typeError("keyword must be string"),
+    tags: array().label("tags").typeError("tags must be array"),
+    additionalTags: array()
+      .label("additionalTags")
+      .typeError("additionalTags must be array of string"),
+    slug: string().label("slug").typeError("Slug must be string type"),
+  }),
 });
 
 export const likeOrDislikeSchema = object({
@@ -202,13 +184,24 @@ export const storyHistoryByIdScheme = object({
   params: object({
     storyId: string()
       .label("storyId")
+      .typeError("storyId is required")
       .required("Story id is required")
       .test("storyId", "story id is invalid.", (val) => isValidObjectId(val)),
     historyId: string()
       .label("historyId")
+      .typeError("History id is required")
       .required("History id is required")
       .test("historyId", "History id is invalid.", (val) =>
         isValidObjectId(val)
       ),
+  }),
+});
+
+export const initializeStoryScheme = object({
+  body: object({
+    slug: string()
+      .label("historyId")
+      .typeError("storyId is required")
+      .required("History id is required"),
   }),
 });

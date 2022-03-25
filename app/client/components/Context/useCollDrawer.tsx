@@ -31,11 +31,13 @@ const CollDrawerCtxProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <CollDrawerCtx.Provider value={{ drawer }}>
-      <CollectionDrawer
-        isOpen={isOpen}
-        onClose={onClose}
-        storySelected={storySelected}
-      />
+      {isOpen && (
+        <CollectionDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          storySelected={storySelected}
+        />
+      )}
       {children}
     </CollDrawerCtx.Provider>
   );

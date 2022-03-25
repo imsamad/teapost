@@ -87,7 +87,6 @@ const Index = () => {
             }}
           >
             {(formikProps) => {
-              // console.log("formikProps ", formikProps);
               return (
                 <Form>
                   <Stack rounded="md" border="1px" borderColor="gray.300" p="2">

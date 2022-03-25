@@ -9,7 +9,7 @@ export interface StoryDocument
     Document {
   author: UserDocument["_id"];
   meta?: StoryMetaDocument;
-  emailToFollowers?: boolean;
+  hadEmailedToFollowers?: boolean;
 }
 
 const storySchema = new Schema(
@@ -55,7 +55,7 @@ const storySchema = new Schema(
       default: false,
     },
     readingTime: { type: Number, default: 0 },
-    emailToFollowers: {
+    hadEmailedToFollowers: {
       type: Boolean,
       default: false,
       select: false,

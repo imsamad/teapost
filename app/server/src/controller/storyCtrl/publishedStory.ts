@@ -24,11 +24,11 @@ const publishedStory = asyncHandler(
       await validateYupSchema(isAbleToPublished, story);
 
       story.isPublished = req.body.isPublished ?? true;
-      if (!story.emailToFollowers) {
+      if (!story.hadEmailedToFollowers) {
         /**
          * Send Email To Followers of story.author
          *****************************************************/
-        story.emailToFollowers = true;
+        story.hadEmailedToFollowers = true;
       }
       story = await story.save();
       return res.status(200).json({ status: "ok", story });

@@ -8,8 +8,9 @@ import {
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import { memo } from "react";
-import StoryActions from "./StoryActions";
+import { useField } from "formik";
 
+import StoryActions from "./StoryActions";
 import MetaFields from "./MetaFields";
 
 const Editor = dynamic(() => import("./Editor"), {
@@ -17,14 +18,11 @@ const Editor = dynamic(() => import("./Editor"), {
 });
 
 const FormBody = () => {
-  // return (
-  //   <>
-  //     <StoryActions setExpand={setExpand} /> <MetaFields /> <Editor />
-  //   </>
-  // );
+  const [{ value: isFromHistory }] = useField("isFromHistory");
+
   return (
     <>
-      <StoryActions />
+      {!isFromHistory && <StoryActions />}
       <Accordion defaultIndex={[0]} allowToggle allowMultiple>
         <AccordionItem border="1px" isFocusable>
           <AccordionButton
@@ -32,7 +30,7 @@ const FormBody = () => {
             _expanded={{ bg: "gray.400", color: "white" }}
           >
             <Heading fontSize="md" flex="1" textAlign="left">
-              Fill Story Meta
+              {isFromHistory ? "" : "Fill"} Story Meta
             </Heading>
             <AccordionIcon />
           </AccordionButton>

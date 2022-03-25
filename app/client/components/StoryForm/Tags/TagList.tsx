@@ -12,6 +12,7 @@ const TagList = ({ tags }: { tags: TagType[] }) => {
     { setValue, setTouched },
   ] = useField("tags");
 
+  const [{ value: isFromHistory }] = useField("isFromHistory");
   return (
     <>
       {tags.length &&
@@ -20,6 +21,11 @@ const TagList = ({ tags }: { tags: TagType[] }) => {
             key={tag._id}
             size="xs"
             m="1"
+            disabled={isFromHistory}
+            _disabled={{
+              color: "gray.700",
+              fontWeight: 800,
+            }}
             variant={tagValues.includes(tag._id) ? "solid" : "outline"}
             leftIcon={tagValues.includes(tag._id) && <CheckCircleIcon />}
             onClick={() => {

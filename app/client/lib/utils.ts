@@ -80,3 +80,33 @@ export const validateYupSchema = async (
     throw Object.keys(finalError).length ? finalError : "Provide proper data";
   }
 };
+export const monthList = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export const readAbleDate = (value: Date) => {
+  let date: any = new Date(value);
+  let time =
+    date.getHours() > 12 ? `${date.getHours() % 12}` : `${date.getHours()}`;
+
+  time = Number(time) >= 10 ? time : `0${time}`;
+
+  date = `${date.getDate()} ${
+    monthList[date.getMonth()]
+  }, ${date.getFullYear()}, ${time}${date.toLocaleTimeString().substring(2)} ${
+    date.getHours() >= 12 ? "PM" : "AM"
+  }`;
+
+  return date;
+};

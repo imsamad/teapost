@@ -18,20 +18,20 @@ import LogInBtn from "./LogInBtn";
 import TSSearch from "./TSSearch";
 
 const Index = () => {
-  const size = useBreakpointValue(["sm", "md"]);
+  const size = useBreakpointValue(["md", "md"]);
   const serachFieldFormSm = useDisclosure();
   const showBelowSm = { display: ["inline-block", "inline-block", "none"] };
   const showAboveSm = { display: ["none", "none", "inline-block"] };
   return (
     <>
-      <HStack pt={2} as="nav">
+      <HStack pt={1} as="nav">
         <MyLink href="/">
           <Heading
             as="h1"
             textTransform="uppercase"
             // fontStyle="italic"
             color="black"
-            fontSize={["xl", "2xl", "3xl"]}
+            fontSize={["2xl", "2xl", "3xl"]}
             fontWeight={900}
             _dark={{
               color: "white",

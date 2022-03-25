@@ -1,11 +1,15 @@
 import { StoryFormType } from "@lib/types/StoryType";
 import axios from "../axios";
 
+interface SubmitStoryType extends Partial<Omit<StoryFormType, "_id">> {
+  _id: string;
+}
+
 export const submitStory = async ({
   values,
   type,
 }: {
-  values: Partial<StoryFormType>;
+  values: SubmitStoryType;
   type: "additionalTags" | "meta" | "content" | "image";
 }) => {
   let allowedFields = [
@@ -39,7 +43,7 @@ export const submitStory = async ({
     data.tags = values.tags;
   }
   try {
-    const res = await axios.post("/stories", data);
+    const res = await axios.put(`/stories/${values._id}`, data);
     return res.data;
   } catch (err: any) {
     throw err.response.data;
@@ -88,7 +92,6 @@ export const commentOnStory = async ({
     const { data } = await axios.put(`/stories/comment/${storyId}`, { text });
     return data;
   } catch (err) {
-    console.log("Error from api commentOnStory", err);
     return false;
   }
 };

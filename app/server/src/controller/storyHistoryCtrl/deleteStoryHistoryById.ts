@@ -4,33 +4,39 @@ import Story from "../../models/Story";
 import StoryHistory from "../../models/StoryHistory";
 
 // @desc      deleteStoryHistoryById
-// @route     DELETE /api/v1/stories/:storyId/histories/:historyId
+// @route     DELETE /api/v1/storyhistory/:storyId/:historyId
 // @access    Auth,Admin,Public
 
-export const deleteStoryHistoryById = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
+export const deleteStoryHistoryById = ({ isAll = false }) =>
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const storyExist = await Story.findById(req.params.storyId);
     // @ts-ignore
     if (!storyExist || storyExist.author.toString() != req.user._id)
       return next(ErrorResponse(400, "No resource found"));
-    const storyHistory = (
-      await StoryHistory.findByIdAndUpdate(
-        req.params.storyId,
-        {
-          $pull: { instances: { _id: { $in: [req.params.historyId] } } },
-        },
-        {
-          new: true,
-        }
-      )
-    )
-      .toJSON()
-      .instances.filter((instance) => instance._id == req.params.historyId);
+
+    if (isAll) {
+      await StoryHistory.findByIdAndRemove(req.params.storyId, {
+        new: true,
+      });
+      return res.json({
+        status: "ok",
+        storyhistory: {},
+      });
+    }
+    const storyHistory = await StoryHistory.findByIdAndUpdate(
+      req.params.storyId,
+      {
+        $pull: { instances: { _id: { $in: [req.params.historyId] } } },
+      },
+      {
+        new: true,
+      }
+    );
+
     res.send({
       status: "ok",
-      storyHistory: storyHistory || [],
+      storyHistory: storyHistory || {},
     });
-  }
-);
+  });
 
 export default deleteStoryHistoryById;

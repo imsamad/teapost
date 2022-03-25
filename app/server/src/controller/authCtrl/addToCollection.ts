@@ -63,9 +63,7 @@ const addToCollection = asyncHandler(
     }
 
     Promise.allSettled(updatePromise)
-      .then((upRes) => {
-        // console.log("upRes ", upRes);
-      })
+      .then((upRes) => {})
       .catch((err: any) => {})
       .finally(() => {
         res.json({ status: "ok" });

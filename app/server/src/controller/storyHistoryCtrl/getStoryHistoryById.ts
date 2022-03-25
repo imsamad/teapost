@@ -13,12 +13,17 @@ export const getStoryHistoryById = asyncHandler(
     // @ts-ignore
     if (!storyExist || storyExist.author.toString() != req.user._id)
       return next(ErrorResponse(400, "No resource found"));
-    const storyHistory = (await StoryHistory.findById(req.params.storyId))
-      .toJSON()
-      .instances.filter((instance) => instance._id == req.params.historyId);
+    let storyHistory = await StoryHistory.findById(req.params.storyId);
+
     res.send({
       status: "ok",
-      storyHistory: storyHistory || [],
+      storyHistory: storyHistory
+        ? storyHistory
+            .toJSON()
+            .instances.filter(
+              (instance) => instance._id == req.params.historyId
+            )
+        : {},
     });
   }
 );

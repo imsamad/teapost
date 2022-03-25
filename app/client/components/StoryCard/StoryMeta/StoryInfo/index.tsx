@@ -1,32 +1,20 @@
 import { Badge, HStack, Text } from "@chakra-ui/react";
-const month = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "June",
-  "July",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+import { monthList } from "@lib/utils";
+
 import MyLink from "../../../MyLink";
 
 const StoryInfo = ({ tag, createdAt }: any) => {
   let date: any = new Date(createdAt);
-  date = `${date.getDate()} ${month[date.getMonth()]}`;
+  date = `${date.getDate()} ${monthList[date.getMonth()]}`;
   return (
-    <HStack spacing={2} alignItems="center">
+    <HStack spacing={1} alignItems="center">
       <MySmText
         // @ts-ignore
         fontWeight={100}
       >
         |
       </MySmText>
-      <MySmText>6 min read</MySmText>
+      <MySmText>6 min</MySmText>
       <MySmText>~</MySmText>
       <MyLink href={`/q?tag=${tag?.title || "tech"}`}>
         <Badge

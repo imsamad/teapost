@@ -42,7 +42,6 @@ export default function App() {
         });
       })
       .catch((errors) => {
-        console.log("errors ", errors);
         setError(errors.message || "Invalid data");
         toast({
           status: "error",
@@ -55,6 +54,7 @@ export default function App() {
         isLoading.onClose();
       });
   };
+  const [{ value: isFromHistory }] = useField("isFromHistory");
   return (
     <Box className="App" zIndex="1">
       <CustomError errors={error} isError={Boolean(error && touched)} />
@@ -68,6 +68,8 @@ export default function App() {
         setOptions={setOptions()}
         autoFocus={false}
         onSave={onSave}
+        hideToolbar={isFromHistory}
+        disableToolbar={isFromHistory}
       />
       <SaveButtonStyles />
     </Box>

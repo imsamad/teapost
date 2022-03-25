@@ -11,17 +11,10 @@ const getMe = asyncHandler(
     // @ts-ignore
     const user = req.user._id;
     let query = Profile.findById(user).populate([{ path: "storyCollections" }]);
-    // .populate({
-    //   path: "storyCollections",
-    //   select: "_id ",
-    // });
-    // .select("storyCollections");
-    // ;
 
     if (req.query.populateStory) query.populate("likedStories dislikedStories");
 
     const profile = await query;
-    // console.log("profile ", profile);
     return res.json({
       status: "ok",
       profile: profile || {

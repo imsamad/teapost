@@ -49,4 +49,5 @@ const getAllImagesFromCloudinary = asyncHandler(
     res.status(200).json({ result: urls });
   }
 );
+// export default getAllImagesFromCloudinary;
 export default getAllImages;

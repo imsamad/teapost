@@ -16,7 +16,6 @@ const updateOrDeleteComment = ({ isPrimary = true, isDelete = false }) =>
     const user = req.user._id;
     let comment: any = isPrimary ? Primary : Secondary;
     comment = await comment.findById(req.params.commentId);
-    console.log("comment ", comment);
     if (!comment || comment.user.toString() != user)
       return next(ErrorResponse(400, "No resource found"));
     if (isDelete) {

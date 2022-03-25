@@ -10,6 +10,7 @@ import StoryHistory from "../../models/StoryHistory";
 export const getStoryHistory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const storyExist = await Story.findById(req.params.storyId);
+
     // @ts-ignore
     if (!storyExist || storyExist.author.toString() != req.user._id)
       return next(ErrorResponse(400, "No resource found"));

@@ -1,11 +1,13 @@
 import { Box } from "@chakra-ui/react";
 
 import { TPInput } from "@compo/FormFields";
+import { useField } from "formik";
 import Tags from "../Tags";
 import SaveButton from "./SaveButton";
 import TitleImage from "./TitleImage";
 
 const Index = () => {
+  const [{ value: isFromHistory }] = useField("isFromHistory");
   return (
     <Box
       display={["block", "block", "grid"]}
@@ -19,7 +21,7 @@ const Index = () => {
       <TPInput name="keywords" placeholder="Keywords" label="Keywords" />
 
       <Tags />
-      <SaveButton />
+      {!isFromHistory && <SaveButton />}
     </Box>
   );
 };

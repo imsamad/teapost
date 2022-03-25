@@ -37,7 +37,6 @@ export const commentActions = async ({
     const { data } = await axiosInstance;
     return data;
   } catch (err) {
-    console.log("Error from api replyToComment", err);
     return false;
   }
 };
@@ -63,7 +62,6 @@ export const likeOrDislikeComment = async ({
     const { data } = await axios.put(endpoint);
     return data;
   } catch (err) {
-    console.log("Error from api likeOrDislikeComment", err);
     return false;
   }
 };
@@ -73,7 +71,6 @@ export const getCommentsOfStory = async (storyId: string) => {
     const { data } = await axios.get(`/comments/story/${storyId}`);
     return data;
   } catch (err) {
-    console.log("Error from api getCommentsOfStory", err);
     return false;
   }
 };
@@ -83,7 +80,6 @@ export const getRepliesOf = async (primaryId: string) => {
     const { data } = await axios.get(`/comments/replyof/${primaryId}`);
     return data;
   } catch (err) {
-    console.log("Error from api getCommentsOfStory", err);
     return false;
   }
 };

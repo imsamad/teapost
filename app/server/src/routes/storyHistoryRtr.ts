@@ -18,16 +18,21 @@ import {
 const router: Router = express();
 
 router
-  .route("/:storyId")
-  .get(protect, validateSchema(likeOrDislikeSchema), getStoryHistory);
-
-router
   .route("/:storyId/:historyId")
   .get(protect, validateSchema(storyHistoryByIdScheme), getStoryHistoryById)
   .delete(
     protect,
     validateSchema(storyHistoryByIdScheme),
-    deleteStoryHistoryById
+    deleteStoryHistoryById({ isAll: false })
+  );
+
+router
+  .route("/:storyId")
+  .get(protect, validateSchema(likeOrDislikeSchema), getStoryHistory)
+  .delete(
+    protect,
+    validateSchema(likeOrDislikeSchema),
+    deleteStoryHistoryById({ isAll: true })
   );
 
 export default router;

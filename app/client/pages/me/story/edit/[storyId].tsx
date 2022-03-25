@@ -7,16 +7,8 @@ import StoryForm from "@compo/StoryForm";
 import StoryType from "@lib/types/StoryType";
 
 import { getCookieFromServer } from "@lib/cookies";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+
 const Index = ({ story }: { story: StoryType }) => {
-  const router = useRouter();
-  useEffect(() => {
-    if (router.query.slug != story.slug) {
-      router.push(story.slug, undefined, { shallow: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <Box p={[0, 4]}>
       <HStack justifyContent="center">
@@ -36,13 +28,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   params,
 }) => {
   // @ts-ignore
-  const slug = params.slug;
+  const storyId = params.storyId;
   const accessToken = await getCookieFromServer(req.cookies);
 
   if (!accessToken) {
     return {
       redirect: {
-        destination: `/auth?redirectTo=/me/story/write/${slug}`,
+        destination: `/auth?redirectTo=/me/stories/edit/${storyId}`,
         permanent: true,
       },
     };
@@ -51,11 +43,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   try {
     const {
       data: { story },
-    } = await axios.post<{ story: StoryType }>(
-      `${process.env.API_URL}/stories/initialize`,
-      {
-        slug,
-      },
+    } = await axios.get<{ story: StoryType }>(
+      `${process.env.API_URL}/stories/${storyId}`,
       {
         headers: {
           authorization: `Bearer ${accessToken}`,

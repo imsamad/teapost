@@ -11,7 +11,6 @@ import Image from "../../models/Image";
 // @access    Auth [Reader]
 const imageUploadSingle = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("req.files ", req.files);
     // @ts-ignore
     const file = req.files.image as UploadedFile;
 
@@ -36,7 +35,6 @@ const imageUpload = asyncHandler(
     );
 
     const response = await Promise.allSettled(uploadImages);
-    console.log("response ", response);
 
     let urls: ImageUrlType[] | (() => Promise<ImageUrlType[]>) = () =>
       new Promise((resolve) => {

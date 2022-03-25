@@ -5,7 +5,7 @@ import ImageActions from "./ImageActions";
 
 const TitleImage = () => {
   const [{ value }, { error, touched }] = useField("titleImage");
-
+  const [{ value: isFromHistory }] = useField("isFromHistory");
   return (
     <GridItem colSpan={2}>
       <FormLabel>Title Image</FormLabel>
@@ -17,7 +17,7 @@ const TitleImage = () => {
         alt="Dan Abramov"
         fallbackSrc="https://via.placeholder.com/150?text=Title Image"
       />
-      <ImageActions />
+      {!isFromHistory && <ImageActions />}
       <CustomError errors={error} isError={Boolean(error && touched)} />
     </GridItem>
   );

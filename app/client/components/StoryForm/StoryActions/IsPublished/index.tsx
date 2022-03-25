@@ -26,7 +26,6 @@ const Index = () => {
         })
         .catch((err) => {
           // setStatus(true);
-          console.log("err ", err);
           Object.keys(err).forEach((key: any) => {
             setFieldTouched(key, true, false);
           });

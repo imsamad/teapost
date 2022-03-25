@@ -14,12 +14,14 @@ import stories from "./data/stories";
 import tags from "./data/tags";
 import primaries from "./data/primaries";
 import secondaries from "./data/secondaries";
+import images from "./data/images";
 
 import User from "../src/models/User";
 import Tag from "../src/models/Tag";
 import Story from "../src/models/Story";
 import StoryMeta from "../src/models/StoryMeta";
 import Profile from "../src/models/Profile";
+import Image from "../src/models/Image";
 import StoryCollection from "../src/models/StoryCollection";
 import Primary from "../src/models/Comment/Primary";
 import Secondary from "../src/models/Comment/Secondary";
@@ -30,7 +32,7 @@ import dbConnect from "../src/db/connectDB";
 const importData = async () => {
   try {
     await Tag.create(tags);
-
+    await Image.create(images);
     await User.create(users);
     await Profile.create(
       users.map((user) => ({ _id: user._id, fullName: "fullName" }))
@@ -65,6 +67,7 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await User.deleteMany();
+    await Image.deleteMany();
     await Story.deleteMany();
     await Tag.deleteMany();
     await Profile.deleteMany();

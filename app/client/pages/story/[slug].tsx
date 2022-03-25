@@ -1,4 +1,4 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Container, Heading, VStack } from "@chakra-ui/react";
 import axios from "axios";
 
 import StoryType from "@lib/types/StoryType";
@@ -6,10 +6,14 @@ import Header from "@compo/LogIn/Form/Header";
 import Renderer from "@compo/Renderer";
 
 const Index = ({ story }: { story: StoryType }) => {
-  console.log("story ", story);
   if (!story) {
     return "Loading...";
   }
+  return (
+    <Container maxW="container.lg" border="1px" p="4px">
+      Large Container
+    </Container>
+  );
   return (
     <Box border="2px solid pink" p={10}>
       <Heading fontSize="3xl" as="h1">

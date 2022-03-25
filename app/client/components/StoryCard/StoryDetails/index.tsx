@@ -14,7 +14,7 @@ const index = ({ story }: { story: StoryType }) => {
             <Heading
               my="4px"
               as="h1"
-              fontWeight={600}
+              fontWeight={700}
               fontSize="md"
               color="rgb(41,41,41)"
               textOverflow="ellipsis"

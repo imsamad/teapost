@@ -36,7 +36,6 @@ const ImageModal = ({
   handleStoryTitleImage: (url: string) => void;
 }) => {
   const [{ value }] = useField("_id");
-  console.log("value ", value);
   const isLoading = useDisclosure();
   const toast = useToast();
   const handleUploadImage = async () => {
@@ -47,7 +46,6 @@ const ImageModal = ({
         onClose();
       })
       .catch((err) => {
-        console.log("Err from handleUploadImage", err);
         toast({
           status: "error",
           title: "Unable to upload plz try again",

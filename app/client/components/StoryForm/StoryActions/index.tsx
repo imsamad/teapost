@@ -2,7 +2,7 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Heading, HStack, Spacer } from "@chakra-ui/react";
 import TSIconButton from "@compo/UI/TSIconButton";
 import { useField } from "formik";
-// import EmailFollwers from "./EmailFollwers";
+
 import IsPublished from "./IsPublished";
 const Index = () => {
   const [{ value }] = useField("_id");

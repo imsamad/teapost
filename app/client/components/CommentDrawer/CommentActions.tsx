@@ -51,9 +51,7 @@ const CommentActions = ({
         .then((data) => {
           mutate();
         })
-        .catch((err) => {
-          console.log("err ", err);
-        });
+        .catch((err) => {});
   };
   const isAuthor = user?._id?.toString() == comment.user?._id.toString();
 

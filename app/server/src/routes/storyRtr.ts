@@ -2,20 +2,23 @@ import express, { NextFunction, Request, Response, Router } from "express";
 
 import {
   commentStory,
-  createOrUpdateStory,
+  updateStory,
   deleteStory,
   getAllStories,
   gradeStory,
   handleTags,
   publishedStory,
+  initializeStory,
+  getStoryById,
 } from "../controller/storyCtrl";
 
-import { protect } from "../middleware/auth";
+import { fetchAuth, protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 import {
   commentStorySchema,
-  createStorySchema,
+  updateStorySchema,
   gradeStorySchema,
+  initializeStoryScheme,
   likeOrDislikeSchema,
   publishedStorySchema,
 } from "../lib/schema/story";
@@ -75,25 +78,21 @@ router
     validateSchema(likeOrDislikeSchema),
     gradeStory({ isLike: false, undo: true })
   );
+
 router
   .route("/comment/:storyId")
   .put(protect, validateSchema(commentStorySchema), commentStory);
 
-router.route("/:storyId").delete(deleteStory);
+router
+  .route("/:storyId")
+  .get(fetchAuth, getStoryById)
+  .delete(deleteStory)
+  .put(protect, validateSchema(updateStorySchema), handleTags, updateStory);
 
 router
-  .route("/")
-  .post(
-    protect,
-    validateSchema(createStorySchema, true),
-    handleTags,
-    createOrUpdateStory
-  )
-  .put(
-    protect,
-    validateSchema(createStorySchema, true),
-    handleTags,
-    createOrUpdateStory
-  )
-  .get(filter, getAllStories);
+  .route("/initialize")
+  .post(protect, validateSchema(initializeStoryScheme), initializeStory);
+
+router.route("/").get(filter, getAllStories);
+
 export default router;

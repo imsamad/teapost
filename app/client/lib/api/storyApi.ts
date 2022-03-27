@@ -1,4 +1,4 @@
-import { StoryFormType } from "@lib/types/StoryType";
+import StoryType, { StoryFormType } from "@lib/types/StoryType";
 import axios from "../axios";
 
 interface SubmitStoryType extends Partial<Omit<StoryFormType, "_id">> {
@@ -104,9 +104,12 @@ export const publishedStory = async ({
   storyId: string;
 }) => {
   try {
-    const { data } = await axios.put(`/stories/published/${storyId}`, {
-      isPublished,
-    });
+    const { data } = await axios.put<{ story: StoryType }>(
+      `/stories/published/${storyId}`,
+      {
+        isPublished,
+      }
+    );
     return data;
   } catch (err: any) {
     throw err.response.data;

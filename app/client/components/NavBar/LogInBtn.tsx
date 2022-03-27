@@ -32,7 +32,12 @@ const LogInBtn = ({ size }: { size: any }) => {
         Profile
       </MenuButton>
       <MenuList zIndex={10}>
-        <MenuGroup title="Profile">
+        <MenuGroup
+          title="Profile"
+          fontWeight={800}
+          letterSpacing={1}
+          fontSize="md"
+        >
           <Divider />
           <MyLink href="/me">
             <MenuItem icon={<BiUser />}>My Account </MenuItem>

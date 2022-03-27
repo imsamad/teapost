@@ -36,7 +36,7 @@ export const setOptions = (): SetOptions => {
 
     // alignItems: ["center"],
 
-    defaultTag: "div",
+    defaultTag: "p",
     minHeight: "300px",
     width: "auto",
     height: "auto",

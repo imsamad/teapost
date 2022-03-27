@@ -69,6 +69,7 @@ const TSSearch = ({ size }: any) => {
           position="absolute"
           bgColor="white"
           border="1px"
+          color="black"
           borderColor="gray.300"
           borderRadius="md"
           w="100%"

@@ -10,7 +10,7 @@ import Story from "../../models/Story";
 export const getStoryById = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const story = await Story.findById(req.params.storyId).lean();
-    if (story?.isPublished && story.isPublishedByAdmin) {
+    if (story?.isPublished) {
       return res.json({
         status: "ok",
         story,

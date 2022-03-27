@@ -13,21 +13,23 @@ import { isAbleToPublished } from "../../lib/schema/story";
 // @access    Auth [Reader]
 const publishedStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let story = await Story.findById(req.params.storyId).select(
-      "emailToFollowers"
-    );
+    let story = await Story.findById(req.params.storyId);
 
     if (!story)
       return next(ErrorResponse(400, "No resources found with this id."));
-
+    if (!req.body.isPublished) {
+      story.isPublished = false;
+      return res.status(200).json({ status: "ok", story: await story.save() });
+    }
     try {
       await validateYupSchema(isAbleToPublished, story);
 
       story.isPublished = req.body.isPublished ?? true;
       if (!story.hadEmailedToFollowers) {
-        /**
+        /*
          * Send Email To Followers of story.author
          *****************************************************/
+
         story.hadEmailedToFollowers = true;
       }
       story = await story.save();

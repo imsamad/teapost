@@ -48,8 +48,8 @@ const index = ({ story }: { story: StoryType }) => {
         </MyLink>
         <StoryActions
           storyId={story._id}
-          like={story?.meta?.likedBy.length || 0}
-          dislike={story?.meta?.dislikedBy.length || 0}
+          like={story?.meta?.likedBy?.length || 0}
+          dislike={story?.meta?.dislikedBy?.length || 0}
         />
       </Stack>
       <MyLink href={`/story/${story.slug}`}>

@@ -4,6 +4,9 @@ import { isValidObjectId } from "mongoose";
 import { typeOf } from "../lib/utils";
 import StoryMeta from "../models/StoryMeta";
 
+const isArrOfMongooseObjectId = (arr: string[]) =>
+  arr.every((val) => isValidObjectId(val));
+
 export const filter = async (
   req: Request,
   res: Response,
@@ -13,30 +16,39 @@ export const filter = async (
     title: string;
     slug: string;
     subtitle: string;
+
+    tags: { $in: string[] };
+    author: { $in: string[] };
+
     like: Partial<{ gt: number; lt: number; gte: number; lte: number }>;
     dislike: Partial<{ gt: number; lt: number; gte: number; lte: number }>;
-    tags: string[];
-    author: string[];
   }> = {};
 
-  let allowedFields = [
-    { key: "title", type: "string" },
-    { key: "subtitle", type: "string" },
+  let allowedFields: { key: string; type: string }[] = [
+    { key: "title", type: "strPattern" },
+    { key: "subtitle", type: "strPattern" },
+
     { key: "slug", type: "string" },
-    { key: "like", type: "object" },
-    { key: "dislike", type: "object" },
-    { key: "tags", type: "stringArr" },
-    { key: "author", type: "stringArr" },
+
+    { key: "tags", type: "mongoIdArr" },
+    { key: "author", type: "mongoIdArr" },
+    // Belongs to storyMeta have to handle carefully
   ];
 
-  allowedFields.forEach(async ({ key, type }: any) => {
-    if (type == "stringArr" && req.query?.[key]?.length) {
+  allowedFields.forEach(async ({ key, type }) => {
+    if (type == "mongoIdArr" && req.query?.[key]?.length) {
       // @ts-ignore
       const arr = req?.query[key].split(",");
-      if (arr.every((ar: any) => isValidObjectId(ar)))
+      if (isArrOfMongooseObjectId(arr)) {
         // @ts-ignore
-        reqQuery[key] = arr;
-    } else if (typeOf(req.query?.[key], type)) {
+        reqQuery[key] = {};
+        // @ts-ignore
+        reqQuery[key]["$in"] = arr;
+      }
+    } else if (type == "strPattern" && typeOf(req.query?.[key], type)) {
+      // @ts-ignore
+      reqQuery[key] = new RegExp(`${req.query?.[key]}`, "gi");
+    } else if (type == "string" && typeOf(req.query?.[key], type)) {
       // @ts-ignore
       reqQuery[key] = req.query[key];
     }
@@ -44,9 +56,12 @@ export const filter = async (
 
   let likeOrDislike: any;
 
-  if (typeOf(reqQuery?.like, "object") || typeOf(reqQuery?.dislike, "object")) {
-    const like: any = reqQuery.like,
-      dislike: any = reqQuery.dislike,
+  if (
+    typeOf(req.query?.like, "object") ||
+    typeOf(req.query?.dislike, "object")
+  ) {
+    const like: any = req.query.like,
+      dislike: any = req.query.dislike,
       query: any = {},
       exist = { $exists: true },
       notExist = { $exists: false };
@@ -72,44 +87,31 @@ export const filter = async (
       likeOrDislike = StoryMeta.find(query).select("_id").lean();
   }
 
-  const finalQuery = () =>
+  const getIDs = () =>
     new Promise(async (resolve) => {
-      let obj: any = {};
-      if (reqQuery.tags) {
-        obj.tags = {};
-        obj.tags.$in = reqQuery.tags;
-      }
-      if (reqQuery.slug) obj.slug = reqQuery.slug;
-      if (reqQuery.title) obj.title = new RegExp(`${reqQuery.title}`, "gi");
-      if (reqQuery.subtitle)
-        obj.subtitle = new RegExp(`${reqQuery.subtitle}`, "gi");
-      if (reqQuery.author) {
-        obj.author = {};
-        obj.author.$in = reqQuery.author;
+      if (!likeOrDislike) return resolve({});
+
+      const stories = await likeOrDislike;
+      if (!stories.length) {
+        return res.json({
+          status: "ok",
+          message: "No stories founds with this amount of like/dislike",
+          stories: [],
+        });
       }
 
-      if (likeOrDislike) {
-        const likeOrDislikeRes = await likeOrDislike;
-        if (likeOrDislikeRes.length) {
-          let $in = likeOrDislikeRes.map((story: any) => story._id.toString());
-          obj = { ...obj, _id: { $in } };
-
-          resolve(obj);
-        } else {
-          return res.json({
-            status: "ok",
-            stories: [],
-          });
-        }
-      } else {
-        resolve(obj);
-      }
+      resolve({
+        _id: {
+          $in: stories.map((story: any) => story._id.toString()),
+        },
+      });
     });
+
   //   @ts-ignore
-  const toSelectComment = req.query?.select?.includes("comments");
+  const selectComments = req.query?.select?.includes("comments");
   req.query = {};
   //   @ts-ignore
-  req.query = await finalQuery();
-  if (toSelectComment) req.query.select = "comments";
+  req.query = { ...reqQuery, ...(await getIDs()) };
+  if (selectComments) req.query.select = "comments";
   next();
 };

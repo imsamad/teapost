@@ -18,7 +18,7 @@ export const typeOf = (
   val: any,
   type: string | "string" | "array" | "object"
 ) => {
-  return !val
+  return !val || val == "undefined" || typeof val == "undefined"
     ? false
     : val.constructor.name.toLowerCase() === type.toLowerCase();
 };

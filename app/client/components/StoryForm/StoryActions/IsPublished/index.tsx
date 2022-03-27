@@ -13,7 +13,12 @@ const Index = () => {
 
   const handleChange = async () => {
     if (values.isPublished == true) {
-      await publishedStory({ isPublished: false, storyId: values._id });
+      const data = await publishedStory({
+        isPublished: false,
+        storyId: values._id,
+      });
+      setFieldValue("isPublished", data.story.isPublished);
+      setFieldTouched("isPublished", true);
     } else
       validateYupSchema(isAbleToPublished, values)
         .then(async (res) => {
@@ -25,6 +30,7 @@ const Index = () => {
           setFieldTouched("isPublished", true);
         })
         .catch((err) => {
+          let error = err?.message || err;
           // setStatus(true);
           Object.keys(err).forEach((key: any) => {
             setFieldTouched(key, true, false);

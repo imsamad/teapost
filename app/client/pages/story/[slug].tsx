@@ -1,30 +1,13 @@
-import { Box, Container, Heading, VStack } from "@chakra-ui/react";
 import axios from "axios";
 
 import StoryType from "@lib/types/StoryType";
-import Header from "@compo/LogIn/Form/Header";
-import Renderer from "@compo/Renderer";
+import SingleStory from "@compo/SingleNews";
 
 const Index = ({ story }: { story: StoryType }) => {
   if (!story) {
     return "Loading...";
   }
-  return (
-    <Container maxW="container.lg" border="1px" p="4px">
-      Large Container
-    </Container>
-  );
-  return (
-    <Box border="2px solid pink" p={10}>
-      <Heading fontSize="3xl" as="h1">
-        {story.title}
-      </Heading>
-      <Heading my="4" size="md" fontWeight={800} color="rgba(41,41,41,0.4)">
-        {story.subtitle}
-      </Heading>
-      {story.content && <Renderer value={story.content} />}
-    </Box>
-  );
+  return <SingleStory story={story} />;
 };
 
 const apiUrl = process.env.API_URL!;
@@ -32,7 +15,7 @@ const apiUrl = process.env.API_URL!;
 export const getStaticPaths = async () => {
   const {
     data: { stories },
-  } = await axios.get(`${apiUrl}/stories`);
+  } = await axios.get<{ stories: StoryType[] }>(`${apiUrl}/stories`);
 
   const paths = stories.map((story: any) => ({
     params: { slug: story.slug },
@@ -44,12 +27,15 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }: any) => {
   const {
     data: { stories },
-  } = await axios.get(`${apiUrl}/stories?slug=${params.slug}`);
+  } = await axios.get<{ stories: StoryType[] }>(
+    `${apiUrl}/stories?slug=${params.slug}`
+  );
 
   return {
     props: {
       story: stories[0],
     },
+    revalidate: 10,
   };
 };
 

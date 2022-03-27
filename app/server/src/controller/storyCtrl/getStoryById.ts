@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
+import { asyncHandler } from "../../lib/utils";
 import Story from "../../models/Story";
 
 // @desc      getStoryById

@@ -17,7 +17,7 @@ const Index = ({
   displayFull?: boolean;
 }) => {
   return (
-    <ButtonGroup spacing={3} alignItems="center">
+    <ButtonGroup spacing={3} alignItems="center" pb="8px" border="1px">
       <LikeAndDislike
         storyId={storyId}
         like={like}

@@ -24,6 +24,7 @@ import imageRtr from "./routes/imageRtr";
 import profileRtr from "./routes/profileRtr";
 import collectionRtr from "./routes/collectionRtr";
 import commentRtr from "./routes/commentRtr";
+import userRtr from "./routes/userRtr";
 // import checkTemp from "./middleware/checkTemp";
 
 const app = express();
@@ -55,6 +56,7 @@ app.get("/ok", (req, res) => {
 });
 // app.use(checkTemp());
 
+app.use("/api/v1/users", userRtr);
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);
 app.use("/api/v1/storyhistory", storyHistoryRtr);

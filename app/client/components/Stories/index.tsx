@@ -1,11 +1,11 @@
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Container, Heading } from "@chakra-ui/react";
 
 import StoryType from "@lib/types/StoryType";
 import StoryCard from "../StoryCard";
 
 const Index = ({ stories }: { stories: StoryType[] }) => {
   return (
-    <Box mx="auto" maxW={["100%", "100%", "70%"]}>
+    <Container maxW="container.md" border="1px solid red">
       {stories.length > 0 ? (
         stories.map((story: StoryType) => (
           <StoryCard story={story} key={story._id} />
@@ -24,7 +24,7 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
           </Heading>
         </Box>
       )}
-    </Box>
+    </Container>
   );
 };
 

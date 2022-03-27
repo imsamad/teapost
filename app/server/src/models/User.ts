@@ -7,7 +7,7 @@ export interface UserDocument extends Omit<UserType, "_id">, mongoose.Document {
   matchPassword(candidatePassword: string): Promise<boolean>;
 }
 
-const UserSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -55,9 +55,9 @@ const UserSchema = new mongoose.Schema(
 
 // Do sth here bcoz ,sth might be missing.
 
-// UserSchema.post<Query<UserDocument, UserDocument>>(
+// userSchema.post<Query<UserDocument, UserDocument>>(
 
-UserSchema.post("save", function (error: any, doc: UserDocument, next: any) {
+userSchema.post("save", function (error: any, doc: UserDocument, next: any) {
   if (error?.code === 11000) {
     next(
       ErrorResponse(400, {
@@ -69,7 +69,7 @@ UserSchema.post("save", function (error: any, doc: UserDocument, next: any) {
   }
 });
 
-UserSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {
   const user = this as UserDocument;
 
   if (!user.isModified("password")) return next();
@@ -85,12 +85,17 @@ UserSchema.pre("save", async function (next) {
   return next();
 });
 
-UserSchema.methods.matchPassword = async function (
+userSchema.methods.matchPassword = async function (
   enterPassword: UserDocument["password"]
 ) {
   return await bcrypt.compare(enterPassword, this.password);
 };
-
-const User = mongoose.model<UserDocument>("User", UserSchema);
+userSchema.virtual("profile", {
+  ref: "Profile",
+  localField: "_id",
+  foreignField: "_id",
+  justOne: true,
+});
+const User = mongoose.model<UserDocument>("User", userSchema);
 
 export default User;

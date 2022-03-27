@@ -10,6 +10,8 @@ import {
   publishedStory,
   initializeStory,
   getStoryById,
+  getStoryByTag,
+  getStoryByAuthor,
 } from "../controller/storyCtrl";
 
 import { fetchAuth, protect } from "../middleware/auth";
@@ -21,10 +23,19 @@ import {
   initializeStoryScheme,
   likeOrDislikeSchema,
   publishedStorySchema,
+  getStoryByTagSchema,
+  getStoryByAuthorSchema,
 } from "../lib/schema/story";
 import { filter } from "../middleware/getStoriesFilter";
 
 const router: Router = express();
+
+router.get("/tag/:tagName", validateSchema(getStoryByTagSchema), getStoryByTag);
+router.get(
+  "/author/:authorUsername",
+  validateSchema(getStoryByAuthorSchema),
+  getStoryByAuthor
+);
 
 router
   .route("/published/:storyId")
@@ -85,8 +96,8 @@ router
 
 router
   .route("/:storyId")
-  .get(fetchAuth, getStoryById)
-  .delete(deleteStory)
+  .get(fetchAuth, validateSchema(likeOrDislikeSchema), getStoryById)
+  .delete(protect, validateSchema(likeOrDislikeSchema), deleteStory)
   .put(protect, validateSchema(updateStorySchema), handleTags, updateStory);
 
 router

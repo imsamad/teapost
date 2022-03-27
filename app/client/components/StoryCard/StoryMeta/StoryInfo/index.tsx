@@ -1,7 +1,7 @@
 import { Badge, HStack, Text } from "@chakra-ui/react";
 import { monthList } from "@lib/utils";
 
-import MyLink from "../../../MyLink";
+// import MyLink from "../../../MyLink";
 
 const StoryInfo = ({ tag, createdAt }: any) => {
   let date: any = new Date(createdAt);
@@ -16,21 +16,21 @@ const StoryInfo = ({ tag, createdAt }: any) => {
       </MySmText>
       <MySmText>6 min</MySmText>
       <MySmText>~</MySmText>
-      <MyLink href={`/q?tag=${tag?.title || "tech"}`}>
-        <Badge
-          textDecor="underline"
-          variant="solid"
-          colorScheme="gray"
-          // bgColor="gray.400"
-          fontStyle="italic"
-          _dark={{
-            color: "gray.900",
-          }}
-          textTransform="capitalize"
-        >
-          {tag?.title || "tech"}
-        </Badge>
-      </MyLink>
+      {/* <MyLink href={`/q?tag=${tag?.title || "tech"}`}> */}
+      <Badge
+        textDecor="underline"
+        variant="solid"
+        colorScheme="gray"
+        // bgColor="gray.400"
+        fontStyle="italic"
+        _dark={{
+          color: "gray.900",
+        }}
+        textTransform="capitalize"
+      >
+        {tag?.title || "tech"}
+      </Badge>
+      {/* </MyLink> */}
       <MySmText>~</MySmText>
       <MySmText>{date}</MySmText>
     </HStack>

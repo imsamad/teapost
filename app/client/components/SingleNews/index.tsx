@@ -1,4 +1,5 @@
 import {
+  AspectRatio,
   Container,
   Heading,
   HStack,
@@ -23,7 +24,10 @@ const SingleStory = ({ story }: { story: StoryType }) => {
           <Text>~</Text>
           <Text wordBreak="keep-all">9 min read</Text>
         </HStack>
-        <Image src={story.titleImage} w="100%" alt={story.title} maxH="500px" />
+        <AspectRatio maxW="full" ratio={4 / 3}>
+          <Image src={story.titleImage} alt={story.title} />
+        </AspectRatio>
+
         <StoryActions
           storyId={story._id}
           like={story?.meta?.likedBy?.length || 0}

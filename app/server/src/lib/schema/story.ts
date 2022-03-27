@@ -2,6 +2,24 @@ import { isValidObjectId } from "mongoose";
 import { array, boolean, number, object, string } from "yup";
 import { trimExtra } from "../utils";
 
+export const getStoryByTagSchema = object({
+  params: object({
+    tagName: string()
+      .required("tagName is required")
+      .typeError("Tag Title must be string")
+      .label("tagName"),
+  }),
+});
+
+export const getStoryByAuthorSchema = object({
+  params: object({
+    authorUsername: string()
+      .required("authorUsername is required")
+      .typeError("Auhtor Name must be string")
+      .label("authorUsername"),
+  }),
+});
+
 export const changeSlugSchema = object({
   body: object({
     slug: string()

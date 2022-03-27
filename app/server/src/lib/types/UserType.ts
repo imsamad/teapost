@@ -1,3 +1,4 @@
+import ProfileType from "./ProfileType";
 interface User {
   _id: string;
   email: string;
@@ -9,5 +10,6 @@ interface User {
   role: string | "admin" | "reader" | "author";
   createdAt?: Date;
   updatedAt?: Date;
+  profile?: ProfileType;
 }
 export default User;

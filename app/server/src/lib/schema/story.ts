@@ -62,7 +62,7 @@ export const updateStorySchema = object({
   body: object().shape({
     title: string().label("title").typeError("title must be string"),
     subtitle: string().label("subtitle").typeError("subtitle must be string"),
-    body: string().label("body").typeError("body must be string"),
+    content: string().label("body").typeError("body must be string"),
     titleImage: string()
       .label("titleImage")
       .url("titleImage must be url")
@@ -219,7 +219,17 @@ export const initializeStoryScheme = object({
   body: object({
     slug: string()
       .label("historyId")
-      .typeError("storyId is required")
+      .typeError("historyId is required")
       .required("History id is required"),
+
+    title: string().label("title").typeError("title must be string"),
+    subtitle: string().label("subtitle").typeError("subtitle must be string"),
+    body: string().label("body").typeError("body must be string"),
+    titleImage: string()
+      .label("titleImage")
+      .url("titleImage must be url")
+      .typeError("titleImage must be url"),
+    keywords: string().label("keywords").typeError("keyword must be string"),
+    tags: array().label("tags").typeError("tags must be array"),
   }),
 });

@@ -1,36 +1,27 @@
-import {
-  Container,
-  Divider,
-  Heading,
-  HStack,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import Author from "@compo/SingleNews/Author";
+import { Container, Divider, Heading, Stack } from "@chakra-ui/react";
+import axios from "axios";
+
+import AuthorCard from "@compo/AuthorCard";
 import StoryType from "@lib/types/StoryType";
 import UserType from "@lib/types/UserType";
-import axios from "axios";
 import Stories from "@compo/Stories";
-const Index = ({ stories }: { stories: StoryType[] }) => {
+
+const Index = ({
+  stories,
+  author,
+}: {
+  stories: StoryType[];
+  author: UserType;
+}) => {
   return (
     <Container maxW="container.md" p="0" pt="4">
       <Stack spacing={4}>
-        <Author />
-        <HStack>
-          <Text
-            borderLeft="4px"
-            borderBottom="1px"
-            pl="4"
-            mr="10px"
-            borderColor="purple"
-          >
-            Stories 4
-          </Text>
+        <AuthorCard
+          author={author}
+          numOfStories={stories?.length}
+          displayStats={true}
+        />
 
-          <Text borderLeft="4px" borderBottom="1px" pl="4" borderColor="purple">
-            Followers 4
-          </Text>
-        </HStack>
         <Divider />
         {stories?.length ? (
           <>
@@ -63,14 +54,15 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }: any) => {
   const {
-    data: { stories },
-  } = await axios.get<{ stories: StoryType[] }>(
-    `${apiUrl}/stories?author=${params.author}`
+    data: { stories, authors },
+  } = await axios.get<{ stories: StoryType[]; authors: UserType[] }>(
+    `${apiUrl}/stories?authors=${params.author}`
   );
 
   return {
     props: {
       stories,
+      author: authors[0],
     },
     revalidate: 10,
   };

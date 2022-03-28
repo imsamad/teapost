@@ -10,19 +10,29 @@ import {
 
 import Render from "@compo/Renderer";
 import StoryType from "@lib/types/StoryType";
-import Author from "./Author";
+import AuthorCard from "@compo/AuthorCard";
 import StoryActions from "@compo/StoryCard/StoryActions";
+import UserType from "@lib/types/UserType";
+import { readAbleDate } from "@lib/utils";
 
-const SingleStory = ({ story }: { story: StoryType }) => {
+const SingleStory = ({
+  story,
+  author,
+}: {
+  story: StoryType;
+  author: UserType;
+}) => {
   return (
     <Container maxW="container.md" border="0px" p={4}>
       <Stack spacing={4}>
-        <Author />
+        <AuthorCard author={author} displayStats={false} />
         <Heading size="xl">{story?.title}</Heading>
         <HStack fontWeight={400} wordBreak="keep-all">
-          <Text wordBreak="keep-all">March 16, 2012</Text>
+          <Text wordBreak="keep-all">
+            {readAbleDate(story.updatedAt, true)}
+          </Text>
           <Text>~</Text>
-          <Text wordBreak="keep-all">9 min read</Text>
+          <Text wordBreak="keep-all">{story.readingTime} min read </Text>
         </HStack>
         <AspectRatio maxW="full" ratio={4 / 3}>
           <Image src={story.titleImage} alt={story.title} />

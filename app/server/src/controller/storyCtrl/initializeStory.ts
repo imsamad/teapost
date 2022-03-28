@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "../../lib/utils";
+import { asyncHandler, readingTime } from "../../lib/utils";
 
 import Story from "../../models/Story";
 import { nanoid } from "nanoid";
@@ -9,7 +9,13 @@ import { nanoid } from "nanoid";
 
 export const initializeStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let slug = req.body.slug;
+    var {
+      slug,
+      isPublished,
+      hadEmailedToFollowers,
+      isPublishedByAdmin,
+      ...rest
+    } = req.body;
 
     const isStoryExist = await Story.findOne({
       slug,
@@ -17,15 +23,19 @@ export const initializeStory = asyncHandler(
     //  @ts-ignore
     let author = req.user._id;
 
-    if (isStoryExist && isStoryExist.author.toString() == author)
-      return res.json({
-        status: "ok",
-        story: isStoryExist,
-      });
-
+    if (isStoryExist) {
+      if (isStoryExist.author.toString() == author)
+        return res.json({
+          status: "ok",
+          story: isStoryExist,
+        });
+      else slug = slug + nanoid(10);
+    }
     const story = await Story.create({
-      slug: nanoid(10),
       author,
+      readingTime: readingTime(rest?.content),
+      slug,
+      ...rest,
     });
     return res.json({
       status: "ok",

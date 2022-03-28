@@ -2,7 +2,7 @@ import { Avatar, HStack, Text } from "@chakra-ui/react";
 
 import UserType from "@lib/types/UserType";
 import MyLink from "@compo/MyLink";
-import Follow from "./Follow";
+import FollowAuthor from "@compo/FollowAuthor";
 
 const Index = ({ author }: { author: UserType }) => {
   return (
@@ -14,13 +14,17 @@ const Index = ({ author }: { author: UserType }) => {
         }}
       >
         <HStack>
-          <Avatar size="xs" name={author.username} src={author?.profilePic} />
+          <Avatar
+            size="xs"
+            name={author.username}
+            src={author?.profile?.profilePic}
+          />
           <Text fontWeight={700} fontSize="md" ml={1}>
             {author.username}
           </Text>
         </HStack>
       </MyLink>
-      <Follow author={author} />
+      <FollowAuthor author={author} />
     </HStack>
   );
 };

@@ -10,6 +10,8 @@ interface ProfileType {
   following: User["_id"][] | User[];
   followers: User["_id"][] | User[];
   storyCollections: StoryCollectionType[];
+  profilePic: string;
+  tagLines: string[];
 }
 
 export default ProfileType;

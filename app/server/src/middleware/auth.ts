@@ -21,7 +21,10 @@ export const protect = async (
 
   const user = await User.findById(token.user).lean();
 
+  const isAllowed = process.env.ONLY_VERIFIED_ALLOWED == "true";
   if (!user)
+    return next(ErrorResponse(400, `Not authorized to access this route.`));
+  if (isAllowed && (!user?.isAuthorised || !user?.isEmailVerified))
     return next(ErrorResponse(400, `Not authorized to access this route.`));
   // @ts-ignore
   req.user = user;
@@ -43,6 +46,10 @@ export const fetchAuth = async (
   if (!token) return next();
   const user = await User.findById(token.user).lean();
   if (!user) return next();
+
+  const isAllowed = process.env.ONLY_VERIFIED_ALLOWED == "true";
+  if (isAllowed && (!user?.isAuthorised || !user?.isEmailVerified))
+    return next();
   // @ts-ignore
   req.user = user;
   next();

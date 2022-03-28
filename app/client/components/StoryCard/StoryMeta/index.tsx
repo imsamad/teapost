@@ -9,7 +9,11 @@ const index = ({ story }: { story: storyType }) => {
     <HStack>
       <Author author={story.author} />
       <Spacer />
-      <StoryInfo tag={story.tags[0]} createdAt={story.createdAt} />
+      <StoryInfo
+        tag={story.tags[0]}
+        createdAt={story.createdAt}
+        readingTime={story.readingTime}
+      />
     </HStack>
   );
 };

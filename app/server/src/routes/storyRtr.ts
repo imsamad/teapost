@@ -10,8 +10,6 @@ import {
   publishedStory,
   initializeStory,
   getStoryById,
-  getStoryByTag,
-  getStoryByAuthor,
 } from "../controller/storyCtrl";
 
 import { fetchAuth, protect } from "../middleware/auth";

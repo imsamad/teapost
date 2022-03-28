@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import path from "path";
 
 const setEnv = () =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     dotenv.config({
       path: path.join(__dirname, "../", `config`, ".env"),
     });
@@ -35,7 +35,11 @@ const importData = async () => {
     await Image.create(images);
     await User.create(users);
     await Profile.create(
-      users.map((user) => ({ _id: user._id, fullName: "fullName" }))
+      users.map((user) => ({
+        _id: user._id,
+        fullName: "fullName",
+        tagLines: ["Programmer", "Author of example.com", " Technical Writer"],
+      }))
     );
     await StoryCollection.create(
       users.map((user) => ({ user: user._id, title: "Read Later" }))

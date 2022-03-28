@@ -3,7 +3,7 @@ import { monthList } from "@lib/utils";
 
 import MyLink from "../../../MyLink";
 
-const StoryInfo = ({ tag, createdAt }: any) => {
+const StoryInfo = ({ tag, createdAt, readingTime }: any) => {
   let date: any = new Date(createdAt);
   date = `${date.getDate()} ${monthList[date.getMonth()]}`;
   return (
@@ -14,7 +14,7 @@ const StoryInfo = ({ tag, createdAt }: any) => {
       >
         |
       </MySmText>
-      <MySmText>6 min</MySmText>
+      <MySmText>{readingTime} min</MySmText>
       <MySmText>~</MySmText>
       <MyLink href={`/tag/${tag?.title || "tech"}`}>
         <Badge

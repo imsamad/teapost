@@ -1,3 +1,5 @@
+import ProfileType from "./ProfileType";
+
 interface UserType {
   _id: string;
   email: string;
@@ -5,10 +7,11 @@ interface UserType {
   password: string;
   isEmailVerified: boolean;
   isAuthorised: boolean;
-  profilePic?: string;
+
   role: string | "admin" | "reader" | "author";
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  profile: ProfileType;
 }
 
 export interface AuthUser

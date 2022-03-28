@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import {
   asyncHandler,
   ErrorResponse,
+  readingTime,
   validateYupSchema,
 } from "../../lib/utils";
 import Story, { StoryDocument } from "../../models/Story";
@@ -58,7 +59,7 @@ const updateStory = asyncHandler(
       } else story.slug = req.body.slug;
     }
 
-    story.readingTime = 10;
+    story.readingTime = readingTime(story?.content);
 
     return res.status(200).json({
       status: "ok",

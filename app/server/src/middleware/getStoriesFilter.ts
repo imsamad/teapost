@@ -90,17 +90,34 @@ export const filter = async (
     }
   }
 
-  if (typeOf(req.query?.author, "string")) {
+  if (typeOf(req.query?.authors, "string")) {
     let author: string[] = [], // @ts-ignore
-      objIds: string[] = req.query.author.split(",").filter((str: any) => {
+      objIds: string[] = req.query.authors.split(",").filter((str: any) => {
         if (isValidObjectId(str)) return str;
         else author.push(str);
       });
 
     if (author.length) {
-      const users = await User.find({ username: { $in: author } });
-
+      const users = await User.find({ username: { $in: author } })
+        .select("username email")
+        .populate([
+          {
+            path: "profile",
+            select: "fullName followers tagLines profilePic",
+            // transform: (doc, id) => {
+            //   return {
+            //     _id: doc?._id || id,
+            //     followers: doc?.followers?.length || 0,
+            //     fullName: doc?.fullName,
+            //     tagLines: doc?.tagLines,
+            //   };
+            // },
+          },
+        ])
+        .lean();
       if (users.length) {
+        // @ts-ignore
+        req.authors = users;
         users.forEach((user) => objIds.push(user._id.toString()));
         // @ts-ignore
         reqQuery.author = {};

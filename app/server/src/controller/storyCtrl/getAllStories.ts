@@ -8,11 +8,22 @@ import Story from "../../models/Story";
 // @access    Public
 const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let stories: any = Story.find(req.query).populate([
+    const filter =
+      process.env.ONLY_VERIFIED_ALLOWED == "true"
+        ? {
+            isPublished: true,
+            isPublishedByAdmin: true,
+          }
+        : {};
+    let stories: any = Story.find({ ...req.query, ...filter }).populate([
       { path: "meta" },
       {
         path: "author",
         select: "username email",
+        populate: {
+          path: "profile",
+          select: "fullName followers tagLines profilePic",
+        },
       },
       {
         path: "tags",
@@ -55,6 +66,8 @@ const getAllStories = asyncHandler(
     return res.status(200).json({
       status: "ok",
       stories,
+      // @ts-ignore
+      authors: req.authors || {},
     });
   }
 );

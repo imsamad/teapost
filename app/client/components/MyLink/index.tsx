@@ -1,11 +1,11 @@
-import { Link as ChakraLink, LinkProps } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import { Link as ChakraLink, LinkProps } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 interface MyLinkProps extends LinkProps {
   href: string;
 }
 
-const Index = ({
+const MyLink = ({
   href,
   children,
   _visited,
@@ -18,21 +18,21 @@ const Index = ({
     <NextLink href={href} passHref>
       <ChakraLink
         _hover={{
-          textDecor: 'none',
-          color: 'gray.500',
+          textDecor: "none",
+          color: "gray.500",
           ..._hover,
         }}
         _active={{
-          outline: 'none',
-          color: 'blue.400',
+          outline: "none",
+          color: "blue.400",
           _active,
         }}
         _visited={{
-          outline: 'none',
+          outline: "none",
           ..._visited,
         }}
         _focus={{
-          outline: 'none',
+          outline: "none",
           _focus,
         }}
         {...rest}
@@ -52,4 +52,4 @@ const Index = ({
         _visited={{ color: 'blue' }}
         _active={{ color: 'blue' }}
  */
-export default Index;
+export default MyLink;

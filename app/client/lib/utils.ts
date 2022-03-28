@@ -95,18 +95,21 @@ export const monthList = [
   "Dec",
 ];
 
-export const readAbleDate = (value: Date) => {
+export const readAbleDate = (value: Date, isFull = false) => {
   let date: any = new Date(value);
-  let time =
-    date.getHours() > 12 ? `${date.getHours() % 12}` : `${date.getHours()}`;
 
-  time = Number(time) >= 10 ? time : `0${time}`;
-
-  date = `${date.getDate()} ${
+  let dmy = `${date.getDate()} ${
     monthList[date.getMonth()]
-  }, ${date.getFullYear()}, ${time}${date.toLocaleTimeString().substring(2)} ${
-    date.getHours() >= 12 ? "PM" : "AM"
-  }`;
+  }, ${date.getFullYear()}`;
 
-  return date;
+  let hour = date.getHours() > 12 ? date.getHours() % 12 : date.getHours();
+
+  hour = Number(hour) >= 10 ? hour : `0${hour}`;
+  hour += date.toLocaleTimeString().substring(2);
+
+  let isAmPm = date.getHours() >= 12 ? "PM" : "AM";
+
+  date = `${hour} ${isAmPm}`;
+
+  return isFull ? `${dmy}, ${date}` : dmy;
 };

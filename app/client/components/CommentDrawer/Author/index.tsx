@@ -7,7 +7,11 @@ import AddComment from "../CommentInput";
 export const Avatar = ({ user }: { user: UserType }) => {
   return (
     <MyLink href={`/@/${user?.username}`} alignSelf="flex-start">
-      <ChkaraAvatar name={user?.username} size="xs" src={user?.profilePic} />
+      <ChkaraAvatar
+        name={user?.username}
+        size="xs"
+        src={user?.profile.profilePic}
+      />
     </MyLink>
   );
 };

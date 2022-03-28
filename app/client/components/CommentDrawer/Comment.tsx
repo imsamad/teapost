@@ -7,7 +7,7 @@ type CommentType = {
   mutate: () => void;
 };
 
-import { AuthorAndComment, Avatar } from "./Auhor";
+import { AuthorAndComment, Avatar } from "./Author";
 import CommentActions from "./CommentActions";
 import SecondaryComments from "./SecondaryComments";
 

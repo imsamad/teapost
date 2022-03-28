@@ -8,11 +8,19 @@ import { signJwt } from "../../lib/jwt";
 const logIn = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
-
-    let user = await User.findOne({ email }).select("+password");
+    const filter =
+      process.env.ONLY_VERIFIED_ALLOWED == "true"
+        ? {
+            isEmailVerified: true,
+            isAuthorised: true,
+          }
+        : {};
+    let user = await User.findOne({ email, ...filter }).select("+password");
 
     if (!user)
-      return next(ErrorResponse(400, { email: "Email not registered." }));
+      return next(
+        ErrorResponse(400, { email: "Email not registered/verfied ." })
+      );
 
     const isPwdMatch = await user.matchPassword(password);
 

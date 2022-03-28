@@ -11,6 +11,8 @@ export interface ProfileDocument extends Document {
   following: Types.Array<UserDocument["_id"]>;
   followers: Types.Array<UserDocument["_id"]>;
   storyCollections: Types.Array<StoryCollectionDocument>;
+  tagLines: string[];
+  profilePic: string;
 }
 
 const profileSchema = new Schema(
@@ -48,6 +50,8 @@ const profileSchema = new Schema(
         ref: "User",
       },
     ],
+    tagLines: [String],
+    profilePic: String,
   },
   {
     timestamps: true,

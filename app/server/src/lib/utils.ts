@@ -4,9 +4,32 @@ import crypto from "crypto";
 import path from "path";
 import { nanoid } from "nanoid";
 import { AnySchema } from "yup";
+import { convert } from "html-to-text";
+
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
+
+export const getRndInteger = ({
+  min,
+  max,
+  isIncludedBoth,
+}: {
+  min: number;
+  max: number;
+  isIncludedBoth: true;
+}) => Math.floor(Math.random() * (max - min + (isIncludedBoth ? 1 : 0))) + min;
+
+export const readingTime = (html: string) => {
+  if (!html) return 0;
+  const string = convert(html, {
+    wordwrap: 80,
+  });
+  const words = string.trim().split(/\s+/).length;
+  const wpm = 200;
+  const time = Math.ceil(words / wpm);
+  return time;
+};
 
 export const randomBytes = (num = 20) =>
   crypto.randomBytes(num).toString("hex");

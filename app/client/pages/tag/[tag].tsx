@@ -5,21 +5,16 @@ import {
   Container,
   Divider,
   Heading,
-  HStack,
-  Icon,
   Stack,
-  Text,
 } from "@chakra-ui/react";
-import Author from "@compo/SingleNews/Author";
-import StoryType from "@lib/types/StoryType";
-
 import axios from "axios";
-import Stories from "@compo/Stories";
-import TagType from "@lib/types/TagType";
 import { useRouter } from "next/router";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import { BiHomeHeart } from "react-icons/bi";
 import Link from "next/link";
+
+import StoryType from "@lib/types/StoryType";
+import Stories from "@compo/Stories";
+import TagType from "@lib/types/TagType";
 
 const Index = ({ stories }: { stories: StoryType[] }) => {
   const router = useRouter();
@@ -30,7 +25,6 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
           <BreadcrumbItem>
             <BreadcrumbLink as={Link} href="/">
               Home
-              {/* <Icon as={BiHomeHeart} /> */}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem>

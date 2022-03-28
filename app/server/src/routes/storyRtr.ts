@@ -30,13 +30,6 @@ import { filter } from "../middleware/getStoriesFilter";
 
 const router: Router = express();
 
-router.get("/tag/:tagName", validateSchema(getStoryByTagSchema), getStoryByTag);
-router.get(
-  "/author/:authorUsername",
-  validateSchema(getStoryByAuthorSchema),
-  getStoryByAuthor
-);
-
 router
   .route("/published/:storyId")
   .put(protect, validateSchema(publishedStorySchema), publishedStory);
@@ -95,14 +88,14 @@ router
   .put(protect, validateSchema(commentStorySchema), commentStory);
 
 router
+  .route("/initialize")
+  .post(protect, validateSchema(initializeStoryScheme), initializeStory);
+
+router
   .route("/:storyId")
   .get(fetchAuth, validateSchema(likeOrDislikeSchema), getStoryById)
   .delete(protect, validateSchema(likeOrDislikeSchema), deleteStory)
   .put(protect, validateSchema(updateStorySchema), handleTags, updateStory);
-
-router
-  .route("/initialize")
-  .post(protect, validateSchema(initializeStoryScheme), initializeStory);
 
 router.route("/").get(filter, getAllStories);
 

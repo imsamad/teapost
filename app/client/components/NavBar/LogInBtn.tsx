@@ -42,7 +42,7 @@ const LogInBtn = ({ size }: { size: any }) => {
           <MyLink href="/me">
             <MenuItem icon={<BiUser />}>My Account </MenuItem>
           </MyLink>
-          <MyLink href={`/me/story/write/${nanoid(10)}`}>
+          <MyLink href={`/me/stories/write/${nanoid(10)}`}>
             <MenuItem icon={<FaPenNib />} color="green.600">
               Write
             </MenuItem>

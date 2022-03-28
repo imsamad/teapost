@@ -5,7 +5,7 @@ import StoryCard from "../StoryCard";
 
 const Index = ({ stories }: { stories: StoryType[] }) => {
   return (
-    <Container maxW="container.md" border="1px solid red">
+    <Container maxW="container.md" p="0">
       {stories.length > 0 ? (
         stories.map((story: StoryType) => (
           <StoryCard story={story} key={story._id} />

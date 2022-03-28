@@ -1,11 +1,5 @@
-import router from 'next/router';
-import { useEffect } from 'react';
-import { nanoid } from 'nanoid';
+import { Heading } from "@chakra-ui/react";
 const Index = () => {
-  useEffect(() => {
-    router.replace(`/me/story/write/${nanoid()}`);
-  });
-  return 'redirect...';
+  return <Heading>Not Exist</Heading>;
 };
-
 export default Index;

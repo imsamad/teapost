@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (!accessToken) {
     return {
       redirect: {
-        destination: `/auth?redirectTo=/me/story/write/${slug}`,
+        destination: `/auth?redirectTo=/me/stories/write/${slug}`,
         permanent: true,
       },
     };

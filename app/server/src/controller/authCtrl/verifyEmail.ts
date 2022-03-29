@@ -11,13 +11,12 @@ import { retriveToken } from "../../lib/createToken";
 const verifyEmail = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const jwtCodedToken: string = req.params.token as string;
-
+    console.log(" jwtCodedToken", jwtCodedToken);
     const malliciousReq = ErrorResponse(400, "Mallicious request.");
 
     const { token, status } = await retriveToken("verifyemail", jwtCodedToken);
 
     if (!status) return next(malliciousReq);
-
     const user = await User.findById(token.userId);
 
     if (!user) return next(malliciousReq);

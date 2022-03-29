@@ -11,6 +11,7 @@ import {
   forgotPassword,
   resetPaswordPage,
   resetPasword,
+  changeEmail,
 } from "../controller/authCtrl";
 
 import { protect } from "../middleware/auth";
@@ -34,6 +35,7 @@ router
 
 router.use(protect);
 router.get("/me", getMe);
+router.put("/changeemail", protect, changeEmail);
 
 router
   .route("/unfollow/:authorId")

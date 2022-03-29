@@ -58,13 +58,13 @@ export const retriveToken = async (
 
     if (!decodedVerifyToken) return { status: false };
     const hashedVerifyToken = createHash(decodedVerifyToken);
+
     let token = await Token.findOne({
       token: hashedVerifyToken,
       type,
     });
-
     if (!token) return { token, status: false };
-    return { token };
+    return { token, status: true };
   } catch (err: any) {
     return { ...err, status: false };
   }

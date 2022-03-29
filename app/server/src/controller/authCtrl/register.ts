@@ -1,17 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { signJwt } from "../../lib/jwt";
-import {
-  asyncHandler,
-  createHash,
-  ErrorResponse,
-  randomBytes,
-} from "../../lib/utils";
-import Profile from "../../models/Profile";
-import StoryCollection from "../../models/StoryCollection";
-import Token from "../../models/Token";
+
+import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import User from "../../models/User";
 
-import emailVerifyMessage from "../../lib/sendVerifyEmail";
+import sendEmail from "../../lib/sendEmail";
+import createToken from "../../lib/createToken";
 
 // @desc      Register new user
 // @route     POST /api/v1/story
@@ -44,57 +37,35 @@ const register = asyncHandler(
       password,
     });
 
-    const verifyToken = randomBytes(20);
-
-    const hashedVerifyToken = createHash(verifyToken);
-
-    const jwtVerifyToken = signJwt(
-      { token: verifyToken },
-      {},
-      process.env.JWT_TOKEN_SECRET!
+    const { token, redirectUrl, message } = await createToken(
+      "verifyemail",
+      req,
+      user._id,
+      { fullName, newUser: true }
     );
-    // jwt of hashed of randomBytes
-    const token = await Token.create({
-      emailVerifyToken: hashedVerifyToken,
-      userId: user._id,
-    });
+    const tryAgain = ErrorResponse(
+      400,
+      "Unable to process your request please register again."
+    );
 
-    if (!token || !verifyToken || !hashedVerifyToken || !jwtVerifyToken) {
+    if (!token || !redirectUrl) {
       await user.delete();
-      if (token) await token.delete();
-      return next(
-        ErrorResponse(
-          400,
-          "Unable to process your request please register again."
-        )
-      );
+      return next(tryAgain);
     }
-
-    const redirectUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/auth/verifyemail?token=${jwtVerifyToken}`;
 
     let isEmailService: boolean = "true" === process.env.IS_EMAIL_SERVICE!;
 
     // isEmailService = isEmailService === "true";
 
     if (isEmailService) {
-      let emailSentResult = await emailVerifyMessage(email, redirectUrl);
+      let emailSentResult = await sendEmail(email, redirectUrl, message);
       if (!emailSentResult) {
         await user.delete();
         await token.delete();
 
-        return next(
-          ErrorResponse(
-            400,
-            "Unable to process your request please register again."
-          )
-        );
+        return next(tryAgain);
       }
     }
-
-    await Profile.create({ _id: user._id, fullName });
-    await StoryCollection.create({ user: user._id, title: "Read Later" });
     let resObj: any = {
       status: "ok",
       message: `Account created successfully, Verify your email sent to ${email}.`,

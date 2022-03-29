@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { asyncHandler } from "../../lib/utils";
+import { asyncHandler, sendTokens } from "../../lib/utils";
 import User, { UserDocument } from "../../models/User";
 import { ErrorResponse } from "../../lib/utils";
 import { signJwt } from "../../lib/jwt";
@@ -35,30 +35,5 @@ const logIn = asyncHandler(
     sendTokens(user, 200, res);
   }
 );
-
-const sendTokens = async (
-  user: UserDocument,
-  statusCode: number,
-  res: Response
-) => {
-  const resData = {
-    status: "ok",
-    user: {
-      _id: user._id,
-      email: user.email,
-      accessToken: signJwt(
-        { user: user._id },
-        {
-          expiresIn: "7d",
-        }
-      ),
-      username: user.username,
-      role: user.role,
-      createdAt: user.createdAt,
-    },
-  };
-
-  return res.status(statusCode).json(resData);
-};
 
 export default logIn;

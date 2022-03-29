@@ -5,6 +5,8 @@ import path from "path";
 import { nanoid } from "nanoid";
 import { AnySchema } from "yup";
 import { convert } from "html-to-text";
+import { UserDocument } from "../models/User";
+import { signJwt } from "./jwt";
 
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
@@ -165,4 +167,31 @@ export const saveImageLocally = async (file: any, appUrl: string) => {
   } catch (err) {
     return { result: false };
   }
+};
+
+export const sendTokens = async (
+  user: UserDocument,
+  statusCode: number,
+  res: Response,
+  message?: any
+) => {
+  const resData = {
+    status: "ok",
+    user: {
+      _id: user._id,
+      email: user.email,
+      accessToken: signJwt(
+        { user: user._id },
+        {
+          expiresIn: "7d",
+        }
+      ),
+      username: user.username,
+      role: user.role,
+      createdAt: user.createdAt,
+      message,
+    },
+  };
+
+  return res.status(statusCode).json(resData);
 };

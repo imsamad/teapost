@@ -4,7 +4,7 @@ import { UserDocument } from "./User";
 
 export interface TokenDocument extends Document {
   token: String;
-  type: "verifyemail" | "resetpassword" | "changeemail";
+  type: "verifyemail" | "resetpassword";
   userId: UserDocument["_id"];
   tempData: {
     fullName?: string;
@@ -18,7 +18,7 @@ const tokenSchema = new Schema(
     token: { type: String, required: true },
     type: {
       type: String,
-      enum: ["verifyemail", "resetpassword", "changeemail"],
+      enum: ["verifyemail", "resetpassword"],
     },
     userId: Schema.Types.ObjectId,
     tempData: {

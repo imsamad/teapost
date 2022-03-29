@@ -5,7 +5,9 @@ import getMe from "./getMe";
 import followAuthor from "./followAuthor";
 import addToCollection from "./addToCollection";
 import changeEmail from "./changeEmail";
+import updateDetails from "./updateDetails";
 import forgotPassword from "./forgotPassword";
+import forgetEmail from "./forgetEmail";
 import { resetPaswordPage, resetPasword } from "./resetPasword";
 
 export {
@@ -19,4 +21,6 @@ export {
   resetPasword,
   forgotPassword,
   changeEmail,
+  updateDetails,
+  forgetEmail,
 };

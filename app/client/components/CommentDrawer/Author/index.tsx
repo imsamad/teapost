@@ -10,7 +10,7 @@ export const Avatar = ({ user }: { user: UserType }) => {
       <ChkaraAvatar
         name={user?.username}
         size="xs"
-        src={user?.profile.profilePic}
+        src={user?.profile?.profilePic}
       />
     </MyLink>
   );

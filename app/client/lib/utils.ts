@@ -1,15 +1,17 @@
 import { AnySchema } from "yup";
+import * as yup from "yup";
 
 export const trimExtra = (
   str: string | any,
-  length: number,
+  min: number,
+  max = Infinity,
   join = " "
 ): boolean => {
   if (!str) return false;
   let splitted = str.split(" ");
   let filtered = splitted.filter((val: string) => val !== "");
   let joined = filtered.join(join);
-  return joined.length >= length ? true : false;
+  return joined.length >= min && joined.length <= max ? true : false;
 };
 
 export const typeOf = (
@@ -112,4 +114,86 @@ export const readAbleDate = (value: Date, isFull = false) => {
   date = `${hour} ${isAmPm}`;
 
   return isFull ? `${dmy}, ${date}` : dmy;
+};
+
+export const strSchema = (
+  label: string,
+  {
+    isRequired = false,
+    prettyLabel,
+    min = 1,
+    max = Infinity,
+  }: Partial<{
+    isRequired: boolean;
+    prettyLabel: string;
+    min: number;
+    max: number;
+  }>
+) => {
+  let schema = yup
+    .string()
+    .typeError(`${prettyLabel || label} must be string type.`)
+    .label(label)
+    .trim();
+  if (isRequired) {
+    let lenMsg = `${prettyLabel || label} must `;
+    if (max != Infinity) {
+      lenMsg += ` have more than ${min} & less than oor equal to ${max} characters.`;
+    } else {
+      lenMsg += ` have more than or equal to ${min} characters.`;
+    }
+    schema.required(`${prettyLabel || label} is required`);
+
+    schema.test(label, lenMsg, (val: any) => {
+      return trimExtra(val, min, max);
+    });
+  }
+
+  return schema;
+};
+
+export const strArrSchema = (
+  label: string,
+  {
+    isRequired = false,
+    prettyLabel,
+    min,
+    max,
+    strMin,
+    strMax,
+  }: Partial<{
+    isRequired: boolean;
+    prettyLabel: string;
+    min: number;
+    max: number;
+    strMin: number;
+    strMax: number;
+  }>
+) => {
+  let lenMsg = "";
+  if (strMax) {
+    lenMsg += `${label} must have less than or equal to ${strMax} characters`;
+  } else if (strMin) {
+    lenMsg += `${label} must have more than or equal to ${strMin} characters`;
+  }
+
+  let schema = yup
+    .array()
+    .label(label)
+    .typeError(`${prettyLabel || label} must be array`)
+    .test(label, lenMsg, (val: any) => {
+      if (!val && !isRequired) return true;
+      else if (strMin && strMax)
+        return val.every((val: any) => trimExtra(val, strMin, strMax));
+      else if (strMin)
+        return val.every((val: any) => trimExtra(val, strMin, Infinity));
+      else if (strMax)
+        return val.every((val: any) => trimExtra(val, 0, strMax));
+    });
+
+  min && schema.min(min);
+  max && schema.max(max);
+  isRequired && schema.required(`${prettyLabel || label} is required`);
+
+  return schema;
 };

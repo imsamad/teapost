@@ -1,4 +1,40 @@
 import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
+
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/200.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/300.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/400.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/500.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/600.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/700.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/800.css"), {
+//   ssr: false,
+// });
+// // @ts-ignore
+// dynamic(() => import("@fontsource/nunito/900.css"), {
+//   ssr: false,
+// });
+
+// import "@fontsource/nunito/100.css";
 import "@fontsource/nunito/200.css";
 import "@fontsource/nunito/300.css";
 import "@fontsource/nunito/400.css";

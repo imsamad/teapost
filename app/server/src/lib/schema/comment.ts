@@ -1,43 +1,35 @@
 import { object, string } from "yup";
-import { trimExtra } from "../utils";
-import { isValidObjectId } from "mongoose";
-
-const reqParams = (label: string) =>
-  object({
-    [label]: string()
-      .label(label)
-      .required(`${label} is required`)
-      .test(label, `${label} is invalid.`, (val) => isValidObjectId(val)),
-  });
+import { strSchema } from "../utils";
 
 export const replyToSchema = object({
   body: object({
-    text: string()
-      .typeError("Text is required")
-      .label("text")
-      .test("text", "Empty is not allowed", (val: any) => trimExtra(val, 1)),
+    text: strSchema("text", { isRequired: true, min: 1 }),
   }),
-  params: reqParams("commentId"),
+  params: object({
+    commentId: strSchema("commentId", { isMongoId: true, isRequired: true }),
+  }),
 });
 
 export const reqStoryParams = object({
-  params: reqParams("storyId"),
+  params: object({
+    storyId: strSchema("storyId", { isMongoId: true, isRequired: true }),
+  }),
 });
+
 export const reqCommentParams = object({
-  params: reqParams("commentId"),
+  params: object({
+    commentId: strSchema("commentId", { isMongoId: true, isRequired: true }),
+  }),
 });
 export const reqPrimaryIdSchema = object({
-  params: reqParams("primaryId"),
+  params: object({
+    primaryId: strSchema("primaryId", { isMongoId: true, isRequired: true }),
+  }),
 });
 
 export const likeOrDislikeSchema = object({
   params: object({
-    commentId: string()
-      .label("commentId")
-      .required(`commentId is required`)
-      .test("commentId", `commentId is invalid.`, (val) =>
-        isValidObjectId(val)
-      ),
+    commentId: strSchema("commentId", { isMongoId: true, isRequired: true }),
     type: string()
       .label("type")
       .required("Type is required")

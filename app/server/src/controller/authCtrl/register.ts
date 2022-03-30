@@ -30,7 +30,6 @@ const register = asyncHandler(
           })
         );
     }
-
     const user = await User.create({
       username,
       email,

@@ -3,24 +3,7 @@ import { isValidObjectId } from "mongoose";
 import YupPassword from "yup-password";
 YupPassword(yup); // extend yup
 
-import { trimExtra, typeOf } from "../utils";
-
-const usernameField = yup
-  .string()
-  .typeError("username must be string")
-  .label("username")
-  .required("Username is required")
-  .test("username", "Username must be above 4 chars.", (val) =>
-    trimExtra(val, 4)
-  );
-const fullNameField = yup
-  .string()
-  .typeError("Full Name must be string")
-  .label("fullName")
-  .required("Full Name is required")
-  .test("fullName", "Full Name must be above 4 chars.", (val) =>
-    trimExtra(val, 4)
-  );
+import { strSchema, trimExtra, typeOf } from "../utils";
 
 const emailField = yup
   .string()
@@ -44,8 +27,12 @@ const pwdConfirmField = yup
 
 export const registerSchema = yup.object({
   body: yup.object({
-    username: usernameField,
-    fullName: fullNameField,
+    username: strSchema("username", { isRequired: true, min: 4 }),
+    fullName: strSchema("fullName", {
+      isRequired: true,
+      min: 4,
+      prettyLabel: "Full Name",
+    }),
     email: emailField,
     password: pwdField,
     passwordConfirmation: pwdConfirmField,
@@ -55,35 +42,36 @@ export const registerSchema = yup.object({
 export const logInSchema = yup.object({
   body: yup.object({
     email: emailField,
-    password: yup.string().required("Password is required").label("password"),
+    password: strSchema("password", {
+      isRequired: true,
+      prettyLabel: "Password",
+    }),
   }),
 });
 
 export const verifyEmailSchema = yup.object({
   query: yup.object({
-    token: yup.string().required("Mallicious request.").label("data"),
+    token: strSchema("token", { isRequired: true }),
   }),
 });
 
 export const followSchema = yup.object({
   params: yup.object({
-    authorId: yup
-      .string()
-      .label("authorId")
-      .required("Author is required")
-      .typeError("Author Id must be string")
-      .test("authorId", "Author is not valid.", (val) => isValidObjectId(val)),
+    authorId: strSchema("authorId", {
+      isRequired: true,
+      isMongoId: true,
+      prettyLabel: "Author Id",
+    }),
   }),
 });
 
 export const addToCollectionSchema = yup.object({
   params: yup.object({
-    storyId: yup
-      .string()
-      .required("Story Id is required")
-      .label("storyId")
-      .typeError("StoryId must valid string")
-      .test("storyId", "Story is not valid", (val) => isValidObjectId(val)),
+    storyId: strSchema("storyId", {
+      isRequired: true,
+      isMongoId: true,
+      prettyLabel: "Story Id",
+    }),
   }),
   body: yup
     .object()

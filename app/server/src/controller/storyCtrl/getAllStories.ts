@@ -30,6 +30,7 @@ const getAllStories = asyncHandler(
         select: "title",
       },
     ]);
+    if (req.query.nocontent == "true") stories.select("-content");
     // @ts-ignore
     if (req.query?.select?.includes("comments")) {
       stories.populate({
@@ -63,6 +64,22 @@ const getAllStories = asyncHandler(
     }
 
     stories = await stories.lean();
+    if (req.query.cutcontent) {
+      stories = stories.map((story: any) => {
+        console.log("content ", story.content.length);
+        return {
+          ...story,
+
+          content: story.content.substr(
+            0, // @ts-ignore
+            parseInt(req.query.cutcontent, 10)
+          ),
+        };
+      });
+      console.log("req.query ", req.query);
+    } else if (req.query.onlycontent) {
+      stories = stories.map(({ content }: any) => ({ content }));
+    }
     return res.status(200).json({
       status: "ok",
       stories,

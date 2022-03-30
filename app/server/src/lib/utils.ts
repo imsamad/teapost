@@ -7,7 +7,8 @@ import { AnySchema } from "yup";
 import { convert } from "html-to-text";
 import { UserDocument } from "../models/User";
 import { signJwt } from "./jwt";
-
+import * as yup from "yup";
+import { isValidObjectId } from "mongoose";
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
@@ -49,15 +50,16 @@ export const typeOf = (
 };
 
 export const trimExtra = (
-  str: string | any,
-  length: number,
-  join = " "
+  str: string,
+  minLength: number,
+  maxLength = Infinity,
+  joinBy = " "
 ): boolean => {
   if (!str) return false;
   let splitted = str.split(/\s/g);
   let filteredVoidStr = splitted.filter((val: string) => val !== "");
-  let joined = filteredVoidStr.join(join);
-  return joined.length >= length ? true : false;
+  let joined = filteredVoidStr.join(joinBy);
+  return joined.length >= minLength && joined.length < maxLength ? true : false;
 };
 
 export type ErrorResponseType = {
@@ -194,4 +196,97 @@ export const sendTokens = async (
   };
 
   return res.status(statusCode).json(resData);
+};
+
+export const strSchema = (
+  label: string,
+  {
+    isRequired = false,
+    prettyLabel,
+    min = 1,
+    max = Infinity,
+    isMongoId,
+  }: Partial<{
+    isRequired: boolean;
+    prettyLabel: string;
+    min: number;
+    max: number;
+    isMongoId: boolean;
+  }>
+) => {
+  let schema = yup
+    .string()
+    .typeError(`${prettyLabel || label} must be string type.`)
+    .label(label)
+    .trim();
+  if (isRequired) {
+    let lenMsg = `${prettyLabel || label} must `;
+    if (max != Infinity) {
+      lenMsg += ` have more than ${min} & less than oor equal to ${max} characters.`;
+    } else {
+      lenMsg += ` have more than or equal to ${min} characters.`;
+    }
+    schema.required(`${prettyLabel || label} is required`);
+    if (isMongoId)
+      schema.test(label, `${prettyLabel || label} must be valid id`, (val) => {
+        return isValidObjectId(val);
+      });
+    else
+      schema.test(label, lenMsg, (val: any) => {
+        return trimExtra(val, min, max);
+      });
+  }
+
+  return schema;
+};
+
+export const strArrSchema = (
+  label: string,
+  {
+    isRequired = false,
+    prettyLabel,
+    min,
+    max,
+    isMongoId,
+    strMin,
+    strMax,
+  }: Partial<{
+    isRequired: boolean;
+    prettyLabel: string;
+    min: number;
+    max: number;
+    isMongoId: boolean;
+    strMin: number;
+    strMax: number;
+  }>
+) => {
+  let lenMsg = "";
+  if (isMongoId) {
+    lenMsg = `${prettyLabel || label} must be valid ids.`;
+  } else if (strMax) {
+    lenMsg += `${label} must have less than or equal to ${strMax} characters`;
+  } else if (strMin) {
+    lenMsg += `${label} must have more than or equal to ${strMin} characters`;
+  }
+
+  let schema = yup
+    .array()
+    .label(label)
+    .typeError(`${prettyLabel || label} must be array`)
+    .test(label, lenMsg, (val: any) => {
+      if (!val && !isRequired) return true;
+      else if (isMongoId) return val?.every((val: any) => isValidObjectId(val));
+      else if (strMin && strMax)
+        return val.every((val: any) => trimExtra(val, strMin, strMax));
+      else if (strMin)
+        return val.every((val: any) => trimExtra(val, strMin, Infinity));
+      else if (strMax)
+        return val.every((val: any) => trimExtra(val, 0, strMax));
+    });
+
+  min && schema.min(min);
+  max && schema.max(max);
+  isRequired && schema.required(`${prettyLabel || label} is required`);
+
+  return schema;
 };

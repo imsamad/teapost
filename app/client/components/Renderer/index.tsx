@@ -1,11 +1,14 @@
 import { useColorModeValue } from "@chakra-ui/react";
-import Head from "next/head";
 
 const Render = ({ value }: { value: string }) => {
   const color = useColorModeValue("#1A202C", "#FFFFFFEB");
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: value }} className="content" />
+      <div
+        dangerouslySetInnerHTML={{ __html: value }}
+        className="content"
+        style={{ border: "0px solid green" }}
+      />
       <style global jsx>{`
         .content {
           font-size: 1.5rem;

@@ -1,17 +1,9 @@
 import * as yup from "yup";
-import { trimExtra } from "../utils";
+import { strSchema } from "../utils";
 
 import YupPassword from "yup-password";
 
 YupPassword(yup); // extend yup
-
-const usernameField = yup
-  .string()
-  .trim()
-  .required("Username is required")
-  .test("username", "Username must be above 4 chars", (val) =>
-    trimExtra(val, 4)
-  );
 
 const emailField = yup
   .string()
@@ -29,45 +21,34 @@ const pwdConfirmField = yup
   .string()
   .oneOf([yup.ref("password"), null], "Passwords must match");
 
-const registerSchema = yup.object({
-  username: usernameField,
-  email: emailField,
-  password: pwdField,
-  passwordConfirmation: pwdConfirmField,
-});
-const signInSchema = yup.object({
-  email: emailField,
-  password: yup.string().required("Password is required"),
-});
-
-const logInSchema = yup.object({
+const authSchema = yup.object({
   isRegister: yup
     .boolean()
     .required("Specify is register or login required")
     .typeError("Non-boolean not allowed"),
+  isForgetPassword: yup
+    .boolean()
+    .required("Specify is isForgetPassword")
+    .typeError("Non-boolean not allowed"),
+
+  isForgetEmail: yup
+    .boolean()
+    .required("Specify is isForgetPassword")
+    .typeError("Non-boolean not allowed"),
+
   username: yup
     .string()
     .trim()
     .when("isRegister", {
       is: (isRegister: boolean) => isRegister,
-      then: yup
-        .string()
-        .required("Username is required")
-        .test("Username", "Username must be above 4 chars", (val) =>
-          trimExtra(val, 4)
-        ),
+      then: strSchema("username", { isRequired: true, min: 4 }),
     }),
   fullName: yup
     .string()
     .trim()
     .when("isRegister", {
       is: (isRegister: boolean) => isRegister,
-      then: yup
-        .string()
-        .required("Full Name is required")
-        .test("fullName", "Full Name must be above 5 chars", (val) =>
-          trimExtra(val, 5)
-        ),
+      then: strSchema("username", { isRequired: true, min: 5 }),
     }),
   email: emailField,
   password: pwdField,
@@ -77,4 +58,4 @@ const logInSchema = yup.object({
   }),
 });
 
-export { registerSchema, signInSchema, logInSchema };
+export { authSchema };

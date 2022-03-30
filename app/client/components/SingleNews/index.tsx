@@ -14,7 +14,7 @@ import AuthorCard from "@compo/AuthorCard";
 import StoryActions from "@compo/StoryCard/StoryActions";
 import UserType from "@lib/types/UserType";
 import { readAbleDate } from "@lib/utils";
-
+import Content from "./Content";
 const SingleStory = ({
   story,
   author,
@@ -27,6 +27,9 @@ const SingleStory = ({
       <Stack spacing={4}>
         <AuthorCard author={author} displayStats={false} />
         <Heading size="xl">{story?.title}</Heading>
+        <Heading size="md" color="gray.300">
+          {story?.subtitle}
+        </Heading>
         <HStack fontWeight={400} wordBreak="keep-all">
           <Text wordBreak="keep-all">
             {readAbleDate(story.updatedAt, true)}
@@ -37,7 +40,6 @@ const SingleStory = ({
         <AspectRatio maxW="full" ratio={4 / 3}>
           <Image src={story.titleImage} alt={story.title} />
         </AspectRatio>
-
         <StoryActions
           storyId={story._id}
           like={story?.meta?.likedBy?.length || 0}
@@ -45,8 +47,7 @@ const SingleStory = ({
           displayFull={true}
           btnSize="sm"
         />
-
-        <Render value={story.content} />
+        <Content storyId={story._id} />
       </Stack>
     </Container>
   );

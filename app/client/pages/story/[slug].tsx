@@ -29,7 +29,7 @@ export const getStaticProps = async ({ params }: any) => {
   const {
     data: { stories },
   } = await axios.get<{ stories: StoryType[] }>(
-    `${apiUrl}/stories?slug=${params.slug}`
+    `${apiUrl}/stories?slug=${params.slug}&nocontent=true`
   );
 
   return {

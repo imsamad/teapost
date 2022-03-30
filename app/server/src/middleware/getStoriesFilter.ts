@@ -27,7 +27,7 @@ export const filter = async (
   }> = {};
 
   let allowedFields: { key: string; type: string }[] = [
-    { key: "id", type: "objIdArr" },
+    { key: "ids", type: "objIdArr" },
 
     { key: "title", type: "strPattern" },
     { key: "subtitle", type: "strPattern" },
@@ -47,7 +47,6 @@ export const filter = async (
     } else if (type == "objIdArr" && typeOf(req.query?.[key], "string")) {
       // @ts-ignore
       const arr: string[] = req.query?.[key]?.split(",");
-      console.log("arrarr ", isArrOfMongooseObjectId(arr));
       if (arr && isArrOfMongooseObjectId(arr)) {
         // @ts-ignore
         reqQuery._id = {};
@@ -173,7 +172,7 @@ export const filter = async (
     else if (dislike?.lt > 0) query[`dislikedBy.${like.lt - 1}`] = notExist;
     else if (dislike?.lte > 0)
       query[`dislikedBy.${Number(like.lte)}`] = notExist;
-    console.log("query ", query);
+
     if (Object.keys(query).length)
       likeOrDislike = StoryMeta.find(query).select("_id").lean();
   }
@@ -200,10 +199,16 @@ export const filter = async (
 
   //   @ts-ignore
   const selectComments = req.query?.select?.includes("comments");
+
+  const nocontent = req.query?.nocontent! == "true";
+  const cutcontent = req.query?.cutcontent! || false;
+  const onlycontent = req.query?.onlycontent! == "true";
   req.query = {};
   //   @ts-ignore
   req.query = { ...reqQuery, ...(await getIDs()) };
   if (selectComments) req.query.select = "comments";
-  console.log("query ", req.query);
+  nocontent && (req.query.nocontent = "true");
+  onlycontent && (req.query.onlycontent = "true");
+  cutcontent && (req.query.cutcontent = cutcontent);
   next();
 };

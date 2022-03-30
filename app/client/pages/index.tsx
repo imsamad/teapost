@@ -10,7 +10,7 @@ const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export const getStaticProps = async () => {
   const { data } = await axios.get<{ stories: storyType[] }>(
-    `${process.env.API_URL}/stories`
+    `${process.env.API_URL}/stories?nocontent=true`
   );
 
   return {

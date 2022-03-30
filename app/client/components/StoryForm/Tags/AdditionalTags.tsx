@@ -27,7 +27,7 @@ const AdditionalTags = ({
 
   const handleAdd = () => {
     const val: string = ref?.current?.value!;
-    if (val.length < 4 || !trimExtra(val, 4, "")) {
+    if (val.length < 4 || !trimExtra(val, 4)) {
       setTouched(true, false);
       setError("Must be more then 4");
     } else if (value.includes(val) || tagsExisted?.includes(val)) {

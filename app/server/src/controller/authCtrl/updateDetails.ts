@@ -29,7 +29,6 @@ const updateDetails = asyncHandler(
         if (!currentPassword) return resolve(true);
         const isPwdMatch = await user.matchPassword(currentPassword);
         if (isPwdMatch) {
-          console.log("isPwdMatch ", isPwdMatch);
           user.password = newPassword;
           resolve(true);
         } else {

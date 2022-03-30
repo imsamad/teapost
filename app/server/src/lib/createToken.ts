@@ -39,6 +39,7 @@ const createToken = async (
     });
     return { redirectUrl, token, message: messages[type] };
   } catch (err: any) {
+    console.log("error from create token ", err);
     // @ts-ignore
     token && (await token.delete());
     return err;

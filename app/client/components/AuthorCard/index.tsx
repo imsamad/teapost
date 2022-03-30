@@ -24,19 +24,20 @@ const Index = ({
     setNumOfFollowers(
       hasBeenFollowing ? numOfFollowers - 1 : numOfFollowers + 1
     );
+
   return (
     <>
       <Flex>
         <Avatar
           size="xl"
-          name={author?.profile.fullName}
-          src={author?.profile.profilePic}
+          name={author.profile.fullName}
+          src={author.profile?.profilePic}
         />
         <Box border="0px" pl="8">
           <HStack mb="2" border="0px">
             <Stack justifyContent="center" pr="8px">
               <Text size="xl" fontWeight={700} lineHeight={1}>
-                {author?.profile.fullName}
+                {author.profile.fullName}
               </Text>
 
               <Text
@@ -46,27 +47,25 @@ const Index = ({
                 lineHeight={1}
                 fontStyle="italic"
               >
-                @{author?.username}
+                @{author.username}
               </Text>
             </Stack>
             <FollowAuthor author={author} isFullBtn followCB={followCB} />
           </HStack>
           <Text fontSize="md" fontWeight={300}>
-            {author?.profile.tagLines.map((tagLine, index) => (
-              <React.Fragment key={tagLine}>
-                {`    ${tagLine}  ${
-                  author?.profile?.tagLines?.length - 1 > index ? "|" : ""
-                }`}
-              </React.Fragment>
-            ))}
+            {author?.profile?.tagLines?.map(
+              (tagLine, index) =>
+                index <= 2 && (
+                  <React.Fragment key={tagLine}>
+                    {`    ${tagLine}  ${index != 2 ? "|" : ""}`}
+                  </React.Fragment>
+                )
+            )}
           </Text>
         </Box>
       </Flex>
       {displayStats && numOfStories && (
-        <Stats
-          numOfStories={numOfStories || 0}
-          numOfFollowers={numOfFollowers}
-        />
+        <Stats numOfStories={numOfStories} numOfFollowers={numOfFollowers} />
       )}
     </>
   );

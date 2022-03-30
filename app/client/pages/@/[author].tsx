@@ -13,6 +13,9 @@ const Index = ({
   stories: StoryType[];
   author: UserType;
 }) => {
+  if (!author) {
+    return "Skeleton";
+  }
   return (
     <Container maxW="container.md" p="0" pt="4">
       <Stack spacing={4}>
@@ -56,7 +59,7 @@ export const getStaticProps = async ({ params }: any) => {
   const {
     data: { stories, authors },
   } = await axios.get<{ stories: StoryType[]; authors: UserType[] }>(
-    `${apiUrl}/stories?authors=${params.author}`
+    `${apiUrl}/stories?authors=${params.author}&nocontent=true`
   );
 
   return {

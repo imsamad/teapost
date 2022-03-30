@@ -46,7 +46,50 @@ const Footer = () => {
       </Link>
 
       <Spacer />
-      <MyLink href="/auth/register">Forgot Password</MyLink>
+      <Link
+        as="button"
+        type="button"
+        onClick={() => {
+          setFieldValue("isRegister", !isRegister, false);
+          setErrors({});
+          setStatus(null);
+        }}
+        _visited={{
+          outline: "none",
+          color: "blue.400",
+        }}
+        _focus={{
+          outline: "none",
+          color: "blue.300",
+        }}
+        _hover={{
+          color: "blue.500",
+        }}
+      >
+        {isRegister ? "Log In" : "Register"}
+      </Link>
+      <Link
+        as="button"
+        type="button"
+        onClick={() => {
+          setFieldValue("isRegister", !isRegister, false);
+          setErrors({});
+          setStatus(null);
+        }}
+        _visited={{
+          outline: "none",
+          color: "blue.400",
+        }}
+        _focus={{
+          outline: "none",
+          color: "blue.300",
+        }}
+        _hover={{
+          color: "blue.500",
+        }}
+      >
+        {isRegister ? "Log In" : "Register"}
+      </Link>
     </HStack>
   );
 };

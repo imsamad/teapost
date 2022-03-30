@@ -1,6 +1,6 @@
 import { useDisclosure, useToast } from "@chakra-ui/react";
-import { createContext, useContext, useState } from "react";
-import Router from "next/router";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { deleteCookies, getCookies, setCookies } from "@lib/cookies";
 import LoginModal from "../LogIn/LogInModal";
@@ -24,6 +24,7 @@ const AuthCtx = createContext<AuthCtxType>({
 });
 
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
   const [user, setUserState] = useState<any>(getCookies());
 
   const setUser = (val: Partial<AuthUser>) => {
@@ -59,13 +60,17 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = (redirect?: string) => {
     deleteCookies().finally(() => {
       setUserState(null);
-      if (redirect) Router.push("/auth");
+      if (redirect && router.pathname.startsWith("/me")) router.push("/auth");
     });
   };
-  // useEffect(() => {
-  //   if (!user) deleteCookies();
-  //   else setCookies(user);
-  // }, [user]);
+
+  useEffect(() => {
+    //   if (!user) deleteCookies();
+    //   else setCookies(user);
+    if (router.pathname.startsWith("/me") && !user?._id)
+      router.replace(`/auth?=${router.asPath}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <AuthCtx.Provider value={{ user, setUser, login, openLoginToast, logout }}>

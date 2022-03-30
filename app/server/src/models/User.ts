@@ -71,7 +71,6 @@ userSchema.post("save", function (error: any, doc: UserDocument, next: any) {
 
 userSchema.pre("save", async function (next) {
   const user = this as UserDocument;
-  console.log("useruser ", user);
   if (!user.isModified("password")) return next();
 
   const saltFactor: number = Number(process.env.SALT_FACTOR) || 10;
@@ -88,7 +87,6 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.matchPassword = async function (
   enterPassword: UserDocument["password"]
 ) {
-  console.log("enterPassword ", enterPassword);
   return await bcrypt.compare(enterPassword, this.password);
 };
 userSchema.virtual("profile", {

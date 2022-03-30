@@ -1,8 +1,12 @@
 import { Box, Divider, Flex, Container } from "@chakra-ui/react";
-
+import dynamic from "next/dynamic";
 import NavBar from "../NavBar";
 import Footer from "../Footer";
-import Context from "../Context";
+const Context = dynamic(() => import("../Context"), {
+  ssr: false,
+  // loading: () => <>Loading</>,
+});
+// import Context from "../Context";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -22,7 +26,13 @@ const Index = ({ children }: LayoutProps) => {
           <NavBar />
           <Divider my={2} />
 
-          <Box flexGrow="1" as="main" minH="75vh">
+          <Box
+            flexGrow="1"
+            as="main"
+            minH="75vh"
+            // border="1px solid red"
+            // position="relative"
+          >
             {children}
           </Box>
           <Footer />

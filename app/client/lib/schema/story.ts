@@ -19,13 +19,13 @@ const stringSchema = (label: string, minLength: number, maxLength: number) => {
 };
 
 export const isAbleToPublished = object({
-  title: stringSchema("title", 10, 90),
+  title: stringSchema("title", 10, Infinity),
   titleImage: string()
     .label("titleImage")
     .required("TitleImage is required.")
     .url("TitleImage must be url")
     .typeError("TitleImage must be url"),
-  subtitle: stringSchema("subtitle", 10, 175),
+  subtitle: stringSchema("subtitle", 20, Infinity),
   slug: string()
     .required("Slug is required to create a story")
     .label("slug")
@@ -36,5 +36,5 @@ export const isAbleToPublished = object({
     .label("tags")
     .typeError("tags must be array type"),
   content: stringSchema("content", 2200, Infinity),
-  keywords: stringSchema("Keywords", 10, 150),
+  keywords: stringSchema("Keywords", 10, Infinity),
 });

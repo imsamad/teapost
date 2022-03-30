@@ -32,10 +32,11 @@ const tokenSchema = new Schema(
   }
 );
 
-// tokenSchema.index(
-//   { createdAt: 1 },
-//   { expireAfterSeconds: Number(process.env.EXPIRE_TOKEN!) }
-// );
+tokenSchema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: parseInt(process.env.TOKEN_EXPIRE!, 10) }
+);
+// tokenSchema.on();
 const Token = mongoose.model<TokenDocument>("Token", tokenSchema);
 
 export default Token;

@@ -2,7 +2,7 @@ import { Button, useToast } from "@chakra-ui/react";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useRouter } from "next/router";
 
-import { logInSchema } from "@lib/schema/auth";
+import { authSchema } from "@lib/schema/auth";
 import { signUp } from "@lib/api/authApi";
 import { typeOf } from "@lib/utils";
 import useUser from "@lib/useUser";
@@ -17,6 +17,8 @@ import { useAuthCtx } from "@compo/Context";
 
 export type AuthType = {
   fullName: string;
+  isForgetPassword: boolean;
+  isForgetEmail: boolean;
   isRegister: boolean;
   username: string;
   email: string;
@@ -94,6 +96,8 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   return (
     <Formik
       initialValues={{
+        isForgetPassword: false,
+        isForgetEmail: false,
         fullName: "Abdus Samad",
         isRegister: false,
         username: "imsamad",
@@ -101,7 +105,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
         password: "Password@1206",
         passwordConfirmation: "Password@1206",
       }}
-      validationSchema={logInSchema}
+      validationSchema={authSchema}
       onSubmit={handleSubmit}
     >
       {(formikProps: FormikProps<AuthType>) => {

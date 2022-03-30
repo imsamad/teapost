@@ -7,7 +7,7 @@ import addToCollection from "./addToCollection";
 import changeEmail from "./changeEmail";
 import updateDetails from "./updateDetails";
 import forgotPassword from "./forgotPassword";
-import forgetEmail from "./forgetEmail";
+import forgotIdentifier from "./forgotIdentifier";
 import { resetPaswordPage, resetPasword } from "./resetPasword";
 
 export {
@@ -22,5 +22,5 @@ export {
   forgotPassword,
   changeEmail,
   updateDetails,
-  forgetEmail,
+  forgotIdentifier,
 };

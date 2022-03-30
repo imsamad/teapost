@@ -22,40 +22,68 @@ const pwdConfirmField = yup
   .oneOf([yup.ref("password"), null], "Passwords must match");
 
 const authSchema = yup.object({
-  isRegister: yup
-    .boolean()
-    .required("Specify is register or login required")
-    .typeError("Non-boolean not allowed"),
-  isForgetPassword: yup
-    .boolean()
-    .required("Specify is isForgetPassword")
-    .typeError("Non-boolean not allowed"),
-
-  isForgetEmail: yup
-    .boolean()
-    .required("Specify is isForgetPassword")
-    .typeError("Non-boolean not allowed"),
-
-  username: yup
+  type: yup
     .string()
-    .trim()
-    .when("isRegister", {
-      is: (isRegister: boolean) => isRegister,
-      then: strSchema("username", { isRequired: true, min: 4 }),
-    }),
+    .required("type is required")
+    .oneOf(["logIn", "register", "forgotPassword", "forgotIdentifier"]),
+
   fullName: yup
     .string()
     .trim()
-    .when("isRegister", {
-      is: (isRegister: boolean) => isRegister,
-      then: strSchema("username", { isRequired: true, min: 5 }),
+    .label("Full Name")
+    .when("type", {
+      is: (type: string) => type == "register",
+      then: yup.string().trim().required().min(5),
     }),
-  email: emailField,
-  password: pwdField,
-  passwordConfirmation: yup.string().when("isRegister", {
-    is: (isRegister: boolean) => isRegister,
+  username: yup
+    .string()
+    .trim()
+    .label("Unique username")
+    .when("type", {
+      is: (type: string) => type == "register",
+      then: yup.string().trim().required().min(5),
+    }),
+  email: yup.string().when("type", {
+    is: (type: string) => ["register"].includes(type),
+    then: emailField,
+  }),
+  confirmPassword: yup.string().when("type", {
+    is: (type: string) => type == "register",
     then: pwdConfirmField,
   }),
+
+  password: yup.string().when("type", {
+    is: (type: string) => ["register", "login"].includes(type),
+    then: pwdField,
+  }),
+
+  identifier: yup
+    .string()
+    .trim()
+    .label("Identifier")
+    .when("type", {
+      is: (type: string) => {
+        return type == "login" || type == "forgotPassword";
+      },
+      then: yup.string().trim().required(),
+    }),
+
+  identifierInitials: yup
+    .string()
+    .trim()
+    .label("identifierInitials")
+    .when("type", {
+      is: (type: string) => type == "forgotIdentifiers",
+      then: yup.string().trim().required(),
+    }),
 });
 
 export { authSchema };
+
+/**
+ * Register => fullName, username, email, pwd, pwdConfirm
+ * Login => identifier, pwd
+ * Forgot Pwd => email
+ * Forgot email => initials
+ *
+ */

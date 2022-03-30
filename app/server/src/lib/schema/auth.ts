@@ -41,7 +41,10 @@ export const registerSchema = yup.object({
 
 export const logInSchema = yup.object({
   body: yup.object({
-    email: emailField,
+    identifier: strSchema("identifier", {
+      isRequired: true,
+      prettyLabel: "Username or email is required.",
+    }),
     password: strSchema("password", {
       isRequired: true,
       prettyLabel: "Password",

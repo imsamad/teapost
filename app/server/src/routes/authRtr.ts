@@ -13,7 +13,7 @@ import {
   resetPasword,
   changeEmail,
   updateDetails,
-  forgetEmail,
+  forgotIdentifier,
 } from "../controller/authCtrl";
 
 import { protect } from "../middleware/auth";
@@ -35,7 +35,8 @@ router
   .get(resetPaswordPage)
   .put(resetPasword);
 
-router.get("/forgetemail", forgetEmail);
+router.post("/forgotidentifier", forgotIdentifier);
+
 router.use(protect);
 router.get("/me", getMe);
 router.put("/changeemail", protect, changeEmail);

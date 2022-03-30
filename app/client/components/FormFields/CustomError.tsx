@@ -2,10 +2,18 @@ import { Box, Collapse, Text } from "@chakra-ui/react";
 
 import { typeOf } from "../../lib/utils";
 
-const Error = ({ errors, isError }: { isError: boolean; errors: any }) => {
+const Error = ({
+  errors,
+  isError,
+  color,
+}: {
+  isError: boolean;
+  errors: any;
+  color?: string;
+}) => {
   return (
     <Collapse in={isError} animateOpacity>
-      <Box color="red.500" my="1" fontSize="md">
+      <Box color={color || "red.500"} my="1" fontSize="md">
         {isError && typeOf(errors, "object") ? (
           // @ts-ignore
           <RenderObjectErrors errors={errors} />

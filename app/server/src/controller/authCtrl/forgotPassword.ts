@@ -10,13 +10,26 @@ import sendEmail from "../../lib/sendEmail";
 
 const forgotPassword = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const identifier: Partial<{ email: string; username: string }> = {};
+    const { identifier } = req.body;
+    const filter =
+      process.env.ONLY_VERIFIED_ALLOWED == "true"
+        ? {
+            isEmailVerified: true,
+            isAuthorised: true,
+          }
+        : {};
 
-    req.body.email && (identifier.email = req.body.email);
-    req.body.username && (identifier.username = req.body.username);
+    let user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }],
+      ...filter,
+    });
 
-    const user = await User.findOne(identifier);
-    if (!user) return next(ErrorResponse(400, "No resource found"));
+    if (!user)
+      return next(
+        ErrorResponse(400, {
+          identifier: "Identifier not associated with any acccount.",
+        })
+      );
 
     const { redirectUrl, token, message } = await createToken(
       "resetpassword",

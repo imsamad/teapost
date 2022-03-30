@@ -3,7 +3,7 @@ import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { useRouter } from "next/router";
 
 import { authSchema } from "@lib/schema/auth";
-import { signUp } from "@lib/api/authApi";
+import { submitAuth, AuthType } from "@lib/api/authApi";
 import { typeOf } from "@lib/utils";
 import useUser from "@lib/useUser";
 
@@ -14,17 +14,6 @@ import LoginWrapper from "./LoginWrapper";
 import FormStatus from "./FormStatus";
 
 import { useAuthCtx } from "@compo/Context";
-
-export type AuthType = {
-  fullName: string;
-  isForgetPassword: boolean;
-  isForgetEmail: boolean;
-  isRegister: boolean;
-  username: string;
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-};
 
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
@@ -50,37 +39,44 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   ) => {
     action.setStatus(false);
     action.setSubmitting(true);
-
     try {
-      const { user, redirectUrl, message, status }: any = await signUp(values);
+      const { user, redirectUrl, message, matchedIdentifiers, status } =
+        await submitAuth(values);
 
-      // if registering user , it will api payload send back {redirectUrl Or message}>
-      if (redirectUrl || message) {
-        // show status in header of form
-        action.setStatus({
-          status,
-          redirectUrl,
-          message,
-        });
-      } else if (user) {
-        // set cookies
+      if (values.type == "logIn" && user) {
         setCookies(user);
         action.resetForm();
+        if (login.isOpen) {
+          login.onClose();
+          toast({
+            title: `Successfully logged in`,
+            status: "success",
+            isClosable: true,
+            duration: 1000,
+          });
+        }
       }
-      // If login modal is open i.e logging in via modal
-      if (login.isOpen && !values.isRegister) {
-        login.onClose();
-        toast({
-          title: `Successfully logged in`,
-          status: "success",
-          isClosable: true,
-          duration: 1000,
+
+      // if registering user , it will api payload send back {redirectUrl Or message}>
+      else if (values.type == "register" || values.type == "forgotPassword") {
+        if (redirectUrl || message) {
+          // show status in header of form
+          action.setStatus({
+            status,
+            redirectUrl,
+            message,
+          });
+        }
+      } else {
+        action.setStatus({
+          status,
+          matchedIdentifiers,
         });
       }
+
       action.setSubmitting(false);
     } catch (error: any) {
       const { message, status } = error;
-
       if (typeOf(error, "string") || typeOf(error, "array")) {
         action.setStatus({
           status: status || "error",
@@ -96,14 +92,14 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   return (
     <Formik
       initialValues={{
-        isForgetPassword: false,
-        isForgetEmail: false,
+        type: "register",
         fullName: "Abdus Samad",
-        isRegister: false,
+        identifier: "",
         username: "imsamad",
         email: "imsamad@gmail.com",
         password: "Password@1206",
-        passwordConfirmation: "Password@1206",
+        confirmPassword: "Password@1206",
+        identifierInitials: "",
       }}
       validationSchema={authSchema}
       onSubmit={handleSubmit}
@@ -121,7 +117,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
                 colorScheme="blue"
                 size="sm"
               >
-                {formikProps.values.isRegister ? "Register" : "Log In"}
+                Submit
               </Button>
               <Footer />
             </LoginWrapper>

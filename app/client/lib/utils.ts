@@ -197,3 +197,12 @@ export const strArrSchema = (
 
   return schema;
 };
+export const spaceB4Capital = (str: string) =>
+  str.replace(/([A-Z])/g, " $1").trim();
+
+export const toPascalCase = (str: string, spaceBeforeCapital = true) => {
+  let tempStr = spaceBeforeCapital ? spaceB4Capital(str) : str;
+  return tempStr.replace(/(\w)(\w*)/g, function (g0, g1, g2) {
+    return g1.toUpperCase() + g2.toLowerCase();
+  });
+};

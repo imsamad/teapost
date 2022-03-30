@@ -20,6 +20,7 @@ type Props = {
   placeholder?: string | "Enter your password";
   helperText?: string;
   LeftAddOn?: string | React.ReactNode;
+  noLeftAddon?: boolean;
 };
 
 const TPPassword = ({
@@ -27,6 +28,7 @@ const TPPassword = ({
   placeholder,
   helperText,
   LeftAddOn,
+  noLeftAddon = false,
   label,
   ...rest
 }: Props) => {
@@ -39,9 +41,11 @@ const TPPassword = ({
           <FormControl isInvalid={isError}>
             {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
             <InputGroup>
-              <InputLeftAddon>
-                {LeftAddOn ? LeftAddOn : <PasswordIcon color="gray.300" />}
-              </InputLeftAddon>
+              {!noLeftAddon && (
+                <InputLeftAddon>
+                  {LeftAddOn ? LeftAddOn : <PasswordIcon color="gray.300" />}
+                </InputLeftAddon>
+              )}
               <Input
                 pr="4.5rem"
                 type={showPassword ? "text" : "password"}

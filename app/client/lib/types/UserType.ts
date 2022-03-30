@@ -16,7 +16,7 @@ interface UserType {
 
 export interface AuthUser
   extends Pick<UserType, "email" | "username" | "_id" | "role" | "createdAt"> {
-  accessToken?: string;
+  accessToken: string;
 }
 
 export default UserType;

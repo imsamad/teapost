@@ -1,41 +1,31 @@
-import { EmailIcon } from "@chakra-ui/icons";
+import { AuthType, formFields } from "@lib/api/authApi";
+import { toPascalCase } from "@lib/utils";
 import { useField } from "formik";
-import { FaUserAlt as UserIcon } from "react-icons/fa";
 
 import { TPInput, TPPassword } from "../../FormFields";
 
 const FormBody = () => {
-  const [, { value: isRegister }] = useField("isRegister");
+  const [, { value: type }] = useField<AuthType["type"]>("type");
   return (
     <>
-      {isRegister && (
-        <>
+      {formFields[type].map((field) => {
+        return field.startsWith("password") ? (
+          <TPPassword
+            label={toPascalCase(field)}
+            key={field}
+            name={field}
+            noLeftAddon={true}
+          />
+        ) : (
           <TPInput
-            name="fullName"
-            placeholder="Full Name"
+            label={toPascalCase(field)}
+            key={field}
+            name={field}
             // LeftAddOn={<user/>}
             // LeftAddOn={<UserIcon />}
           />
-          <TPInput
-            name="username"
-            placeholder="John Doe"
-            LeftAddOn={<UserIcon />}
-          />
-        </>
-      )}
-      <TPInput
-        name="email"
-        placeholder="johndoe@email.com"
-        LeftAddOn={<EmailIcon />}
-        isRequired={true}
-      />
-      <TPPassword name="password" />
-      {isRegister && (
-        <TPPassword
-          name="passwordConfirmation"
-          placeholder="Confirm Password"
-        />
-      )}
+        );
+      })}
     </>
   );
 };

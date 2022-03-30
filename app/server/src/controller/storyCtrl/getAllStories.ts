@@ -66,7 +66,6 @@ const getAllStories = asyncHandler(
     stories = await stories.lean();
     if (req.query.cutcontent) {
       stories = stories.map((story: any) => {
-        console.log("content ", story.content.length);
         return {
           ...story,
 
@@ -76,7 +75,6 @@ const getAllStories = asyncHandler(
           ),
         };
       });
-      console.log("req.query ", req.query);
     } else if (req.query.onlycontent) {
       stories = stories.map(({ content }: any) => ({ content }));
     }

@@ -1,21 +1,37 @@
+import { AuthUser } from "@lib/types/UserType";
 import axios from "../axios";
 
-export interface LogInFields {
-  isRegister: boolean;
+export const formFields = {
+  register: ["fullName", "username", "email", "password", "confirmPassword"],
+  logIn: ["identifier", "password"],
+  forgotPassword: ["identifier"],
+  forgotIdentifier: ["identifierInitials"],
+};
+
+export type AuthType = {
+  type: "logIn" | "register" | "forgotPassword" | "forgotIdentifier";
+  fullName: string;
+  username: string;
   email: string;
   password: string;
-}
+  confirmPassword: string;
+  identifier: string;
+  identifierInitials: string;
+};
 
-export interface UserRegisterFields extends LogInFields {
-  username: string;
-  passwordConfirmation: string;
-}
+export type AuthResponse = {
+  matchedIdentifiers: string[];
+  message: string | string[];
+  redirectUrl: string;
+  user: AuthUser;
+  status: "ok" | "error";
+};
 
-export const signUp = async (values: UserRegisterFields) => {
+export const submitAuth = async (values: Partial<AuthType>) => {
   try {
-    const apiUrl = values.isRegister ? `/auth/register` : `/auth/login`;
+    let endpoint = `/auth/${values.type?.toLowerCase()}`;
 
-    const { data } = await axios.post(apiUrl, values);
+    const { data } = await axios.post<Partial<AuthResponse>>(endpoint, values);
 
     return data;
   } catch (err: any) {

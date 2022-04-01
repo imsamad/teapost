@@ -4,20 +4,20 @@ import { useRouter } from "next/router";
 
 import { deleteCookies, getCookies, setCookies } from "@lib/cookies";
 import LoginModal from "../LogIn/LogInModal";
-import { AuthUser } from "@lib/types/UserType";
+import { AuthType } from "@lib/types/UserType";
 import CustomToast from "@compo/UI/customToast";
 
 type AuthCtxType = {
-  user: Partial<AuthUser>;
-  setUser: (props: Partial<AuthUser>) => void;
+  auth: Partial<AuthType>;
+  setAuth: (props: Partial<AuthType>, redirectTo?: string) => void;
   login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
   logout: (redirect?: string) => void;
   openLoginToast: () => void;
 };
 
 const AuthCtx = createContext<AuthCtxType>({
-  user: getCookies(),
-  setUser: () => {},
+  auth: getCookies(),
+  setAuth: () => {},
   logout: (redirect?: string) => {},
   openLoginToast: () => {},
   login: { isOpen: false, onOpen: () => {}, onClose: () => {} },
@@ -25,55 +25,65 @@ const AuthCtx = createContext<AuthCtxType>({
 
 const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const [user, setUserState] = useState<any>(getCookies());
-
-  const setUser = (val: Partial<AuthUser>) => {
-    if (!Object.keys(val).length)
-      deleteCookies().then(() => setUserState(null));
-    else {
-      /*
-       * Have to set cookies asyncronously , to make sure they have been set bcoz ,
-       * in useProfile() immediatley related profile would be fetched
-       */
+  /**
+   * Auth states ,set & delete <==> Login ,logout
+   ***********************************************/
+  const [auth, setAuthState] = useState<Partial<AuthType>>(getCookies());
+  const setAuth = (val: Partial<AuthType>, redirectTo?: string) => {
+    if (!Object.keys(val).length) {
+      deleteCookies().then(() => setAuthState({}));
+    } else {
       setCookies(val).finally(() => {
-        setUserState((pre: AuthUser) => ({ ...pre, ...val }));
+        setAuthState((pre) => ({ ...pre, ...val }));
+        if (router.pathname.startsWith("/auth") && !redirectTo)
+          redirectTo = "/me";
+
+        if (redirectTo) router.push(redirectTo);
       });
     }
   };
-
+  const logout = (redirect?: string) => {
+    deleteCookies().finally(() => {
+      setAuthState({});
+      if (redirect && router.pathname.startsWith("/me")) router.push("/auth");
+    });
+  };
+  /**
+   * Login Modal
+   *****************************/
   const { isOpen, onOpen, onClose } = useDisclosure();
   const login = {
     isOpen,
-    on: onOpen,
+    on: () => {
+      if (!router.pathname.startsWith("/auth")) onOpen();
+    },
     off: onClose,
-    onOpen,
+    onOpen: () => {
+      if (!router.pathname.startsWith("/auth")) onOpen();
+    },
     onClose,
   };
+  /**
+   * Custom Login Toast
+   ************************/
   const toast = useToast();
-
   const openLoginToast = () =>
     toast({
       duration: 2000,
       isClosable: true,
       render: CustomToast(onOpen),
     });
-  const logout = (redirect?: string) => {
-    deleteCookies().finally(() => {
-      setUserState(null);
-      if (redirect && router.pathname.startsWith("/me")) router.push("/auth");
-    });
-  };
 
   useEffect(() => {
     //   if (!user) deleteCookies();
     //   else setCookies(user);
-    if (router.pathname.startsWith("/me") && !user?._id)
+    if (router.pathname.startsWith("/me") && !auth?.user?._id)
       router.replace(`/auth?=${router.asPath}`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [auth]);
 
   return (
-    <AuthCtx.Provider value={{ user, setUser, login, openLoginToast, logout }}>
+    <AuthCtx.Provider value={{ auth, setAuth, login, openLoginToast, logout }}>
       <LoginModal isOpen={isOpen} onClose={onClose} />
       {children}
     </AuthCtx.Provider>

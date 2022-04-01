@@ -2,7 +2,7 @@ import { content } from "./content";
 import { readingTime } from "../../src/lib/utils";
 const stories = [
   {
-    _id: "6221becd44eaf2d6fc67b984",
+    // _id: "6221becd44eaf2d6fc67b984",
     slug: "mirqnqmtrrzltqs6_6gds",
     tags: ["6221bf0044eaf2d6fc67b995"],
     author: "6221be7444eaf2d6fc67b964",
@@ -18,7 +18,7 @@ const stories = [
     readingTime: readingTime(content),
   },
   {
-    _id: "6221bf3c44eaf2d6fc67b9c5",
+    // _id: "6221bf3c44eaf2d6fc67b9c5",
     slug: "mirqnqmtrrzltqs6_",
     tags: ["6221bf8144eaf2d6fc67b9ed"],
     author: "6221be7444eaf2d6fc67b964",
@@ -33,7 +33,7 @@ const stories = [
     keywords: "That aren’t just",
   },
   {
-    _id: "6221bfde44eaf2d6fc67ba2a",
+    // _id: "6221bfde44eaf2d6fc67ba2a",
     slug: "87mmwekellcu-nex4uec7",
     tags: ["6221c01544eaf2d6fc67ba46"],
     author: "6221be8f44eaf2d6fc67b96a",
@@ -48,7 +48,7 @@ const stories = [
     readingTime: readingTime(content),
   },
   {
-    _id: "6221c05d44eaf2d6fc67ba83",
+    // _id: "6221c05d44eaf2d6fc67ba83",
     slug: "87mmwekellc",
     tags: ["6221c0a144eaf2d6fc67baaa"],
     author: "6221be8f44eaf2d6fc67b96a",
@@ -64,7 +64,7 @@ const stories = [
     readingTime: readingTime(content),
   },
   {
-    _id: "6221c12244eaf2d6fc67baf1",
+    // _id: "6221c12244eaf2d6fc67baf1",
     slug: "pg6-epuyzisnstrgiyo1w",
     tags: ["6221c15c44eaf2d6fc67bb1b"],
     author: "6221be9844eaf2d6fc67b96f",
@@ -78,7 +78,7 @@ const stories = [
     readingTime: readingTime(content),
   },
   {
-    _id: "6221c1b244eaf2d6fc67bb48",
+    // _id: "6221c1b244eaf2d6fc67bb48",
     slug: "xydlq9duptxg64yhn8mtc",
     tags: ["6221c1ce44eaf2d6fc67bb5e"],
     author: "6221bea144eaf2d6fc67b974",
@@ -92,7 +92,7 @@ const stories = [
     readingTime: readingTime(content),
   },
   {
-    _id: "6221c22f44eaf2d6fc67bba3",
+    // _id: "6221c22f44eaf2d6fc67bba3",
     slug: "xydlq9duptxg6",
     tags: ["6221c26a44eaf2d6fc67bbc8"],
     author: "6221bea144eaf2d6fc67b974",

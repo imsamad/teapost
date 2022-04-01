@@ -4,8 +4,9 @@ import Story from "../../models/Story";
 import StoryHistory from "../../models/StoryHistory";
 
 // @desc      deleteStoryHistoryById
-// @route     DELETE /api/v1/storyhistory/:storyId/:historyId
-// @access    Auth,Admin,Public
+// @route     DELETE /api/v1/storyhistories/:storyId/:historyId
+// @route     DELETE /api/v1/storyhistories/:storyId => Delete all
+// @access    Auth,Admin
 
 export const deleteStoryHistoryById = ({ isAll = false }) =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

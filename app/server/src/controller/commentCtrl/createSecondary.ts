@@ -4,7 +4,7 @@ import Primary from "../../models/Comment/Primary";
 import Secondary from "../../models/Comment/Secondary";
 
 // @desc      Reply To Primary Comment
-// @route     GET /api/v1/comments/reply/to/primary/:primaryId
+// @route     GET /api/v1/comments/reply/primary/:primaryId
 // @access    Auth,Admin,Public
 
 // action => replyToPrimary => create Secondary Comment as response
@@ -14,12 +14,21 @@ const replyToPrimary = asyncHandler(
     if (!primaryComment) {
       return next(ErrorResponse(400, "Resource not found"));
     }
-    const reply = await Secondary.create({
-      // @ts-ignore
-      user: req.user._id,
-      text: req.body.text,
-      replyToPrimary: primaryComment._id,
-    });
+    const reply = (
+      await Secondary.create({
+        // @ts-ignore
+        user: req.user._id,
+        text: req.body.text,
+        primary: primaryComment._id,
+      })
+    ).populate([
+      { path: "meta" },
+      {
+        path: "user",
+        select: "email username",
+      },
+    ]);
+
     res.json({
       status: "ok",
       reply,

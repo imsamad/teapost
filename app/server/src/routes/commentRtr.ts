@@ -1,19 +1,18 @@
 import express, { Router } from "express";
 import {
   getSecondaries,
-  getStoryComment,
-  likeOrDislike,
-  replyToPrimary,
-  replyToSecondary,
+  getPrimaries,
+  createPrimary,
+  createSecondary,
   updateOrDeleteComment,
+  likeOrDislike,
+  replyToSecondary,
 } from "../controller/commentCtrl";
 
 import {
   likeOrDislikeSchema,
-  replyToSchema,
-  reqCommentParams,
-  reqPrimaryIdSchema,
-  reqStoryParams,
+  replySchema,
+  reqSingleParams,
 } from "../lib/schema/comment";
 
 import { protect } from "../middleware/auth";
@@ -22,24 +21,38 @@ import validateSchema from "../middleware/validateSchema";
 const router: Router = express();
 
 router
-  .route("/story/:storyId")
-  .get(validateSchema(reqStoryParams), getStoryComment);
+  .route("/primaries/:storyId")
+  .get(validateSchema(reqSingleParams("storyId")), getPrimaries)
+  .post(validateSchema(replySchema("storyId")), createPrimary)
+  .put(
+    validateSchema(replySchema("storyId")),
+    updateOrDeleteComment({ isPrimary: true, isDelete: false })
+  )
+  .delete(
+    validateSchema(reqSingleParams("storyId")),
+    updateOrDeleteComment({ isPrimary: true, isDelete: true })
+  );
 
-router.get(
-  "/replyof/:primaryId",
-  validateSchema(reqPrimaryIdSchema),
-  getSecondaries
-);
+router
+  .route("/secondaries/:primaryId")
+  .get(validateSchema(reqSingleParams("primaryId")), getSecondaries)
+  .post(validateSchema(replySchema("primaryId")), createSecondary)
+  .put(
+    validateSchema(replySchema("primaryId")),
+    updateOrDeleteComment({ isPrimary: false, isDelete: false })
+  )
+  .delete(
+    validateSchema(reqSingleParams("primaryId")),
+    updateOrDeleteComment({ isPrimary: false, isDelete: true })
+  );
 
 router.use(protect);
 
-router
-  .route("/reply/to/primary/:commentId")
-  .post(validateSchema(replyToSchema), replyToPrimary);
-
-router
-  .route("/reply/to/secondary/:commentId")
-  .post(validateSchema(replyToSchema), replyToSecondary);
+router.post(
+  "/reply/secondary/:commentId",
+  validateSchema(replySchema("commentId")),
+  replyToSecondary
+);
 
 router
   .route("/like/undo/:type/:commentId")
@@ -67,28 +80,6 @@ router
   .put(
     validateSchema(likeOrDislikeSchema),
     likeOrDislike({ isLike: false, undo: false })
-  );
-
-router
-  .route("/primary/:commentId")
-  .put(
-    validateSchema(replyToSchema),
-    updateOrDeleteComment({ isPrimary: true, isDelete: false })
-  )
-  .delete(
-    validateSchema(reqCommentParams),
-    updateOrDeleteComment({ isPrimary: true, isDelete: true })
-  );
-
-router
-  .route("/secondary/:commentId")
-  .put(
-    validateSchema(replyToSchema),
-    updateOrDeleteComment({ isPrimary: false, isDelete: false })
-  )
-  .delete(
-    validateSchema(reqCommentParams),
-    updateOrDeleteComment({ isPrimary: false, isDelete: true })
   );
 
 export default router;

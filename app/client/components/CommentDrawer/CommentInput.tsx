@@ -39,9 +39,9 @@ const AddComment = ({
   comment,
 }: InputProps) => {
   const [value, setValue] = useState<string>(comment?.editValue || "");
-  const { user, openLoginToast } = useAuthCtx();
+  const { auth, openLoginToast } = useAuthCtx();
   const handleReply = () => {
-    if (!user?._id) {
+    if (!auth?.user?._id) {
       openLoginToast();
       return;
     }
@@ -88,7 +88,6 @@ const AddComment = ({
             }}
           />
         </HStack>
-        {/* {value && ( */}
         <Collapse in={Boolean(value) || Boolean(replyBadge)}>
           <HStack justifyContent="flex-end">
             <Button
@@ -113,7 +112,6 @@ const AddComment = ({
             </Button>
           </HStack>
         </Collapse>
-        {/* )} */}
       </Stack>
     </HStack>
   );

@@ -18,26 +18,41 @@ const LikeAndDislike = ({
   size: string;
   displayFull?: boolean;
 }) => {
-  const { profile, mutateProfile } = useProfile();
-  const init = {
-    like: profile?.likedStories?.includes(storyId) && like == 0 ? 1 : like,
-    dislike:
-      profile?.dislikedStories?.includes(storyId) && dislike == 0 ? 1 : dislike,
-    hadBeenLiked: !!profile?.likedStories?.includes(storyId),
-    hadBeenDisLiked: !!profile?.dislikedStories?.includes(storyId),
-  };
-  const [grade, setGrade] = useState(init);
+  const { myProfile, mutateProfile } = useProfile();
+
+  const [grade, setGrade] = useState({
+    like,
+    dislike,
+    hadBeenLiked: false,
+    hadBeenDisLiked: false,
+  });
 
   useEffect(
-    () => setGrade(init),
+    () => {
+      setGrade((pre) => ({
+        ...pre,
+        hadBeenLiked: !!myProfile?.likedStories?.includes(storyId),
+        hadBeenDisLiked: !!myProfile?.dislikedStories?.includes(storyId),
+      }));
+
+      if (!!myProfile?.likedStories?.includes(storyId) && grade.like == 0) {
+        setGrade((pre) => ({ ...pre, like: 1 }));
+      }
+      if (
+        !!myProfile?.dislikedStories?.includes(storyId) &&
+        grade.dislike == 0
+      ) {
+        setGrade((pre) => ({ ...pre, dislike: 1 }));
+      }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [profile]
+    [myProfile]
   );
 
   const loading = useDisclosure();
   const { openLoginToast } = useAuthCtx();
   const handleGrade = async (isLike = true) => {
-    if (!profile?._id) {
+    if (!myProfile?._id) {
       openLoginToast();
       return;
     }
@@ -48,14 +63,15 @@ const LikeAndDislike = ({
       undo: isLike ? grade.hadBeenLiked : grade.hadBeenDisLiked,
       isLike,
     });
-
     if (data) {
+      // console.log("like ", data.story.noOfLikes);
+      // console.log("dislike ", data.story.noOfDislikes);
+      await mutateProfile();
       setGrade((pre: any) => ({
         ...pre,
-        like: data.storyMeta.like,
-        dislike: data.storyMeta.dislike,
+        like: data.story.noOfLikes,
+        dislike: data.story.noOfDislikes,
       }));
-      await mutateProfile();
       loading.onClose();
     } else loading.onClose();
   };

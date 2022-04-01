@@ -1,7 +1,7 @@
 const brandName = process.env.BRAND_NAME!;
 import sgMail, { MailDataRequired } from "@sendgrid/mail";
 
-const sendEmail = async (to: string, redirectUrl: string, messsage) => {
+const sendEmail = async (to: string, redirectUrl: string, messsage: string) => {
   const emailMessage: MailDataRequired = {
     to,
     from: {

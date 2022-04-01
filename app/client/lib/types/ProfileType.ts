@@ -4,9 +4,6 @@ import User from "./UserType";
 
 interface ProfileType {
   _id: string;
-  fullName: string;
-  profilePic: string;
-  tagLines: string[];
 
   likedStories: Story["_id"][];
   dislikedStories: Story["_id"][];

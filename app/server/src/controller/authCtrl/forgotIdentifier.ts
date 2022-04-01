@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
+
 import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import User from "../../models/User";
 
 // @desc      forgetEmail
-// @route     GET /api/v1/auth/forgotIdentifier
+// @route     GET /api/v1/auth/forgotidentifier
 // @access    Public
 const forgotIdentifier = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {

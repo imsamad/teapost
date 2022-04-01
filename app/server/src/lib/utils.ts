@@ -9,6 +9,7 @@ import { UserDocument } from "../models/User";
 import { signJwt } from "./jwt";
 import * as yup from "yup";
 import { isValidObjectId } from "mongoose";
+
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
@@ -171,6 +172,14 @@ export const saveImageLocally = async (file: any, appUrl: string) => {
   }
 };
 
+export const peelUserDoc = (user: UserDocument) => {
+  // @ts-ignore
+  user = user?.toObject ? user?.toObject() : user;
+  let { isEmailVerified, isAuthorised, updatedAt, password, id, __v, ...rest } =
+    user;
+  return rest;
+};
+
 export const sendTokens = async (
   user: UserDocument,
   statusCode: number,
@@ -179,20 +188,15 @@ export const sendTokens = async (
 ) => {
   const resData = {
     status: "ok",
-    user: {
-      _id: user._id,
-      email: user.email,
-      accessToken: signJwt(
-        { user: user._id },
-        {
-          expiresIn: "7d",
-        }
-      ),
-      username: user.username,
-      role: user.role,
-      createdAt: user.createdAt,
-      message,
-    },
+
+    user: peelUserDoc(user),
+    message,
+    accessToken: signJwt(
+      { user: user._id },
+      {
+        expiresIn: "7d",
+      }
+    ),
   };
 
   return res.status(statusCode).json(resData);
@@ -274,6 +278,7 @@ export const strArrSchema = (
     .label(label)
     .typeError(`${prettyLabel || label} must be array`)
     .test(label, lenMsg, (val: any) => {
+      if (new Set(val).size != val.length) return false;
       if (!val && !isRequired) return true;
       else if (isMongoId) return val?.every((val: any) => isValidObjectId(val));
       else if (strMin && strMax)

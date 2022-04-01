@@ -25,7 +25,7 @@ const Index = ({
   onClose: () => void;
 }) => {
   const { data, isValidating, mutate } = useSWR<{ comments: PrimaryComment[] }>(
-    () => storySelected && `/comments/story/${storySelected}`
+    () => storySelected && `/comments/primaries/${storySelected}`
   );
 
   return (

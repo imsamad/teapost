@@ -13,6 +13,7 @@ export interface PrimaryCommentDocument
   story: StoryDocument["_id"];
   meta: CommentMetaDocument;
 }
+
 const primaryCommentSchema = new Schema(
   {
     user: {
@@ -30,6 +31,9 @@ const primaryCommentSchema = new Schema(
       type: String,
       min: [1, "Enter some thing"],
     },
+    noOfReplies: { type: Number, default: 0 },
+    noOfLikes: { type: Number, default: 0 },
+    noOfDislikes: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -41,7 +45,7 @@ const primaryCommentSchema = new Schema(
 primaryCommentSchema.virtual("secondary", {
   ref: "Secondary",
   localField: "_id",
-  foreignField: "replyToPrimary",
+  foreignField: "primary",
   justOne: false,
 });
 
@@ -52,13 +56,24 @@ primaryCommentSchema.virtual("meta", {
   justOne: true,
 });
 
-primaryCommentSchema.pre("remove", async function (next) {
-  let deleteCommentMeta = await this.model("CommentMeta").findByIdAndRemove(
-    this._id
-  );
+primaryCommentSchema.pre("save", async function (next) {
+  console.log("upper from primarycomment", this?.isNew);
+  if (!this.isNew) return next();
 
+  await this.model("Story").findByIdAndUpdate(this.story.toString(), {
+    _id: this.story.toString(),
+    $inc: { noOfComments: 1 },
+  });
+  next();
+});
+
+primaryCommentSchema.pre("remove", async function (next) {
+  await this.model("CommentMeta").findByIdAndRemove(this._id);
+  await this.model("Story").findByIdAndUpdate(this.story.toString(), {
+    $inc: { noOfComments: -1 },
+  });
   let secondaryComments = await this.model("Secondary").find({
-    replyToPrimary: this._id,
+    primary: this._id,
   });
 
   let secondaryCommentsPromise: any = secondaryComments.map((secondary: any) =>

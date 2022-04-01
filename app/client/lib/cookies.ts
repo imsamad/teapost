@@ -1,11 +1,13 @@
 import Cookies from "universal-cookie";
 
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
+import { AuthType } from "./types/UserType";
+
 const cookies = new Cookies();
 const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION!;
 
 const getCookies = () => {
-  return cookies.get(userAuthCookie);
+  return cookies.get<AuthType>(userAuthCookie);
 };
 
 const oneDay = 24 * 60 * 60;

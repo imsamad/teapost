@@ -1,14 +1,12 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { BiBellPlus, BiBellMinus } from "react-icons/bi";
+import { BiBellPlus } from "react-icons/bi";
+import { CheckIcon } from "@chakra-ui/icons";
 
 import { useAuthCtx, useProfile } from "@compo/Context";
-
 import { followAuthor } from "@lib/api/authApi";
-
 import TSButton from "@compo/UI/TSButton";
 import UserType from "@lib/types/UserType";
-import { CheckIcon } from "@chakra-ui/icons";
 
 const FollowBtn = ({
   author,
@@ -19,7 +17,7 @@ const FollowBtn = ({
   isFullBtn?: boolean;
   followCB?: (hasBeenFollowing: boolean) => void;
 }) => {
-  const { profile, mutateProfile } = useProfile();
+  const { myProfile, mutateProfile } = useProfile();
   const { openLoginToast } = useAuthCtx();
 
   const [stats, setStats] = useState({
@@ -30,18 +28,18 @@ const FollowBtn = ({
   useEffect(() => {
     setStats({
       hasBeenFollowing: Boolean(
-        profile?.following?.includes(author?._id || "")
+        myProfile?.following?.includes(author?._id || "")
       ),
-      isItselfAuthor: profile._id?.toString() == author._id,
+      isItselfAuthor: myProfile?._id?.toString() == author._id,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
+  }, [myProfile]);
 
   const loadingState = useDisclosure();
 
   const handleFollowing = async () => {
     loadingState.onOpen();
-    if (!profile?._id) {
+    if (!myProfile?._id) {
       openLoginToast();
       loadingState.onClose();
       return;

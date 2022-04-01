@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 
 import { asyncHandler, sendTokens } from "../../lib/utils";
-import User, { UserDocument } from "../../models/User";
+import User from "../../models/User";
 import { ErrorResponse } from "../../lib/utils";
-import { signJwt } from "../../lib/jwt";
 
+// @desc      Log in.
+// @route     GET /api/v1/auth/login
+// @access    Public
 const logIn = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { identifier, password } = req.body;
@@ -33,9 +35,6 @@ const logIn = asyncHandler(
       return next(ErrorResponse(400, { password: "Password is wrong." }));
 
     if (!user.isAuthorised) return next(ErrorResponse(400, "Not authorised!"));
-
-    user.password = "";
-    // delete user?.password;
 
     sendTokens(user, 200, res);
   }

@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 
-import { asyncHandler } from "../../lib/utils";
+import { asyncHandler, peelUserDoc } from "../../lib/utils";
 import Profile from "../../models/Profile";
+import StoryCollection from "../../models/StoryCollection";
 
 // @desc      Profile of logged in user.
 // @route     GET /api/v1/auth/me
-// @access    Auth,Public
+// @access    Auth
 const getMe = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
@@ -15,12 +16,22 @@ const getMe = asyncHandler(
     if (req.query.populateStory) query.populate("likedStories dislikedStories");
 
     const profile = await query;
+    const coll = () =>
+      StoryCollection.create({
+        user,
+        title: "Read Later",
+      });
+    console.log("profile ", profile);
     return res.json({
       status: "ok",
-      profile: profile || {
-        _id: user,
+      user: {
+        // @ts-ignore
+        ...peelUserDoc(req.user),
+        profile,
+        // : profile || (await coll),
       },
     });
   }
 );
+
 export default getMe;

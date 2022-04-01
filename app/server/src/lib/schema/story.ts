@@ -51,8 +51,6 @@ export const updateStorySchema = object({
   }),
 });
 
-export const likeOrDislikeSchema = singleParamsObj("storyId", true);
-
 export const gradeStorySchema = object({
   ...singleParam("storyId", true),
   body: object().shape(
@@ -90,11 +88,6 @@ export const isAbleToPublished = object({
   tags: strArrSchema("tags", { isMongoId: true, isRequired: false, min: 1 }),
   content: strSchema("content", { min: 2200, isRequired: true }),
   keywords: strSchema("keywords", { min: 10, isRequired: true }),
-});
-
-export const commentStorySchema = object({
-  body: object({ text: strSchema("text", { isRequired: true }) }),
-  ...singleParam("storyId", true),
 });
 
 export const storyHistoryByIdScheme = object({

@@ -1,4 +1,5 @@
 import StoryType, { StoryFormType } from "@lib/types/StoryType";
+import UserType from "@lib/types/UserType";
 import axios from "../axios";
 
 interface SubmitStoryType extends Partial<Omit<StoryFormType, "_id">> {
@@ -60,7 +61,6 @@ export const changeSlug = async (reqBody: { id: string; slug: string }) => {
     throw err.response.data;
   }
 };
-type axiosObjType = Partial<{ like: number; dislike: number }>;
 
 type gradeStoryType = {
   storyId: string;
@@ -68,16 +68,18 @@ type gradeStoryType = {
   undo: boolean;
 };
 
-export const likeOrDislikeStory = async (props: gradeStoryType) => {
+export const likeOrDislikeStory = async (
+  props: gradeStoryType
+): Promise<{ story: StoryType }> => {
   try {
     let endpoint = props.isLike ? "/stories/like/" : "/stories/dislike/";
     endpoint += props.undo ? `undo/${props.storyId}` : props.storyId;
 
-    const { data } = await axios.put(`${endpoint}`);
+    const { data } = await axios.put<{ story: StoryType }>(`${endpoint}`);
     return data;
   } catch (err: any) {
     // throw err.response.data;
-    return false;
+    return err.response.data;
   }
 };
 
@@ -89,7 +91,9 @@ export const commentOnStory = async ({
   text: string;
 }) => {
   try {
-    const { data } = await axios.put(`/stories/comment/${storyId}`, { text });
+    const { data } = await axios.post(`/comments/primaries/${storyId}`, {
+      text,
+    });
     return data;
   } catch (err) {
     return false;
@@ -110,6 +114,21 @@ export const publishedStory = async ({
         isPublished,
       }
     );
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};
+
+export const getStories = async (page = 1, queryType?: string) => {
+  try {
+    let endpoint = `/stories`;
+    if (queryType) endpoint += `?${queryType}&page=${page}`;
+    const { data } = await axios.get<{
+      stories: StoryType[];
+      authors: UserType[];
+      pagination: { next: number; prev: number; limit: number };
+    }>(endpoint);
     return data;
   } catch (err: any) {
     throw err.response.data;

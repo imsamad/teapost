@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { decodeJwt } from "../lib/jwt";
-import { ErrorResponse } from "../lib/utils";
+import { ErrorResponse, peelUserDoc } from "../lib/utils";
 import User from "../models/User";
 export const protect = async (
   req: Request,
@@ -51,7 +51,7 @@ export const fetchAuth = async (
   if (isAllowed && (!user?.isAuthorised || !user?.isEmailVerified))
     return next();
   // @ts-ignore
-  req.user = user;
+  req.user = peelUserDoc(user);
   next();
 };
 export const authorise = (roles: ("admin" | "reader" | "author")[]) => {

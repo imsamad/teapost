@@ -2,13 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../lib/utils";
 import Secondary from "../../models/Comment/Secondary";
 
-// @desc      Get comments of secondary of primary
-// @route     GET /api/v1/comments/replyof/:primaryId
-// @access    Auth,Public,Admin
+// @desc      Get comments reply of primary
+// @route     GET /api/v1/comments/secondaries/:primaryId
+// @access    Public
+
 const getSecondaries = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const comments = await Secondary.find({
-      replyToPrimary: req.params.primaryId,
+      primary: req.params.primaryId,
     })
       .populate([
         { path: "meta" },
@@ -17,7 +18,7 @@ const getSecondaries = asyncHandler(
           select: "email username",
         },
         {
-          path: "replyToSecondaryUser",
+          path: "secondaryUser",
           select: "username email",
         },
       ])

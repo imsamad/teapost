@@ -22,7 +22,7 @@ const Index = ({
         <AuthorCard
           author={author}
           numOfStories={stories?.length}
-          displayStats={true}
+          displayFull={true}
         />
 
         <Divider />
@@ -31,7 +31,12 @@ const Index = ({
             <Heading size="md" textAlign="center">
               Stories
             </Heading>
-            <Stories stories={stories} />
+            <Stories
+              stories={stories}
+              isInitial={true}
+              query={`authors=${author.username}`}
+              nextPageNo={2}
+            />
           </>
         ) : (
           <Heading textAlign="center">No stories found</Heading>

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+
 import createToken from "../../lib/createToken";
 import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import User from "../../models/User";
@@ -35,12 +36,10 @@ const forgotPassword = asyncHandler(
       "resetpassword",
       req,
       user._id,
-      { newUser: false }
+      { isVerifyChangedEmailToken: false }
     );
 
-    let isEmailService: boolean = "true" === process.env.IS_EMAIL_SERVICE!;
-
-    // isEmailService = isEmailService === "true";
+    let isEmailService = "true" === process.env.IS_EMAIL_SERVICE!;
 
     if (isEmailService) {
       let emailSentResult = await sendEmail(user.email, redirectUrl, message);
@@ -53,7 +52,12 @@ const forgotPassword = asyncHandler(
       message: `Chnage your password by visiting the link sent to ${user.email}.`,
     };
 
-    if (!isEmailService) resObj = { ...resObj, redirectUrl };
+    if (!isEmailService)
+      resObj = {
+        ...resObj,
+        redirectUrl,
+        message: `Chnage your password by visiting this link valid for 10min.`,
+      };
 
     return res.json(resObj);
   }

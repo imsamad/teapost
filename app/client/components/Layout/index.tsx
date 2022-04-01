@@ -14,22 +14,16 @@ type LayoutProps = {
 
 const Index = ({ children }: LayoutProps) => {
   return (
-    <Container maxWidth="container.xl" p="4px">
+    <Container maxWidth="container.xl" p="4px" overflow="hidden">
       <Context>
-        <Flex
-          direction="column"
-          w="100%"
-          minH="100vh"
-          maxH="max-content"
-          overflow="hidden"
-        >
+        <Flex direction="column" w="100%" minH="100vh" maxH="max-content">
           <NavBar />
           <Divider my={2} />
 
           <Box
             flexGrow="1"
             as="main"
-            minH="75vh"
+            // minH="75vh"
             // border="1px solid red"
             // position="relative"
           >

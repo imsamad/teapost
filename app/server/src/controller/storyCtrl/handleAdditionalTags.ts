@@ -4,7 +4,7 @@ import { asyncHandler } from "../../lib/utils";
 import { StoryDocument } from "../../models/Story";
 import TagModel, { TagDocument } from "../../models/Tag";
 
-const handleTags = asyncHandler(
+const handleAdditionalTags = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.body?.tags?.length && !req.body?.additionalTags?.length) {
       // req.body.tags
@@ -56,4 +56,4 @@ const handleTags = asyncHandler(
   }
 );
 
-export default handleTags;
+export default handleAdditionalTags;

@@ -34,18 +34,22 @@ const importData = async () => {
     await Tag.create(tags);
     await Image.create(images);
     await User.create(users);
-    await Profile.create(
-      users.map((user) => ({
-        _id: user._id,
-        fullName: "fullName",
-        tagLines: ["Programmer", "Author of example.com", " Technical Writer"],
-      }))
-    );
+    // await Profile.create(
+    //   users.map((user) => ({
+    //     _id: user._id,
+    //     fullName: "fullName",
+    //     tagLines: ["Programmer", "Author of example.com", " Technical Writer"],
+    //   }))
+    // );
     await StoryCollection.create(
       users.map((user) => ({ user: user._id, title: "Read Later" }))
     );
-
-    await Story.create(stories);
+    let temp: any = [];
+    for (var i = 0; i < 100; i++) temp = [...temp, ...stories];
+    // ar.forEach((i) => temp.push(stories));
+    // console.log("temp ", temp[0]);
+    const storiesss = await Story.create(temp);
+    // console.log("storiesssstoriesss ", storiesss);
     // await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
 
     await Primary.create(primaries);

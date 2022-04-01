@@ -27,14 +27,13 @@ const storySchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
-      unique: true,
+      // unique: true,
       required: true,
     },
     tags: {
       type: [
         {
           type: Schema.Types.ObjectId,
-          required: true,
           ref: "Tag",
         },
       ],
@@ -54,7 +53,6 @@ const storySchema = new Schema(
       require: true,
       default: false,
     },
-    readingTime: { type: Number, default: 0 },
     hadEmailedToFollowers: {
       type: Boolean,
       default: false,
@@ -67,8 +65,12 @@ const storySchema = new Schema(
         "Specifying the story, Is published or not is compulsary.",
       ],
       default: true,
-      select: false,
     },
+    readingTime: { type: Number, default: 0 },
+    noOfViews: { type: Number, default: 0 },
+    noOfComments: { type: Number, default: 0 },
+    noOfLikes: { type: Number, default: 0 },
+    noOfDislikes: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -81,6 +83,7 @@ storySchema.post(["save", "updateOne"], errorHandlerMdlwr);
 storySchema.post("findOneAndUpdate", errorHandlerMdlwr);
 
 async function errorHandlerMdlwr(error: any, doc: StoryDocument, next: any) {
+  console.log("error error ", error);
   if (error) {
     if (error?.code === 11000) {
       next(
@@ -111,20 +114,21 @@ storySchema.virtual("comments", {
 });
 
 storySchema.pre("remove", async function (next) {
-  await this.model("StoryMeta").findByIdAndRemove(this._id);
-
+  // Remove related StoryMeta + StoryHistory + All Primary ==> Secondary
   let deletedPrimary: any = await this.model("Primary").find({
     story: this._id,
   });
-  let deleteStoryHistory: any = await this.model(
-    "StoryHistory"
-  ).findByIdAndRemove(this._id);
 
-  let deletedPrimaryPromise: any = deletedPrimary.map(
-    (primary: any, index: any) => primary.remove()
+  let promises: any = [];
+
+  promises.push(this.model("StoryMeta").findByIdAndRemove(this._id));
+  promises.push(this.model("StoryHistory").findByIdAndRemove(this._id));
+
+  deletedPrimary.forEach((primary: any, index: any) =>
+    promises.push(primary.remove())
   );
 
-  Promise.allSettled(deletedPrimaryPromise)
+  Promise.allSettled(promises)
     .then((res: any) => {})
     .finally(() => {
       next();

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { asyncHandler } from "../../lib/utils";
+import { asyncHandler, peelUserDoc } from "../../lib/utils";
 import Story from "../../models/Story";
 
 // @desc      Get all stories
@@ -15,14 +15,14 @@ const getAllStories = asyncHandler(
             isPublishedByAdmin: true,
           }
         : {};
+    console.log("req.query ", req.query);
+    // @ts-ignore
     let stories: any = Story.find({ ...req.query, ...filter }).populate([
-      { path: "meta" },
       {
         path: "author",
-        select: "username email",
-        populate: {
-          path: "profile",
-          select: "fullName followers tagLines profilePic",
+        transform: (v: any) => {
+          // console.log("vvvvvvvvv ", v);
+          return peelUserDoc(v);
         },
       },
       {
@@ -37,33 +37,40 @@ const getAllStories = asyncHandler(
         path: "comments",
         populate: [
           {
-            path: "meta",
-          },
-          {
             path: "user",
-            select: "username email",
+            transform: (v: any) => peelUserDoc(v),
           },
           {
             path: "secondary",
             populate: [
               {
-                path: "meta",
-              },
-              {
                 path: "user",
-                select: "username email",
+                transform: (v: any) => peelUserDoc(v),
               },
               {
-                path: "replyToSecondaryUser",
-                select: "username email",
+                path: "secondaryUser",
+                transform: (v: any) => peelUserDoc(v),
               },
             ],
           },
         ],
       });
     }
+    // @ts-ignore
+    let page: number = req.query.page!,
+      // @ts-ignore
+      limit: number = req.query.limit,
+      // @ts-ignore
+      startIndex = (page - 1) * limit,
+      endIndex = page * limit;
 
-    stories = await stories.lean();
+    stories = await stories.skip(startIndex).limit(limit).lean();
+    let pagination: any = { limit };
+    if (stories.length) {
+      pagination.next = page + 1;
+    }
+    if (startIndex > 0) pagination.prev = page - 1;
+
     if (req.query.cutcontent) {
       stories = stories.map((story: any) => {
         return {
@@ -80,6 +87,7 @@ const getAllStories = asyncHandler(
     }
     return res.status(200).json({
       status: "ok",
+      pagination,
       stories,
       // @ts-ignore
       authors: req.authors || {},

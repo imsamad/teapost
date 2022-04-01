@@ -17,8 +17,8 @@ import { nanoid } from "nanoid";
 import { BiUser } from "react-icons/bi";
 
 const LogInBtn = ({ size }: { size: any }) => {
-  const { login, user, logout } = useAuthCtx();
-  return user?._id ? (
+  const { login, auth, logout } = useAuthCtx();
+  return auth?.user?._id ? (
     <Menu>
       <MenuButton
         as={Button}

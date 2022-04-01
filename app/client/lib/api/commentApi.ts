@@ -14,12 +14,7 @@ export const commentActions = async ({
   try {
     let axiosInstance = axios;
     if (type == "reply")
-      axiosInstance.post(
-        `/comments/reply/to/${
-          isPrimary ? "primary" : "secondary"
-        }/${commentId}`,
-        { text }
-      );
+      axiosInstance.post(`/comments/reply/to/secondary/${commentId}`, { text });
     else if (type == "edit")
       axiosInstance.put(
         `/comments/${isPrimary ? "primary" : "secondary"}/${commentId}`,

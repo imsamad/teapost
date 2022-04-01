@@ -4,19 +4,21 @@ interface UserType {
   _id: string;
   email: string;
   username: string;
-  password: string;
-  isEmailVerified: boolean;
-  isAuthorised: boolean;
-
   role: string | "admin" | "reader" | "author";
   createdAt: Date;
-  updatedAt: Date;
-  profile: ProfileType;
-}
 
-export interface AuthUser
-  extends Pick<UserType, "email" | "username" | "_id" | "role" | "createdAt"> {
+  fullName: string;
+  profilePic: string;
+  tagLines: string[];
+  following: number;
+  followers: number;
+  isEmailVerified?: boolean;
+  isAuthorised?: boolean;
+  updatedAt?: Date;
+  profile?: ProfileType;
+}
+export interface AuthType {
+  user: UserType;
   accessToken: string;
 }
-
 export default UserType;

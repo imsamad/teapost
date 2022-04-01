@@ -3,10 +3,11 @@ import { Request, Response, NextFunction } from "express";
 import { asyncHandler } from "../../lib/utils";
 import User from "../../models/User";
 import { ErrorResponse } from "../../lib/utils";
-
-import Profile from "../../models/Profile";
-import StoryCollection from "../../models/StoryCollection";
 import { retriveToken } from "../../lib/createToken";
+
+// @desc      Verify Email
+// @route     GET /api/v1/auth/verifyemail
+// @access    Public
 
 const verifyEmail = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -21,13 +22,8 @@ const verifyEmail = asyncHandler(
 
     if (!user) return next(malliciousReq);
 
-    if (token.tempData.newUser) {
-      await Profile.create({
-        _id: user._id,
-        fullName: token.tempData.fullName,
-      });
-      await StoryCollection.create({ user: user._id, title: "Read Later" });
-    } else if (token.tempData.newEmail) user.email = token.tempData.newEmail;
+    if (token.tempData.isVerifyChangedEmailToken)
+      user.email = token.tempData.newEmail;
 
     user.isEmailVerified = true;
 

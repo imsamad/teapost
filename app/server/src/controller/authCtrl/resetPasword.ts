@@ -4,9 +4,9 @@ import { retriveToken } from "../../lib/createToken";
 import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import User from "../../models/User";
 
-// @desc      resetPasword
+// @desc      Reset Pasword
 // @route     PUT /api/v1/auth/resetpassword/:resettoken
-// @access    Auth,Admin,Public
+// @access    Auth,Admin
 
 export const resetPasword = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {

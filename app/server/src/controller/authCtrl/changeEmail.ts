@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+
 import createToken from "../../lib/createToken";
 import sendEmail from "../../lib/sendEmail";
 import { asyncHandler, ErrorResponse } from "../../lib/utils";
@@ -28,7 +29,7 @@ const changeEmail = asyncHandler(
       user._id,
       {
         newEmail,
-        newUser: false,
+        isVerifyChangedEmailToken: true,
       }
     );
 
@@ -46,7 +47,12 @@ const changeEmail = asyncHandler(
       message: `Verify your email by visiting the link sent to ${user.email}.`,
     };
 
-    if (!isEmailService) resObj = { ...resObj, redirectUrl };
+    if (!isEmailService)
+      resObj = {
+        ...resObj,
+        redirectUrl,
+        message: `Verify your email by visiting this link valid for 10min.`,
+      };
 
     return res.json(resObj);
   }

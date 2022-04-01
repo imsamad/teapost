@@ -7,11 +7,11 @@ import { PrimaryCommentDocument } from "./Primary";
 
 export interface SecondaryCommentDocument
   extends Document,
-    Omit<SecondaryCommentType, "_id" | "replyToPrimary" | "replyToSecondary"> {
+    Omit<SecondaryCommentType, "_id" | "primary" | "secondary"> {
   //
   user: UserDocument["_id"];
-  replyToPrimary: PrimaryCommentDocument["_id"];
-  replyToSecondary: SecondaryCommentDocument["_id"];
+  primary: PrimaryCommentDocument["_id"];
+  secondary: SecondaryCommentDocument["_id"];
   meta: CommentMetaDocument;
 }
 
@@ -22,23 +22,25 @@ const secondaryCommentSchema = new Schema(
       required: [true, "Author of comment is required."],
       ref: "User",
     },
-    replyToSecondaryUser: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    text: {
+      type: String,
+      min: [1, "Enter some thing"],
     },
-    replyToSecondary: {
-      type: Schema.Types.ObjectId,
-      ref: "Secondary",
-    },
-    replyToPrimary: {
+    primary: {
       type: Schema.Types.ObjectId,
       required: [true, "Author of comment is required."],
       ref: "Primary",
     },
-    text: {
-      type: String,
-      min: [0, "Enter some thing"],
+    secondary: {
+      type: Schema.Types.ObjectId,
+      ref: "Secondary",
     },
+    secondaryUser: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    noOfLikes: { type: Number, default: 0 },
+    noOfDislikes: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -46,12 +48,6 @@ const secondaryCommentSchema = new Schema(
     toJSON: { virtuals: true },
   }
 );
-secondaryCommentSchema.virtual("tertiary", {
-  ref: "Secondary",
-  localField: "_id",
-  foreignField: "replyToPrimary",
-  justOne: false,
-});
 
 secondaryCommentSchema.virtual("meta", {
   ref: "CommentMeta",
@@ -60,13 +56,34 @@ secondaryCommentSchema.virtual("meta", {
   justOne: true,
 });
 
-secondaryCommentSchema.pre("remove", async function (next) {
-  const deleteCommentMeta = await this.model("CommentMeta").findByIdAndRemove(
-    this._id
+secondaryCommentSchema.pre("save", async function (next) {
+  console.log("this fromsecondaryCommentSchema ", this.isNew);
+  if (!this.isNew) return next();
+  const primary = await this.model("Primary").findByIdAndUpdate(
+    this.primary.toString(),
+    { $inc: { noOfReplies: 1 } }
   );
+  await this.model("Story").findByIdAndUpdate(primary.story, {
+    $inc: { noOfComments: 1 },
+  });
+});
+
+secondaryCommentSchema.pre("remove", async function (next) {
+  await this.model("CommentMeta").findByIdAndRemove(this._id);
+  const primary = await this.model("Primary").findByIdAndUpdate(
+    this.primary.toString(),
+    {
+      $inc: { noOfReplies: -1 },
+    }
+  );
+
+  await this.model("Story").findByIdAndUpdate(primary.story, {
+    $inc: { noOfComments: -1 },
+  });
 
   next();
 });
+
 const Secondary = model<SecondaryCommentDocument>(
   "Secondary",
   secondaryCommentSchema

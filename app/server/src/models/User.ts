@@ -5,10 +5,18 @@ import UserType from "../lib/types/UserType";
 
 export interface UserDocument extends Omit<UserType, "_id">, mongoose.Document {
   matchPassword(candidatePassword: string): Promise<boolean>;
+  password: string;
 }
 
 const userSchema = new mongoose.Schema(
   {
+    fullName: {
+      type: String,
+      required: true,
+    },
+
+    tagLines: [String],
+    profilePic: String,
     username: {
       type: String,
       required: [true, "Please add a name"],
@@ -44,6 +52,8 @@ const userSchema = new mongoose.Schema(
       default: true,
       required: true,
     },
+    following: { type: Number, default: 0 },
+    followers: { type: Number, default: 0 },
   },
 
   {
@@ -54,8 +64,6 @@ const userSchema = new mongoose.Schema(
 );
 
 // Do sth here bcoz ,sth might be missing.
-
-// userSchema.post<Query<UserDocument, UserDocument>>(
 
 userSchema.post("save", function (error: any, doc: UserDocument, next: any) {
   if (error?.code === 11000) {
@@ -89,6 +97,7 @@ userSchema.methods.matchPassword = async function (
 ) {
   return await bcrypt.compare(enterPassword, this.password);
 };
+
 userSchema.virtual("profile", {
   ref: "Profile",
   localField: "_id",

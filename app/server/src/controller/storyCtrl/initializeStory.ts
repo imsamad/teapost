@@ -14,6 +14,11 @@ export const initializeStory = asyncHandler(
       isPublished,
       hadEmailedToFollowers,
       isPublishedByAdmin,
+      readingTime,
+      noOfViews,
+      noOfComments,
+      noOfLikes,
+      noOfDislikes,
       ...rest
     } = req.body;
 

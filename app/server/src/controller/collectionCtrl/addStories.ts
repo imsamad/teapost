@@ -5,10 +5,11 @@ import { ErrorResponse } from "../../lib/utils";
 import Story from "../../models/Story";
 import StoryCollection from "../../models/StoryCollection";
 
-// @desc      Create Collection
-// @route     GET /api/v1/auth/collection/add/:storyId
-// @access    Auth,Public
-const addToCollection = asyncHandler(
+// @desc      addStories
+// @route     PUT /api/v1/collection/addstories/:storyId
+// @access    Auth
+
+const addStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
@@ -63,11 +64,14 @@ const addToCollection = asyncHandler(
     }
 
     Promise.allSettled(updatePromise)
-      .then((upRes) => {})
+      .then((upRes) => {
+        console.log("upResupRes ", upRes);
+        //   Send back all collections
+      })
       .catch((err: any) => {})
       .finally(() => {
         res.json({ status: "ok" });
       });
   }
 );
-export default addToCollection;
+export default addStories;

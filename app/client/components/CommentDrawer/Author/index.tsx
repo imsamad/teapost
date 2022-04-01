@@ -7,11 +7,7 @@ import AddComment from "../CommentInput";
 export const Avatar = ({ user }: { user: UserType }) => {
   return (
     <MyLink href={`/@/${user?.username}`} alignSelf="flex-start">
-      <ChkaraAvatar
-        name={user?.username}
-        size="xs"
-        src={user?.profile?.profilePic}
-      />
+      <ChkaraAvatar name={user?.username} size="xs" src={user?.profilePic} />
     </MyLink>
   );
 };
@@ -29,8 +25,8 @@ export const AuthorAndComment = ({
   onClose: () => void;
   isPrimary: boolean;
 }) => {
-  const secondaryUserReplyTo = comment?.replyToSecondaryUser?.username
-    ? `@${comment.replyToSecondaryUser?.username}  `
+  const secondaryUserReplyTo = comment?.secondaryUser?.username
+    ? `@${comment.secondaryUser?.username}  `
     : "";
   return (
     <>

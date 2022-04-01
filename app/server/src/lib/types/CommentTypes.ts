@@ -6,17 +6,23 @@ export interface PrimaryComment {
   user: UserType["_id"] | UserType;
   story: StoryType["_id"];
   text: string;
-  meta?: CommentMeta;
+
+  noOfReplies: number;
+  noOfLikes: number;
+  noOfDislikes: number;
   secondary?: SecondaryComment[];
+  meta?: CommentMeta;
 }
 
 export interface SecondaryComment {
   _id: string;
   user: UserType["_id"] | UserType;
-  replyToPrimary: PrimaryComment["_id"] | PrimaryComment;
+  primary: PrimaryComment["_id"] | PrimaryComment;
   text: string;
-  replyToSecondaryUser?: UserType["_id"] | UserType;
-  replyToSecondary?: SecondaryComment["_id"];
+  secondaryUser?: UserType["_id"] | UserType;
+  secondary?: SecondaryComment["_id"];
+  noOfLikes: number;
+  noOfDislikes: number;
   meta?: CommentMeta;
 }
 

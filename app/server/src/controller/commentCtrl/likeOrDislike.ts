@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+
 import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import CommentMeta from "../../models/Comment/CommentMeta";
 import Primary from "../../models/Comment/Primary";
@@ -14,10 +15,9 @@ import Secondary from "../../models/Comment/Secondary";
 // @route     PUT /api/v1/comments/dislike/primary/:commentId
 // @route     PUT /api/v1/comments/dislike/secondary/:commentId
 // @route     PUT /api/v1/comments/dislike/undo/primary/:commentId
-
 // @route     PUT /api/v1/comments/dislike/undo/secondary/:commentId
 
-// @access    Auth,Admin,Public
+// @access    Auth
 
 const likeOrDislike = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
@@ -25,13 +25,13 @@ const likeOrDislike = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
     const user = req.user._id;
 
     const CommentType = req.params.type == "primary" ? Primary : Secondary;
-    let comment = await CommentType.findById(req.params.commentId).lean();
+    let comment = await CommentType.findById(req.params.commentId);
 
     if (!comment) return next(ErrorResponse(400, "No resource found"));
 
     const commentId = comment._id;
 
-    const commentMeta = await CommentMeta.findByIdAndUpdate(
+    await CommentMeta.findByIdAndUpdate(
       commentId,
       isLike
         ? undo
@@ -53,10 +53,17 @@ const likeOrDislike = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
         new: true,
       }
     );
-
+    if (isLike) {
+      comment.noOfLikes = undo ? comment.noOfLikes - 1 : comment.noOfLikes + 1;
+    } else {
+      comment.noOfDislikes = undo
+        ? comment.noOfDislikes - 1
+        : comment.noOfDislikes + 1;
+    }
+    await comment.save();
     res.json({
       status: "ok",
-      comment: commentMeta,
+      comment: await comment.save(),
     });
   });
 export default likeOrDislike;

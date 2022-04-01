@@ -8,6 +8,7 @@ export interface PrimaryComment {
   text: string;
   meta?: CommentMeta;
   secondary: SecondaryComment[];
+  noOfReplies: number;
 }
 
 export interface SecondaryComment {

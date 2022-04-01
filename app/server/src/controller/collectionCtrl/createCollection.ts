@@ -15,7 +15,9 @@ const createCollection = asyncHandler(
     });
     if (isExist.length)
       return next(
-        ErrorResponse(400, `Already exist with title ${req.body.title}`)
+        ErrorResponse(400, {
+          title: `${req.body.title} alreadu creted by you`,
+        })
       );
 
     const collection = await StoryCollection.create({

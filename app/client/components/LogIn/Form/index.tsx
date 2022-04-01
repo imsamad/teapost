@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { authSchema } from "@lib/schema/auth";
 import { submitAuth, AuthType } from "@lib/api/authApi";
 import { typeOf } from "@lib/utils";
-import useUser from "@lib/useUser";
 
 import FormBody from "./FormBody";
 import Footer from "./Footer";
@@ -19,19 +18,14 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
   const toast = useToast();
 
+  // login modal in case login form is on, & have to off after logged in.
+  const { login, setAuth } = useAuthCtx();
   // Get redirectUrl if present
-  const redirectTo = router.query.redirectTo
+  const redirectTo = login.isOpen
+    ? ""
+    : router.query.redirectTo
     ? (router.query.redirectTo as string)
     : redirectToProp ?? "/me";
-
-  // Check if already login ,
-  const { setCookies } = useUser({
-    redirectTo,
-    redirectToIfLoggedIn: true,
-  });
-
-  // login modal in case login form is on, & have to off after logged in.
-  const { login } = useAuthCtx();
 
   const handleSubmit = async (
     values: AuthType,
@@ -40,11 +34,17 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     action.setStatus(false);
     action.setSubmitting(true);
     try {
-      const { user, redirectUrl, message, matchedIdentifiers, status } =
-        await submitAuth(values);
+      const {
+        user,
+        redirectUrl,
+        message,
+        matchedIdentifiers,
+        status,
+        accessToken,
+      } = await submitAuth(values);
 
       if (values.type == "logIn" && user) {
-        setCookies(user);
+        setAuth({ user, accessToken }, redirectTo);
         action.resetForm();
         if (login.isOpen) {
           login.onClose();
@@ -92,9 +92,9 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   return (
     <Formik
       initialValues={{
-        type: "register",
+        type: "logIn",
         fullName: "Abdus Samad",
-        identifier: "",
+        identifier: "imsamad",
         username: "imsamad",
         email: "imsamad@gmail.com",
         password: "Password@1206",

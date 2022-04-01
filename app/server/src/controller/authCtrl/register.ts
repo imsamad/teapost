@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from "express";
 
 import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import User from "../../models/User";
-
 import sendEmail from "../../lib/sendEmail";
 import createToken from "../../lib/createToken";
 
 // @desc      Register new user
-// @route     POST /api/v1/story
+// @route     POST /api/v1/auth/register
 // @access    Public
+
 const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password, fullName } = req.body;
@@ -34,14 +34,16 @@ const register = asyncHandler(
       username,
       email,
       password,
+      fullName,
     });
 
     const { token, redirectUrl, message } = await createToken(
       "verifyemail",
       req,
       user._id,
-      { fullName, newUser: true }
+      { isVerifyChangedEmailToken: false }
     );
+
     const tryAgain = ErrorResponse(
       400,
       "Unable to process your request please register again."

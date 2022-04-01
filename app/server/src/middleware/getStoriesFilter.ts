@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { isValidObjectId } from "mongoose";
-import { typeOf } from "../lib/utils";
+import { peelUserDoc, typeOf } from "../lib/utils";
 import StoryMeta from "../models/StoryMeta";
 import Tag from "../models/Tag";
 import User from "../models/User";
@@ -61,20 +61,22 @@ export const filter = async (
         if (isValidObjectId(str)) return str;
         else titles.push(str);
       });
-
+    // noOfComments
+    // noOfLikes
+    // noOfDislikes
+    const moveForward = () => {
+      // @ts-ignore
+      reqQuery.tags = {};
+      // @ts-ignore
+      reqQuery.tags.$in = objIds;
+    };
     if (titles.length) {
       const tags = await Tag.find({ title: { $in: titles } });
       if (tags.length) {
         tags.forEach((tag) => objIds.push(tag._id.toString()));
-        // @ts-ignore
-        reqQuery.tags = {};
-        // @ts-ignore
-        reqQuery.tags.$in = objIds;
+        moveForward();
       } else if (objIds.length) {
-        // @ts-ignore
-        reqQuery.tags = {};
-        // @ts-ignore
-        reqQuery.tags.$in = objIds;
+        moveForward();
       } else {
         return res.json({
           status: "ok",
@@ -82,10 +84,7 @@ export const filter = async (
         });
       }
     } else if (objIds.length) {
-      // @ts-ignore
-      reqQuery.tags = {};
-      // @ts-ignore
-      reqQuery.tags.$in = objIds;
+      moveForward();
     }
   }
 
@@ -97,26 +96,10 @@ export const filter = async (
       });
 
     if (author.length) {
-      const users = await User.find({ username: { $in: author } })
-        .select("username email")
-        .populate([
-          {
-            path: "profile",
-            select: "fullName followers tagLines profilePic",
-            // transform: (doc, id) => {
-            //   return {
-            //     _id: doc?._id || id,
-            //     followers: doc?.followers?.length || 0,
-            //     fullName: doc?.fullName,
-            //     tagLines: doc?.tagLines,
-            //   };
-            // },
-          },
-        ])
-        .lean();
+      const users = await User.find({ username: { $in: author } });
       if (users.length) {
         // @ts-ignore
-        req.authors = users;
+        req.authors = users.map((user) => peelUserDoc(user));
         users.forEach((user) => objIds.push(user._id.toString()));
         // @ts-ignore
         reqQuery.author = {};
@@ -154,7 +137,8 @@ export const filter = async (
 
     if (like?.eq > 0)
       // If ==  2 then index 2,must be not be prsent only  0,1 docs present
-      query[`likedBy.${Number(like.eq)}`] = notExist;
+      // query[`likedBy.${Number(like.eq)}`] = notExist;
+      query.likes;
     else if (like?.gt > 0)
       // If >  2 then index 2,must be that means 0,1,2 docs present
       query[`likedBy.${Number(like.gt)}`] = exist;
@@ -198,17 +182,24 @@ export const filter = async (
     });
 
   //   @ts-ignore
-  const selectComments = req.query?.select?.includes("comments");
+  const selectComments = req.query?.select?.includes("comments"),
+    nocontent = req.query?.nocontent! == "true",
+    // @ts-ignore
+    cutcontent = parseInt(req.query?.cutcontent! || 0.1),
+    onlycontent = req.query?.onlycontent! == "true",
+    // @ts-ignore
+    page = parseInt(req?.query?.page || 1, 10),
+    // @ts-ignore
+    limit = parseInt(req?.query?.limit || 10, 10);
 
-  const nocontent = req.query?.nocontent! == "true";
-  const cutcontent = req.query?.cutcontent! || false;
-  const onlycontent = req.query?.onlycontent! == "true";
   req.query = {};
   //   @ts-ignore
-  req.query = { ...reqQuery, ...(await getIDs()) };
-  if (selectComments) req.query.select = "comments";
+  req.query = { ...reqQuery, ...(await getIDs()), page, limit };
+
+  selectComments && (req.query.select = "comments");
   nocontent && (req.query.nocontent = "true");
   onlycontent && (req.query.onlycontent = "true");
+  // @ts-ignore
   cutcontent && (req.query.cutcontent = cutcontent);
   next();
 };

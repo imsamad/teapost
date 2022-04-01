@@ -7,9 +7,8 @@ export interface TokenDocument extends Document {
   type: "verifyemail" | "resetpassword";
   userId: UserDocument["_id"];
   tempData: {
-    fullName?: string;
+    isVerifyChangedEmailToken?: boolean;
     newEmail?: string;
-    newUser: boolean;
   };
 }
 
@@ -22,9 +21,8 @@ const tokenSchema = new Schema(
     },
     userId: Schema.Types.ObjectId,
     tempData: {
-      fullName: String,
+      isVerifyChangedEmailToken: { type: Boolean, default: false },
       newEmail: String,
-      newUser: Boolean,
     },
   },
   {

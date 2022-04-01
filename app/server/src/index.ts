@@ -21,7 +21,6 @@ import storyRtr from "./routes/storyRtr";
 import storyHistoryRtr from "./routes/storyHistoryRtr";
 import tagRtr from "./routes/tagRtr";
 import imageRtr from "./routes/imageRtr";
-import profileRtr from "./routes/profileRtr";
 import collectionRtr from "./routes/collectionRtr";
 import commentRtr from "./routes/commentRtr";
 import userRtr from "./routes/userRtr";
@@ -59,10 +58,9 @@ app.get("/ok", (req, res) => {
 app.use("/api/v1/users", userRtr);
 app.use("/api/v1/auth", authRtr);
 app.use("/api/v1/stories", storyRtr);
-app.use("/api/v1/storyhistory", storyHistoryRtr);
+app.use("/api/v1/storyhistories", storyHistoryRtr);
 app.use("/api/v1/tags", tagRtr);
 app.use("/api/v1/image", imageRtr);
-app.use("/api/v1/profile", profileRtr);
 app.use("/api/v1/collection", collectionRtr);
 app.use("/api/v1/comments", commentRtr);
 app.get("/api/v1", (_req, res) => {

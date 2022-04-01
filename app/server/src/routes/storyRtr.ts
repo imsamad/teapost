@@ -1,12 +1,11 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 
 import {
-  commentStory,
   updateStory,
   deleteStory,
   getAllStories,
   gradeStory,
-  handleTags,
+  handleAdditionalTags,
   publishedStory,
   initializeStory,
   getStoryById,
@@ -15,22 +14,24 @@ import {
 import { fetchAuth, protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 import {
-  commentStorySchema,
   updateStorySchema,
   gradeStorySchema,
   initializeStoryScheme,
-  likeOrDislikeSchema,
   publishedStorySchema,
-  getStoryByTagSchema,
-  getStoryByAuthorSchema,
+  singleParamsObj,
 } from "../lib/schema/story";
+
 import { filter } from "../middleware/getStoriesFilter";
 
 const router: Router = express();
 
-router
-  .route("/published/:storyId")
-  .put(protect, validateSchema(publishedStorySchema), publishedStory);
+router.put(
+  "/published/:storyId",
+  protect,
+  validateSchema(publishedStorySchema),
+  publishedStory
+);
+
 router
   .route("/grade/:storyId")
   .put(
@@ -49,51 +50,58 @@ router
     }
   );
 
-router
-  .route("/like/undo/:storyId")
-  .put(
-    protect,
-    validateSchema(likeOrDislikeSchema),
-    gradeStory({ isLike: true, undo: true })
-  );
+router.put(
+  "/like/undo/:storyId",
+  protect,
+  validateSchema(singleParamsObj("storyId", true)),
+  gradeStory({ isLike: true, undo: true })
+);
 
-router
-  .route("/dislike/:storyId")
-  .put(
-    protect,
-    validateSchema(likeOrDislikeSchema),
-    gradeStory({ isLike: false, undo: false })
-  );
+router.put(
+  "/dislike/undo/:storyId",
+  protect,
+  validateSchema(singleParamsObj("storyId", true)),
+  gradeStory({ isLike: false, undo: true })
+);
 
-router
-  .route("/like/:storyId")
-  .put(
-    protect,
-    validateSchema(likeOrDislikeSchema),
-    gradeStory({ isLike: true, undo: false })
-  );
+router.put(
+  "/like/:storyId",
+  protect,
+  validateSchema(singleParamsObj("storyId", true)),
+  gradeStory({ isLike: true, undo: false })
+);
+router.put(
+  "/dislike/:storyId",
+  protect,
+  validateSchema(singleParamsObj("storyId", true)),
+  gradeStory({ isLike: false, undo: false })
+);
 
-router
-  .route("/dislike/undo/:storyId")
-  .put(
-    protect,
-    validateSchema(likeOrDislikeSchema),
-    gradeStory({ isLike: false, undo: true })
-  );
-
-router
-  .route("/comment/:storyId")
-  .put(protect, validateSchema(commentStorySchema), commentStory);
-
-router
-  .route("/initialize")
-  .post(protect, validateSchema(initializeStoryScheme), initializeStory);
+router.post(
+  "/initialize",
+  protect,
+  validateSchema(initializeStoryScheme),
+  initializeStory
+);
 
 router
   .route("/:storyId")
-  .get(fetchAuth, validateSchema(likeOrDislikeSchema), getStoryById)
-  .delete(protect, validateSchema(likeOrDislikeSchema), deleteStory)
-  .put(protect, validateSchema(updateStorySchema), handleTags, updateStory);
+  .get(
+    fetchAuth,
+    validateSchema(singleParamsObj("storyId", true)),
+    getStoryById
+  )
+  .delete(
+    protect,
+    validateSchema(singleParamsObj("storyId", true)),
+    deleteStory
+  )
+  .put(
+    protect,
+    validateSchema(updateStorySchema),
+    handleAdditionalTags,
+    updateStory
+  );
 
 router.route("/").get(filter, getAllStories);
 

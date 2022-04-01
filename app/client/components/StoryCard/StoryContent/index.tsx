@@ -6,6 +6,7 @@ import MyLink from "../../MyLink";
 import StoryType from "@lib/types/StoryType";
 
 const index = ({ story }: { story: StoryType }) => {
+  // console.log("title ", story.title);
   return (
     <HStack>
       <Stack pr="15px" flex="1">
@@ -48,8 +49,8 @@ const index = ({ story }: { story: StoryType }) => {
         </MyLink>
         <StoryActions
           storyId={story._id}
-          like={story?.meta?.likedBy?.length || 0}
-          dislike={story?.meta?.dislikedBy?.length || 0}
+          like={story?.noOfLikes || 0}
+          dislike={story?.noOfDislikes || 0}
         />
       </Stack>
       <MyLink href={`/story/${story.slug}`}>

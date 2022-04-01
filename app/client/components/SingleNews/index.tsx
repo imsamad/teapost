@@ -25,7 +25,7 @@ const SingleStory = ({
   return (
     <Container maxW="container.md" border="0px" p={4}>
       <Stack spacing={4}>
-        <AuthorCard author={author} displayStats={false} />
+        <AuthorCard author={author} displayFull={false} />
         <Heading size="xl">{story?.title}</Heading>
         <Heading size="md" color="gray.300">
           {story?.subtitle}
@@ -42,8 +42,8 @@ const SingleStory = ({
         </AspectRatio>
         <StoryActions
           storyId={story._id}
-          like={story?.meta?.likedBy?.length || 0}
-          dislike={story?.meta?.dislikedBy?.length || 0}
+          like={story.noOfLikes || 0}
+          dislike={story.noOfDislikes || 0}
           displayFull={true}
           btnSize="sm"
         />

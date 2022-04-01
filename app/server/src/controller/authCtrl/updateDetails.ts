@@ -2,12 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import { asyncHandler, ErrorResponse, sendTokens } from "../../lib/utils";
 import User from "../../models/User";
 
-// @desc      changeUsername
-// @route     GET /api/v1/auth/changeusername
-// @access    Auth,Admin,Public
+// @desc      Update Details
+// @route     GET /api/v1/auth/update
+// @access    Auth
 const updateDetails = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { username, newPassword, currentPassword } = req.body;
+    const {
+      username,
+      newPassword,
+      currentPassword,
+      fullName,
+      tagLines,
+      profilePic,
+    } = req.body;
     // @ts-ignore
     const userId = req.user._id;
     const alreadyExist = await User.findOne({
@@ -21,25 +28,26 @@ const updateDetails = asyncHandler(
         })
       );
     }
-    let user = await User.findById(userId).select("+password");
-    user.username = username || user.username;
-    let message = "";
-    const chechPwd = () =>
-      new Promise(async (resolve) => {
-        if (!currentPassword) return resolve(true);
-        const isPwdMatch = await user.matchPassword(currentPassword);
-        if (isPwdMatch) {
-          user.password = newPassword;
-          resolve(true);
-        } else {
-          message = "Passwod does not match";
-          resolve(true);
-        }
-      });
 
-    chechPwd().finally(async () => {
-      sendTokens(await user.save(), 200, res, message);
-    });
+    let user = await User.findById(userId);
+
+    // @ts-ignore
+    user.username = username || user?.username;
+    user.fullName = fullName || user?.fullName;
+    user.tagLines = tagLines || user?.tagLines;
+    user.profilePic = profilePic || user?.profilePic;
+    let message = "";
+    const moveForward = async () =>
+      sendTokens(await user.save(), 200, res, { currentPassword: message });
+
+    if (currentPassword && newPassword) {
+      if (await user.matchPassword(currentPassword))
+        user.password = currentPassword;
+      else {
+        message = "Password does not match";
+        moveForward();
+      }
+    } else moveForward();
   }
 );
 

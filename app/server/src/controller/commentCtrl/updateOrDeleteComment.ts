@@ -4,11 +4,11 @@ import Primary from "../../models/Comment/Primary";
 import Secondary from "../../models/Comment/Secondary";
 
 // @desc      Update Or Delete Comment
-// @route     PUT /api/v1/comment/primary:commentId
-// @route     DELETE /api/v1/comment/primary:commentId
-// @route     PUT /api/v1/comment/secondary:commentId
-// @route     DELETE /api/v1/comment/secondary:commentId
-// @access    Auth,Admin
+// @route     PUT /api/v1/comment/primaries/:commentId
+// @route     DELETE /api/v1/comment/primaries/:commentId
+// @route     PUT /api/v1/comment/secondaries/:commentId
+// @route     DELETE /api/v1/comment/secondaries/:commentId
+// @access    Auth
 
 const updateOrDeleteComment = ({ isPrimary = true, isDelete = false }) =>
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

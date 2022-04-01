@@ -1,4 +1,4 @@
-import { AuthUser } from "@lib/types/UserType";
+import UserType from "@lib/types/UserType";
 import axios from "../axios";
 
 export const formFields = {
@@ -23,7 +23,8 @@ export type AuthResponse = {
   matchedIdentifiers: string[];
   message: string | string[];
   redirectUrl: string;
-  user: AuthUser;
+  user: UserType;
+  accessToken: string;
   status: "ok" | "error";
 };
 

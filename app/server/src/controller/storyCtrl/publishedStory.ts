@@ -13,7 +13,9 @@ import { isAbleToPublished } from "../../lib/schema/story";
 // @access    Auth [Reader]
 const publishedStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let story = await Story.findById(req.params.storyId);
+    let story = await await Story.findById(req.params.storyId).select(
+      "+hadEmailedToFollowers"
+    );
 
     if (!story)
       return next(ErrorResponse(400, "No resources found with this id."));

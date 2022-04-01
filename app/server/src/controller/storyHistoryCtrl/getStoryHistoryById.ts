@@ -4,7 +4,7 @@ import Story from "../../models/Story";
 import StoryHistory from "../../models/StoryHistory";
 
 // @desc      getStoryHistoryById
-// @route     GET /api/v1/stories/:storyId/histories/:historyId
+// @route     GET /api/v1/storyhistories/:storyId/:historyId
 // @access    Auth,Admin,Public
 
 export const getStoryHistoryById = asyncHandler(

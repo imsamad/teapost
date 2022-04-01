@@ -3,12 +3,16 @@ interface User {
   _id: string;
   email: string;
   username: string;
-  profilePic: string;
-  password: string;
-  isEmailVerified: boolean;
-  isAuthorised: boolean;
   role: string | "admin" | "reader" | "author";
-  createdAt?: Date;
+  createdAt: Date;
+
+  fullName: string;
+  profilePic: string;
+  tagLines: string[];
+  following: number;
+  followers: number;
+  isEmailVerified?: boolean;
+  isAuthorised?: boolean;
   updatedAt?: Date;
   profile?: ProfileType;
 }

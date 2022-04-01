@@ -19,9 +19,9 @@ import { TPInput, TPTextarea } from "../FormFields";
 
 const Index = () => {
   const { isOpen, onClose, onToggle } = useDisclosure();
-  const { profile, mutateProfile } = useProfile();
+  const { myProfile, mutateProfile } = useProfile();
 
-  const alreadyCreatedCollections = profile.storyCollections?.map(
+  const alreadyCreatedCollections = myProfile.storyCollections?.map(
     (collection) => collection?.title?.toLowerCase()
   );
   const toast = useToast();

@@ -8,15 +8,21 @@ interface Story {
   titleImage: string;
   subtitle: string;
   slug: string;
-  tags: Tag["_id"] | Tag[];
+  tags: Tag[];
   content: string;
   keywords: string;
   isPublished: boolean;
   isPublishedByAdmin: boolean;
-  data: Object;
-  author: string;
-  meta: StoryMeta;
+
   readingTime: number;
+  noOfViews: number;
+  noOfComments: number;
+  noOfLikes: number;
+  noOfDislikes: number;
+
+  meta?: StoryMeta;
+
+  author: string;
 }
 
 export default Story;

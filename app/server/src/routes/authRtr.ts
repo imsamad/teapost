@@ -7,7 +7,6 @@ import {
   verifyEmail,
   getMe,
   followAuthor,
-  addToCollection,
   forgotPassword,
   resetPaswordPage,
   resetPasword,
@@ -18,12 +17,7 @@ import {
 
 import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
-import {
-  addToCollectionSchema,
-  followSchema,
-  logInSchema,
-  registerSchema,
-} from "../lib/schema/auth";
+import { followSchema, logInSchema, registerSchema } from "../lib/schema/auth";
 
 router.post("/login", validateSchema(logInSchema), logIn);
 router.post("/register", validateSchema(registerSchema), register);
@@ -40,7 +34,7 @@ router.post("/forgotidentifier", forgotIdentifier);
 router.use(protect);
 router.get("/me", getMe);
 router.put("/changeemail", protect, changeEmail);
-router.put("/updatedetails", protect, updateDetails);
+router.put("/update", protect, updateDetails);
 
 router
   .route("/unfollow/:authorId")
@@ -49,9 +43,5 @@ router
 router
   .route("/follow/:authorId")
   .put(validateSchema(followSchema), followAuthor(true));
-
-router
-  .route("/collection/add/:storyId")
-  .put(validateSchema(addToCollectionSchema), addToCollection);
 
 export default router;

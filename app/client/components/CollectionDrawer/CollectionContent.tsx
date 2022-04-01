@@ -16,28 +16,28 @@ import CollectionFooter from "./CollectionFooter";
 import NewCollection from "../NewCollection";
 import CollectionRow from "./CollectionRow";
 const Content = ({ storySelected }: { storySelected: string }) => {
-  const { profile } = useProfile();
+  const { myProfile } = useProfile();
   //   extract collId of which current SelectStory is part of
 
-  const partOf: string[] =
+  const storyPartOf: string[] =
     //  If story is selected , plus logged in
-    storySelected && profile?._id
-      ? profile?.storyCollections
-        ? profile?.storyCollections
+    storySelected && myProfile?._id
+      ? myProfile?.storyCollections
+        ? myProfile?.storyCollections
             ?.filter((collection) => collection.stories.includes(storySelected))
             .map((coll) => coll._id)
         : []
       : [];
 
   const [sendObj, setSendObj] = useState<{
-    partOf: string[];
+    storyPartOf: string[];
     removeFrom: string[];
   }>({
-    partOf,
+    storyPartOf,
     removeFrom: [],
   });
   // useEffect(() => {
-  //   setSendObj({ removeFrom: [], addTo: partOf });
+  //   setSendObj({ removeFrom: [], addTo: storyPartOf });
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [storySelected]);
 
@@ -47,8 +47,10 @@ const Content = ({ storySelected }: { storySelected: string }) => {
 
   const handleSubmit = async () => {
     const finalObj = {
-      addTo: sendObj.partOf.filter((coll) => !partOf.includes(coll)),
-      removeFrom: sendObj.removeFrom.filter((coll) => partOf.includes(coll)),
+      addTo: sendObj.storyPartOf.filter((coll) => !storyPartOf.includes(coll)),
+      removeFrom: sendObj.removeFrom.filter((coll) =>
+        storyPartOf.includes(coll)
+      ),
     };
     if (!finalObj.addTo.length && !finalObj.removeFrom.length) {
       toast({
@@ -91,12 +93,12 @@ const Content = ({ storySelected }: { storySelected: string }) => {
         setSendObj((pre) => ({
           ...pre,
           removeFrom: pre.removeFrom.filter((coll: string) => coll != collId),
-          partOf: [...pre.partOf, collId],
+          storyPartOf: [...pre.storyPartOf, collId],
         }));
       } else {
         setSendObj((pre) => ({
           ...pre,
-          partOf: pre.partOf.filter((coll: string) => coll != collId),
+          storyPartOf: pre.storyPartOf.filter((coll: string) => coll != collId),
           removeFrom: [...pre.removeFrom, collId],
         }));
       }
@@ -105,7 +107,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
   return (
     <>
       <DrawerBody p="2">
-        {!profile._id ? (
+        {!myProfile._id ? (
           <VStack>
             <Heading fontSize="md">Please Login first</Heading>
             <Button onClick={login.onOpen} colorScheme="blue" size="sm">
@@ -119,7 +121,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
               Add To
             </Heading>
             <Divider />
-            {profile?.storyCollections?.map((collection) => (
+            {myProfile?.storyCollections?.map((collection) => (
               <CollectionRow
                 key={collection._id}
                 sendObj={sendObj}
@@ -132,7 +134,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
         )}
       </DrawerBody>
 
-      {profile._id && (
+      {myProfile._id && (
         <CollectionFooter
           handleSubmit={handleSubmit}
           isOpen={loadingState.isOpen}

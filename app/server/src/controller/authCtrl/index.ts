@@ -3,7 +3,6 @@ import register from "./register";
 import verifyEmail from "./verifyEmail";
 import getMe from "./getMe";
 import followAuthor from "./followAuthor";
-import addToCollection from "./addToCollection";
 import changeEmail from "./changeEmail";
 import updateDetails from "./updateDetails";
 import forgotPassword from "./forgotPassword";
@@ -16,7 +15,6 @@ export {
   verifyEmail,
   getMe,
   followAuthor,
-  addToCollection,
   resetPaswordPage,
   resetPasword,
   forgotPassword,

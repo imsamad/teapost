@@ -16,7 +16,7 @@ import { useProfile } from "../Context";
 
 type CollRowProps = {
   collection: StoryCollectionType;
-  sendObj: { partOf: string[]; removeFrom: string[] };
+  sendObj: { storyPartOf: string[]; removeFrom: string[] };
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   isDisabled: boolean;
 };
@@ -41,7 +41,7 @@ const CollectionRow = ({
     <HStack mb="2">
       <HStack flex="1" overflow="hidden">
         <Checkbox
-          isChecked={sendObj.partOf.includes(collection._id)}
+          isChecked={sendObj.storyPartOf.includes(collection._id)}
           onChange={handleChange}
           isDisabled={isDisabled}
           icon={<CustomIcon />}

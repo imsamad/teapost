@@ -44,6 +44,11 @@ const updateStory = asyncHandler(
       isPublished,
       hadEmailedToFollowers,
       isPublishedByAdmin,
+      readingTime,
+      noOfViews,
+      noOfComments,
+      noOfLikes,
+      noOfDislikes,
       ...rest
     } = req.body;
     // @ts-ignore

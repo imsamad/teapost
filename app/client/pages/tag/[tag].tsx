@@ -38,7 +38,12 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
             <Heading size="md" textAlign="center">
               Stories
             </Heading>
-            <Stories stories={stories} />
+            <Stories
+              stories={stories}
+              nextPageNo={2}
+              query={`tags=${router.query.tag}`}
+              isInitial={true}
+            />
           </>
         ) : (
           <Heading textAlign="center">No stories found in this domain</Heading>

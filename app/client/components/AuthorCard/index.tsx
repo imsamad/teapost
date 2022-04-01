@@ -10,15 +10,14 @@ import Stats from "./Stats";
 const Index = ({
   author,
   numOfStories,
-  displayStats,
+  displayFull,
 }: {
   author: UserType;
   numOfStories?: number;
-  displayStats: boolean;
+  displayFull: boolean;
 }) => {
   const [numOfFollowers, setNumOfFollowers] = useState<number>(
-    // @ts-ignore
-    author?.profile?.followers?.length || 0
+    author?.followers || 0
   );
   const followCB = (hasBeenFollowing: boolean) =>
     setNumOfFollowers(
@@ -28,16 +27,12 @@ const Index = ({
   return (
     <>
       <Flex>
-        <Avatar
-          size="xl"
-          name={author.profile.fullName}
-          src={author.profile?.profilePic}
-        />
+        <Avatar size="md" name={author.fullName} src={author?.profilePic} />
         <Box border="0px" pl="8">
           <HStack mb="2" border="0px">
             <Stack justifyContent="center" pr="8px">
               <Text size="xl" fontWeight={700} lineHeight={1}>
-                {author.profile.fullName}
+                {author.fullName}
               </Text>
 
               <Text
@@ -52,19 +47,21 @@ const Index = ({
             </Stack>
             <FollowAuthor author={author} isFullBtn followCB={followCB} />
           </HStack>
-          <Text fontSize="md" fontWeight={300}>
-            {author?.profile?.tagLines?.map(
-              (tagLine, index) =>
-                index <= 2 && (
-                  <React.Fragment key={tagLine}>
-                    {`    ${tagLine}  ${index != 2 ? "|" : ""}`}
-                  </React.Fragment>
-                )
-            )}
-          </Text>
+          {displayFull && (
+            <Text fontSize="md" fontWeight={300}>
+              {author?.tagLines?.map(
+                (tagLine, index) =>
+                  index <= 2 && (
+                    <React.Fragment key={tagLine}>
+                      {`    ${tagLine}  ${index != 2 ? "|" : ""}`}
+                    </React.Fragment>
+                  )
+              )}
+            </Text>
+          )}
         </Box>
       </Flex>
-      {displayStats && numOfStories && (
+      {displayFull && numOfStories && (
         <Stats numOfStories={numOfStories} numOfFollowers={numOfFollowers} />
       )}
     </>

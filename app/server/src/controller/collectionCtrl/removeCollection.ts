@@ -5,6 +5,7 @@ import StoryCollection from "../../models/StoryCollection";
 // @desc      Delete collection
 // @route     DELETE /api/v1/collection/:collectionId
 // @access    Auth,Public,Admin
+
 const removeCollection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const collection = await StoryCollection.findOne({

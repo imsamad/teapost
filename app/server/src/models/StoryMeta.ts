@@ -4,8 +4,6 @@ import { UserDocument } from "./User";
 
 export interface StoryMetaDocument extends Document {
   _id: StoryDocument["_id"];
-  views: number;
-  comments: number;
   likedBy: Types.Array<UserDocument["_id"]>;
   dislikedBy: Types.Array<UserDocument["_id"]>;
 }
@@ -17,8 +15,6 @@ const storyMetaSchema = new Schema(
       required: true,
       ref: "Story",
     },
-    views: { type: Number, default: 0 },
-    comments: { type: Number, default: 0 },
     likedBy: {
       type: [
         {
@@ -46,16 +42,6 @@ const storyMetaSchema = new Schema(
     toJSON: { virtuals: true },
   }
 );
-storyMetaSchema.virtual("like").get(function () {
-  // @ts-ignore
-  const storyMeta = this as StoryMetaDocument;
-  return storyMeta.likedBy.length;
-});
-storyMetaSchema.virtual("dislike").get(function () {
-  // @ts-ignore
-  const storyMeta = this as StoryMetaDocument;
-  return storyMeta.dislikedBy.length;
-});
 const StoryMetaModel = model("StoryMeta", storyMetaSchema);
 
 export default StoryMetaModel;

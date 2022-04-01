@@ -30,7 +30,7 @@ const gradeStory = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
       revert dislike => pull from didikeStories    
       */
 
-    const profile = await Profile.findByIdAndUpdate(
+    await Profile.findByIdAndUpdate(
       user,
       isLike
         ? undo
@@ -69,9 +69,17 @@ const gradeStory = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
 
       { upsert: true, new: true }
     );
+    if (isLike) {
+      story.noOfLikes = undo ? story.noOfLikes - 1 : story.noOfLikes + 1;
+    } else {
+      story.noOfDislikes = undo
+        ? story.noOfDislikes - 1
+        : story.noOfDislikes + 1;
+    }
+    await story.save();
     res.json({
       status: "ok",
-      storyMeta,
+      story,
     });
   });
 

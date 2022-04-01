@@ -4,10 +4,11 @@ import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import Story from "../../models/Story";
 import Primary from "../../models/Comment/Primary";
 
-// @desc      Comment on story
-// @route     GET /api/v1/stories/comment/:storyId
+// @desc      Comment on story / Create Primary
+// @route     POST /api/v1/comments/primaries/:storyId
 // @access    Auth,Admin
-const commentStory = asyncHandler(
+
+const commentOnStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
@@ -15,11 +16,20 @@ const commentStory = asyncHandler(
     if (!storyExist) {
       return next(ErrorResponse(400, "Resource not found"));
     }
-    const primaryComment = await Primary.create({
-      user,
-      text: req.body.text,
-      story: storyExist._id,
-    });
+    const primaryComment = (
+      await Primary.create({
+        user,
+        text: req.body.text,
+        story: storyExist._id,
+      })
+    ).populate([
+      { path: "meta" },
+      {
+        path: "user",
+        select: "email username",
+      },
+    ]);
+    //   .lean();
     return res.json({
       status: "ok",
       comment: primaryComment,
@@ -27,4 +37,4 @@ const commentStory = asyncHandler(
   }
 );
 
-export default commentStory;
+export default commentOnStory;

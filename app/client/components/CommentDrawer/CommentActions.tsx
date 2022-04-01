@@ -1,10 +1,11 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   ButtonGroup,
   Collapse,
   HStack,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { useAuthCtx } from "@compo/Context";
 import TSButton from "@compo/UI/TSButton";
@@ -13,6 +14,7 @@ import { commentActions, likeOrDislikeComment } from "@lib/api/commentApi";
 import { CommentForDisplay } from "@lib/types/CommentTypes";
 import React from "react";
 import {
+  BiCrosshair,
   BiDislike,
   BiDotsVerticalRounded,
   BiLike,
@@ -31,15 +33,17 @@ const CommentActions = ({
   mutate: () => void;
   isEditOnOpen: () => void;
 }) => {
-  const { openLoginToast, user } = useAuthCtx();
+  const { openLoginToast, auth } = useAuthCtx();
 
   let actions = useDisclosure();
 
-  let hasBeenLiked = !!comment.meta?.likedBy?.includes(user?._id || ""),
-    hasBeenDisLiked = !!comment.meta?.dislikedBy?.includes(user?._id || "");
+  let hasBeenLiked = !!comment.meta?.likedBy?.includes(auth?.user?._id || ""),
+    hasBeenDisLiked = !!comment.meta?.dislikedBy?.includes(
+      auth?.user?._id || ""
+    );
   const inputState = useDisclosure();
   const handleLikeOrDislike = (isLike: boolean) => {
-    if (!user?._id) openLoginToast();
+    if (!auth?.user?._id) openLoginToast();
     else
       likeOrDislikeComment({
         isLike,
@@ -53,10 +57,10 @@ const CommentActions = ({
         })
         .catch((err) => {});
   };
-  const isAuthor = user?._id?.toString() == comment.user?._id.toString();
+  const isAuthor = auth?.user?._id?.toString() == comment?.user?._id.toString();
 
   const handleDelete = () => {
-    if (!user?._id) openLoginToast();
+    if (!auth?.user?._id) openLoginToast();
     else
       commentActions({
         commentId: comment._id,
@@ -111,22 +115,30 @@ const CommentActions = ({
                 <TSIconButton
                   onClick={() => actions.onToggle()}
                   isRound
-                  size="10px"
-                  variant="outline"
-                  icon={<BiDotsVerticalRounded />}
+                  size="xs"
+                  variant="solid"
+                  icon={
+                    actions.isOpen ? (
+                      <CloseIcon />
+                    ) : (
+                      <BiDotsVerticalRounded fontWeight={900} size="20px" />
+                    )
+                  }
                   aria-label="Edit Or Delete"
                 />
                 <Collapse in={actions.isOpen}>
-                  <HStack
+                  <VStack
                     zIndex="tooltip"
                     bgColor="white"
                     position="absolute"
                     right="0"
+                    top="25px"
                     borderColor="gray.200"
                     border="1px"
                     shadow="md"
                     borderRadius="md"
                     p="1"
+                    px="0.5px"
                     // onClick={(e) => {
                     //   actions.onClose();
                     //   isEdit.onOpen();
@@ -135,9 +147,10 @@ const CommentActions = ({
                   >
                     <TSIconButton
                       size="xs"
-                      variant="outline"
+                      variant="solid"
                       icon={<DeleteIcon />}
                       aria-label="Delete"
+                      colorScheme="red"
                       mx="2"
                       onClick={(e) => {
                         actions.onClose();
@@ -148,6 +161,7 @@ const CommentActions = ({
                     <TSIconButton
                       size="xs"
                       variant="outline"
+                      colorScheme="green"
                       icon={<EditIcon />}
                       aria-label="Edit"
                       onClick={() => {
@@ -155,7 +169,7 @@ const CommentActions = ({
                         isEditOnOpen();
                       }}
                     />
-                  </HStack>
+                  </VStack>
                 </Collapse>
               </Box>
             </Box>

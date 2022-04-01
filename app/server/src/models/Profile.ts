@@ -5,14 +5,11 @@ import { UserDocument } from "./User";
 import { StoryCollectionDocument } from "./StoryCollection";
 export interface ProfileDocument extends Document {
   id: UserDocument["id"];
-  fullName: string;
   likedStories: Types.Array<StoryDocument["_id"]>;
   dislikedStories: Types.Array<StoryDocument["_id"]>;
   following: Types.Array<UserDocument["_id"]>;
   followers: Types.Array<UserDocument["_id"]>;
   storyCollections: Types.Array<StoryCollectionDocument>;
-  tagLines: string[];
-  profilePic: string;
 }
 
 const profileSchema = new Schema(
@@ -21,10 +18,6 @@ const profileSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: [true, "User is required."],
       ref: "User",
-    },
-    fullName: {
-      type: String,
-      required: true,
     },
     likedStories: [
       {
@@ -50,8 +43,6 @@ const profileSchema = new Schema(
         ref: "User",
       },
     ],
-    tagLines: [String],
-    profilePic: String,
   },
   {
     timestamps: true,

@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express, { NextFunction, Router, Request, Response } from "express";
 import {
   getSecondaries,
   getPrimaries,
@@ -19,40 +19,52 @@ import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 
 const router: Router = express();
-
+const swapParams = (req: Request, res: Response, next: NextFunction) => {
+  req.params.commentId = req.params.storyId || req.params.primaryId;
+  next();
+};
 router
   .route("/primaries/:storyId")
   .get(validateSchema(reqSingleParams("storyId")), getPrimaries)
-  .post(validateSchema(replySchema("storyId")), createPrimary)
+  .post(protect, validateSchema(replySchema("storyId")), createPrimary)
   .put(
+    protect,
     validateSchema(replySchema("storyId")),
+    swapParams,
     updateOrDeleteComment({ isPrimary: true, isDelete: false })
   )
   .delete(
+    protect,
     validateSchema(reqSingleParams("storyId")),
+    swapParams,
     updateOrDeleteComment({ isPrimary: true, isDelete: true })
   );
+
+router.post(
+  "/secondaries/reply/:secondaryId",
+  protect,
+  validateSchema(replySchema("secondaryId")),
+  replyToSecondary
+);
 
 router
   .route("/secondaries/:primaryId")
   .get(validateSchema(reqSingleParams("primaryId")), getSecondaries)
-  .post(validateSchema(replySchema("primaryId")), createSecondary)
+  .post(protect, validateSchema(replySchema("primaryId")), createSecondary)
   .put(
+    protect,
     validateSchema(replySchema("primaryId")),
+    swapParams,
     updateOrDeleteComment({ isPrimary: false, isDelete: false })
   )
   .delete(
+    protect,
     validateSchema(reqSingleParams("primaryId")),
+    swapParams,
     updateOrDeleteComment({ isPrimary: false, isDelete: true })
   );
 
 router.use(protect);
-
-router.post(
-  "/reply/secondary/:commentId",
-  validateSchema(replySchema("commentId")),
-  replyToSecondary
-);
 
 router
   .route("/like/undo/:type/:commentId")

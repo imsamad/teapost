@@ -295,3 +295,75 @@ export const strArrSchema = (
 
   return schema;
 };
+export const monthList = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export function formatAMPM(date: Date) {
+  var hours = date.getHours();
+  var minutes: string | number = date.getMinutes();
+  var sec: string | number = date.getSeconds();
+  var ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  sec = sec < 10 ? "0" + sec : sec;
+
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}
+
+export const readAbleDate = (
+  value: Date,
+
+  isFull = true
+) => {
+  // let date: any = new Date(value);
+  let date = value;
+  let d: string | number = date.getDate(),
+    m: string | number = date.getMonth() + 1,
+    y: string | number = date.getFullYear();
+  d = d < 10 ? "0" + d : d;
+  m = m < 10 ? "0" + m : m;
+
+  // let dmy = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+  let dmy = `${d}-${m}-${y}`;
+
+  return !isFull ? dmy : `${dmy}, ${formatAMPM(date)}`;
+};
+/**
+ 
+
+  {
+    d = true,
+    m = true,
+    y = true,
+    h = true,
+    mi = true,
+    s = true,
+    z = true,
+    seperator = "-",
+    isFull,
+  }: {
+    d?: boolean;
+    m?: boolean;
+    y?: boolean;
+    h?: boolean;
+    mi?: boolean;
+    s?: boolean;
+    z?: boolean;
+    seperator: string;
+    isFull: boolean;
+  }
+ */

@@ -7,31 +7,56 @@ export interface PrimaryComment {
   story: StoryType["_id"];
   text: string;
   meta?: CommentMeta;
-  secondary: SecondaryComment[];
   noOfReplies: number;
+  noOfLikes: number;
+  noOfDislikes: number;
+  secondaries?: SecondaryComment[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface SecondaryComment {
   _id: string;
   user: UserType;
-  replyToPrimary: PrimaryComment["_id"] | PrimaryComment;
+  primary: PrimaryComment["_id"];
   text: string;
-  replyToSecondaryUser?: UserType;
-  replyToSecondary?: SecondaryComment["_id"];
+  secondaryUser?: UserType;
+  secondary?: SecondaryComment["_id"];
   meta?: CommentMeta;
+  noOfLikes: number;
+  noOfDislikes: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface CommentMeta {
   _id: PrimaryComment["_id"] | SecondaryComment["_id"];
   likedBy: UserType["_id"][];
   dislikedBy: UserType["_id"][];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CombineComment {
+  _id: string;
+  text: string;
+  user: UserType;
+  noOfLikes: number;
+  noOfDislikes: number;
+  createdAt: Date;
+  updatedAt: Date;
+  meta?: CommentMeta;
+
+  //primary
+  story?: string;
+  noOfReplies?: number;
+  //secondary
+  secondary?: string;
+  secondaryUser?: UserType;
 }
 interface PickSecondary
-  extends Pick<
-    SecondaryComment,
-    "replyToPrimary" | "replyToSecondary" | "replyToSecondaryUser"
-  > {}
+  extends Pick<SecondaryComment, "primary" | "secondary" | "secondaryUser"> {}
 
-export interface CommentForDisplay
-  extends Omit<PrimaryComment, "story">,
-    Partial<PickSecondary> {}
+// export interface CommentForDisplay
+//   extends Omit<PrimaryComment, "story">,
+//     Partial<PickSecondary> {}

@@ -11,7 +11,7 @@ import {
 import Render from "@compo/Renderer";
 import StoryType from "@lib/types/StoryType";
 import AuthorCard from "@compo/AuthorCard";
-import StoryActions from "@compo/StoryCard/StoryActions";
+import StoryActions from "@compo/StoryActions";
 import UserType from "@lib/types/UserType";
 import { readAbleDate } from "@lib/utils";
 import Content from "./Content";
@@ -42,10 +42,9 @@ const SingleStory = ({
         </AspectRatio>
         <StoryActions
           storyId={story._id}
-          like={story.noOfLikes || 0}
-          dislike={story.noOfDislikes || 0}
-          displayFull={true}
-          btnSize="sm"
+          noOfLikes={story.noOfLikes || 0}
+          noOfDislikes={story.noOfDislikes || 0}
+          noOfComments={story.noOfComments || 0}
         />
         <Content storyId={story._id} />
       </Stack>

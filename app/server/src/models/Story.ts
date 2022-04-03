@@ -27,7 +27,7 @@ const storySchema = new Schema(
       type: String,
       trim: true,
       lowercase: true,
-      // unique: true,
+      unique: true,
       required: true,
     },
     tags: {
@@ -83,7 +83,6 @@ storySchema.post(["save", "updateOne"], errorHandlerMdlwr);
 storySchema.post("findOneAndUpdate", errorHandlerMdlwr);
 
 async function errorHandlerMdlwr(error: any, doc: StoryDocument, next: any) {
-  console.log("error error ", error);
   if (error) {
     if (error?.code === 11000) {
       next(

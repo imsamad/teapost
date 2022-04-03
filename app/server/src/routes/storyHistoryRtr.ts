@@ -10,10 +10,7 @@ import { protect } from "../middleware/auth";
 
 import validateSchema from "../middleware/validateSchema";
 
-import {
-  likeOrDislikeSchema,
-  storyHistoryByIdScheme,
-} from "../lib/schema/story";
+import { storyHistoryByIdScheme } from "../lib/schema/story";
 
 const router: Router = express();
 
@@ -28,11 +25,7 @@ router
 
 router
   .route("/:storyId")
-  .get(protect, validateSchema(likeOrDislikeSchema), getStoryHistory)
-  .delete(
-    protect,
-    validateSchema(likeOrDislikeSchema),
-    deleteStoryHistoryById({ isAll: true })
-  );
+  .get(protect, getStoryHistory)
+  .delete(protect, deleteStoryHistoryById({ isAll: true }));
 
 export default router;

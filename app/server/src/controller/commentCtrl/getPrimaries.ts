@@ -8,25 +8,14 @@ import Primary from "../../models/Comment/Primary";
 
 const getPrimaries = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const comments = await Primary.find({ story: req.params.storyId })
+    const comments = await Primary.find({
+      story: { $in: req.params.storyId },
+    })
       .populate([
         { path: "meta" },
         {
           path: "user",
           select: "email username",
-        },
-        {
-          path: "secondary",
-          populate: [
-            {
-              path: "user",
-              select: "email username",
-            },
-            {
-              path: "secondaryUser",
-              select: "username",
-            },
-          ],
         },
       ])
       .lean();

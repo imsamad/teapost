@@ -33,15 +33,22 @@ const updateDetails = asyncHandler(
 
     // @ts-ignore
     user.username = username || user?.username;
+    // @ts-ignore
     user.fullName = fullName || user?.fullName;
+
+    // @ts-ignore
     user.tagLines = tagLines || user?.tagLines;
+    // @ts-ignore
     user.profilePic = profilePic || user?.profilePic;
     let message = "";
     const moveForward = async () =>
+      // @ts-ignore
       sendTokens(await user.save(), 200, res, { currentPassword: message });
 
     if (currentPassword && newPassword) {
+      // @ts-ignore
       if (await user.matchPassword(currentPassword))
+        // @ts-ignore
         user.password = currentPassword;
       else {
         message = "Password does not match";

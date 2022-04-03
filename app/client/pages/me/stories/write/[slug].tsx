@@ -15,6 +15,7 @@ const Index = ({ story }: { story: StoryType }) => {
     if (router.query.slug != story.slug) {
       router.push(story.slug, undefined, { shallow: true });
     }
+    localStorage.setItem("initialStory", JSON.stringify(story));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

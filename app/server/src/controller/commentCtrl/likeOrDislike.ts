@@ -31,7 +31,7 @@ const likeOrDislike = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
 
     const commentId = comment._id;
 
-    await CommentMeta.findByIdAndUpdate(
+    const commentMeta = await CommentMeta.findByIdAndUpdate(
       commentId,
       isLike
         ? undo
@@ -53,13 +53,11 @@ const likeOrDislike = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
         new: true,
       }
     );
-    if (isLike) {
-      comment.noOfLikes = undo ? comment.noOfLikes - 1 : comment.noOfLikes + 1;
-    } else {
-      comment.noOfDislikes = undo
-        ? comment.noOfDislikes - 1
-        : comment.noOfDislikes + 1;
-    }
+
+    comment.noOfLikes = commentMeta.likedBy.length;
+
+    comment.noOfDislikes = commentMeta.dislikedBy.length;
+    comment.updatedAt = comment.createdAt;
     await comment.save();
     res.json({
       status: "ok",

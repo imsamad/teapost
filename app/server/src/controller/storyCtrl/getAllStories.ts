@@ -15,15 +15,12 @@ const getAllStories = asyncHandler(
             isPublishedByAdmin: true,
           }
         : {};
-    console.log("req.query ", req.query);
+
     // @ts-ignore
     let stories: any = Story.find({ ...req.query, ...filter }).populate([
       {
         path: "author",
-        transform: (v: any) => {
-          // console.log("vvvvvvvvv ", v);
-          return peelUserDoc(v);
-        },
+        transform: (v: any) => peelUserDoc(v),
       },
       {
         path: "tags",
@@ -85,6 +82,7 @@ const getAllStories = asyncHandler(
     } else if (req.query.onlycontent) {
       stories = stories.map(({ content }: any) => ({ content }));
     }
+    // return res.json(await Story.find({}).lean());
     return res.status(200).json({
       status: "ok",
       pagination,

@@ -69,17 +69,13 @@ const gradeStory = ({ isLike, undo }: { isLike: boolean; undo: boolean }) =>
 
       { upsert: true, new: true }
     );
-    if (isLike) {
-      story.noOfLikes = undo ? story.noOfLikes - 1 : story.noOfLikes + 1;
-    } else {
-      story.noOfDislikes = undo
-        ? story.noOfDislikes - 1
-        : story.noOfDislikes + 1;
-    }
-    await story.save();
+
+    story.noOfLikes = storyMeta.likedBy.length;
+    story.noOfDislikes = storyMeta.dislikedBy.length;
+
     res.json({
       status: "ok",
-      story,
+      story: await story.save(),
     });
   });
 

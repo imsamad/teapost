@@ -16,7 +16,7 @@ export const getAllUsers = asyncHandler(
         : usersDoc.map((user) => ({
             _id: user._id,
             username: user.username,
-            fullName: user?.profile?.fullName,
+            fullName: user.fullName,
             email: user.email,
             followers: user?.profile?.followers?.length || 0,
           })),

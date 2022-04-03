@@ -43,7 +43,7 @@ const followAuthor = (toFollow: boolean) =>
     });
 
     return res.json({
-      status: "ok",
+      status: "ok", //@ts-ignore
       user: peelUserDoc(user),
     });
   });

@@ -16,23 +16,21 @@ const commentOnStory = asyncHandler(
     if (!storyExist) {
       return next(ErrorResponse(400, "Resource not found"));
     }
-    const primaryComment = (
-      await Primary.create({
-        user,
-        text: req.body.text,
-        story: storyExist._id,
-      })
-    ).populate([
-      { path: "meta" },
-      {
-        path: "user",
-        select: "email username",
-      },
-    ]);
+    const primaryComment = await Primary.create({
+      user,
+      text: req.body.text,
+      story: storyExist._id,
+    });
     //   .lean();
     return res.json({
       status: "ok",
-      comment: primaryComment,
+      comment: await primaryComment.populate([
+        { path: "meta" },
+        {
+          path: "user",
+          select: "email username",
+        },
+      ]),
     });
   }
 );

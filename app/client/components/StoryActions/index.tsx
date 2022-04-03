@@ -1,10 +1,10 @@
-import { ButtonGroup, ThemingProps } from "@chakra-ui/react";
+import { ButtonGroup } from "@chakra-ui/react";
 import TSButton from "@compo/UI/TSButton";
 import TSIconButton from "@compo/UI/TSIconButton";
 import { BiCommentAdd, BiDislike, BiLike } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import { AiFillFileAdd } from "react-icons/ai";
-// import StoryActions from "./StoryActions";
+
 const StoryActions = dynamic(() => import("./StoryActions"), {
   ssr: false,
   loading: () => <Temp />,
@@ -12,27 +12,25 @@ const StoryActions = dynamic(() => import("./StoryActions"), {
 
 export default function index({
   storyId,
-  like,
-  dislike,
-  btnSize = "xs",
-  displayFull = false,
+  noOfLikes,
+  noOfDislikes,
+  noOfComments,
 }: {
   storyId: string;
-  like: number;
-  dislike: number;
-  btnSize?: ThemingProps<"Button">["size"];
-  displayFull?: boolean;
+  noOfLikes: number;
+  noOfDislikes: number;
+  noOfComments: number;
 }) {
   return (
     <StoryActions
       storyId={storyId}
-      like={like}
-      dislike={dislike}
-      btnSize={btnSize}
-      displayFull={displayFull}
+      noOfLikes={noOfLikes}
+      noOfDislikes={noOfDislikes}
+      noOfComments={noOfComments}
     />
   );
 }
+
 const Temp = () => {
   return (
     <ButtonGroup spacing={3} alignItems="center">

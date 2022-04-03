@@ -12,6 +12,8 @@ export interface PrimaryComment {
   noOfDislikes: number;
   secondary?: SecondaryComment[];
   meta?: CommentMeta;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface SecondaryComment {
@@ -24,6 +26,8 @@ export interface SecondaryComment {
   noOfLikes: number;
   noOfDislikes: number;
   meta?: CommentMeta;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface CommentMeta {

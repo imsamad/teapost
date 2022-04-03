@@ -65,7 +65,6 @@ const addStories = asyncHandler(
 
     Promise.allSettled(updatePromise)
       .then((upRes) => {
-        console.log("upResupRes ", upRes);
         //   Send back all collections
       })
       .catch((err: any) => {})

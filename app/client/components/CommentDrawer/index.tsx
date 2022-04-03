@@ -1,83 +1,42 @@
-import {
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  Heading,
-} from "@chakra-ui/react";
-import { PrimaryComment } from "@lib/types/CommentTypes";
-import useSWR from "swr";
+import TSIconButton from "@compo/UI/TSIconButton";
+import { BiCommentAdd } from "react-icons/bi";
+import Router from "next/router";
+import Drawer from "./Drawer";
+import { useDisclosure } from "@chakra-ui/react";
+import { useState } from "react";
 
-import CommentInput from "./CommentInput";
-import CommentSkeleton from "./CommentSkeleton";
-import Comment from "./Comment";
-
-const Index = ({
-  isOpen,
-  onClose,
-  storySelected,
+const CommentDrawer = ({
+  noOfComments,
+  storyId,
 }: {
-  isOpen: boolean;
-  storySelected: string;
-  onClose: () => void;
+  storyId: string;
+  noOfComments: number;
 }) => {
-  const { data, isValidating, mutate } = useSWR<{ comments: PrimaryComment[] }>(
-    () => storySelected && `/comments/primaries/${storySelected}`
+  const isOnHomePage = ["/", "/home", "/@/[author]", "/tag/[tag]"].includes(
+    Router.pathname
   );
+  const drawer = useDisclosure();
 
   return (
-    <Drawer
-      isOpen={isOpen && Boolean(storySelected)}
-      onClose={onClose}
-      size="sm"
-    >
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>Comments</DrawerHeader>
-        <DrawerBody p="3" px="10px">
-          {isValidating && !data?.comments ? (
-            <CommentSkeleton />
-          ) : data?.comments && data?.comments?.length > 0 ? (
-            data.comments.map((comment) => (
-              <Comment
-                mutate={() => mutate()}
-                key={comment._id}
-                comment={comment}
-                isPrimary={true}
-              />
-            ))
-          ) : (
-            <Heading
-              textAlign="justify"
-              size="md"
-              fontStyle="italic"
-              color="green.600"
-            >
-              No comments, be first one to comment
-            </Heading>
-          )}
-        </DrawerBody>
-        <DrawerFooter
-          borderTop="2px"
-          borderColor="blue.500"
-          borderStyle="dashed"
-          px="4"
-          py="2"
-          justifyContent="flex-start"
-        >
-          <CommentInput
-            placeholder="Add Comment..."
-            storyId={storySelected}
-            mutate={() => mutate()}
-          />
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <>
+      <TSIconButton
+        aria-label="comment"
+        size={isOnHomePage ? "xs" : "sm"}
+        variant={isOnHomePage ? "solid" : "outline"}
+        colorScheme={isOnHomePage ? "gray" : "purple"}
+        icon={<BiCommentAdd />}
+        onClick={drawer.onOpen}
+      />
+      {drawer.isOpen && (
+        <Drawer
+          isOpen={drawer.isOpen}
+          onClose={drawer.onClose}
+          storyId={storyId}
+          noOfComments={noOfComments}
+        />
+      )}
+    </>
   );
 };
 
-export default Index;
+export default CommentDrawer;

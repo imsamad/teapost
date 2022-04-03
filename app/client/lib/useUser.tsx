@@ -4,10 +4,10 @@ import Router from "next/router";
 import { useAuthCtx } from "../components/Context";
 
 const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
-  const { user, setUser, logout: logOutUser } = useAuthCtx();
+  const { auth, setAuth, logout: logOutUser } = useAuthCtx();
 
   const setCookies = (user: any, customRedirect?: string) => {
-    setUser(user);
+    setAuth(user);
 
     if (customRedirect || redirectTo) {
       const to = customRedirect || redirectTo;
@@ -25,15 +25,15 @@ const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
       return;
     }
     const haveToRediectButUserNotLoggedIn =
-        redirectTo && !redirectToIfLoggedIn && !user,
-      redirectToIfUserLoggedIn = redirectToIfLoggedIn && user;
+        redirectTo && !redirectToIfLoggedIn && !auth,
+      redirectToIfUserLoggedIn = redirectToIfLoggedIn && auth;
 
     if (haveToRediectButUserNotLoggedIn || redirectToIfUserLoggedIn) {
       Router.push(redirectTo);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, redirectTo, redirectToIfLoggedIn]);
-  return { user, setCookies, logout };
+  }, [auth, redirectTo, redirectToIfLoggedIn]);
+  return { auth, setCookies, logout };
 };
 
 export default useUser;

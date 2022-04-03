@@ -15,16 +15,16 @@ import CollectionFooter from "./CollectionFooter";
 
 import NewCollection from "../NewCollection";
 import CollectionRow from "./CollectionRow";
-const Content = ({ storySelected }: { storySelected: string }) => {
+const Content = ({ storyId }: { storyId: string }) => {
   const { myProfile } = useProfile();
   //   extract collId of which current SelectStory is part of
 
   const storyPartOf: string[] =
     //  If story is selected , plus logged in
-    storySelected && myProfile?._id
+    storyId && myProfile?._id
       ? myProfile?.storyCollections
         ? myProfile?.storyCollections
-            ?.filter((collection) => collection.stories.includes(storySelected))
+            ?.filter((collection) => collection.stories.includes(storyId))
             .map((coll) => coll._id)
         : []
       : [];
@@ -39,7 +39,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
   // useEffect(() => {
   //   setSendObj({ removeFrom: [], addTo: storyPartOf });
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [storySelected]);
+  // }, [storyId]);
 
   const loadingState = useDisclosure();
 
@@ -62,7 +62,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
       });
     } else {
       loadingState.onOpen();
-      addToCollection(finalObj, storySelected)
+      addToCollection(finalObj, storyId)
         .then(() => {
           toast({
             status: "success",
@@ -125,7 +125,7 @@ const Content = ({ storySelected }: { storySelected: string }) => {
               <CollectionRow
                 key={collection._id}
                 sendObj={sendObj}
-                isDisabled={!storySelected}
+                isDisabled={!storyId}
                 handleChange={handleChange(collection._id)}
                 collection={collection}
               />

@@ -2,27 +2,28 @@ import { useDisclosure } from "@chakra-ui/react";
 import { useAuthCtx, useProfile } from "@compo/Context";
 import TSButton from "@compo/UI/TSButton";
 import { likeOrDislikeStory } from "@lib/api/storyApi";
+import Router from "next/router";
 import React, { useEffect, useState } from "react";
 import { BiDislike, BiLike } from "react-icons/bi";
 
 const LikeAndDislike = ({
   storyId,
-  like,
-  dislike,
-  size,
-  displayFull,
+  noOfLikes,
+  noOfDislikes,
 }: {
   storyId: string;
-  like: number;
-  dislike: number;
-  size: string;
-  displayFull?: boolean;
+  noOfLikes: number;
+  noOfDislikes: number;
 }) => {
-  const { myProfile, mutateProfile } = useProfile();
+  const isOnHomePage = ["/", "/home", "/@/[author]", "/tag/[tag]"].includes(
+    Router.pathname
+  );
 
+  const { myProfile, mutateProfile } = useProfile();
+  console.log("Router.pathname ", Router.pathname);
   const [grade, setGrade] = useState({
-    like,
-    dislike,
+    noOfLikes,
+    noOfDislikes,
     hadBeenLiked: false,
     hadBeenDisLiked: false,
   });
@@ -35,12 +36,15 @@ const LikeAndDislike = ({
         hadBeenDisLiked: !!myProfile?.dislikedStories?.includes(storyId),
       }));
 
-      if (!!myProfile?.likedStories?.includes(storyId) && grade.like == 0) {
+      if (
+        !!myProfile?.likedStories?.includes(storyId) &&
+        grade.noOfLikes == 0
+      ) {
         setGrade((pre) => ({ ...pre, like: 1 }));
       }
       if (
         !!myProfile?.dislikedStories?.includes(storyId) &&
-        grade.dislike == 0
+        grade.noOfDislikes == 0
       ) {
         setGrade((pre) => ({ ...pre, dislike: 1 }));
       }
@@ -64,14 +68,15 @@ const LikeAndDislike = ({
       isLike,
     });
     if (data) {
-      // console.log("like ", data.story.noOfLikes);
-      // console.log("dislike ", data.story.noOfDislikes);
       await mutateProfile();
-      setGrade((pre: any) => ({
-        ...pre,
-        like: data.story.noOfLikes,
-        dislike: data.story.noOfDislikes,
-      }));
+      setGrade({
+        noOfLikes: data.story.noOfLikes,
+        noOfDislikes: data.story.noOfDislikes,
+        hadBeenDisLiked:
+          data.story.noOfLikes < data.story.noOfDislikes ? true : false,
+        hadBeenLiked:
+          data.story.noOfLikes > data.story.noOfDislikes ? true : false,
+      });
       loading.onClose();
     } else loading.onClose();
   };
@@ -87,11 +92,11 @@ const LikeAndDislike = ({
           color: "blue",
         }}
         leftIcon={<BiLike />}
-        size={size}
-        variant={displayFull ? "outline" : "solid"}
-        colorScheme={displayFull ? "purple" : "gray"}
+        size={isOnHomePage ? "xs" : "sm"}
+        variant={!isOnHomePage ? "outline" : "solid"}
+        colorScheme={!isOnHomePage ? "purple" : "gray"}
       >
-        {grade.like}
+        {grade.noOfLikes}
       </TSButton>
 
       <TSButton
@@ -102,12 +107,12 @@ const LikeAndDislike = ({
           color: "pink",
         }}
         leftIcon={<BiDislike />}
-        size={size}
-        variant={displayFull ? "outline" : "solid"}
-        colorScheme={displayFull ? "purple" : "gray"}
+        size={isOnHomePage ? "xs" : "sm"}
+        variant={!isOnHomePage ? "outline" : "solid"}
+        colorScheme={!isOnHomePage ? "purple" : "gray"}
         onClick={() => handleGrade(false)}
       >
-        {grade.dislike}
+        {grade.noOfDislikes}
       </TSButton>
     </>
   );

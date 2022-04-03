@@ -9,13 +9,13 @@ import {
 import CollectionContent from "./CollectionContent";
 
 const Index = ({
-  storySelected,
+  storyId,
   isOpen,
   onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  storySelected: string;
+  storyId: string;
 }) => {
   return (
     <Drawer size="xs" isOpen={isOpen} placement="right" onClose={onClose}>
@@ -25,7 +25,7 @@ const Index = ({
         <DrawerHeader borderBottomWidth="1px">
           My Story collections
         </DrawerHeader>
-        <CollectionContent storySelected={storySelected} />
+        <CollectionContent storyId={storyId} />
       </DrawerContent>
     </Drawer>
   );

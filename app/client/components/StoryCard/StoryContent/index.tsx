@@ -1,16 +1,15 @@
 import { Box, Center, Heading, HStack, Stack } from "@chakra-ui/react";
 // @ts-ignore
 import { Image } from "cloudinary-react";
-import StoryActions from "../StoryActions";
+import StoryActions from "../../StoryActions";
 import MyLink from "../../MyLink";
 import StoryType from "@lib/types/StoryType";
 
 const index = ({ story }: { story: StoryType }) => {
-  // console.log("title ", story.title);
   return (
     <HStack>
       <Stack pr="15px" flex="1">
-        <MyLink href={`/story/${story.slug}`}>
+        <MyLink href={`/story/${story.slug}`} scroll={false}>
           <Stack role="group">
             <Heading
               my="4px"
@@ -49,8 +48,9 @@ const index = ({ story }: { story: StoryType }) => {
         </MyLink>
         <StoryActions
           storyId={story._id}
-          like={story?.noOfLikes || 0}
-          dislike={story?.noOfDislikes || 0}
+          noOfLikes={story?.noOfLikes || 0}
+          noOfDislikes={story?.noOfDislikes || 0}
+          noOfComments={story.noOfComments}
         />
       </Stack>
       <MyLink href={`/story/${story.slug}`}>

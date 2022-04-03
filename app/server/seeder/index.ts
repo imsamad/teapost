@@ -28,27 +28,32 @@ import Secondary from "../src/models/Comment/Secondary";
 import CommentMeta from "../src/models/Comment/CommentMeta";
 
 import dbConnect from "../src/db/connectDB";
-
+import { nanoid } from "nanoid";
+const getNewStories = () => {
+  let temp: any = [];
+  for (var i = 0; i < 100; i++)
+    temp = [
+      ...temp,
+      ...stories.map((story, index) => ({
+        ...story,
+        slug: nanoid(),
+      })),
+    ];
+  return temp;
+  // console.log("temp", temp);
+};
 const importData = async () => {
   try {
-    await Tag.create(tags);
-    await Image.create(images);
-    await User.create(users);
-    // await Profile.create(
-    //   users.map((user) => ({
-    //     _id: user._id,
-    //     fullName: "fullName",
-    //     tagLines: ["Programmer", "Author of example.com", " Technical Writer"],
-    //   }))
+    // await Tag.create(tags);
+    // await Image.create(images);
+    // await User.create(users);
+
+    // await StoryCollection.create(
+    //   users.map((user) => ({ user: user._id, title: "Read Later" }))
     // );
-    await StoryCollection.create(
-      users.map((user) => ({ user: user._id, title: "Read Later" }))
-    );
-    let temp: any = [];
-    for (var i = 0; i < 100; i++) temp = [...temp, ...stories];
-    // ar.forEach((i) => temp.push(stories));
-    // console.log("temp ", temp[0]);
-    const storiesss = await Story.create(temp);
+
+    // const storiesss = await Story.create(stories);
+    await Story.findOne({ title: "title" });
     // console.log("storiesssstoriesss ", storiesss);
     // await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
 
@@ -74,14 +79,23 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    await User.deleteMany();
-    await Image.deleteMany();
-    await Story.deleteMany();
-    await Tag.deleteMany();
-    await Profile.deleteMany();
-    await StoryMeta.deleteMany();
-    await StoryCollection.deleteMany();
+    // await User.deleteMany();
+    // await Image.deleteMany();
+    // await Story.findOne({ title: "title" });
+    // await Story.deleteMany();
+    // await Tag.deleteMany();
+    // await Profile.deleteMany();
+    // await StoryMeta.deleteMany();
+    // await StoryCollection.deleteMany();
+
+    primaries.forEach(async ({ story }) => {
+      await Story.findByIdAndUpdate(story, {
+        noOfComments: 0,
+      });
+    });
+
     await Primary.deleteMany();
+
     await Secondary.deleteMany();
     await CommentMeta.deleteMany();
     console.log("data deleted ");

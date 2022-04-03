@@ -35,6 +35,10 @@ export interface StoryFormType
     | "meta"
     | "updatedAt"
     | "createdAt"
+    | "noOfViews"
+    | "noOfComments"
+    | "noOfLikes"
+    | "noOfDislikes"
   > {
   additionalTags: string[];
 }

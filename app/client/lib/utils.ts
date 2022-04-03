@@ -206,3 +206,33 @@ export const toPascalCase = (str: string, spaceBeforeCapital = true) => {
     return g1.toUpperCase() + g2.toLowerCase();
   });
 };
+export function timeSince(date: Date) {
+  let now = new Date(),
+    createdAt = new Date(date);
+  // @ts-ignore
+  const timeLapse = now - createdAt;
+  var seconds = Math.floor(timeLapse / 1000);
+
+  var interval = seconds / 31536000;
+
+  if (interval > 1) {
+    return Math.floor(interval) + " y";
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    return Math.floor(interval) + " mo";
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return Math.floor(interval) + " d";
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return Math.floor(interval) + " h";
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return Math.floor(interval) + " mi";
+  }
+  return Math.floor(seconds) + " sec";
+}

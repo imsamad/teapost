@@ -35,10 +35,10 @@ const Index = ({
     }
     observer.current = new IntersectionObserver(
       async (entries, observerInst) => {
-        console.log({ isInitial, entries, observerInst });
         if (entries[0].isIntersecting) {
           let data = await getStories(nextPageNo, query);
-          if (!data.pagination.next) setData({ noResult: true, stories: [] });
+          if (!data.pagination.next || !data.stories.length)
+            setData({ noResult: true, stories: [] });
           else setData({ stories: data.stories, noResult: false });
           observer?.current?.disconnect(node);
           observerInst?.unobserve(entries[0].target);

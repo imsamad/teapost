@@ -57,13 +57,15 @@ primaryCommentSchema.virtual("meta", {
 });
 
 primaryCommentSchema.pre("save", async function (next) {
-  console.log("upper from primarycomment", this?.isNew);
   if (!this.isNew) return next();
-
-  await this.model("Story").findByIdAndUpdate(this.story.toString(), {
-    _id: this.story.toString(),
-    $inc: { noOfComments: 1 },
-  });
+  const update = await this.model("Story").findByIdAndUpdate(
+    this.story.toString(),
+    {
+      _id: this.story.toString(),
+      $inc: { noOfComments: 1 },
+    },
+    { new: true }
+  );
   next();
 });
 

@@ -9,32 +9,20 @@ import Secondary from "../../models/Comment/Secondary";
 
 const replyToSecondary = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const secondaryComment = await Secondary.findById(
-      req.params.commentId
-    ).lean();
+    const secondaryComment = await Secondary.findById(req.params.secondaryId);
+
     if (!secondaryComment) {
       return next(ErrorResponse(400, "Resource not found"));
     }
-    const reply = (
-      await Secondary.create({
-        // @ts-ignore
-        user: req.user._id,
-        text: req.body.text,
-        secondaryUser: secondaryComment.user,
-        secondary: secondaryComment._id,
-        primary: secondaryComment.primary,
-      })
-    ).populate([
-      { path: "meta" },
-      {
-        path: "user",
-        select: "email username",
-      },
-      {
-        path: "secondaryUser",
-        select: "username email",
-      },
-    ]);
+    const reply = await Secondary.create({
+      // @ts-ignore
+      user: req.user._id,
+      text: req.body.text,
+      secondaryUser: secondaryComment.user,
+      secondary: secondaryComment._id,
+      primary: secondaryComment.primary,
+    });
+
     res.json({
       status: "ok",
       reply,

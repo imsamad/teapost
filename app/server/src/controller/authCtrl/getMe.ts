@@ -21,7 +21,7 @@ const getMe = asyncHandler(
         user,
         title: "Read Later",
       });
-    console.log("profile ", profile);
+
     return res.json({
       status: "ok",
       user: {

@@ -1,13 +1,14 @@
 import { Link as ChakraLink, LinkProps } from "@chakra-ui/react";
-import NextLink from "next/link";
+import NextLink, { LinkProps as NextLinkProps } from "next/link";
 
-interface MyLinkProps extends LinkProps {
-  href: string;
-}
+interface MyLinkProps
+  extends Omit<LinkProps, "href" | "as">,
+    Omit<NextLinkProps, "as"> {}
 
 const MyLink = ({
   href,
   children,
+  scroll = true,
   _visited,
   _hover,
   _focus,
@@ -15,7 +16,7 @@ const MyLink = ({
   ...rest
 }: MyLinkProps) => {
   return (
-    <NextLink href={href} passHref>
+    <NextLink href={href} passHref scroll={scroll}>
       <ChakraLink
         _hover={{
           textDecor: "none",

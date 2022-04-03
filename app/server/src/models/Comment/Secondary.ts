@@ -57,7 +57,6 @@ secondaryCommentSchema.virtual("meta", {
 });
 
 secondaryCommentSchema.pre("save", async function (next) {
-  console.log("this fromsecondaryCommentSchema ", this.isNew);
   if (!this.isNew) return next();
   const primary = await this.model("Primary").findByIdAndUpdate(
     this.primary.toString(),
@@ -66,6 +65,7 @@ secondaryCommentSchema.pre("save", async function (next) {
   await this.model("Story").findByIdAndUpdate(primary.story, {
     $inc: { noOfComments: 1 },
   });
+  next();
 });
 
 secondaryCommentSchema.pre("remove", async function (next) {

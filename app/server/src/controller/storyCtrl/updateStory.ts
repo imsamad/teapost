@@ -17,10 +17,15 @@ const updateStory = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const storyId = req.params.storyId;
 
-    const story = await Story.findById(storyId);
+    const story = await Story.findById(storyId),
+      // @ts-ignore
+      userId = req.user._id.toString();
 
-    // @ts-ignore
-    if (!story || story.author.toString() != req.user._id.toString())
+    if (
+      !story ||
+      (story.author.toString() != userId &&
+        !story.collabWith.map((id) => id.toString()).includes(userId))
+    )
       return next(ErrorResponse(400, "No resource found"));
 
     let extraMessage: { [name: string]: string[] } = {};
@@ -49,6 +54,7 @@ const updateStory = asyncHandler(
       noOfComments,
       noOfLikes,
       noOfDislikes,
+      collabWith,
       ...rest
     } = req.body;
     // @ts-ignore

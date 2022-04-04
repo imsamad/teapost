@@ -16,6 +16,7 @@ interface StoryType {
   isPublishedByAdmin?: boolean;
   readingTime: number;
 
+  collabWith: UserType["_id"][];
   noOfViews: number;
   noOfComments: number;
   noOfLikes: number;

@@ -9,6 +9,8 @@ import {
   publishedStory,
   initializeStory,
   getStoryById,
+  collab,
+  uncollab,
 } from "../controller/storyCtrl";
 
 import { fetchAuth, protect } from "../middleware/auth";
@@ -19,6 +21,7 @@ import {
   initializeStoryScheme,
   publishedStorySchema,
   singleParamsObj,
+  collabUncollabSchema,
 } from "../lib/schema/story";
 
 import { filter } from "../middleware/getStoriesFilter";
@@ -30,6 +33,20 @@ router.put(
   protect,
   validateSchema(publishedStorySchema),
   publishedStory
+);
+
+router.put(
+  "/collab/:storyId",
+  protect,
+  validateSchema(collabUncollabSchema(true)),
+  collab
+);
+
+router.delete(
+  "/uncollab/:storyId",
+  protect,
+  validateSchema(collabUncollabSchema(false)),
+  uncollab
 );
 
 router

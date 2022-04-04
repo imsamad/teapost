@@ -280,7 +280,8 @@ export const strArrSchema = (
     .typeError(`${prettyLabel || label} must be array`)
     .test(label, lenMsg, (val: any) => {
       if (!val) return !isRequired ? true : false;
-      if (new Set(val).size != val?.length) return false;
+      if (new Set(val).size != val?.length || (min && val?.length < min))
+        return false;
       else if (isMongoId) return val?.every((val: any) => isValidObjectId(val));
       else if (strMin && strMax)
         return val.every((val: any) => trimExtra(val, strMin, strMax));
@@ -290,7 +291,7 @@ export const strArrSchema = (
         return val.every((val: any) => trimExtra(val, 0, strMax));
     });
 
-  min && schema.min(min);
+  if (min) schema.min(min);
   max && schema.max(max);
   isRequired && schema.required(`${prettyLabel || label} is required`);
 

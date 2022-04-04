@@ -19,6 +19,7 @@ export const initializeStory = asyncHandler(
       noOfComments,
       noOfLikes,
       noOfDislikes,
+      collabWith,
       ...rest
     } = req.body;
 

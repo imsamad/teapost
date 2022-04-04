@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
 import { ErrorResponse } from "../lib/utils";
 import { StoryMetaDocument } from "./StoryMeta";
 import { UserDocument } from "./User";
@@ -10,6 +10,7 @@ export interface StoryDocument
   author: UserDocument["_id"];
   meta?: StoryMetaDocument;
   hadEmailedToFollowers?: boolean;
+  collabWith: Types.Array<UserDocument["_id"]>;
 }
 
 const storySchema = new Schema(
@@ -48,6 +49,12 @@ const storySchema = new Schema(
       required: [true, "Author of story is required."],
       ref: "User",
     },
+    collabWith: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     isPublished: {
       type: Boolean,
       require: true,

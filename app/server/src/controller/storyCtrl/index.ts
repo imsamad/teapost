@@ -6,6 +6,8 @@ import handleAdditionalTags from "./handleAdditionalTags";
 import publishedStory from "./publishedStory";
 import initializeStory from "./initializeStory";
 import getStoryById from "./getStoryById";
+import collab from "./collab";
+import uncollab from "./uncollab";
 
 export {
   updateStory,
@@ -16,4 +18,6 @@ export {
   publishedStory,
   initializeStory,
   getStoryById,
+  collab,
+  uncollab,
 };

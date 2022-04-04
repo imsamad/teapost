@@ -34,6 +34,15 @@ export const publishedStorySchema = object({
   }),
 });
 
+export const collabUncollabSchema = (isCollab: boolean) => {
+  const key = isCollab ? "collabWith" : "uncollabWith";
+  return object({
+    ...singleParam("storyId", true),
+    body: object({
+      [key]: strArrSchema(key, { isMongoId: true, isRequired: true, min: 1 }),
+    }),
+  });
+};
 export const updateStorySchema = object({
   ...singleParam("storyId", true),
 

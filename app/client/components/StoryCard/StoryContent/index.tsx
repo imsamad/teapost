@@ -51,6 +51,11 @@ const index = ({ story }: { story: StoryType }) => {
           noOfLikes={story?.noOfLikes || 0}
           noOfDislikes={story?.noOfDislikes || 0}
           noOfComments={story.noOfComments}
+          share={{
+            text: story.subtitle,
+            title: story.title,
+            url: "/story/" + story.slug,
+          }}
         />
       </Stack>
       <MyLink href={`/story/${story.slug}`}>

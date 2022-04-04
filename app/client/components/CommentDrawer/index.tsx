@@ -2,7 +2,7 @@ import TSIconButton from "@compo/UI/TSIconButton";
 import { BiCommentAdd } from "react-icons/bi";
 import Router from "next/router";
 import Drawer from "./Drawer";
-import { useDisclosure } from "@chakra-ui/react";
+import { IconButton, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 
 const CommentDrawer = ({
@@ -19,14 +19,22 @@ const CommentDrawer = ({
 
   return (
     <>
-      <TSIconButton
-        aria-label="comment"
-        size={isOnHomePage ? "xs" : "sm"}
-        variant={isOnHomePage ? "solid" : "outline"}
-        colorScheme={isOnHomePage ? "gray" : "purple"}
+      <IconButton
+        aria-label="ccc"
         icon={<BiCommentAdd />}
+        size="sm"
+        variant="outline"
+        colorScheme="blue"
+        // colorScheme={isOnHomePage ? "gray" : "purple"}
+        outline="none"
+        border="none"
+        _focus={{
+          outline: "none",
+          border: "none",
+        }}
         onClick={drawer.onOpen}
       />
+
       {drawer.isOpen && (
         <Drawer
           isOpen={drawer.isOpen}

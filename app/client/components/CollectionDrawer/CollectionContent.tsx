@@ -8,7 +8,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { useAuthCtx, useProfile } from "@compo/Context";
-import { addToCollection } from "@lib/api/authApi";
+import { addToCollection } from "@lib/api/collectionApi";
 import { ChangeEvent, useState } from "react";
 
 import CollectionFooter from "./CollectionFooter";

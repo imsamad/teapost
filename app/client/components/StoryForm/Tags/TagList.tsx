@@ -28,6 +28,7 @@ const TagList = ({ tags }: { tags: TagType[] }) => {
             }}
             variant={tagValues.includes(tag._id) ? "solid" : "outline"}
             leftIcon={tagValues.includes(tag._id) && <CheckCircleIcon />}
+            // colorScheme="purple"
             onClick={() => {
               setValue(
                 tagValues.includes(tag._id)

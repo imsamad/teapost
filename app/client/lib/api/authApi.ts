@@ -53,18 +53,3 @@ export const followAuthor = async (
     throw err?.response?.data || "Invalid Data";
   }
 };
-
-export const addToCollection = async (
-  reqObj: {
-    addTo: string[];
-    removeFrom: string[];
-  },
-  storyId: string
-) => {
-  try {
-    const { data } = await axios.put(`/auth/collection/add/${storyId}`, reqObj);
-    return data;
-  } catch (err: any) {
-    throw err?.response?.data || "Invalid Data";
-  }
-};

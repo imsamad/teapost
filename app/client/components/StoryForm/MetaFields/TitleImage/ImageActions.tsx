@@ -46,13 +46,13 @@ const ImageActions = () => {
           multiple={false}
         />
         <TSButton
-          colorScheme="teal"
+          colorScheme="blue"
           leftIcon={
             <label htmlFor="imageUpload">
               {titleImage ? <EditIcon /> : <PlusSquareIcon />}
             </label>
           }
-          size="sm"
+          size="xs"
         >
           <label htmlFor="imageUpload">{titleImage ? "Edit" : "Upload"}</label>
         </TSButton>
@@ -60,7 +60,7 @@ const ImageActions = () => {
         {titleImage && (
           <TSButton
             leftIcon={<DeleteIcon />}
-            size="sm"
+            size="xs"
             colorScheme="red"
             isLoading={isDeleting.isOpen}
             loadingText="Deleting..."
@@ -71,7 +71,7 @@ const ImageActions = () => {
         )}
         <TSButton
           leftIcon={<GrGallery />}
-          size="sm"
+          size="xs"
           onClick={imageGallery.onOpen}
         >
           From Gallery

@@ -45,6 +45,11 @@ const SingleStory = ({
           noOfLikes={story.noOfLikes || 0}
           noOfDislikes={story.noOfDislikes || 0}
           noOfComments={story.noOfComments || 0}
+          share={{
+            title: story.title,
+            text: story.subtitle,
+            url: "/story/" + story.slug,
+          }}
         />
         <Content storyId={story._id} />
       </Stack>

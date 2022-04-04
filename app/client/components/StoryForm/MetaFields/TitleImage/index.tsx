@@ -14,7 +14,7 @@ const TitleImage = () => {
         boxSize="150px"
         objectFit="cover"
         src={value}
-        alt="Dan Abramov"
+        alt="storyTitleImage"
         fallbackSrc="https://via.placeholder.com/150?text=Title Image"
       />
       {!isFromHistory && <ImageActions />}

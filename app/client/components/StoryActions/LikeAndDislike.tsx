@@ -2,9 +2,14 @@ import { useDisclosure } from "@chakra-ui/react";
 import { useAuthCtx, useProfile } from "@compo/Context";
 import TSButton from "@compo/UI/TSButton";
 import { likeOrDislikeStory } from "@lib/api/storyApi";
-import Router from "next/router";
+
 import React, { useEffect, useState } from "react";
-import { BiDislike, BiLike } from "react-icons/bi";
+import {
+  AiFillDislike,
+  AiFillLike,
+  AiOutlineDislike,
+  AiOutlineLike,
+} from "react-icons/ai";
 
 const LikeAndDislike = ({
   storyId,
@@ -15,12 +20,7 @@ const LikeAndDislike = ({
   noOfLikes: number;
   noOfDislikes: number;
 }) => {
-  const isOnHomePage = ["/", "/home", "/@/[author]", "/tag/[tag]"].includes(
-    Router.pathname
-  );
-
   const { myProfile, mutateProfile } = useProfile();
-  console.log("Router.pathname ", Router.pathname);
   const [grade, setGrade] = useState({
     noOfLikes,
     noOfDislikes,
@@ -84,6 +84,99 @@ const LikeAndDislike = ({
   return (
     <>
       <TSButton
+        leftIcon={grade.hadBeenLiked ? <AiFillLike /> : <AiOutlineLike />}
+        size="xs"
+        variant="outline"
+        colorScheme="blue"
+        outline="none"
+        border="none"
+        _focus={{
+          outline: "none",
+          border: "none",
+        }}
+        onClick={() => handleGrade(true)}
+      >
+        {grade.noOfLikes}
+      </TSButton>
+      <TSButton
+        leftIcon={
+          grade.hadBeenDisLiked ? <AiFillDislike /> : <AiOutlineDislike />
+        }
+        size="xs"
+        variant="outline"
+        colorScheme="blue"
+        outline="none"
+        border="none"
+        _focus={{
+          outline: "none",
+          border: "none",
+        }}
+        onClick={() => handleGrade(false)}
+      >
+        {grade.noOfDislikes}
+      </TSButton>
+    </>
+  );
+};
+
+export default LikeAndDislike;
+/**
+ 
+
+ <TSButton
+          leftIcon={state.hasBeenLike ? <AiFillLike /> : <AiOutlineLike />}
+          size="xs"
+          variant="outline"
+          colorScheme="blue"
+          outline="none"
+          border="none"
+          _focus={{
+            outline: "none",
+            border: "none",
+          }}
+          onClick={() => handleLikeOrDislike(true)}
+        >
+          {state.noOfLikes}
+        </TSButton>
+        <TSButton
+          leftIcon={
+            state.hasBeenDisLike ? <AiFillDislike /> : <AiOutlineDislike />
+          }
+          size="xs"
+          variant="outline"
+          colorScheme="blue"
+          outline="none"
+          border="none"
+          _focus={{
+            outline: "none",
+            border: "none",
+          }}
+          onClick={() => handleLikeOrDislike(false)}
+        >
+          {state.noOfDislikes}
+        </TSButton>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         <TSButton
         onClick={() => handleGrade(true)}
         isDisabled={loading.isOpen}
         isActive={grade.hadBeenLiked}
@@ -114,8 +207,4 @@ const LikeAndDislike = ({
       >
         {grade.noOfDislikes}
       </TSButton>
-    </>
-  );
-};
-
-export default LikeAndDislike;
+ */

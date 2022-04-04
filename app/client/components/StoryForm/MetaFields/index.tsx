@@ -5,6 +5,7 @@ import { useField } from "formik";
 import Tags from "../Tags";
 import SaveButton from "./SaveButton";
 import TitleImage from "./TitleImage";
+import Slug from "./Slug";
 
 const Index = () => {
   const [{ value: isFromHistory }] = useField("isFromHistory");
@@ -17,7 +18,7 @@ const Index = () => {
       <TitleImage />
       <TPInput name="title" placeholder="Title" label="Title" />
       <TPInput name="subtitle" placeholder="Subtitle" label="Subtitle" />
-      <TPInput name="slug" placeholder="Slug" label="Slug" />
+      <Slug />
       <TPInput name="keywords" placeholder="Keywords" label="Keywords" />
 
       <Tags />

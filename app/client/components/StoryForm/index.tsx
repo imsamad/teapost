@@ -8,6 +8,7 @@ import { submitStory } from "@lib/api/storyApi";
 import FormBody from "./FormBody";
 import StoryType, { StoryFormType } from "@lib/types/StoryType";
 import { mutate } from "swr";
+import { impStoryFields } from "@lib/utils";
 
 const initValues: StoryFormType = {
   _id: "",
@@ -46,6 +47,11 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
       position: position || "bottom",
     });
 
+  useEffect(() => {
+    localStorage.setItem("story", JSON.stringify(impStoryFields(story)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Formik
       initialValues={{
@@ -56,7 +62,11 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
         const crtStorySlug = router.query.slug;
         actions.setSubmitting(true);
 
-        const data = await submitStory({ values, type: "meta" });
+        const data = await submitStory({
+          values,
+          type: "meta",
+          storeResToLocal: true,
+        });
 
         if (values.additionalTags.length) {
           await mutate(`${process.env.NEXT_PUBLIC_API_URL}/tags`);
@@ -80,10 +90,6 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
           actions.setFieldError("slug", data.message.slug);
           actions.setFieldTouched("slug", true);
         }
-        // Object.keys(data.message).forEach((key: any) => {
-        //   actions.setFieldTouched(key, true, false);
-        // });
-        // actions.setErrors(data.message);
 
         saveToast("Saved Changes.");
       }}

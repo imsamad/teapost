@@ -53,7 +53,8 @@ const ImageModal = ({
           position: "bottom",
           isClosable: true,
         });
-      });
+      })
+      .finally(() => isLoading.onClose());
   };
   return (
     <Modal

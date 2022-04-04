@@ -1,5 +1,6 @@
 import StoryType, { StoryFormType } from "@lib/types/StoryType";
 import UserType from "@lib/types/UserType";
+import { impStoryFields } from "@lib/utils";
 import axios from "../axios";
 
 interface SubmitStoryType extends Partial<Omit<StoryFormType, "_id">> {
@@ -9,12 +10,13 @@ interface SubmitStoryType extends Partial<Omit<StoryFormType, "_id">> {
 export const submitStory = async ({
   values,
   type,
+  storeResToLocal,
 }: {
   values: SubmitStoryType;
-  type: "additionalTags" | "meta" | "content" | "image";
+  type: "meta" | "content" | "image" | "autoSave";
+  storeResToLocal?: boolean;
 }) => {
   let allowedFields = [
-    "id",
     "title",
     "subtitle",
     "slug",
@@ -23,18 +25,10 @@ export const submitStory = async ({
     "additionalTags",
   ];
   let data: any = {};
-
-  // if (type == "additionalTags") {
-  //   data.additionalTags = values.additionalTags;
-  // } else
-
+  data.id = values._id;
   if (type == "content") {
-    values._id && (data.id = values._id);
-    values.slug && (data.slug = values.slug);
     data.content = values.content;
   } else if (type == "image") {
-    values._id && (data.id = values._id);
-    values.slug && (data.slug = values.slug);
     data.titleImage = values.titleImage;
   } else {
     allowedFields.forEach((key: string) => {
@@ -42,9 +36,21 @@ export const submitStory = async ({
       if (values?.[key]?.length) data[key] = values[key];
     });
     data.tags = values.tags;
+    if (type == "autoSave") {
+      data.content = values.content;
+    }
   }
   try {
-    const res = await axios.put(`/stories/${values._id}`, data);
+    const res = await axios.put<{
+      story: StoryType;
+      message: any;
+    }>(`/stories/${values._id}`, data);
+    if (storeResToLocal) {
+      localStorage.setItem(
+        "story",
+        JSON.stringify(impStoryFields(res.data.story))
+      );
+    }
     return res.data;
   } catch (err: any) {
     throw err.response.data;

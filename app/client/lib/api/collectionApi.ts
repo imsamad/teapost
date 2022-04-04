@@ -17,3 +17,21 @@ export const deleteCollection = async (collId: string) => {
     return false;
   }
 };
+
+export const addToCollection = async (
+  reqObj: {
+    addTo: string[];
+    removeFrom: string[];
+  },
+  storyId: string
+) => {
+  try {
+    const { data } = await axios.put(
+      `/collection/addstories/${storyId}`,
+      reqObj
+    );
+    return data;
+  } catch (err: any) {
+    throw err?.response?.data || "Invalid Data";
+  }
+};

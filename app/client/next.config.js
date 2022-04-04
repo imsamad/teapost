@@ -2,6 +2,7 @@
 
 const path = require("path");
 module.exports = {
+  // basePath: "https://www.example.com/docs",
   reactStrictMode: false,
   async redirects() {
     return [

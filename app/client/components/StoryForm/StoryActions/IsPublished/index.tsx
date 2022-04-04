@@ -42,6 +42,7 @@ const Index = () => {
     <HStack>
       <Heading size="sm">Published</Heading>
       <Switch
+        colorScheme="cyan"
         size="lg"
         isChecked={values?.isPublished}
         value={values?.isPublished ? 1 : 0}

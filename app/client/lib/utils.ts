@@ -1,5 +1,6 @@
 import { AnySchema } from "yup";
 import * as yup from "yup";
+import StoryType from "./types/StoryType";
 
 export const trimExtra = (
   str: string | any,
@@ -236,3 +237,36 @@ export function timeSince(date: Date) {
   }
   return Math.floor(seconds) + " sec";
 }
+
+export const impStoryFields = (story: any) => {
+  const keys = [
+    "title",
+    "subtitle",
+    "tags",
+    "titleImage",
+    "slug",
+    "keywords",
+    "additionalTags",
+    "content",
+    "_id",
+  ];
+  let obj: any = {};
+  keys.forEach((key) => {
+    story?.[key]?.length && (obj[key] = story[key]);
+  });
+  return obj;
+};
+
+export const slugify = (str: string) => {
+  //replace all special characters | symbols with a space
+  str = str
+    .replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, " ")
+    .toLowerCase();
+
+  // trim spaces at start and end of string
+  str = str.replace(/^\s+|\s+$/gm, "");
+
+  // replace space with dash/hyphen
+  str = str.replace(/\s+/g, "-");
+  return str;
+};

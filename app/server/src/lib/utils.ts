@@ -95,6 +95,7 @@ export const validateYupSchema = async (
     if (res) return true;
     else throw new Error("Provide proper data");
   } catch (yupError: any) {
+    console.log("yupError", yupError);
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
 
@@ -278,8 +279,8 @@ export const strArrSchema = (
     .label(label)
     .typeError(`${prettyLabel || label} must be array`)
     .test(label, lenMsg, (val: any) => {
-      if (new Set(val).size != val.length) return false;
-      if (!val && !isRequired) return true;
+      if (!val) return !isRequired ? true : false;
+      if (new Set(val).size != val?.length) return false;
       else if (isMongoId) return val?.every((val: any) => isValidObjectId(val));
       else if (strMin && strMax)
         return val.every((val: any) => trimExtra(val, strMin, strMax));

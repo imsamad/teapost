@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler, readingTime } from "../../lib/utils";
+import { asyncHandler, readingTime as readingTimeFun } from "../../lib/utils";
 
 import Story from "../../models/Story";
 import { nanoid } from "nanoid";
@@ -38,7 +38,7 @@ export const initializeStory = asyncHandler(
     }
     const story = await Story.create({
       author,
-      readingTime: readingTime(rest?.content),
+      readingTime: readingTimeFun(rest?.content),
       slug,
       ...rest,
     });

@@ -32,6 +32,7 @@ export default function App() {
         // slug: Router.query.slug as string,
       },
       type: "content",
+      storeResToLocal: true,
     })
       .then(() => {
         toast({

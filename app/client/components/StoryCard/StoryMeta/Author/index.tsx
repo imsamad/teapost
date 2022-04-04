@@ -1,5 +1,5 @@
-import { Avatar, HStack, Text } from "@chakra-ui/react";
-
+import { Avatar, HStack, IconButton, Text } from "@chakra-ui/react";
+import { FcCollaboration } from "react-icons/fc";
 import UserType from "@lib/types/UserType";
 import MyLink from "@compo/MyLink";
 import FollowAuthor from "@compo/FollowAuthor";
@@ -21,6 +21,10 @@ const Index = ({ author }: { author: UserType }) => {
         </HStack>
       </MyLink>
       <FollowAuthor author={author} />
+      <IconButton aria-label="collab" icon={<FcCollaboration />} size="xs" />
+      {/* <Text color="muted" fontSize="xs" ml={1}>
+        + 3 more
+      </Text> */}
     </HStack>
   );
 };

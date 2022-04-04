@@ -20,13 +20,7 @@ const Index = ({ children }: LayoutProps) => {
           <NavBar />
           <Divider my={2} />
 
-          <Box
-            flexGrow="1"
-            as="main"
-            // minH="75vh"
-            // border="1px solid red"
-            // position="relative"
-          >
+          <Box flexGrow="1" as="main">
             {children}
           </Box>
           <Footer />

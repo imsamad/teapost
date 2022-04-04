@@ -15,11 +15,17 @@ export default function index({
   noOfLikes,
   noOfDislikes,
   noOfComments,
+  share,
 }: {
   storyId: string;
   noOfLikes: number;
   noOfDislikes: number;
   noOfComments: number;
+  share: {
+    title: string;
+    text: string;
+    url: string;
+  };
 }) {
   return (
     <StoryActions
@@ -27,13 +33,14 @@ export default function index({
       noOfLikes={noOfLikes}
       noOfDislikes={noOfDislikes}
       noOfComments={noOfComments}
+      share={share}
     />
   );
 }
 
 const Temp = () => {
   return (
-    <ButtonGroup spacing={3} alignItems="center">
+    <ButtonGroup alignItems="center">
       <TSButton
         _active={{
           border: "1px solid blue",

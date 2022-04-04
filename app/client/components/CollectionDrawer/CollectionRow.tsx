@@ -38,7 +38,7 @@ const CollectionRow = ({
   };
 
   return (
-    <HStack mb="2">
+    <HStack my="2">
       <HStack flex="1" overflow="hidden">
         <Checkbox
           isChecked={sendObj.storyPartOf.includes(collection._id)}

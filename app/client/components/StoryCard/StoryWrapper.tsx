@@ -8,10 +8,10 @@ const StoryWrapper = ({ children }: { children: React.ReactNode }) => {
       py="8px"
       shadow="sm"
       border="1px"
-      borderColor="gray.300"
+      borderColor="gray.200"
       borderRadius="md"
       overflow="hidden"
-      maxH={["155px", "132px", "198px", "198px"]}
+      maxH={["165px", "132px", "198px", "198px"]}
     >
       {children}
     </Stack>

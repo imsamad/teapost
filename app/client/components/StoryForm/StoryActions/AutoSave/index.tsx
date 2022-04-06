@@ -36,7 +36,7 @@ const Index = () => {
   const saveChanges = () => {
     const initialStory = localStorage.getItem("story"),
       changedStory = JSON.stringify(impStoryFields(values));
-    // console.log("saveChanges");
+
     if (!autoSave || initialStory == changedStory) {
       clearInterval(intervalRef.current);
       return;
@@ -80,6 +80,10 @@ const Index = () => {
       <HStack border="0px">
         <Heading size="sm">Auto Save</Heading>
         <Switch
+          outline="none"
+          border="0"
+          _focus={{ outline: "none", border: 0 }}
+          _active={{ outline: "none", border: 0 }}
           colorScheme="cyan"
           size="lg"
           isChecked={autoSave}

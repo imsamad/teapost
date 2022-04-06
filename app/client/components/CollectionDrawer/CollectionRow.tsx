@@ -1,5 +1,5 @@
 import { DeleteIcon } from "@chakra-ui/icons";
-// EditIcon
+
 import {
   Checkbox,
   HStack,

@@ -1,20 +1,18 @@
-import { boolean, number, object, string } from "yup";
+import { boolean, number, object, string, array } from "yup";
 import { strArrSchema, strSchema } from "../utils";
 
+import { isValidObjectId } from "mongoose";
 const singleParam = (label: string, isMongoId: boolean) => ({
   params: object({
     [label]: strSchema(label, { isRequired: true, isMongoId }),
   }),
 });
+
 export const singleParamsObj = (label: string, isMongoId = true) => {
   return object({
     ...singleParam(label, isMongoId),
   });
 };
-
-export const getStoryByTagSchema = singleParamsObj("tagName", false);
-
-export const getStoryByAuthorSchema = singleParamsObj("authorUsername", false);
 
 export const changeSlugSchema = object({
   body: object({
@@ -38,27 +36,76 @@ export const collabUncollabSchema = (isCollab: boolean) => {
   const key = isCollab ? "collabWith" : "uncollabWith";
   return object({
     ...singleParam("storyId", true),
-    body: object({
-      [key]: strArrSchema(key, { isMongoId: true, isRequired: true, min: 1 }),
-    }),
+    body: object()
+      .shape(
+        {
+          collabWth: array()
+            .of(
+              string().test(
+                "collabWith",
+                "Collab With must be valid id array",
+                (val: any) =>
+                  !val ? true : val?.every((id: any) => isValidObjectId(id))
+              )
+            )
+            .label("collabWith")
+            .when("uncollabWith", {
+              is: (uncollabWith: any) => {
+                return !uncollabWith;
+              },
+              then: array()
+                .required("Collab with is required")
+                .min(1)
+                .test("collabWith", "Must be unique", (val: any) => {
+                  return new Set(val)?.size == val?.length;
+                }),
+            }),
+          uncollabWith: array()
+            .of(
+              string().test(
+                "uncollabWith",
+                "Collab With must be valid id array",
+                (val: any) =>
+                  !val ? true : val?.every((id: any) => isValidObjectId(id))
+              )
+            )
+            .when("collabWith", {
+              is: (collabWith: any) => {
+                return !collabWith;
+              },
+              then: array()
+                .required("Collab with is required")
+                .min(1)
+                .test(
+                  "uncollabWith",
+                  "Must be unique",
+                  (val: any) => new Set(val)?.size == val?.length
+                ),
+            }),
+        },
+        [["collabWith", "uncollabWith"]]
+      )
+      .label("body")
+      .test("body", "Provde valid ids.", (body) => {
+        //
+        let collabWith: any = body?.collabWith || null,
+          uncollabWith: any = body?.uncollabWith || null,
+          correct = true;
+
+        // if (!collabWith && !uncollabWith) return false;
+
+        if (correct && uncollabWith && collabWith) {
+          if (
+            new Set([...collabWith, ...uncollabWith])?.size !=
+            collabWith?.length + uncollabWith?.length
+          )
+            correct = false;
+        }
+
+        return correct;
+      }),
   });
 };
-export const updateStorySchema = object({
-  ...singleParam("storyId", true),
-
-  body: object().shape({
-    title: strSchema("title", {}),
-    subtitle: strSchema("subtitle", {}),
-    titleImage: string()
-      .label("titleImage")
-      .url("titleImage must be url")
-      .typeError("titleImage must be url"),
-    keywords: strSchema("keywords", {}),
-    tags: strArrSchema("tags", { isMongoId: true, isRequired: false }),
-    additionalTags: strArrSchema("additionalTags", { strMin: 3 }),
-    slug: strSchema("slug", {}),
-  }),
-});
 
 export const gradeStorySchema = object({
   ...singleParam("storyId", true),
@@ -81,6 +128,23 @@ export const gradeStorySchema = object({
     },
     [["like", "dislike"]]
   ),
+});
+
+export const updateStorySchema = object({
+  ...singleParam("storyId", true),
+
+  body: object().shape({
+    title: strSchema("title", {}),
+    subtitle: strSchema("subtitle", {}),
+    titleImage: string()
+      .label("titleImage")
+      .url("titleImage must be url")
+      .typeError("titleImage must be url"),
+    keywords: strSchema("keywords", {}),
+    tags: strArrSchema("tags", { isMongoId: true, isRequired: false }),
+    additionalTags: strArrSchema("additionalTags", { strMin: 3 }),
+    slug: strSchema("slug", {}),
+  }),
 });
 
 export const isAbleToPublished = object({

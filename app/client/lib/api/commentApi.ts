@@ -113,7 +113,6 @@ export const replyComment = async (prop: {
     const { data } = await axios.post<{ comment: CombineComment }>(endpoint, {
       text: prop.text,
     });
-
     return data;
   } catch (err: any) {
     throw err.response.data;

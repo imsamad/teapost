@@ -5,7 +5,7 @@ interface User {
   username: string;
   role: string | "admin" | "reader" | "author";
   createdAt: Date;
-
+  stories: number;
   fullName: string;
   profilePic: string;
   tagLines: string[];

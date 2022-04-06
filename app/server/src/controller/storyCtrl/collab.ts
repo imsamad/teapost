@@ -10,33 +10,66 @@ const collab = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     let userId = req.user._id,
-      collabWith: string[] = req.body.collabWith;
+      collabWith: string[] = req.body?.collabWith || [],
+      uncollabWith: string[] = req.body?.uncollabWith || [];
 
     let story = await Story.findById(req.params.storyId);
+
     const alreadyCollab = story?.collabWith.map((id) => id.toString()) || [];
-
     collabWith = collabWith.filter((id) => !alreadyCollab.includes(id));
+    uncollabWith = uncollabWith.filter((id) => alreadyCollab.includes(id));
 
-    if (!story || story.author.toString() != userId || !collabWith.length) {
+    if (
+      !story ||
+      story?.author?.toString() != userId ||
+      (!collabWith.length && !uncollabWith.length)
+    ) {
       return next(
         ErrorResponse(
           400,
-          !collabWith.length ? "Already collabing" : "Resource not found"
+          !collabWith.length && !uncollabWith.length
+            ? "No Change"
+            : "Resource not found"
         )
       );
     }
 
-    story.collabWith.addToSet(...collabWith);
+    collabWith.length && story.collabWith.addToSet(...collabWith);
+    uncollabWith.length && story.collabWith.pull(...uncollabWith);
 
     story = await story.save();
 
-    await Profile.updateMany(
-      { _id: { $in: collabWith } },
-      {
-        $addToSet: { collabStories: story._id },
-      }
-    );
-
+    let promises: any = [];
+    collabWith.forEach((id) => {
+      promises.push(
+        Profile.findByIdAndUpdate(
+          id,
+          {
+            _id: id, //@ts-ignore
+            $addToSet: { collabStories: story._id },
+          },
+          {
+            upsert: true,
+          }
+        )
+      );
+    });
+    uncollabWith.forEach((id) => {
+      promises.push(
+        Profile.findByIdAndUpdate(
+          id,
+          {
+            _id: id,
+            //@ts-ignore
+            $pull: { collabStories: story._id },
+          },
+          {
+            upsert: true,
+          }
+        )
+      );
+    });
+    await Promise.allSettled(promises);
     res.json({
       status: "ok",
       message: "Operation successed!",

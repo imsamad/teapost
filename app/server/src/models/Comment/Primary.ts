@@ -29,6 +29,7 @@ const primaryCommentSchema = new Schema(
     text: {
       required: true,
       type: String,
+      trim: true,
       min: [1, "Enter some thing"],
     },
     noOfReplies: { type: Number, default: 0 },

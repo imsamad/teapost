@@ -14,7 +14,7 @@ const replyToPrimary = asyncHandler(
     if (!primaryComment) {
       return next(ErrorResponse(400, "Resource not found"));
     }
-    const reply = await Secondary.create({
+    const comment = await Secondary.create({
       // @ts-ignore
       user: req.user._id,
       text: req.body.text,
@@ -23,7 +23,13 @@ const replyToPrimary = asyncHandler(
 
     res.json({
       status: "ok",
-      reply,
+      comment: await comment.populate([
+        { path: "meta" },
+        {
+          path: "user",
+          select: "email username",
+        },
+      ]),
     });
   }
 );

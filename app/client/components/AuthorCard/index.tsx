@@ -1,19 +1,17 @@
 import { Avatar, Box, Flex, HStack, Stack, Text } from "@chakra-ui/react";
-
 import React, { useState } from "react";
 
 import FollowAuthor from "@compo/FollowAuthor";
-
 import UserType from "@lib/types/UserType";
 import Stats from "./Stats";
 
 const Index = ({
   author,
-  numOfStories,
+
   displayFull,
 }: {
   author: UserType;
-  numOfStories?: number;
+
   displayFull: boolean;
 }) => {
   const [numOfFollowers, setNumOfFollowers] = useState<number>(
@@ -61,8 +59,11 @@ const Index = ({
           )}
         </Box>
       </Flex>
-      {displayFull && numOfStories && (
-        <Stats numOfStories={numOfStories} numOfFollowers={numOfFollowers} />
+      {displayFull && (
+        <Stats
+          numOfStories={author.stories || 0}
+          numOfFollowers={numOfFollowers}
+        />
       )}
     </>
   );

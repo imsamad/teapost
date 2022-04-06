@@ -6,12 +6,10 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
+import { getStories } from "@lib/api/storyApi";
 
 import StoryType from "@lib/types/StoryType";
-import UserType from "@lib/types/UserType";
-
 import { useCallback, useRef, useState } from "react";
-import useSWR from "swr";
 
 import StoryCard from "../StoryCard";
 
@@ -26,13 +24,9 @@ const Index = ({
   isInitial?: boolean;
   nextPageNo: number;
 }) => {
-  const { data } = useSWR<{
-    stories: StoryType[];
-    authors: UserType[];
-    pagination: { next: number; prev: number; limit: number };
-  }>(() => !isInitial && `/stories?${query}&page=${nextPageNo}`);
-
-  const [show, setShow] = useState(false);
+  const [data, setData] = useState<{ stories: StoryType[]; noResult: boolean }>(
+    { stories: stories ?? [], noResult: false }
+  );
 
   const observer: any = useRef();
   const isInView = useCallback((node) => {
@@ -42,7 +36,10 @@ const Index = ({
     observer.current = new IntersectionObserver(
       async (entries, observerInst) => {
         if (entries[0].isIntersecting) {
-          setShow(true);
+          let data = await getStories(nextPageNo, query);
+          if (!data.pagination.next || !data.stories.length)
+            setData({ noResult: true, stories: [] });
+          else setData({ stories: data.stories, noResult: false });
           observer?.current?.disconnect(node);
           observerInst?.unobserve(entries[0].target);
         }
@@ -54,14 +51,16 @@ const Index = ({
   return (
     <Container maxW="container.md" p="0">
       <div ref={isInitial ? null : isInView} />
-      {isInitial ? (
+      {data && data?.stories.length ? (
         <>
-          {stories?.map((story: StoryType) => (
+          {data?.stories?.map((story: StoryType) => (
             <StoryCard story={story} key={story._id} />
           ))}
-          <Index nextPageNo={nextPageNo} query={query} />
+          <Index nextPageNo={nextPageNo + 1} query={query} />
         </>
-      ) : !show ? (
+      ) : data.noResult ? (
+        <Text textAlign="center"> The End </Text>
+      ) : (
         <HStack justifyContent="center">
           <Spinner
             thickness="4px"
@@ -71,15 +70,6 @@ const Index = ({
             size="xl"
           />
         </HStack>
-      ) : data?.stories?.length ? (
-        <>
-          {data?.stories?.map((story: StoryType) => (
-            <StoryCard story={story} key={story._id} />
-          ))}
-          <Index nextPageNo={nextPageNo + 1} query={query} />
-        </>
-      ) : (
-        <Text textAlign="center"> The End </Text>
       )}
     </Container>
   );

@@ -1,3 +1,5 @@
+import { getRndInteger, lorem } from "../../src/lib/utils";
+
 const secondaries = [
   {
     _id: "62319aa773ec61adcafb7147",
@@ -89,3 +91,59 @@ const secondaries = [
   },
 ];
 export default secondaries;
+
+import usersSeed from "./users";
+export const createSecondaries = ({
+  userIds = usersSeed.map((user) => user._id),
+  primaryIds,
+  qty = 100,
+}: {
+  primaryIds: string[];
+  userIds?: string[];
+  qty?: number;
+}) => {
+  const comment = (index: number, primary: number) => ({
+    user: userIds[index],
+    primary: primaryIds[primary],
+    text: lorem.generateSentences(1),
+  });
+
+  let comments = [];
+  for (var j = 0; j < primaryIds.length; j++) {
+    for (var i = 0; i < qty; i++) {
+      comments.push(comment(getRndInteger(0, userIds.length), j));
+    }
+  }
+  return comments;
+};
+
+import users from "./users";
+
+export const secondaryReply = ({
+  primary,
+  userIds = users.map((user) => user._id),
+  secondary,
+  secondaryUser,
+  qty = 100,
+}: {
+  primary: string;
+  userIds?: string[];
+  secondary: string;
+  secondaryUser: string;
+  qty: number;
+}) => {
+  const comment = (index: number) => ({
+    user: userIds[index],
+    secondaryUser: secondaryUser,
+    secondary: secondary,
+    primary: primary,
+    text: lorem.generateSentences(1),
+  });
+
+  let comments = [];
+
+  for (var i = 0; i < qty; i++)
+    comments.push(comment(i % (userIds.length - 1)));
+
+  return comments;
+};

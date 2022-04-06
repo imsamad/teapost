@@ -38,7 +38,7 @@ router.put(
 router.put(
   "/collab/:storyId",
   protect,
-  validateSchema(collabUncollabSchema(true)),
+  // validateSchema(collabUncollabSchema(true)),
   collab
 );
 

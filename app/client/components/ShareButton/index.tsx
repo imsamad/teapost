@@ -14,7 +14,6 @@ const ShareButton = ({
   };
   size?: string;
 }) => {
-  console.log(window.location.hostname, "Router ", Router);
   return (
     <RWebShare
       data={{ ...share, url: window.location.origin + share.url }}

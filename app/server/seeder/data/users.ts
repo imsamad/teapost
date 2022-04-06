@@ -72,3 +72,26 @@ const users = [
   },
 ];
 export default users;
+import axios from "axios";
+import { lorem } from "../../src/lib/utils";
+export const createUsers = async () => {
+  const { data: users } = await axios.get<
+    { name: string; email: string; username: string }[]
+  >(`https://jsonplaceholder.typicode.com/users`);
+
+  return users.map(({ name, username, email }) => ({
+    fullName: name,
+    username,
+    email,
+    profilePic: "https://i.pravatar.cc/300",
+    role: "reader",
+    password: "Password@1206",
+    isEmailVerified: true,
+    isAuthorised: true,
+    tagLines: [
+      lorem.generateWords(2),
+      lorem.generateWords(2),
+      lorem.generateWords(2),
+    ],
+  }));
+};

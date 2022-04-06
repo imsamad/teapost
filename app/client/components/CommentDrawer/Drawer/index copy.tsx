@@ -11,7 +11,7 @@ import {
 
 import CommentList from "./CommentList";
 import AddComment from "./AddComment";
-import { useCTX, CtxProvider } from "./AddedCtx";
+import { useCTX } from "./AddedCtx";
 import { useEffect } from "react";
 const Index = ({
   isOpen,
@@ -24,10 +24,6 @@ const Index = ({
   storyId: string;
   noOfComments: number;
 }) => {
-  const { noOfReplies, setNoOfReplies, addedComments } = useCTX();
-  useEffect(() => {
-    setNoOfReplies(noOfComments);
-  }, []);
   return (
     <Drawer
       isOpen={isOpen}
@@ -41,18 +37,26 @@ const Index = ({
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>Comments</DrawerHeader>
-        <CtxProvider>
-          <DrawerBody px="10px" pr="20px">
-            <AddComment storyId={storyId} />
-
+        <DrawerBody px="10px" pr="20px">
+          <AddComment storyId={storyId} />
+          {noOfComments > 0 ? (
             <CommentList
               isPrimary={true}
               url={storyId ? `/comments/primaries/${storyId}` : ""}
               isInitial={true}
               pageNo={1}
             />
-          </DrawerBody>
-        </CtxProvider>
+          ) : (
+            <Heading
+              textAlign="justify"
+              size="md"
+              fontStyle="italic"
+              color="green.600"
+            >
+              No comments, be first one to comment
+            </Heading>
+          )}
+        </DrawerBody>
       </DrawerContent>
     </Drawer>
   );

@@ -24,6 +24,7 @@ const initValues: StoryFormType = {
   additionalTags: [],
 
   isPublished: false,
+  collabWith: [],
 };
 
 const Index = ({ story }: { story: Partial<StoryType> }) => {
@@ -49,6 +50,7 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
 
   useEffect(() => {
     localStorage.setItem("story", JSON.stringify(impStoryFields(story)));
+    return () => localStorage.removeItem("story");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -10,19 +10,27 @@ import { signJwt } from "./jwt";
 import * as yup from "yup";
 import { isValidObjectId } from "mongoose";
 
+import { LoremIpsum } from "lorem-ipsum";
+// const LoremIpsum = require("lorem-ipsum").LoremIpsum;
+
+export const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4,
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4,
+  },
+});
+
 export const asyncHandler =
   (fn: any) => (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
-export const getRndInteger = ({
-  min,
-  max,
-  isIncludedBoth,
-}: {
-  min: number;
-  max: number;
-  isIncludedBoth: true;
-}) => Math.floor(Math.random() * (max - min + (isIncludedBoth ? 1 : 0))) + min;
+export function getRndInteger(min: number, max: number, include = false) {
+  return Math.floor(Math.random() * (max - min + (include ? 1 : 0))) + min;
+}
 
 export const readingTime = (html: string) => {
   if (!html) return 0;
@@ -249,6 +257,7 @@ export const strArrSchema = (
   label: string,
   {
     isRequired = false,
+    unique = true,
     prettyLabel,
     min,
     max,
@@ -263,6 +272,7 @@ export const strArrSchema = (
     isMongoId: boolean;
     strMin: number;
     strMax: number;
+    unique: boolean;
   }>
 ) => {
   let lenMsg = "";
@@ -280,9 +290,11 @@ export const strArrSchema = (
     .typeError(`${prettyLabel || label} must be array`)
     .test(label, lenMsg, (val: any) => {
       if (!val) return !isRequired ? true : false;
+
       if (new Set(val).size != val?.length || (min && val?.length < min))
         return false;
       else if (isMongoId) return val?.every((val: any) => isValidObjectId(val));
+      else if (unique) return new Set(val).size == val.length;
       else if (strMin && strMax)
         return val.every((val: any) => trimExtra(val, strMin, strMax));
       else if (strMin)

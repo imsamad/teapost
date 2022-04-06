@@ -54,7 +54,7 @@ const TSSearch = ({ size }: any) => {
   const handleKeyUp = useCallback(debounce(fetchQuery), []);
 
   return (
-    <Box position="relative">
+    <Box>
       <MySearch
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           if (!e.target.value.split(" ").join("").length) setIsQuery("");
@@ -138,7 +138,7 @@ const TSSearch = ({ size }: any) => {
 export default TSSearch;
 
 const MySearch = ({ onChange, size, value, onKeyUp }: any) => (
-  <Box w="lg" maxW={["full", "md", "lg"]}>
+  <Box w="lg" maxW={["full", "md", "lg"]} mx="auto">
     <InputGroup
       size={size ?? "md"}
       overflow="hidden"

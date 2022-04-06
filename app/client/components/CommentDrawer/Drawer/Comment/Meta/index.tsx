@@ -5,11 +5,11 @@ import React from "react";
 
 const index = ({
   username,
-  updateAt,
+  updatedAt,
   createdAt,
 }: {
   username: CombineComment["user"]["username"];
-  updateAt: CombineComment["updatedAt"];
+  updatedAt: CombineComment["updatedAt"];
   createdAt: CombineComment["updatedAt"];
 }) => {
   const getSeconds = (val: Date) => new Date(val).getSeconds();
@@ -33,8 +33,8 @@ const index = ({
         {username}
       </Text>
       <Text fontStyle="italic" fontSize="xs" color="muted">
-        {timeSince(updateAt)} ago
-        {getSeconds(updateAt) != getSeconds(createdAt) ? "  (edited)" : ""}
+        {timeSince(updatedAt)} ago
+        {getSeconds(updatedAt) != getSeconds(createdAt) ? "  (edited)" : ""}
       </Text>
     </>
   );

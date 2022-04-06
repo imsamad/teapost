@@ -1,7 +1,6 @@
 import { CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Collapse,
   Fade,
   useDisclosure,
   useOutsideClick,
@@ -10,6 +9,7 @@ import {
 import TSIconButton from "@compo/UI/TSIconButton";
 import React, { useRef } from "react";
 import { GrMoreVertical } from "react-icons/gr";
+import { useCTX } from "../../AddedCtx";
 
 const Index = ({
   openEdit,
@@ -25,7 +25,7 @@ const Index = ({
     ref: ref,
     handler: () => actions.onClose(),
   });
-
+  const { setNoOfReplies } = useCTX();
   return (
     <Box>
       <Box position="relative">
@@ -62,6 +62,7 @@ const Index = ({
               mx="2"
               onClick={(e) => {
                 onDelete().then(() => {
+                  setNoOfReplies(-1);
                   actions.onClose();
                 });
               }}

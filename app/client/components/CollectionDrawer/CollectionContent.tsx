@@ -7,14 +7,14 @@ import {
   VStack,
   Divider,
 } from "@chakra-ui/react";
-import { useAuthCtx, useProfile } from "@compo/Context";
-import { addToCollection } from "@lib/api/collectionApi";
 import { ChangeEvent, useState } from "react";
 
+import { useAuthCtx, useProfile } from "@compo/Context";
+import { addToCollection } from "@lib/api/collectionApi";
 import CollectionFooter from "./CollectionFooter";
-
 import NewCollection from "../NewCollection";
 import CollectionRow from "./CollectionRow";
+
 const Content = ({ storyId }: { storyId: string }) => {
   const { myProfile } = useProfile();
   //   extract collId of which current SelectStory is part of

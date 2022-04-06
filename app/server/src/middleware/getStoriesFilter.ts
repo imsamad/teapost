@@ -188,9 +188,9 @@ export const filter = async (
     cutcontent = parseInt(req.query?.cutcontent! || 0.1),
     onlycontent = req.query?.onlycontent! == "true",
     // @ts-ignore
-    page = parseInt(req?.query?.page || 1, 10),
+    page = parseInt(req?.query?.page || 1, 10) || 1,
     // @ts-ignore
-    limit = parseInt(req?.query?.limit || 10, 10);
+    limit = parseInt(req?.query?.limit || 10, 10) || 10;
 
   req.query = {};
   //   @ts-ignore

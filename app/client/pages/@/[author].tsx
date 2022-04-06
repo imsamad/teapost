@@ -19,11 +19,7 @@ const Index = ({
   return (
     <Container maxW="container.md" p="0" pt="4">
       <Stack spacing={4}>
-        <AuthorCard
-          author={author}
-          numOfStories={stories?.length}
-          displayFull={true}
-        />
+        <AuthorCard author={author} displayFull={true} />
 
         <Divider />
         {stories?.length ? (

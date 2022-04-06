@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { asyncHandler } from "../../lib/utils";
+import { asyncHandler, peelUserDoc } from "../../lib/utils";
 import User from "../../models/User";
 // @desc      getAllUsers
 // @route     GET /api/v1/users
@@ -7,19 +7,28 @@ import User from "../../models/User";
 
 export const getAllUsers = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const usersDoc = await User.find({}).populate("profile");
+    // @ts-ignore
+    const page = parseInt(req?.query?.page || 1, 10) || 1,
+      // @ts-ignore
+      limit = parseInt(req?.query?.limit || 10, 10) || 10;
+    // @ts-ignore
+    const startIndex = (page - 1) * limit;
+    const usersDoc = await User.find({})
+      .populate("profile")
+      .skip(startIndex)
+      .limit(limit);
+    // .lean();
+
+    let pagination: any = { limit };
+
+    if (usersDoc.length) {
+      pagination.next = page + 1;
+    }
+    if (startIndex > 0) pagination.prev = page - 1;
 
     res.json({
       status: "ok",
-      users: !usersDoc.length
-        ? []
-        : usersDoc.map((user) => ({
-            _id: user._id,
-            username: user.username,
-            fullName: user.fullName,
-            email: user.email,
-            followers: user?.profile?.followers?.length || 0,
-          })),
+      users: !usersDoc.length ? [] : usersDoc.map((user) => peelUserDoc(user)),
     });
   }
 );

@@ -1,6 +1,4 @@
 import { HStack, Text } from "@chakra-ui/react";
-import StoryType from "@lib/types/StoryType";
-import UserType from "@lib/types/UserType";
 import React from "react";
 
 const index = ({

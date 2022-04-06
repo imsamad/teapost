@@ -86,6 +86,17 @@ const storySchema = new Schema(
   }
 );
 
+storySchema.pre("save", async function (next) {
+  if (!this.isNew) return next();
+
+  await this.model("User").findOneAndUpdate(
+    { _id: this.author },
+    { $inc: { stories: 1 } }
+  );
+
+  next();
+});
+
 storySchema.post(["save", "updateOne"], errorHandlerMdlwr);
 storySchema.post("findOneAndUpdate", errorHandlerMdlwr);
 
@@ -129,6 +140,13 @@ storySchema.pre("remove", async function (next) {
 
   promises.push(this.model("StoryMeta").findByIdAndRemove(this._id));
   promises.push(this.model("StoryHistory").findByIdAndRemove(this._id));
+
+  promises.push(
+    this.model("User").findOneAndUpdate(
+      { _id: this.author },
+      { $inc: { stories: -1 } }
+    )
+  );
 
   deletedPrimary.forEach((primary: any, index: any) =>
     promises.push(primary.remove())

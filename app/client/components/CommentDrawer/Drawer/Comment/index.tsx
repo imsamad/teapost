@@ -11,7 +11,7 @@ import { deleteComment, updateComment } from "@lib/api/commentApi";
 
 import { getCookies } from "@lib/cookies";
 import { CombineComment } from "@lib/types/CommentTypes";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 
 import EditDelete from "./EditDelete";
@@ -25,11 +25,9 @@ import Replies from "../Replies";
 const Index = ({
   comment: commentUpper,
   isPrimary,
-  mutate,
 }: {
   comment: CombineComment;
   isPrimary: boolean;
-  mutate?: () => void;
 }) => {
   const [comment, setComment] = useState(commentUpper);
   const editComment = useDisclosure();
@@ -71,8 +69,8 @@ const Index = ({
         <HStack borderBottom="0px" mb="4px">
           <Avatar
             alignSelf="flex-start"
-            name="Dan Abrahmov"
-            src="https://bit.ly/dan-abramov"
+            name={comment.user.fullName}
+            src={comment.user.profilePic}
             size="sm"
           />
           <Stack alignSelf="flex-start" flex="1">
@@ -80,7 +78,7 @@ const Index = ({
               <Meta
                 username={comment.user.username}
                 createdAt={comment.createdAt}
-                updateAt={comment.updatedAt}
+                updatedAt={comment.updatedAt}
               />
 
               {isAuthor && (
@@ -108,7 +106,6 @@ const Index = ({
             )}
             <LikeDislikeReply
               username={comment.user.username}
-              mutate={mutate}
               noOfDislikes={comment.noOfDislikes}
               noOfLikes={comment.noOfLikes}
               hasBeenLike={
@@ -124,7 +121,12 @@ const Index = ({
               commentId={comment._id}
               isPrimary={isPrimary}
             />
-            {comment.noOfReplies && <Replies primaryId={comment._id} />}
+            {isPrimary && (
+              <Replies
+                primaryId={comment._id}
+                noOfReplies={comment.noOfReplies || 0}
+              />
+            )}
           </Stack>
         </HStack>
       )}
@@ -132,7 +134,7 @@ const Index = ({
   );
 };
 
-export default Index;
+export default memo(Index);
 /*
 
 

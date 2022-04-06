@@ -9,11 +9,11 @@ const setEnv = () =>
     resolve(true);
   });
 
-import users from "./data/users";
+import users, { createUsers } from "./data/users";
 import stories from "./data/stories";
 import tags from "./data/tags";
-import primaries from "./data/primaries";
-import secondaries from "./data/secondaries";
+import { primaries, createPrimaries } from "./data/primaries";
+import secondaries, { createSecondaries } from "./data/secondaries";
 import images from "./data/images";
 
 import User from "../src/models/User";
@@ -40,36 +40,39 @@ const getNewStories = () => {
       })),
     ];
   return temp;
-  // console.log("temp", temp);
 };
 const importData = async () => {
   try {
     // await Tag.create(tags);
     // await Image.create(images);
-    // await User.create(users);
 
-    // await StoryCollection.create(
-    //   users.map((user) => ({ user: user._id, title: "Read Later" }))
-    // );
+    await User.create(users);
+    let userCreated = await User.create(await createUsers());
+    let userIds: string[] = userCreated.map((usr) => usr._id);
 
     // const storiesss = await Story.create(stories);
     await Story.findOne({ title: "title" });
-    // console.log("storiesssstoriesss ", storiesss);
-    // await StoryMeta.create(stories.map((s) => ({ _id: s._id })));
 
-    await Primary.create(primaries);
-    // await CommentMeta.create(
-    //   primaries.map((primary) => ({
-    //     _id: primary._id,
-    //   }))
-    // );
-    await Secondary.create(secondaries);
-    // await CommentMeta.create(
-    //   secondaries.map((secondary) => ({
-    //     _id: secondary._id,
-    //   }))
-    // );
-    console.log("data imported");
+    let primariesCreated = await Primary.create(
+      createPrimaries({
+        storyIds: stories
+          .filter((s, index) => index < 10 && true)
+          .map((user) => user._id),
+        userIds,
+        qty: 100,
+      })
+    );
+
+    // @ts-ignore
+    let primaryIds: string[] = primariesCreated.map((prim) =>
+      prim._id.toString()
+    );
+
+    const secCreted = await Secondary.create(
+      createSecondaries({ primaryIds, userIds })
+    );
+
+    // console.log("data imported");
     process.exit(1);
   } catch (err) {
     console.log("import err ", err);
@@ -88,16 +91,16 @@ const deleteData = async () => {
     // await StoryMeta.deleteMany();
     // await StoryCollection.deleteMany();
 
-    primaries.forEach(async ({ story }) => {
-      await Story.findByIdAndUpdate(story, {
-        noOfComments: 0,
-      });
+    // primaries.forEach(async ({ story }) => {
+    await Story.findByIdAndUpdate("6246f5a68e399c2b1c3382e8", {
+      noOfComments: 0,
     });
+    // });
 
-    await Primary.deleteMany();
+    await Primary.deleteMany({ story: "6246f5a68e399c2b1c3382e8" });
 
-    await Secondary.deleteMany();
-    await CommentMeta.deleteMany();
+    // await Secondary.deleteMany();
+    // await CommentMeta.deleteMany();
     console.log("data deleted ");
     process.exit(1);
   } catch (err) {

@@ -24,6 +24,7 @@ const secondaryCommentSchema = new Schema(
     },
     text: {
       type: String,
+      trim: true,
       min: [1, "Enter some thing"],
     },
     primary: {

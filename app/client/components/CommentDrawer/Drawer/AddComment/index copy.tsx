@@ -8,12 +8,12 @@ import Comment from "../Comment";
 
 import { useCTX } from "../AddedCtx";
 const AddComment = ({ storyId }: { storyId: string }) => {
-  const { addedComments, setAddComments, setNoOfReplies } = useCTX();
+  const [addedComments, setAddCommentsState] = useState<CombineComment[]>([]);
 
   const onSave = async (val: string) => {
     addComment(storyId, val).then(({ comment }) => {
-      setAddComments(comment);
-      setNoOfReplies(1);
+      setAddCommentsState((pre) => [...pre, comment]);
+      // setNoOfReplies(1);
     });
   };
 
@@ -27,9 +27,9 @@ const AddComment = ({ storyId }: { storyId: string }) => {
           onSave={onSave}
         />
       </Box>
-      {/* {addedComments.map((comment) => {
+      {addedComments.map((comment) => {
         return <Comment key={comment._id} comment={comment} isPrimary={true} />;
-      })} */}
+      })}
     </>
   );
 };

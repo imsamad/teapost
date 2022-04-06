@@ -20,16 +20,16 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: [true, "Please add a name"],
-      minlength: [5, "Username's minimum length must be 5."],
+      minlength: [4, "Username's minimum length must be 4."],
     },
     email: {
       type: String,
       required: [true, "Please add an email"],
       unique: true,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please add a valid email",
-      ],
+      // match: [
+      //   /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      //   "Please add a valid email",
+      // ],
     },
     password: {
       type: String,
@@ -54,6 +54,7 @@ const userSchema = new mongoose.Schema(
     },
     following: { type: Number, default: 0 },
     followers: { type: Number, default: 0 },
+    stories: { type: Number, default: 0 },
   },
 
   {

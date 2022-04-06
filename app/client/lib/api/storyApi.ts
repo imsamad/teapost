@@ -140,3 +140,19 @@ export const getStories = async (page = 1, queryType?: string) => {
     throw err.response.data;
   }
 };
+
+export const collabWithApi = async (
+  storyId: string,
+  body: { collabWith?: string[]; uncollabWith?: string[] }
+) => {
+  try {
+    if (!body.collabWith?.length) delete body.collabWith;
+    if (!body.uncollabWith?.length) delete body.uncollabWith;
+    if (!body.uncollabWith?.length && !body.collabWith?.length) return;
+
+    const { data } = await axios.put(`/stories/collab/${storyId}`, body);
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};

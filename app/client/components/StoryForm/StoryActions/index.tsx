@@ -3,6 +3,7 @@ import { Heading, HStack, Spacer } from "@chakra-ui/react";
 import TSIconButton from "@compo/UI/TSIconButton";
 import { useField } from "formik";
 import AutoSave from "./AutoSave";
+import Collab from "./Collab";
 
 import IsPublished from "./IsPublished";
 const Index = () => {
@@ -25,6 +26,7 @@ const Index = () => {
         />
       </HStack>
       <Spacer />
+      <Collab />
       <AutoSave />
       <IsPublished />
     </HStack>

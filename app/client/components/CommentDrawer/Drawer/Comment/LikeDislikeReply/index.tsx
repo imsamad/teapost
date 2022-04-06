@@ -1,10 +1,4 @@
-import {
-  Box,
-  ButtonGroup,
-  Collapse,
-  useDisclosure,
-  useOutsideClick,
-} from "@chakra-ui/react";
+import { ButtonGroup, Collapse, useDisclosure } from "@chakra-ui/react";
 import { useAuthCtx } from "@compo/Context";
 import TSButton from "@compo/UI/TSButton";
 import { likeOrDislikeComment, replyComment } from "@lib/api/commentApi";
@@ -17,14 +11,12 @@ import {
   AiFillDislike,
 } from "react-icons/ai";
 import { FaReply } from "react-icons/fa";
-import { useSWRConfig } from "swr";
 
 import InputField from "../../InputField";
-
+import { useCTX } from "../../AddedCtx";
 const Index = ({
   commentId,
   isPrimary,
-  mutate,
   username,
   ...rest
 }: {
@@ -34,7 +26,6 @@ const Index = ({
   hasBeenDisLike: boolean;
   commentId: string;
   isPrimary: boolean;
-  mutate?: () => void;
   username: string;
 }) => {
   const { auth, openLoginToast } = useAuthCtx();
@@ -63,16 +54,15 @@ const Index = ({
     });
   };
   const reply = useDisclosure();
-  // const { mutate: mutateSWR } = useSWRConfig();
+  const { setAddComments, setNoOfReplies, noOfReplies } = useCTX();
   const onSave = async (val: string) => {
     replyComment({
       isReplyToPrimary: isPrimary,
       commentId,
       text: val,
     }).then(async (res) => {
-      // const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/comments/secondaries/${commentId}`;
-      // mutateSWR([endpoint]);
-      mutate && mutate();
+      setAddComments(res.comment);
+      setNoOfReplies(1);
       reply.onClose();
     });
   };

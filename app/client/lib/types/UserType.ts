@@ -16,6 +16,7 @@ interface UserType {
   isAuthorised?: boolean;
   updatedAt?: Date;
   profile?: ProfileType;
+  stories: number;
 }
 export interface AuthType {
   user: UserType;

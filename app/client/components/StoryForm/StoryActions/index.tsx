@@ -19,7 +19,7 @@ const Index = () => {
           variant="outline"
           colorScheme="blue"
           // @ts-ignore
-          href={`/me/story/history/${value}`}
+          href={`/me/stories/history/${value}`}
           size="xs"
           icon={<ExternalLinkIcon />}
           aria-label="History"

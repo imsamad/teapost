@@ -1,4 +1,3 @@
-import { useState } from "react";
 import axios from "axios";
 import { GetServerSideProps } from "next";
 
@@ -28,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
   try {
     const { data } = await axios.get<{ storyHistory: StoryHistoryType }>(
-      `${process.env.API_URL}/storyhistory/${storyId}`,
+      `${process.env.API_URL}/storyhistories/${storyId}`,
       {
         headers: {
           authorization: `Bearer ${accessToken}`,
@@ -42,12 +41,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
     };
   } catch (err) {
+    console.log("err ", err);
     return {
       notFound: true,
-      // redirect: {
-      //   destination: "/404",
-      //   permanent: true,
-      // },
     };
   }
 };

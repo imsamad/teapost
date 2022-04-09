@@ -28,7 +28,6 @@ export const initializeStory = asyncHandler(
     });
     //  @ts-ignore
     let author = req.user._id;
-
     if (isStoryExist) {
       if (isStoryExist.author.toString() == author)
         return res.json({

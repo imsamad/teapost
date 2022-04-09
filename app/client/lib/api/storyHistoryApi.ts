@@ -11,7 +11,7 @@ export const deleteStoryHistory = async ({
   isAll: boolean;
 }) => {
   try {
-    let endpoint = `/storyhistory`;
+    let endpoint = `/storyhistories`;
     if (isAll) endpoint += `/${storyId}`;
     else endpoint += `/${storyId}/${historyId}`;
 

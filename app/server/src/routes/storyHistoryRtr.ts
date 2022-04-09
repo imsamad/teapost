@@ -13,19 +13,19 @@ import validateSchema from "../middleware/validateSchema";
 import { storyHistoryByIdScheme } from "../lib/schema/story";
 
 const router: Router = express();
+router.use(protect);
 
 router
   .route("/:storyId/:historyId")
-  .get(protect, validateSchema(storyHistoryByIdScheme), getStoryHistoryById)
+  .get(validateSchema(storyHistoryByIdScheme), getStoryHistoryById)
   .delete(
-    protect,
     validateSchema(storyHistoryByIdScheme),
     deleteStoryHistoryById({ isAll: false })
   );
 
 router
   .route("/:storyId")
-  .get(protect, getStoryHistory)
-  .delete(protect, deleteStoryHistoryById({ isAll: true }));
+  .get(getStoryHistory)
+  .delete(deleteStoryHistoryById({ isAll: true }));
 
 export default router;

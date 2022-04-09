@@ -1,23 +1,49 @@
 import { FormLabel, GridItem, Image } from "@chakra-ui/react";
-import { CustomError } from "@compo/FormFields";
+
 import { useField } from "formik";
-import ImageActions from "./ImageActions";
+
+import ImageUploader from "@compo/ImageUploader";
+import { submitStory } from "@lib/api/storyApi";
+import { CustomError } from "@compo/FormFields";
 
 const TitleImage = () => {
-  const [{ value }, { error, touched }] = useField("titleImage");
+  const [{ value: titleImage }, { error, touched }, { setValue }] =
+    useField("titleImage");
   const [{ value: isFromHistory }] = useField("isFromHistory");
+  const [{ value: _id }] = useField("_id");
+
   return (
     <GridItem colSpan={2}>
       <FormLabel>Title Image</FormLabel>
-      <Image
-        mr="0"
-        boxSize="150px"
-        objectFit="cover"
-        src={value}
-        alt="storyTitleImage"
-        fallbackSrc="https://via.placeholder.com/150?text=Title Image"
-      />
-      {!isFromHistory && <ImageActions />}
+      {isFromHistory ? (
+        <Image
+          mr="0"
+          boxSize="150px"
+          objectFit="cover"
+          src={titleImage}
+          alt="storyTitleImage"
+          fallbackSrc="https://via.placeholder.com/150?text=Title Image"
+        />
+      ) : (
+        <ImageUploader
+          imageUrl={titleImage}
+          imageUploadCB={async (src: string) => {
+            await submitStory({
+              values: { _id, titleImage: src },
+              type: "image",
+            });
+            setValue(src);
+          }}
+          imageDeleteCB={async () => {
+            submitStory({
+              values: { _id, titleImage: "" },
+              type: "image",
+            }).finally(() => {
+              setValue(undefined);
+            });
+          }}
+        />
+      )}
       <CustomError errors={error} isError={Boolean(error && touched)} />
     </GridItem>
   );

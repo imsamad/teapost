@@ -1,8 +1,6 @@
 import {
   Box,
-  Flex,
   Heading,
-  HStack,
   Image,
   Modal,
   ModalBody,
@@ -22,7 +20,7 @@ const ImageGallery = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onClickCb: (cb: string) => void;
+  onClickCb: (url: string) => void;
 }) => {
   const { data, error, isValidating } = useSWR<{ result: ImageUrlType[] }>(
     () => isOpen && "/image"

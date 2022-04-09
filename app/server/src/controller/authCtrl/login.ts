@@ -19,7 +19,6 @@ const logIn = asyncHandler(
         : {};
 
     let user = await User.findOne({
-      // username: identifier,
       $or: [{ email: identifier }, { username: identifier }],
       ...filter,
     }).select("+password");

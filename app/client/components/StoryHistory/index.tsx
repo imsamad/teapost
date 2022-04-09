@@ -43,7 +43,7 @@ const Index = ({ storyHistory }: { storyHistory: StoryHistoryType }) => {
                     _expanded={{ bg: "gray.400", color: "white" }}
                   >
                     <Heading fontSize="md" flex="1" textAlign="left">
-                      Till {readAbleDate(instance.createdAt)}
+                      Till {readAbleDate(instance.createdAt, true)}
                     </Heading>
                     <AccordionIcon />
                   </AccordionButton>

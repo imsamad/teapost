@@ -1,12 +1,6 @@
-import { DeleteIcon, EditIcon, PlusSquareIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
-  ButtonGroup,
-  FormLabel,
   Grid,
-  GridItem,
-  IconButton,
   Image,
   Modal,
   ModalBody,
@@ -18,31 +12,27 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useField } from "formik";
-import { GrGallery } from "react-icons/gr";
-import TSButton from "@compo/UI/TSButton";
-import { ChangeEvent, useState } from "react";
-import { submitStory } from "@lib/api/storyApi";
+
 import { uploadImage } from "@lib/api/imageApi";
-const ImageModal = ({
+
+const ImagePreviewModal = ({
   isOpen,
   onClose,
   file,
-  handleStoryTitleImage,
+  imageUploadCB,
 }: {
   isOpen: boolean;
   onClose: () => void;
   file: File;
-  handleStoryTitleImage: (url: string) => void;
+  imageUploadCB: (url: string) => void;
 }) => {
-  const [{ value }] = useField("_id");
   const isLoading = useDisclosure();
   const toast = useToast();
   const handleUploadImage = async () => {
     isLoading.onOpen();
     uploadImage(file)
       .then(({ result }) => {
-        handleStoryTitleImage(result[0].url);
+        imageUploadCB(result[0].url);
         onClose();
       })
       .catch((err) => {
@@ -101,4 +91,4 @@ const ImageModal = ({
     </Modal>
   );
 };
-export default ImageModal;
+export default ImagePreviewModal;

@@ -29,20 +29,58 @@ import CommentMeta from "../src/models/Comment/CommentMeta";
 
 import dbConnect from "../src/db/connectDB";
 import { nanoid } from "nanoid";
-const getNewStories = () => {
-  let temp: any = [];
-  for (var i = 0; i < 100; i++)
-    temp = [
-      ...temp,
-      ...stories.map((story, index) => ({
-        ...story,
-        slug: nanoid(),
-      })),
+import { lorem } from "../src/lib/utils";
+
+const insertStoriesIntoColls = async () => {
+  try {
+    const ids = [
+      "62474c2fcb5443749cccd64d",
+      "624f804bdc397c69051bfde4",
+      "624f8056dc397c69051bfdeb",
     ];
-  return temp;
+
+    let promise: any = [];
+
+    ids.forEach(async (id, index) => {
+      const storiesIds = stories
+        .filter(
+          (story, storyIndex) =>
+            storyIndex >= index * 100 && storyIndex <= (index + 1) * 100
+        )
+        .map(({ _id }) => _id);
+
+      await StoryCollection.findByIdAndUpdate(id, {
+        $addToSet: { stories: storiesIds },
+      });
+    });
+  } catch (err: any) {
+    console.log("first ", err);
+  }
+};
+
+const createCollections = async () => {
+  try {
+    const storiesIds = stories
+      .filter((story, storyIndex) => storyIndex < 100)
+      .map(({ _id }) => _id);
+    const colls: any = [];
+    for (var i = 0; i < 100; i++) {
+      const coll = {
+        title: lorem.generateWords(4),
+        user: "6221be7444eaf2d6fc67b964",
+        description: lorem.generateWords(10),
+        stories: storiesIds,
+      };
+      colls.push(coll);
+    }
+
+    await StoryCollection.create(colls);
+  } catch (err) {}
 };
 const importData = async () => {
   try {
+    await createCollections();
+    return;
     // await Tag.create(tags);
     // await Image.create(images);
 

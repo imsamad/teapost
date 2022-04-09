@@ -5,18 +5,27 @@ import { ErrorResponse } from "../../lib/utils";
 import Story from "../../models/Story";
 import StoryCollection from "../../models/StoryCollection";
 
-// @desc      addStories
-// @route     PUT /api/v1/collection/addstories/:storyId
+// @desc      buildCollecion
+// @route     PUT /api/v1/collection/buildCollecion/:storyId
 // @access    Auth
-
-const addStories = asyncHandler(
+const obj = [
+  {
+    storyId: "stirng",
+    addTo: [""],
+    removeFrom: [""],
+    addToDefault: true,
+    removeFromDefault: true,
+  },
+];
+const buildCollecion = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
-    const story = await Story.findById(req.params.storyId);
-    if (!story) return next(ErrorResponse(400, "No resource found"));
+    const { addToDefault, removeFromDefault, addTo, removeFrom, storyId } =
+      req.body;
 
-    const { addToDefault, removeFromDefault, addTo, removeFrom } = req.body;
+    const story = await Story.findById(storyId);
+    if (!story) return next(ErrorResponse(400, "No resource found"));
 
     let updatePromise: any = [];
     if (addToDefault || removeFromDefault) {
@@ -73,4 +82,4 @@ const addStories = asyncHandler(
       });
   }
 );
-export default addStories;
+export default buildCollecion;

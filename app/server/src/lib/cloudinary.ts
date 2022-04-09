@@ -14,7 +14,7 @@ export const uploadImageToCloudinary = async (
     const uploadResponse = await cloudinary.uploader.upload(data, {
       upload_preset: "custom_upload_preset",
     });
-    console.log("uploadResponse ", uploadResponse);
+
     return { resource: uploadResponse, result: true };
   } catch (err: any) {
     console.log("error from uploadImageToCloudinary", err);

@@ -10,9 +10,9 @@ import {
 import { ChangeEvent, useState } from "react";
 
 import { useAuthCtx, useProfile } from "@compo/Context";
-import { addToCollection } from "@lib/api/collectionApi";
+import { buildCollection } from "@lib/api/collectionApi";
 import CollectionFooter from "./CollectionFooter";
-import NewCollection from "../NewCollection";
+import NewCollectionBtn from "./NewCollectionBtn";
 import CollectionRow from "./CollectionRow";
 
 const Content = ({ storyId }: { storyId: string }) => {
@@ -51,6 +51,7 @@ const Content = ({ storyId }: { storyId: string }) => {
       removeFrom: sendObj.removeFrom.filter((coll) =>
         storyPartOf.includes(coll)
       ),
+      storyId,
     };
     if (!finalObj.addTo.length && !finalObj.removeFrom.length) {
       toast({
@@ -62,7 +63,7 @@ const Content = ({ storyId }: { storyId: string }) => {
       });
     } else {
       loadingState.onOpen();
-      addToCollection(finalObj, storyId)
+      buildCollection(finalObj)
         .then(() => {
           toast({
             status: "success",
@@ -116,7 +117,7 @@ const Content = ({ storyId }: { storyId: string }) => {
           </VStack>
         ) : (
           <>
-            <NewCollection />
+            <NewCollectionBtn />
             <Heading fontSize="md" textAlign="center" my="2">
               Add To
             </Heading>

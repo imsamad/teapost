@@ -27,17 +27,15 @@ export const removeCollectionSchema = yup.object({
   }),
 });
 
-export const addStoriesSchema = yup.object({
-  params: yup.object({
-    storyId: strSchema("storyId", {
-      isRequired: true,
-      isMongoId: true,
-      prettyLabel: "Story Id",
-    }),
-  }),
+export const buildSchema = yup.object({
   body: yup
     .object()
     .shape({
+      storyId: strSchema("storyId", {
+        isRequired: true,
+        isMongoId: true,
+        prettyLabel: "Story Id",
+      }),
       addTo: strArrSchema("addTo", {
         isMongoId: true,
       }),

@@ -3,7 +3,7 @@ import { asyncHandler, ErrorResponse } from "../../lib/utils";
 import StoryCollection from "../../models/StoryCollection";
 
 // @desc      Create Collection
-// @route     POST /api/v1/collection/:collectionId
+// @route     POST /api/v1/collections/:collectionId
 // @access    Auth
 export const updateCollection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {

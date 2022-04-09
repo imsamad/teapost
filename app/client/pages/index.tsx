@@ -7,7 +7,12 @@ import storyType from "@lib/types/StoryType";
 const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
-      <Stories stories={stories} isInitial={true} nextPageNo={2} />
+      <Stories
+        initialStories={stories}
+        // isInitial={true}
+        nextPageNo={2}
+        query="/stories?"
+      />
       {/* <Stories stories={stories} /> */}
     </>
   );

@@ -1,4 +1,4 @@
-import StoryCollectionType from "./StoryCollectionType";
+import { StoryCollectionType } from "./StoryCollectionType";
 import Story from "./StoryType";
 import User from "./UserType";
 

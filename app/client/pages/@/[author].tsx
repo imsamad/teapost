@@ -28,9 +28,9 @@ const Index = ({
               Stories
             </Heading>
             <Stories
-              stories={stories}
-              isInitial={true}
-              query={`authors=${author.username}`}
+              initialStories={stories}
+              // isInitial={true}
+              query={`/stories?authors=${author.username}&`}
               nextPageNo={2}
             />
           </>

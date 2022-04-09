@@ -1,27 +1,65 @@
-import Profile from "@compo/Profile/Profile";
+import axios from "axios";
 import { GetServerSideProps } from "next";
-import { applyServerSideCookie } from "next-universal-cookie";
 
-const Index = () => <Profile />;
+import { getCookieFromServer } from "@lib/cookies";
+import { StoryCollectionType } from "@lib/types/StoryCollectionType";
+
+import DashboardHeader from "@compo/DashboardHeader";
+import MyCollections from "@compo/MyCollections";
+
+const Index = ({ mycollections }: { mycollections: StoryCollectionType[] }) => {
+  return (
+    <>
+      <DashboardHeader type="collections" />
+      <MyCollections
+        initialMycollections={mycollections}
+        isInitial={true}
+        nextPageNo={2}
+      />
+    </>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
   res,
-}): Promise<any> => {
-  applyServerSideCookie(req, res);
-  const allCookies = req.cookies;
-  const userAuthCookie = process.env.AUTH_SESSION as string;
-
+  params,
+}) => {
   // @ts-ignore
-  if (!allCookies[userAuthCookie]) {
+
+  const accessToken = await getCookieFromServer(req.cookies);
+
+  if (!accessToken) {
     return {
-      redirect: { destination: `/auth?redirectTo=/me`, permanent: true },
+      redirect: {
+        destination: `/auth?redirectTo=/me`,
+        permanent: true,
+      },
     };
   }
 
-  return {
-    props: {},
-  };
+  try {
+    const {
+      data: { mycollections },
+    } = await axios.get<{ mycollections: StoryCollectionType[] }>(
+      `${process.env.API_URL}/collections/my`,
+      {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    return {
+      props: {
+        mycollections,
+      },
+    };
+  } catch (err) {
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default Index;

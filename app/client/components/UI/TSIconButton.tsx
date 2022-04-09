@@ -5,7 +5,6 @@ const TSIconButton = ({ ...rest }: IconButtonProps) => {
     <IconButton
       _focus={{
         border: "1px solid gray",
-        bgColor: "transparent",
         boxShadow: "none",
         WebkitTapHighlightColor: "transparent",
         backfaceVisibility: "hidden",

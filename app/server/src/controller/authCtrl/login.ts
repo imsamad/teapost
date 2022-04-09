@@ -17,11 +17,12 @@ const logIn = asyncHandler(
             isAuthorised: true,
           }
         : {};
+
     let user = await User.findOne({
+      // username: identifier,
       $or: [{ email: identifier }, { username: identifier }],
       ...filter,
     }).select("+password");
-
     if (!user)
       return next(
         ErrorResponse(400, {

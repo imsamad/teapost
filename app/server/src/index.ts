@@ -61,7 +61,7 @@ app.use("/api/v1/stories", storyRtr);
 app.use("/api/v1/storyhistories", storyHistoryRtr);
 app.use("/api/v1/tags", tagRtr);
 app.use("/api/v1/image", imageRtr);
-app.use("/api/v1/collection", collectionRtr);
+app.use("/api/v1/collections", collectionRtr);
 app.use("/api/v1/comments", commentRtr);
 app.get("/api/v1", (_req, res) => {
   return res.json({

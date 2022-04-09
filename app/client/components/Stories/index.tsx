@@ -6,37 +6,39 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
+import { useCallback, useRef, useState } from "react";
+import useSWR from "swr";
 
 import StoryType from "@lib/types/StoryType";
 import UserType from "@lib/types/UserType";
 
-import { useCallback, useRef, useState } from "react";
-import useSWR from "swr";
-
 import StoryCard from "../StoryCard";
+import ShowStoryCard from "../MyCollections/CollectionCard/ShowStories/ShowStoryCard";
 
-const Index = ({
-  stories,
+const Stories = ({
+  initialStories,
   query = "",
   isInitial = false,
   nextPageNo,
+  collectionId,
 }: {
-  stories?: StoryType[];
+  initialStories?: StoryType[];
   query?: string;
   isInitial?: boolean;
+  collectionId?: string;
   nextPageNo: number;
 }) => {
-  const { data } = useSWR<{
+  const { data, isValidating } = useSWR<{
     stories: StoryType[];
     authors: UserType[];
     pagination: { next: number; prev: number; limit: number };
-  }>(() => !isInitial && `/stories?${query}&page=${nextPageNo}`);
+  }>(() => !initialStories && `${query}page=${nextPageNo}`);
 
   const [show, setShow] = useState(false);
 
   const observer: any = useRef();
   const isInView = useCallback((node) => {
-    if (isInitial || !nextPageNo) {
+    if (initialStories || !nextPageNo) {
       return;
     }
     observer.current = new IntersectionObserver(
@@ -53,39 +55,63 @@ const Index = ({
   }, []);
   return (
     <Container maxW="container.md" p="0">
-      <div ref={isInitial ? null : isInView} />
-      {isInitial ? (
+      <div ref={initialStories ? null : isInView} />
+      {initialStories ? (
         <>
-          {stories?.map((story: StoryType) => (
-            <StoryCard story={story} key={story._id} />
-          ))}
-          <Index nextPageNo={nextPageNo} query={query} />
+          {initialStories?.map((story: StoryType) =>
+            collectionId ? (
+              <ShowStoryCard
+                story={story}
+                key={story._id}
+                collectionId={collectionId}
+              />
+            ) : (
+              <StoryCard story={story} key={story._id} />
+            )
+          )}
+          <Stories
+            nextPageNo={nextPageNo}
+            query={query}
+            collectionId={collectionId}
+          />
         </>
-      ) : !show ? (
-        <HStack justifyContent="center">
+      ) : !show || isValidating ? (
+        <HStack justifyContent="center" my={2}>
           <Spinner
             thickness="4px"
             speed="0.65s"
             emptyColor="gray.200"
             color="blue.500"
-            size="xl"
+            size="sm"
           />
         </HStack>
       ) : data?.stories?.length ? (
         <>
-          {data?.stories?.map((story: StoryType) => (
-            <StoryCard story={story} key={story._id} />
-          ))}
-          <Index nextPageNo={nextPageNo + 1} query={query} />
+          {data?.stories?.map((story: StoryType) =>
+            collectionId ? (
+              <ShowStoryCard
+                story={story}
+                key={story._id}
+                collectionId={collectionId}
+              />
+            ) : (
+              <StoryCard story={story} key={story._id} />
+            )
+          )}
+          <Stories
+            nextPageNo={nextPageNo + 1}
+            query={query}
+            collectionId={collectionId}
+          />
         </>
       ) : (
-        <Text textAlign="center"> The End </Text>
+        !isValidating && <Text textAlign="center"> The End </Text>
       )}
     </Container>
   );
 };
 
-export default Index;
+export default Stories;
 const Server = () => (
   <Box
     maxW="400px"

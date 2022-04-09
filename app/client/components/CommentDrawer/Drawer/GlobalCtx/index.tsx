@@ -19,13 +19,11 @@ export const CtxProvider = ({ children }: { children: React.ReactNode }) => {
   const [addedComments, setAddCommentsState] = useState<CombineComment[]>([]);
   const [noOfReplies, setNoOfRepliesState] = useState(0);
   const setNoOfReplies = (num: number) => {
-    console.log(" setNoOfReplies ", num);
     setNoOfRepliesState(num + noOfReplies);
   };
   const setAddComments = (comment: CombineComment, isDelete = false) => {
     if (isDelete) setAddCommentsState([]);
     else setAddCommentsState((pre) => [...pre, comment]);
-    console.log("setAddComments");
   };
   return (
     <Ctx.Provider
@@ -40,7 +38,7 @@ export const useCTX = () => useContext(Ctx);
 
 export const Render = () => {
   const { addedComments } = useCTX();
-  console.log("addedComments ", addedComments);
+
   return (
     <>
       {addedComments.map((comment) => (

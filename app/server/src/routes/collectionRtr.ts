@@ -2,8 +2,10 @@ import express, { Router } from "express";
 const router: Router = express();
 
 import {
-  addStories,
+  buildCollecion,
   createCollection,
+  getCollectionStories,
+  myCollections,
   removeCollection,
   updateCollection,
 } from "../controller/collectionCtrl";
@@ -11,30 +13,25 @@ import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
 
 import {
-  addStoriesSchema,
+  buildSchema,
   createCollectionSchema,
   removeCollectionSchema,
   updateCollectionSchema,
 } from "../lib/schema/collection";
-import checkTemp from "../middleware/checkTemp";
 
 router.use(protect);
 
-router.post(
-  "/",
-  checkTemp(),
-  validateSchema(createCollectionSchema),
-  createCollection
-);
+router.post("/", validateSchema(createCollectionSchema), createCollection);
 
-router.put(
-  "/addstories/:storyId",
-  protect,
-  validateSchema(addStoriesSchema),
-  addStories
-);
+router.get("/my", myCollections);
+
+router.get("/stories/:collectionId", getCollectionStories);
+
+router.put("/build", validateSchema(buildSchema), buildCollecion);
+
 router
   .route("/:collectionId")
   .put(validateSchema(updateCollectionSchema), updateCollection)
   .delete(validateSchema(removeCollectionSchema), removeCollection);
+
 export default router;

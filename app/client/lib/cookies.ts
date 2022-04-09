@@ -36,9 +36,10 @@ const getCookieFromServer = (cookies: NextApiRequestCookies): Promise<string> =>
   new Promise((resolve, reject) => {
     const userAuthCookie: string = process.env.AUTH_SESSION!;
     let token: any = cookies?.[userAuthCookie];
-    if (!token) reject("");
+
+    if (!token) resolve("");
     token = JSON.parse(token).accessToken;
-    if (!token) reject("");
+    if (!token) resolve("");
     resolve(token);
   });
 export { getCookies, setCookies, deleteCookies, getCookieFromServer };

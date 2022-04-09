@@ -27,7 +27,7 @@ export const filter = async (
   }> = {};
 
   let allowedFields: { key: string; type: string }[] = [
-    { key: "ids", type: "objIdArr" },
+    { key: "id", type: "objIdArr" },
 
     { key: "title", type: "strPattern" },
     { key: "subtitle", type: "strPattern" },

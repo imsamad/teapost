@@ -8,9 +8,8 @@ const Index = (props: { primaryId: string; noOfReplies: number }) => {
   const showReplies = useDisclosure();
 
   const { setNoOfReplies, noOfReplies, setAddComments } = useCTX();
-  console.log("replies index");
+
   useEffect(() => {
-    console.log("setting replies");
     if (!noOfReplies) setNoOfReplies(props.noOfReplies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

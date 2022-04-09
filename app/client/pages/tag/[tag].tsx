@@ -39,10 +39,10 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
               Stories
             </Heading>
             <Stories
-              stories={stories}
+              initialStories={stories}
               nextPageNo={2}
-              query={`tags=${router.query.tag}`}
-              isInitial={true}
+              query={`/stories?tags=${router.query.tag}&`}
+              // isInitial={true}
             />
           </>
         ) : (

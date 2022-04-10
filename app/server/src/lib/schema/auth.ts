@@ -67,3 +67,20 @@ export const followSchema = yup.object({
     }),
   }),
 });
+export const forgotIdentifierSchema = yup.object({
+  body: yup.object({
+    identifierInitials: strSchema("identifierInitials", {
+      isRequired: true,
+      prettyLabel: "Identifier Initials ",
+      min: 3,
+      from: "Identifier",
+    }),
+  }),
+});
+/*
+identifierInitials: yup
+.string()
+.label("identifierInitials")
+.required("Identifier Initials is required to guess")
+.min(3)
+.trim(),*/

@@ -18,8 +18,9 @@ interface UserType {
   profile?: ProfileType;
   stories: number;
 }
-export interface AuthType {
+export interface AuthTypeResponse {
   user: UserType;
   accessToken: string;
+  message?: any;
 }
 export default UserType;

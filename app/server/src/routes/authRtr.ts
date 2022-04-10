@@ -17,7 +17,12 @@ import {
 
 import { protect } from "../middleware/auth";
 import validateSchema from "../middleware/validateSchema";
-import { followSchema, logInSchema, registerSchema } from "../lib/schema/auth";
+import {
+  followSchema,
+  forgotIdentifierSchema,
+  logInSchema,
+  registerSchema,
+} from "../lib/schema/auth";
 
 router.post("/login", validateSchema(logInSchema), logIn);
 router.post("/register", validateSchema(registerSchema), register);
@@ -29,7 +34,11 @@ router
   .get(resetPaswordPage)
   .put(resetPasword);
 
-router.post("/forgotidentifier", forgotIdentifier);
+router.post(
+  "/forgotidentifier",
+  validateSchema(forgotIdentifierSchema),
+  forgotIdentifier
+);
 
 router.use(protect);
 router.get("/me", getMe);

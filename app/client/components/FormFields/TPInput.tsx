@@ -6,6 +6,7 @@ import {
   Input,
   InputRightAddon,
   FormHelperText,
+  InputProps,
 } from "@chakra-ui/react";
 import { FieldProps, FastField } from "formik";
 import { memo } from "react";
@@ -19,6 +20,7 @@ type Props = {
   placeholder?: string;
   size?: string;
   isRequired?: boolean | false;
+  inputProps?: InputProps;
 };
 import CustomError from "./CustomError";
 
@@ -31,6 +33,7 @@ const TPInput = ({
   placeholder,
   size,
   isRequired,
+  inputProps,
   ...rest
 }: Props) => {
   return (
@@ -48,7 +51,12 @@ const TPInput = ({
             {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
             <InputGroup size={size ? size : "md"}>
               {LeftAddOn && <InputLeftAddon>{LeftAddOn}</InputLeftAddon>}
-              <Input {...field} id={name} placeholder={placeholder} />
+              <Input
+                {...field}
+                id={name}
+                placeholder={placeholder}
+                {...inputProps}
+              />
               {rightAddOn && <InputRightAddon>{rightAddOn}</InputRightAddon>}
             </InputGroup>
             {!isError && helperText && (

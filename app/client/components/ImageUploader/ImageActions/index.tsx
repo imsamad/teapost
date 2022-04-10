@@ -33,7 +33,6 @@ const Index = ({
   };
   const isDeleting = useDisclosure();
   const handeDeleteImage = async () => {
-    console.log("deleteing");
     isDeleting.onOpen();
     imageDeleteCB();
   };
@@ -49,7 +48,7 @@ const Index = ({
         accept="image/*"
         multiple={false}
       />
-      <Popover>
+      <Popover computePositionOnMount>
         <PopoverTrigger>
           <IconButton
             aria-label="edit"

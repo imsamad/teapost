@@ -53,3 +53,56 @@ export const followAuthor = async (
     throw err?.response?.data || "Invalid Data";
   }
 };
+
+export interface UpdatDetailsType {
+  profilePic: string;
+
+  newPassword: string;
+  currentPassword: string;
+
+  username: string;
+  fullName: string;
+  tagLines: string[];
+}
+
+export const updateProfile = async ({
+  type,
+  reqBody: { profilePic, ...rest },
+}: {
+  type: "profilePic" | "other" | "password";
+  reqBody: Partial<UpdatDetailsType>;
+}) => {
+  try {
+    let reqBody: Partial<UpdatDetailsType> = {};
+    if (type == "profilePic") {
+      reqBody.profilePic = profilePic;
+    } else {
+      reqBody = rest;
+    }
+    const { data } = await axios.put<AuthResponse>("/auth/update", reqBody);
+
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};
+
+export const changeEmail = async (newEmail: string) => {
+  try {
+    const { data } = await axios.put<{ message: string; redirectUrl: string }>(
+      "/auth/changeemail",
+      {
+        newEmail,
+      }
+    );
+
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
+  }
+};
+
+export const updateDetailFields = {
+  changePassword: ["currentPassword", "newPassword", "confirmNewPassword"],
+  changeEmail: ["newEmail"],
+};

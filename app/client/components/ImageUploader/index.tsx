@@ -1,6 +1,6 @@
 import { Box, Image } from "@chakra-ui/react";
 import ImageActions from "./ImageActions";
-const Index = (props: {
+const ImageUploader = (props: {
   imageUrl?: string;
   imageUploadCB: (src: string) => void;
   imageDeleteCB: (src?: string) => void;
@@ -21,4 +21,4 @@ const Index = (props: {
   );
 };
 
-export default Index;
+export default ImageUploader;

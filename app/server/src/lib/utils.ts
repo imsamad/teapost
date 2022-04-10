@@ -100,10 +100,11 @@ export const validateYupSchema = async (
 ) => {
   try {
     const res = await schema.validate(data, { abortEarly });
+
     if (res) return true;
     else throw new Error("Provide proper data");
   } catch (yupError: any) {
-    console.log("yupError", yupError);
+    console.log("validateYupSchema yupError ", yupError);
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
 
@@ -197,7 +198,6 @@ export const sendTokens = async (
 ) => {
   const resData = {
     status: "ok",
-
     user: peelUserDoc(user),
     message,
     accessToken: signJwt(
@@ -219,12 +219,14 @@ export const strSchema = (
     min = 1,
     max = Infinity,
     isMongoId,
+    from,
   }: Partial<{
     isRequired: boolean;
     prettyLabel: string;
     min: number;
     max: number;
     isMongoId: boolean;
+    from?: string;
   }>
 ) => {
   let schema = yup
@@ -235,19 +237,20 @@ export const strSchema = (
   if (isRequired) {
     let lenMsg = `${prettyLabel || label} must `;
     if (max != Infinity) {
-      lenMsg += ` have more than ${min} & less than oor equal to ${max} characters.`;
+      lenMsg += ` have more than ${min} & less than or equal to ${max} characters.`;
     } else {
       lenMsg += ` have more than or equal to ${min} characters.`;
     }
     schema.required(`${prettyLabel || label} is required`);
-    if (isMongoId)
+    if (isMongoId) {
       schema.test(label, `${prettyLabel || label} must be valid id`, (val) => {
         return isValidObjectId(val);
       });
-    else
+    } else {
       schema.test(label, lenMsg, (val: any) => {
         return trimExtra(val, min, max);
       });
+    }
   }
 
   return schema;

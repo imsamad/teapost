@@ -4,7 +4,6 @@ const TSButton = ({ children, ...rest }: ButtonProps) => {
   return (
     <Button
       _focus={{
-        border: "1px solid gray",
         // bgColor: "transparent",
         outline: "none",
         boxShadow: "none",

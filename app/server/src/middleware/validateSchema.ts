@@ -10,7 +10,7 @@ const validateSchema =
       // @ts-ignore
       schema = schema ? schema : (req.__YUP_SCHEMA__ as AnySchema);
       req.body.__YUP_SCHEMA__ && delete req.body.__YUP_SCHEMA__;
-      await validateYupSchema(
+      const res = await validateYupSchema(
         schema,
         {
           body: req.body,
@@ -20,7 +20,6 @@ const validateSchema =
         },
         abortEarly
       );
-
       return next();
     } catch (yupError: any) {
       return next(

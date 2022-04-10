@@ -15,7 +15,7 @@ import { useAuthCtx } from "../Context";
 const LoginModal = ({ isOpen, onClose }: any) => {
   const { login } = useAuthCtx();
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="xs">
+    <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent borderRadius="lg" py="5">
         <ModalCloseButton />

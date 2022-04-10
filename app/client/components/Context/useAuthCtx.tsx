@@ -4,12 +4,12 @@ import { useRouter } from "next/router";
 
 import { deleteCookies, getCookies, setCookies } from "@lib/cookies";
 import LoginModal from "../LogIn/LogInModal";
-import { AuthType } from "@lib/types/UserType";
+import { AuthTypeResponse } from "@lib/types/UserType";
 import CustomToast from "@compo/UI/customToast";
 
 type AuthCtxType = {
-  auth: Partial<AuthType>;
-  setAuth: (props: Partial<AuthType>, redirectTo?: string) => void;
+  auth: Partial<AuthTypeResponse>;
+  setAuth: (props: Partial<AuthTypeResponse>, redirectTo?: string) => void;
   login: { isOpen: boolean; onOpen: () => void; onClose: () => void };
   logout: (redirect?: string) => void;
   openLoginToast: () => void;
@@ -28,8 +28,10 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   /**
    * Auth states ,set & delete <==> Login ,logout
    ***********************************************/
-  const [auth, setAuthState] = useState<Partial<AuthType>>(getCookies());
-  const setAuth = (val: Partial<AuthType>, redirectTo?: string) => {
+  const [auth, setAuthState] = useState<Partial<AuthTypeResponse>>(
+    getCookies()
+  );
+  const setAuth = (val: Partial<AuthTypeResponse>, redirectTo?: string) => {
     if (!Object.keys(val).length) {
       deleteCookies().then(() => setAuthState({}));
     } else {

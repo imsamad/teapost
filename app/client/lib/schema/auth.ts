@@ -1,27 +1,32 @@
 import * as yup from "yup";
-import { strSchema } from "../utils";
 
 import YupPassword from "yup-password";
 
 YupPassword(yup); // extend yup
 
-const emailField = yup
-  .string()
-  .email("Must be a valid email")
-  .required("Email is required");
+const emailField = (label: string, prettyLabel?: string) =>
+  yup
+    .string()
+    .label(label)
+    .email(`${prettyLabel || label} Must be a valid email`)
+    .required(`${prettyLabel || label} is required`);
 
-const pwdField = yup
-  .string()
-  .password()
-  .minSymbols(1, "Password must contain one symbol")
-  .minUppercase(1, "Password must contain one uppercase letter")
-  .required("Password is required");
+const pwdField = (label: string, prettyLabel?: string) =>
+  yup
+    .string()
+    .password()
+    .label(label)
+    .minSymbols(1, `${prettyLabel || label} must contain one symbol`)
+    .minUppercase(
+      1,
+      `${prettyLabel || label} must contain one uppercase letter`
+    )
+    .required(`${prettyLabel || label} is required`);
 
-const pwdConfirmField = yup
-  .string()
-  .oneOf([yup.ref("password"), null], "Passwords must match");
+const pwdConfirmField = (ref: string) =>
+  yup.string().oneOf([yup.ref(ref), null], "Passwords must match");
 
-const authSchema = yup.object({
+export const authSchema = yup.object({
   type: yup
     .string()
     .required("type is required")
@@ -45,16 +50,16 @@ const authSchema = yup.object({
     }),
   email: yup.string().when("type", {
     is: (type: string) => ["register"].includes(type),
-    then: emailField,
+    then: emailField("email", "Email"),
   }),
   confirmPassword: yup.string().when("type", {
     is: (type: string) => type == "register",
-    then: pwdConfirmField,
+    then: pwdConfirmField("confirmPassword"),
   }),
 
   password: yup.string().when("type", {
-    is: (type: string) => ["register", "login"].includes(type),
-    then: pwdField,
+    is: (type: string) => ["register", "logIn"].includes(type),
+    then: pwdField("pasword", "Password"),
   }),
 
   identifier: yup
@@ -63,7 +68,7 @@ const authSchema = yup.object({
     .label("Identifier")
     .when("type", {
       is: (type: string) => {
-        return type == "login" || type == "forgotPassword";
+        return type == "logIn" || type == "forgotPassword";
       },
       then: yup.string().trim().required(),
     }),
@@ -71,14 +76,72 @@ const authSchema = yup.object({
   identifierInitials: yup
     .string()
     .trim()
-    .label("identifierInitials")
+    .label("Identifier Initials")
     .when("type", {
-      is: (type: string) => type == "forgotIdentifiers",
-      then: yup.string().trim().required(),
+      is: (type: string) => type == "forgotIdentifier",
+      then: yup.string().trim().required("Identifier Initials to guess."),
     }),
 });
 
-export { authSchema };
+export const changePwdEmailSchemeTemp = yup.object({
+  type: yup.string().oneOf(["changePassword", "changeEmail"]),
+  newEmail: yup.string().when("type", {
+    is: (type: string) => {
+      return ["changeEmail"].includes(type);
+    },
+    then: yup
+      .string()
+      .label("newEmail")
+      .email(`New Email Must be a valid email`)
+      .required(`New Email is required`),
+  }),
+  currentPassword: yup.string().when("type", {
+    is: (type: string) => ["changePassword"].includes(type),
+    then: yup
+      .string()
+      .password()
+      .label("currentPassword")
+      .minSymbols(1, `Current Password must contain one symbol`)
+      .minUppercase(1, `Current Password must contain one uppercase letter`)
+      .required(`Current Password is required`),
+  }),
+  newPassword: yup.string().when("type", {
+    is: (type: string) => ["changePassword"].includes(type),
+    then: yup
+      .string()
+      .password()
+      .label("newPassword")
+      .minSymbols(1, `New Password must contain one symbol`)
+      .minUppercase(1, `New Password must contain one uppercase letter`)
+      .required(`New Password is required`),
+  }),
+  confirmNewPassword: yup.string().when("type", {
+    is: (type: string) => ["changePassword"].includes(type),
+    then: pwdConfirmField("newPassword"),
+  }),
+});
+
+export const changePwdEmailScheme = yup.object({
+  type: yup.string().oneOf(["changePassword", "changeEmail"]),
+  newEmail: yup.string().when("type", {
+    is: (type: string) => {
+      return ["changeEmail"].includes(type);
+    },
+    then: emailField("newEmail", "New Email"),
+  }),
+  currentPassword: yup.string().when("type", {
+    is: (type: string) => ["changePassword"].includes(type),
+    then: pwdField("currentPassword", "Current Password"),
+  }),
+  newPassword: yup.string().when("type", {
+    is: (type: string) => ["changePassword"].includes(type),
+    then: pwdField("newPassword", "New Password"),
+  }),
+  confirmNewPassword: yup.string().when("type", {
+    is: (type: string) => ["changePassword"].includes(type),
+    then: pwdConfirmField("newPassword"),
+  }),
+});
 
 /**
  * Register => fullName, username, email, pwd, pwdConfirm

@@ -8,6 +8,11 @@ import Story from "../../models/Story";
 // @access    Public
 const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    // return res.json(
+    //   await Story.find({ author: "6221be7444eaf2d6fc67b964" })
+    //     .select("-content")
+    //     .lean()
+    // );
     const filter =
       process.env.ONLY_VERIFIED_ALLOWED == "true"
         ? {

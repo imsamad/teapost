@@ -6,6 +6,7 @@ import {
   Spacer,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import TSIconButton from "@compo/UI/TSIconButton";
 import { useState } from "react";
@@ -44,14 +45,13 @@ const Index = ({
       ) : (
         <>
           <HStack>
-            <Box>
+            <Box flex="1">
               <Heading size="md"> {collection.title}</Heading>{" "}
               <Text size="2xl" color="muted">
                 {collection?.description}
               </Text>
             </Box>
-            <Spacer />
-            <Box>
+            <VStack>
               <RemoveBtn
                 collectionId={collectionId}
                 removeCB={() => onRemoveCB()}
@@ -66,7 +66,7 @@ const Index = ({
                 aria-label="edit"
                 colorScheme="green"
               />
-            </Box>
+            </VStack>
           </HStack>
         </>
       )}

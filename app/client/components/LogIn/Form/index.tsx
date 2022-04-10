@@ -45,7 +45,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
 
       if (values.type == "logIn" && user) {
         setAuth({ user, accessToken }, redirectTo);
-        action.resetForm();
+        // action.resetForm();
         if (login.isOpen) {
           login.onClose();
           toast({
@@ -93,6 +93,17 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     <Formik
       initialValues={{
         type: "logIn",
+        // fullName: "",
+
+        // identifier: "",
+
+        // username: "",
+
+        // email: "",
+
+        // password: "",
+
+        // confirmPassword: "",
         fullName: "Abdus Samad",
         identifier: "imsamad",
         username: "imsamad",

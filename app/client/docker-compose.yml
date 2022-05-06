@@ -1,6 +1,7 @@
 version: '3'
 services:
   teaspost-client:
+    build: .
     ports:
       - '3000:3000'
     image: teapost-client

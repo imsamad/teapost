@@ -20,11 +20,6 @@
       "@compo/*": ["components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/form.js"],
-  "exclude": [
-    "node_modules",
-    "components/CommentDrawer/*",
-    "components/Context/useUICtx.tsx",
-    "components/Context/useCollDrawer.tsx"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

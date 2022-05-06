@@ -7,12 +7,12 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Heading,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import CommentList from "./CommentList";
-import AddComment from "./AddComment";
-import { useCTX, CtxProvider } from "./AddedCtx";
-import { useEffect } from "react";
+import CommentList from './CommentList';
+import AddComment from './AddComment';
+import { useCTX, CtxProvider } from './AddedCtx';
+import { useEffect } from 'react';
 const Index = ({
   isOpen,
   onClose,
@@ -27,6 +27,7 @@ const Index = ({
   const { noOfReplies, setNoOfReplies, addedComments } = useCTX();
   useEffect(() => {
     setNoOfReplies(noOfComments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Drawer
@@ -47,7 +48,7 @@ const Index = ({
 
             <CommentList
               isPrimary={true}
-              url={storyId ? `/comments/primaries/${storyId}` : ""}
+              url={storyId ? `/comments/primaries/${storyId}` : ''}
               isInitial={true}
               pageNo={1}
             />

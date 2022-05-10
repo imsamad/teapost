@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import Secondary from "../../models/Comment/Secondary";
+import { NextFunction, Request, Response } from 'express';
+import { asyncHandler, ErrorResponse, typeOf } from '../../lib/utils';
+import Secondary from '../../models/Comment/Secondary';
 
+import * as yup from 'yup';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 // @desc      Reply to Secondary Comment
 // @route     GET /api/v1/comments/reply/secondary/:commentId
 // @access    Auth,Public,Admin
@@ -12,7 +14,7 @@ const replyToSecondary = asyncHandler(
     const secondaryComment = await Secondary.findById(req.params.secondaryId);
 
     if (!secondaryComment) {
-      return next(ErrorResponse(400, "Resource not found"));
+      return next(ErrorResponse(400, 'Resource not found'));
     }
     const comment = await Secondary.create({
       // @ts-ignore
@@ -24,15 +26,35 @@ const replyToSecondary = asyncHandler(
     });
 
     res.json({
-      status: "ok",
+      status: 'ok',
       comment: await comment.populate([
-        { path: "meta" },
+        { path: 'meta' },
         {
-          path: "user",
-          select: "email username",
+          path: 'user',
+          select: 'email username',
         },
       ]),
     });
   }
 );
-export default replyToSecondary;
+export const schema = yup.object({
+  body: yup.object({
+    text: yup
+      .string()
+      .label('text')
+      .typeError('Text must be string type.')
+      .required()
+      .trim(),
+  }),
+  params: yup.object({
+    secondaryId: yup
+      .string()
+      .label('secondaryId')
+      .typeError('secondaryId must be valid.')
+      .required()
+      .test('secondaryId', 'secondaryId must be valid.', (val: any) =>
+        typeOf(val, 'mongoId')
+      ),
+  }),
+});
+export default [validateSchemaMdlwr(schema), replyToSecondary];

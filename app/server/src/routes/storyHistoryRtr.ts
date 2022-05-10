@@ -1,31 +1,23 @@
-import express, { Router } from "express";
-
-import {
-  getStoryHistory,
-  getStoryHistoryById,
-  deleteStoryHistoryById,
-} from "../controller/storyHistoryCtrl";
-
-import { protect } from "../middleware/auth";
-
-import validateSchema from "../middleware/validateSchema";
-
-import { storyHistoryByIdScheme } from "../lib/schema/story";
-
+import express, { Router } from 'express';
 const router: Router = express();
+
+import ctrl from '../controller/storyHistoryCtrl';
+
+import { protect } from '../middleware/auth';
+
 router.use(protect);
 
 router
-  .route("/:storyId/:historyId")
-  .get(validateSchema(storyHistoryByIdScheme), getStoryHistoryById)
+  .route('/:storyId/:historyId')
+  .get(ctrl.getStoryHistoryById)
   .delete(
-    validateSchema(storyHistoryByIdScheme),
-    deleteStoryHistoryById({ isAll: false })
+    ctrl.deleteStoryHistoryById.schema,
+    ctrl.deleteStoryHistoryById.ctrl({ isAll: false })
   );
 
 router
-  .route("/:storyId")
-  .get(getStoryHistory)
-  .delete(deleteStoryHistoryById({ isAll: true }));
+  .route('/:storyId')
+  .get(ctrl.getStoryHistory)
+  .delete(ctrl.deleteStoryHistoryById.ctrl({ isAll: true }));
 
 export default router;

@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import StoryCollection from "../../models/StoryCollection";
+import { NextFunction, Request, Response } from 'express';
+import { asyncHandler, ErrorResponse, typeOf } from '../../lib/utils';
+import StoryCollection from '../../models/StoryCollection';
 
+import * as yup from 'yup';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 // @desc      Delete collection
 // @route     DELETE /api/v1/collection/:collectionId
 // @access    Auth
@@ -21,9 +23,22 @@ const removeCollection = asyncHandler(
     // await collection.delete();
 
     return res.json({
-      status: "ok",
-      message: "Deleted",
+      status: 'ok',
+      message: 'Deleted',
     });
   }
 );
-export default removeCollection;
+
+export const removeCollectionSchema = yup.object({
+  params: yup.object({
+    collectionId: yup
+      .string()
+      .label('collectionId')
+      .test('collectionId', 'collectionId must be valid ids', (val: any) => {
+        return typeOf(val, 'mongoId');
+      })
+      .required('Specify collectiionId to remove')
+      .typeError('Collection ID must be a valid id.'),
+  }),
+});
+export default [validateSchemaMdlwr(removeCollectionSchema), removeCollection];

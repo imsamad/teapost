@@ -1,66 +1,71 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-import createToken from "../../lib/createToken";
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import User from "../../models/User";
-import sendEmail from "../../lib/sendEmail";
+import createToken from '../../lib/createToken';
+import { asyncHandler, ErrorResponse } from '../../lib/utils';
+import User from '../../models/User';
+import sendEmail from '../../lib/sendEmail';
+import * as yup from 'yup';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 
 // @desc      forgotPassword
-// @route     POST /api/v1/auth/forgotpassword
+// @route     GET /api/v1/auth/forgotpassword
 // @access    Public
 
 const forgotPassword = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { identifier } = req.body;
-    const filter =
-      process.env.ONLY_VERIFIED_ALLOWED == "true"
-        ? {
-            isEmailVerified: true,
-            isAuthorised: true,
-          }
-        : {};
-
     let user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-      ...filter,
+      isEmailVerified: true,
+      isAuthorised: true,
     });
 
     if (!user)
       return next(
         ErrorResponse(400, {
-          identifier: "Identifier not associated with any acccount.",
+          identifier: "We don't find any matching account.",
         })
       );
 
-    const { redirectUrl, token, message } = await createToken(
-      "resetpassword",
-      req,
-      user._id,
-      { isVerifyChangedEmailToken: false }
-    );
+    const { redirectUrl, token, message } = await createToken(req, {
+      userId: user._id,
+      type: 'resetPassword',
+    });
 
-    let isEmailService = "true" === process.env.IS_EMAIL_SERVICE!;
+    let isEmailService = 'true' === process.env.IS_EMAIL_SERVICE!;
 
     if (isEmailService) {
       let emailSentResult = await sendEmail(user.email, redirectUrl, message);
       if (!emailSentResult) {
-        await token.delete();
+        // @ts-ignore
+        token && (await token.delete());
       }
     }
+
     let resObj: any = {
-      status: "ok",
-      message: `Chnage your password by visiting the link sent to ${user.email}.`,
+      status: 'ok',
+      message: `Change your password by visiting the link sent to ${user.email} valid for  ${process.env.TOKEN_EXPIRE}.`,
     };
 
     if (!isEmailService)
       resObj = {
         ...resObj,
         redirectUrl,
-        message: `Chnage your password by visiting this link valid for 10min.`,
+        message: `Change your password by visiting this link valid for ${process.env.TOKEN_EXPIRE}.`,
       };
 
     return res.json(resObj);
   }
 );
 
-export default forgotPassword;
+const schema = yup.object({
+  body: yup.object({
+    identifier: yup
+      .string()
+      .typeError('Identfier must be type of string')
+      .min(3)
+      .label('identifier')
+      .required(),
+  }),
+});
+export default [validateSchemaMdlwr(schema), forgotPassword];

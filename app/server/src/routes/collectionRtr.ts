@@ -1,37 +1,22 @@
-import express, { Router } from "express";
+import express, { Router } from 'express';
 const router: Router = express();
 
-import {
-  buildCollecion,
-  createCollection,
-  getCollectionStories,
-  myCollections,
-  removeCollection,
-  updateCollection,
-} from "../controller/collectionCtrl";
-import { protect } from "../middleware/auth";
-import validateSchema from "../middleware/validateSchema";
-
-import {
-  buildSchema,
-  createCollectionSchema,
-  removeCollectionSchema,
-  updateCollectionSchema,
-} from "../lib/schema/collection";
+import * as collectionCtrl from '../controller/collectionCtrl';
+import { protect } from '../middleware/auth';
 
 router.use(protect);
 
-router.post("/", validateSchema(createCollectionSchema), createCollection);
+router.post('/', collectionCtrl.createCollection);
 
-router.get("/my", myCollections);
+router.get(['/my', '/'], collectionCtrl.myCollections);
 
-router.get("/stories/:collectionId", getCollectionStories);
+router.get('/stories/:collectionId', collectionCtrl.getCollectionStories);
 
-router.put("/build", validateSchema(buildSchema), buildCollecion);
+router.patch('/build', collectionCtrl.buildCollecion);
 
 router
-  .route("/:collectionId")
-  .put(validateSchema(updateCollectionSchema), updateCollection)
-  .delete(validateSchema(removeCollectionSchema), removeCollection);
+  .route('/:collectionId')
+  .put(collectionCtrl.updateCollection)
+  .delete(collectionCtrl.removeCollection);
 
 export default router;

@@ -5,19 +5,19 @@ import {
   HStack,
   Spinner,
   Text,
-} from "@chakra-ui/react";
-import { useCallback, useRef, useState } from "react";
-import useSWR from "swr";
+} from '@chakra-ui/react';
+import { useCallback, useRef, useState } from 'react';
+import useSWR from 'swr';
 
-import StoryType from "@lib/types/StoryType";
-import UserType from "@lib/types/UserType";
+import StoryType from '@lib/types/StoryType';
+import UserType from '@lib/types/UserType';
 
-import StoryCard from "../StoryCard";
-import ShowStoryCard from "../MyCollections/CollectionCard/ShowStories/ShowStoryCard";
+import StoryCard from '../StoryCard';
+import ShowStoryCard from '../MyCollections/CollectionCard/ShowStories/ShowStoryCard';
 
 const Stories = ({
   initialStories,
-  query = "",
+  query = '',
   isInitial = false,
   nextPageNo,
   collectionId,
@@ -36,21 +36,21 @@ const Stories = ({
 
   const [show, setShow] = useState(false);
 
-  const observer: any = useRef();
+  const lastDivRef: any = useRef();
   const isInView = useCallback((node) => {
     if (initialStories || !nextPageNo) {
       return;
     }
-    observer.current = new IntersectionObserver(
+    lastDivRef.current = new IntersectionObserver(
       async (entries, observerInst) => {
         if (entries[0].isIntersecting) {
           setShow(true);
-          observer?.current?.disconnect(node);
+          lastDivRef?.current?.disconnect(node);
           observerInst?.unobserve(entries[0].target);
         }
       }
     );
-    if (node) observer?.current?.observe(node);
+    if (node) lastDivRef?.current?.observe(node);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -70,7 +70,7 @@ const Stories = ({
             )
           )}
           <Stories
-            nextPageNo={nextPageNo}
+            nextPageNo={nextPageNo + 1}
             query={query}
             collectionId={collectionId}
           />

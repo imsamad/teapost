@@ -1,9 +1,9 @@
-import { AnySchema } from "yup";
-import { Request, Response, NextFunction } from "express";
+import { AnySchema } from 'yup';
+import { Request, Response, NextFunction } from 'express';
 
-import { ErrorResponse, validateYupSchema } from "../lib/utils";
+import { ErrorResponse, validateYupSchema } from '../lib/utils';
 
-const validateSchema =
+const validateSchemaMdlwr =
   (schema?: AnySchema, abortEarly = false) =>
   async (req: Request, _res: Response, next: NextFunction) => {
     try {
@@ -25,10 +25,10 @@ const validateSchema =
       return next(
         ErrorResponse(
           422,
-          yupError ? yupError : "Provide Proper Data,for further processing."
+          yupError ? yupError : 'Provide Proper Data,for further processing.'
         )
       );
     }
   };
 
-export default validateSchema;
+export default validateSchemaMdlwr;

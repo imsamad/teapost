@@ -1,37 +1,29 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from 'express';
 
-import { asyncHandler, peelUserDoc } from "../../lib/utils";
-import Profile from "../../models/Profile";
-import StoryCollection from "../../models/StoryCollection";
+import { asyncHandler } from '../../lib/utils';
+import Profile from '../../models/Profile';
+import { peelUserDoc } from '../../models/User';
 
-// @desc      Profile of logged in user.
+// @desc      Profile of logged in user
 // @route     GET /api/v1/auth/me
 // @access    Auth
-const getMe = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
-    const user = req.user._id;
-    let query = Profile.findById(user).populate([{ path: "storyCollections" }]);
+const getMe = asyncHandler(async (req: Request, res: Response) => {
+  // @ts-ignore
+  const user = req.user._id;
+  let query = Profile.findById(user).populate([{ path: 'storyCollections' }]);
 
-    if (req.query.populateStory) query.populate("likedStories dislikedStories");
+  if (req.query.populateStory) query.populate('likedStories dislikedStories');
 
-    const profile = await query;
-    const coll = () =>
-      StoryCollection.create({
-        user,
-        title: "Read Later",
-      });
+  const profile = await query;
 
-    return res.json({
-      status: "ok",
-      user: {
-        // @ts-ignore
-        ...peelUserDoc(req.user),
-        profile,
-        // : profile || (await coll),
-      },
-    });
-  }
-);
+  return res.json({
+    status: 'ok',
+    user: {
+      // @ts-ignore
+      ...peelUserDoc(req.user),
+      profile,
+    },
+  });
+});
 
 export default getMe;

@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { asyncHandler, peelUserDoc } from "../../lib/utils";
-import User from "../../models/User";
+import { Request, Response, NextFunction } from 'express';
+import { asyncHandler } from '../../lib/utils';
+import User, { peelUserDoc } from '../../models/User';
 // @desc      getAllUsers
 // @route     GET /api/v1/users
 // @access    Public
@@ -13,8 +13,11 @@ export const getAllUsers = asyncHandler(
       limit = parseInt(req?.query?.limit || 10, 10) || 10;
     // @ts-ignore
     const startIndex = (page - 1) * limit;
-    const usersDoc = await User.find({})
-      .populate("profile")
+    const usersDoc = await User.find({
+      isEmailVerified: true,
+      isAuthorised: true,
+    })
+      .populate('profile')
       .skip(startIndex)
       .limit(limit);
     // .lean();
@@ -25,10 +28,11 @@ export const getAllUsers = asyncHandler(
       pagination.next = page + 1;
     }
     if (startIndex > 0) pagination.prev = page - 1;
-
+    // @ts-ignore
+    const isAdmin = req?.user?.role == 'admin';
     res.json({
-      status: "ok",
-      users: !usersDoc.length ? [] : usersDoc.map((user) => peelUserDoc(user)),
+      status: 'ok',
+      users: isAdmin ? usersDoc : usersDoc.map((user) => peelUserDoc(user)),
     });
   }
 );

@@ -1,28 +1,35 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 import {
   asyncHandler,
   ErrorResponse,
   validateYupSchema,
-} from "../../lib/utils";
-import Story from "../../models/Story";
-import { isAbleToPublished } from "../../lib/schema/story";
+} from '../../lib/utils';
+import Story from '../../models/Story';
+import { isAbleToPublished } from '../../lib/schema/storySchema';
+import validateSchema from '../../middleware/validateSchemaMdlwr';
+import { boolean, object, string } from 'yup';
+import { isValidObjectId } from 'mongoose';
 
 // @desc      Published story story
 // @route     PUT /api/v1/story/published/:storyId
 // @access    Auth [Reader]
-const publishedStory = asyncHandler(
+const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let story = await await Story.findById(req.params.storyId).select(
-      "+hadEmailedToFollowers"
+    const isPublish = req.originalUrl.startsWith('/publish');
+    let story = await Story.findById(req.params.storyId).select(
+      '+hadEmailedToFollowers'
     );
 
     if (!story)
-      return next(ErrorResponse(400, "No resources found with this id."));
-    if (!req.body.isPublished) {
+      return next(ErrorResponse(400, 'No resources found with this id.'));
+
+    if (!isPublish) {
       story.isPublished = false;
-      return res.status(200).json({ status: "ok", story: await story.save() });
+      story = await story.save();
+      return res.status(200).json({ status: 'ok', story });
     }
+
     try {
       await validateYupSchema(isAbleToPublished, story);
 
@@ -35,11 +42,23 @@ const publishedStory = asyncHandler(
         story.hadEmailedToFollowers = true;
       }
       story = await story.save();
-      return res.status(200).json({ status: "ok", story });
+      return res.status(200).json({ status: 'ok', story });
     } catch (err: any) {
       return next(ErrorResponse(400, err));
     }
   }
 );
 
-export default publishedStory;
+export const schema = object({
+  params: object({
+    storyId: string()
+      .label('storyId')
+      .required()
+      .typeError('StoryId must be string type.')
+      .test('storyId', 'Story Id must be a valid', (val) =>
+        isValidObjectId(val)
+      ),
+  }),
+});
+
+export default [validateSchema(schema), ctrl];

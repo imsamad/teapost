@@ -1,64 +1,61 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 import {
   asyncHandler,
   ErrorResponse,
   readingTime as readingTimeFun,
   validateYupSchema,
-} from "../../lib/utils";
-import Story, { StoryDocument } from "../../models/Story";
-import { isAbleToPublished } from "../../lib/schema/story";
-import StoryHistory from "../../models/StoryHistory";
+} from '../../lib/utils';
+import Story, { StoryDocument, storyAllowedFields } from '../../models/Story';
+import { isAbleToPublished } from '../../lib/schema/storySchema';
+import StoryHistory from '../../models/StoryHistory';
 
+import { array, object, string } from 'yup';
+
+import { isValidObjectId } from 'mongoose';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 // @desc      Create a story
 // @route     POST / PUT /api/v1/story/:storyId
 // @access    Auth [Reader]
-const updateStory = asyncHandler(
+const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const storyId = req.params.storyId;
 
-    const story = await Story.findById(storyId),
-      // @ts-ignore
-      userId = req.user._id.toString();
+    const story = await Story.findById(storyId);
+    // @ts-ignore
+    const userId = req.user._id.toString();
+    // not any story OR not author OR not collabrating
+    const isCollabing = story?.collabWith
+      .map((id) => id.toString())
+      .includes(userId);
 
-    if (
-      !story ||
-      (story.author.toString() != userId &&
-        !story.collabWith.map((id) => id.toString()).includes(userId))
-    )
-      return next(ErrorResponse(400, "No resource found"));
+    if (!story || (story.author.toString() != userId && !isCollabing))
+      return next(ErrorResponse(400, 'No resource found'));
 
-    let extraMessage: { [name: string]: string[] } = {};
-
-    await StoryHistory.findByIdAndUpdate(
-      storyId,
-      {
-        _id: storyId,
-        $push: {
-          instances: {
-            story: JSON.stringify(story.toJSON()),
-            createdAt: Date.now(),
+    let warnings: { [name: string]: string[] } = {};
+    if (req?.query?.addToHistory != 'false') {
+      await StoryHistory.findByIdAndUpdate(
+        storyId,
+        {
+          _id: storyId,
+          $push: {
+            instances: {
+              story: JSON.stringify(story.toJSON()),
+              createdAt: Date.now(),
+            },
           },
         },
-      },
-      { upsert: true }
-    );
+        { upsert: true }
+      );
+    }
 
-    var {
-      slug,
-      isPublished,
-      hadEmailedToFollowers,
-      isPublishedByAdmin,
-      readingTime,
-      noOfViews,
-      noOfComments,
-      noOfLikes,
-      noOfDislikes,
-      collabWith,
-      ...rest
-    } = req.body;
+    var { slug, ...rest } = req.body;
     // @ts-ignore
-    for (var key in rest) story[key] = req.body[key];
+    // for (var key in rest) story[key] = req.body[key];
+    storyAllowedFields.forEach((field) => {
+      // @ts-ignore
+      rest?.[field] && (story[field] = rest[field]);
+    });
 
     if (slug && story.slug != slug) {
       const isStoryExist = await Story.findOne({
@@ -66,55 +63,53 @@ const updateStory = asyncHandler(
       });
 
       if (isStoryExist) {
-        extraMessage["slug"] = ["This slug already exist."];
+        warnings['slug'] = ['This slug already exist.'];
       } else story.slug = req.body.slug;
     }
 
     story.readingTime = readingTimeFun(story?.content);
+    // try {
+    let newStory = await story.save();
 
     return res.status(200).json({
-      status: "ok",
-      story: (await story.save()).toJSON(),
-      message: extraMessage,
+      status: 'ok',
+      message: warnings,
+      story: newStory,
     });
+    // } catch (err) {
+    //   console.log('err ', err);
+    //   res.json({ err });
+    // }
   }
 );
 
-const sendResponse = async (
-  isPublished: StoryDocument["isPublished"],
-  story: StoryDocument,
-  res: Response,
-  extraMessage?: any
-) => {
-  if (isPublished) {
-    try {
-      const result = await validateYupSchema(isAbleToPublished, story);
-      story.isPublished = true;
-      story = await story.save();
-      return res.status(200).json({
-        status: "ok",
-        story: story,
-        message: extraMessage,
-      });
-    } catch (err: any) {
-      story.isPublished = false;
-      story = await story.save();
+export const schema = object({
+  body: object({
+    title: string().label('title').typeError('Title must be string.'),
+    subtitle: string().label('subtitle').typeError('Subtitle must be string'),
 
-      return res.status(200).json({
-        status: "ok",
-        story,
-        message: err,
-      });
-    }
-  } else {
-    story = await story.save();
+    keywords: string()
+      .label('keywords')
+      .typeError('Keywords must be string/url type'),
+    tags: array()
+      .label('tags')
+      .typeError('tags must of type array')
+      .test((val) =>
+        !val
+          ? true
+          : val && Array.isArray(val)
+          ? val.every((v) => isValidObjectId(v))
+          : false
+      ),
 
-    return res.status(200).json({
-      status: "ok",
-      story,
-      message: extraMessage,
-    });
-  }
-};
-
-export default updateStory;
+    slug: string().label('slug').typeError('Slug must be string/url type'),
+    content: string()
+      .label('content')
+      .typeError('Content must be string/url type'),
+    titleImage: string()
+      .label('titleImage')
+      .url('titleImage must be url')
+      .typeError('titleImage must be url'),
+  }),
+});
+export default [validateSchemaMdlwr(schema), ctrl];

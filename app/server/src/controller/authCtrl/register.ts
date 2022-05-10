@@ -1,80 +1,85 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
+import { asyncHandler, ErrorResponse } from '../../lib/utils';
 
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import User from "../../models/User";
-import sendEmail from "../../lib/sendEmail";
-import createToken from "../../lib/createToken";
+import User from '../../models/User';
+import sendEmail from '../../lib/sendEmail';
+import createToken from '../../lib/createToken';
+import { registerSchema } from '../../lib/schema/authSchema';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 
-// @desc      Register new user
+// @desc      Create new user
 // @route     POST /api/v1/auth/register
 // @access    Public
-
-const register = asyncHandler(
+const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username, email, password, fullName } = req.body;
 
-    let alreadyExist = await User.findOne({ email });
-
-    if (alreadyExist)
-      next(
+    // If email || username already register
+    let alreadyExistUsernameOrEmail = await User.findOne({ email });
+    if (alreadyExistUsernameOrEmail) {
+      return next(
         ErrorResponse(400, {
           email: `${email} already registered.`,
         })
       );
-    else {
-      alreadyExist = await User.findOne({ username });
-      if (alreadyExist)
-        next(
+    } else {
+      alreadyExistUsernameOrEmail = await User.findOne({ username });
+      if (alreadyExistUsernameOrEmail)
+        return next(
           ErrorResponse(400, {
             username: `${username} already registered.`,
           })
         );
     }
-    const user = await User.create({
+
+    const newUser = await User.create({
       username,
       email,
       password,
       fullName,
     });
-
-    const { token, redirectUrl, message } = await createToken(
-      "verifyemail",
-      req,
-      user._id,
-      { isVerifyChangedEmailToken: false }
-    );
-
     const tryAgain = ErrorResponse(
       400,
-      "Unable to process your request please register again."
+      'Unable to process your request please register again.'
     );
 
-    if (!token || !redirectUrl) {
-      await user.delete();
+    try {
+      const { token, redirectUrl, message } = await createToken(req, {
+        type: 'verifyRegistration',
+        userId: newUser._id,
+        newEmail: email,
+      });
+
+      let isEmailService: boolean = 'true' === process.env.IS_EMAIL_SERVICE!;
+
+      if (isEmailService) {
+        let emailSentResult = await sendEmail(email, redirectUrl, message);
+        if (!emailSentResult) {
+          await newUser.delete();
+          // @ts-ignore
+          await token.delete();
+          return next(tryAgain);
+        }
+      }
+
+      let resObj: any = {
+        status: 'ok',
+        message: `Account created successfully, Verify your email sent to ${email} valid for  ${process.env.TOKEN_EXPIRE}.`,
+      };
+
+      if (!isEmailService)
+        resObj = {
+          ...resObj,
+          redirectUrl,
+          message: `Account created successfully, Verify your by visting link valid for  ${process.env.TOKEN_EXPIRE}.`,
+        };
+
+      return res.json(resObj);
+    } catch (err) {
+      newUser && (await newUser.delete());
       return next(tryAgain);
     }
-
-    let isEmailService: boolean = "true" === process.env.IS_EMAIL_SERVICE!;
-
-    // isEmailService = isEmailService === "true";
-
-    if (isEmailService) {
-      let emailSentResult = await sendEmail(email, redirectUrl, message);
-      if (!emailSentResult) {
-        await user.delete();
-        await token.delete();
-
-        return next(tryAgain);
-      }
-    }
-    let resObj: any = {
-      status: "ok",
-      message: `Account created successfully, Verify your email sent to ${email}.`,
-    };
-
-    if (!isEmailService) resObj = { ...resObj, redirectUrl };
-
-    return res.json(resObj);
   }
 );
-export default register;
+
+export default [validateSchemaMdlwr(registerSchema), ctrl];

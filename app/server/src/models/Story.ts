@@ -1,17 +1,27 @@
-import { Document, model, Schema, Types } from "mongoose";
-import { ErrorResponse } from "../lib/utils";
-import { StoryMetaDocument } from "./StoryMeta";
-import { UserDocument } from "./User";
-import StoryType from "../lib/types/StoryType";
+import { Document, model, Schema, Types } from 'mongoose';
+import { ErrorResponse } from '../lib/utils';
+import { StoryMetaDocument } from './StoryMeta';
+import { UserDocument } from './User';
+import StoryType from '../lib/types/StoryType';
 
 export interface StoryDocument
-  extends Omit<StoryType, "_id" | "meta">,
+  extends Omit<StoryType, '_id' | 'meta'>,
     Document {
-  author: UserDocument["_id"];
+  author: UserDocument['_id'];
   meta?: StoryMetaDocument;
   hadEmailedToFollowers?: boolean;
-  collabWith: Types.Array<UserDocument["_id"]>;
+  collabWith: Types.Array<UserDocument['_id']>;
 }
+
+export const storyAllowedFields = [
+  'title',
+  'subtitle',
+  'titleImage',
+  'slug',
+  'tags',
+  'content',
+  'keywords',
+];
 
 const storySchema = new Schema(
   {
@@ -35,7 +45,7 @@ const storySchema = new Schema(
       type: [
         {
           type: Schema.Types.ObjectId,
-          ref: "Tag",
+          ref: 'Tag',
         },
       ],
     },
@@ -46,13 +56,13 @@ const storySchema = new Schema(
     },
     author: {
       type: Schema.Types.ObjectId,
-      required: [true, "Author of story is required."],
-      ref: "User",
+      required: [true, 'Author of story is required.'],
+      ref: 'User',
     },
     collabWith: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     isPublished: {
@@ -69,7 +79,7 @@ const storySchema = new Schema(
       type: Boolean,
       require: [
         true,
-        "Specifying the story, Is published or not is compulsary.",
+        'Specifying the story, Is published or not is compulsary.',
       ],
       default: true,
     },
@@ -86,10 +96,10 @@ const storySchema = new Schema(
   }
 );
 
-storySchema.pre("save", async function (next) {
+storySchema.pre('save', async function (next) {
   if (!this.isNew) return next();
 
-  await this.model("User").findOneAndUpdate(
+  await this.model('User').findOneAndUpdate(
     { _id: this.author },
     { $inc: { stories: 1 } }
   );
@@ -97,52 +107,51 @@ storySchema.pre("save", async function (next) {
   next();
 });
 
-storySchema.post(["save", "updateOne"], errorHandlerMdlwr);
-storySchema.post("findOneAndUpdate", errorHandlerMdlwr);
+storySchema.post(['save', 'updateOne'], errorHandlerMdlwr);
+storySchema.post('findOneAndUpdate', errorHandlerMdlwr);
 
 async function errorHandlerMdlwr(error: any, doc: StoryDocument, next: any) {
   if (error) {
     if (error?.code === 11000) {
       next(
         ErrorResponse(400, {
-          slug: `This slug already registered.`,
+          slug: `${doc?.slug || 'This slug'} already have story associted.`,
         })
       );
     } else {
-      next(ErrorResponse(400, "Invalid data."));
+      next('error');
     }
   } else {
     next(error);
   }
 }
 
-storySchema.virtual("meta", {
-  ref: "StoryMeta",
-  localField: "_id",
-  foreignField: "_id",
+storySchema.virtual('meta', {
+  ref: 'StoryMeta',
+  localField: '_id',
+  foreignField: '_id',
   justOne: true,
 });
 
-storySchema.virtual("comments", {
-  ref: "Primary",
-  localField: "_id",
-  foreignField: "story",
+storySchema.virtual('comments', {
+  ref: 'Primary',
+  localField: '_id',
+  foreignField: 'story',
   justOne: false,
 });
-
-storySchema.pre("remove", async function (next) {
+storySchema.pre('remove', async function (next) {
   // Remove related StoryMeta + StoryHistory + All Primary ==> Secondary
-  let deletedPrimary: any = await this.model("Primary").find({
+  let deletedPrimary: any = await this.model('Primary').find({
     story: this._id,
   });
 
   let promises: any = [];
 
-  promises.push(this.model("StoryMeta").findByIdAndRemove(this._id));
-  promises.push(this.model("StoryHistory").findByIdAndRemove(this._id));
+  promises.push(this.model('StoryMeta').findByIdAndRemove(this._id));
+  promises.push(this.model('StoryHistory').findByIdAndRemove(this._id));
 
   promises.push(
-    this.model("User").findOneAndUpdate(
+    this.model('User').findOneAndUpdate(
       { _id: this.author },
       { $inc: { stories: -1 } }
     )
@@ -159,6 +168,6 @@ storySchema.pre("remove", async function (next) {
     });
 });
 
-const Story = model<StoryDocument>("Story", storySchema);
+const Story = model<StoryDocument>('Story', storySchema);
 
 export default Story;

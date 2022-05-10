@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-import createToken from "../../lib/createToken";
-import sendEmail from "../../lib/sendEmail";
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import User from "../../models/User";
+import createToken from '../../lib/createToken';
+import sendEmail from '../../lib/sendEmail';
+import { asyncHandler, ErrorResponse } from '../../lib/utils';
+import User from '../../models/User';
 
 // @desc      Change Email
 // @route     PUT /api/v1/auth/changeemail
@@ -11,7 +11,7 @@ import User from "../../models/User";
 
 const changeEmail = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { newEmail } = req.body,
+    const newEmail = req.body.newEmail,
       // @ts-ignore
       user = req.user;
 
@@ -23,17 +23,13 @@ const changeEmail = asyncHandler(
         })
       );
 
-    const { redirectUrl, message, token } = await createToken(
-      "verifyemail",
-      req,
-      user._id,
-      {
-        newEmail,
-        isVerifyChangedEmailToken: true,
-      }
-    );
+    const { redirectUrl, message, token } = await createToken(req, {
+      newEmail,
+      type: 'verifyChangedEmail',
+      userId: user._id,
+    });
 
-    let isEmailService: boolean = "true" === process.env.IS_EMAIL_SERVICE!;
+    let isEmailService: boolean = 'true' === process.env.IS_EMAIL_SERVICE!;
 
     if (isEmailService) {
       let emailSentResult = await sendEmail(user.email, redirectUrl, message);
@@ -43,7 +39,7 @@ const changeEmail = asyncHandler(
     }
 
     let resObj: any = {
-      status: "ok",
+      status: 'ok',
       message: `Verify your email by visiting the link sent to ${user.email}.`,
     };
 

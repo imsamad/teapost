@@ -1,6 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import { asyncHandler, ErrorResponse, sendTokens } from "../../lib/utils";
-import User from "../../models/User";
+import { Request, Response, NextFunction } from 'express';
+import createToken from '../../lib/createToken';
+import sendEmail from '../../lib/sendEmail';
+import { asyncHandler, ErrorResponse, sendTokens } from '../../lib/utils';
+import User from '../../models/User';
 
 // @desc      Update Details
 // @route     GET /api/v1/auth/update
@@ -14,42 +16,18 @@ const updateDetails = asyncHandler(
       fullName,
       tagLines,
       profilePic,
+      newEmail,
     } = req.body;
 
     // @ts-ignore
     const userId = req.user._id;
-    const alreadyExist = await User.findOne({
-      username,
-      _id: { $nin: userId },
-    });
-    if (alreadyExist) {
-      return next(
-        ErrorResponse(400, {
-          username: `${username} already registered.`,
-        })
-      );
-    }
-    let user = await User.findById(userId).select("+password");
-    let message: any = {};
-    let isUsernameExist = () =>
-      new Promise(async (resolve) => {
-        let usernameExist = await User.findOne({ username });
-        if (usernameExist) return resolve(false);
-        // @ts-ignore
-        resolve(true);
-      });
 
-    if (username) {
-      let usernameExist = await User.findOne({ username });
-      if (usernameExist) {
-        message.username = "Username alreday registered";
-      }
-      // @ts-ignore
-      else user.username = username ?? user?.username;
-    }
+    let warnings: any = {};
 
-    // @ts-ignore
-    // user.username=username?await isUsernameExist()?
+    let query = User.findById(userId);
+    if (currentPassword && newPassword) query.select('+password');
+    let user: any = await query;
+
     // @ts-ignore
     user.fullName = fullName ?? user?.fullName;
     // @ts-ignore
@@ -57,22 +35,96 @@ const updateDetails = asyncHandler(
     // @ts-ignore
     user.profilePic = profilePic ?? user?.profilePic;
 
-    const moveForward = async () =>
-      // @ts-ignore
-      sendTokens(await user.save(), 200, res, message);
+    const usernameAlreadyExist = () =>
+      new Promise(async (resolve) => {
+        if (!username) return resolve(true);
 
-    if (!currentPassword || !newPassword) return moveForward();
+        if (username && user.username == username) {
+          // @ts-ignore
+          user.username = req.user.username;
+          resolve(false);
+        } else {
+          const alreadyExist = await User.findOne({
+            username,
+            _id: { $nin: userId },
+          });
+          if (alreadyExist) {
+            warnings.username = 'Username already registered';
+            resolve(true);
+          } else {
+            user.username = username;
+            resolve(false);
+          }
+        }
+      });
 
-    if (user && (await user.matchPassword(currentPassword))) {
-      user.password = newPassword;
-      moveForward();
-    } else {
-      return next(
-        ErrorResponse(400, {
-          currentPassword: "Password is not valid.",
-        })
-      );
-    }
+    const changePwd = () =>
+      new Promise(async (resolve) => {
+        if (!currentPassword || !newPassword) resolve(true);
+        else {
+          if (await user.matchPassword(currentPassword)) {
+            user.password = newPassword;
+            resolve(true);
+          } else {
+            warnings.password = 'Password does not match';
+            resolve(false);
+          }
+        }
+      });
+
+    await usernameAlreadyExist();
+    await changePwd();
+
+    const changeEmail = () =>
+      new Promise(async (resolve) => {
+        if (!newEmail) return resolve(true);
+        if (newEmail == user.email) return resolve(true);
+        else {
+          let alreadyExist = await User.findOne({ email: newEmail });
+          warnings.newEmail = {};
+          if (alreadyExist) {
+            warnings.newEmail.message = `${newEmail} already registered.`;
+            return resolve(false);
+          }
+
+          const { redirectUrl, message, token } = await createToken(req, {
+            newEmail,
+            type: 'verifyChangedEmail',
+            userId: user._id,
+          });
+
+          let isEmailService: boolean =
+            'true' === process.env.IS_EMAIL_SERVICE!;
+
+          if (!isEmailService) {
+            warnings.newEmail.redirectUrl = redirectUrl;
+            warnings.newEmail.message = `Verify your email by visiting this link valid for ${process.env.TOKEN_EXPIRE}.`;
+            return resolve(true);
+          }
+
+          let emailSentResult = await sendEmail(
+            user.email,
+            redirectUrl,
+            message
+          );
+
+          if (!emailSentResult) {
+            await token.delete();
+            warnings.newEmail.messsage =
+              "Email can't  be changed right now, plz try again.";
+            return resolve(false);
+          } else {
+            warnings.newEmail.redirectUrl = redirectUrl;
+            warnings.newEmail.message = `Verify your email by visiting this link valid for ${process.env.TOKEN_EXPIRE}.`;
+            return resolve(true);
+          }
+        }
+      });
+
+    await changeEmail();
+    user = await user.save();
+
+    return sendTokens(user, 200, res, warnings);
   }
 );
 

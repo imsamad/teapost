@@ -1,15 +1,17 @@
-version: "3"
+version: '3'
 services:
   backend:
     build: .
     image: registry.heroku.com/teapost/web:2
     ports:
-      - "4000:4000"
+      - '4000:4000'
     container_name: teapost-backend
-    # environment:
-    #   - MONGO_URI=mongodb+srv://teapost:teapost@mongodb-practice.gimw9.mongodb.net/teapost?authSource=admin
     # env_file:
-    #   - ./config/.env
+    # these would over-write the .envs loaded by dotenv
+    # - ./config/.env.example
+    # environment:
+    # highest preference
+    # - APP_NAME=fromfile
 # heroku apps:create <HEROKU-APP-NAME>
 # heroku container:login
 # docker build registry.heroku.com/<HEROKU-APP-NAME>/web

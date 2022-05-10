@@ -1,13 +1,13 @@
-import getPrimaries from "./getPrimaries";
-import getSecondaries from "./getSecondaries";
-import createPrimary from "./createPrimary";
-import createSecondary from "./createSecondary";
-import updateOrDeleteComment from "./updateOrDeleteComment";
-import replyToSecondary from "./replyToSecondary";
+import getPrimaries from './getPrimaries';
+import getSecondaries from './getSecondaries';
+import createPrimary from './createPrimary';
+import createSecondary from './createSecondary';
+import updateOrDeleteComment from './updateOrDeleteComment';
+import replyToSecondary from './replyToSecondary';
 
-import likeOrDislike from "./likeOrDislike";
+import likeOrDislike from './likeOrDislike';
 
-export {
+export default {
   getSecondaries,
   likeOrDislike,
   replyToSecondary,

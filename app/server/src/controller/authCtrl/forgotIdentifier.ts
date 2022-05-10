@@ -1,28 +1,23 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import User from "../../models/User";
-
+import { asyncHandler, ErrorResponse, trimInside } from '../../lib/utils';
+import User from '../../models/User';
+import * as yup from 'yup';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 // @desc      forgetEmail
 // @route     GET /api/v1/auth/forgotidentifier
 // @access    Public
 const forgotIdentifier = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { identifierInitials } = req.body;
-    const filter =
-      process.env.ONLY_VERIFIED_ALLOWED == "true"
-        ? {
-            isEmailVerified: true,
-            isAuthorised: true,
-          }
-        : {};
 
     let users = await User.find({
       $or: [
-        { email: new RegExp(identifierInitials, "gi") },
-        { username: new RegExp(identifierInitials, "gi") },
+        { email: new RegExp(identifierInitials, 'gi') },
+        { username: new RegExp(identifierInitials, 'gi') },
       ],
-      ...filter,
+      isEmailVerified: true,
+      isAuthorised: true,
     });
     if (!users.length) {
       return next(
@@ -34,9 +29,9 @@ const forgotIdentifier = asyncHandler(
 
     let matchedIdentifiers: string[] = [];
     users.forEach(({ email, username }) => {
-      if (email.match(new RegExp(identifierInitials, "gi")))
+      if (email.match(new RegExp(identifierInitials, 'gi')))
         matchedIdentifiers.push(email);
-      if (username.match(new RegExp(identifierInitials, "gi")))
+      if (username.match(new RegExp(identifierInitials, 'gi')))
         matchedIdentifiers.push(username);
     });
 
@@ -49,10 +44,25 @@ const forgotIdentifier = asyncHandler(
     }
 
     res.json({
-      status: "ok",
+      status: 'ok',
       matchedIdentifiers,
     });
   }
 );
 
-export default forgotIdentifier;
+export const forgotIdentifierSchema = yup.object({
+  body: yup.object({
+    identifierInitials: yup
+      .string()
+      .label('identifierInitials')
+      .required('identifierInitials is required')
+      .test(
+        'identifierInitials',
+        'identifierInitials must have atleast 3 chars.',
+        (val: any) => {
+          return trimInside(val, 3);
+        }
+      ),
+  }),
+});
+export default [validateSchemaMdlwr(forgotIdentifierSchema), forgotIdentifier];

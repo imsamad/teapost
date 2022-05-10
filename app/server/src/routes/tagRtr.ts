@@ -1,8 +1,8 @@
 import express, { Router } from 'express';
-import { getAllTags } from '../controller/tagCtrl';
+import tagCtrl from '../controller/tagCtrl';
 
 const router: Router = express();
 
-router.route('/').get(getAllTags);
+router.route('/').get(tagCtrl.getAllTags).post(tagCtrl.createTags);
 
 export default router;

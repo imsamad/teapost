@@ -1,5 +1,5 @@
-import getStoryHistory from "./getStoryHistory";
-import getStoryHistoryById from "./getStoryHistoryById";
-import deleteStoryHistoryById from "./deleteStoryHistoryById";
+import getStoryHistory from './getStoryHistory';
+import getStoryHistoryById from './getStoryHistoryById';
+import deleteStoryHistoryById from './deleteStoryHistoryById';
 
-export { getStoryHistory, getStoryHistoryById, deleteStoryHistoryById };
+export default { getStoryHistory, getStoryHistoryById, deleteStoryHistoryById };

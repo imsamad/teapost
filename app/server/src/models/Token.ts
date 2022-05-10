@@ -1,15 +1,14 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
+import ms from 'ms';
 
-import { UserDocument } from "./User";
+import { UserDocument } from './User';
 
 export interface TokenDocument extends Document {
   token: String;
-  type: "verifyemail" | "resetpassword";
-  userId: UserDocument["_id"];
-  tempData: {
-    isVerifyChangedEmailToken?: boolean;
-    newEmail?: string;
-  };
+  type: 'resetPassword' | 'verifyRegistration' | 'verifyChangedEmail';
+  userId: UserDocument['_id'];
+
+  newEmail?: string;
 }
 
 const tokenSchema = new Schema(
@@ -17,13 +16,11 @@ const tokenSchema = new Schema(
     token: { type: String, required: true },
     type: {
       type: String,
-      enum: ["verifyemail", "resetpassword"],
+      enum: ['verifyRegistration', 'verifyChangedEmail', 'resetPassword'],
     },
     userId: Schema.Types.ObjectId,
-    tempData: {
-      isVerifyChangedEmailToken: { type: Boolean, default: false },
-      newEmail: String,
-    },
+    newEmail: String,
+    // createdAt: { type: Date, expires: 60, default: Date.now },
   },
   {
     timestamps: true,
@@ -31,10 +28,10 @@ const tokenSchema = new Schema(
 );
 
 tokenSchema.index(
-  { createdAt: 1 },
-  { expireAfterSeconds: parseInt(process.env.TOKEN_EXPIRE!, 10) }
+  { createdAt: 1 }, //@ts-ignore
+  { expireAfterSeconds: ms(process.env.TOKEN_EXPIRE) }
 );
-// tokenSchema.on();
-const Token = mongoose.model<TokenDocument>("Token", tokenSchema);
+
+const Token = mongoose.model<TokenDocument>('Token', tokenSchema);
 
 export default Token;

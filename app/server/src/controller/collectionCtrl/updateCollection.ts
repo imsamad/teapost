@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import { asyncHandler, ErrorResponse } from "../../lib/utils";
-import StoryCollection from "../../models/StoryCollection";
-
+import { NextFunction, Request, Response } from 'express';
+import { asyncHandler, ErrorResponse, typeOf } from '../../lib/utils';
+import StoryCollection from '../../models/StoryCollection';
+import * as yup from 'yup';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 // @desc      Create Collection
 // @route     POST /api/v1/collections/:collectionId
 // @access    Auth
@@ -14,15 +15,40 @@ export const updateCollection = asyncHandler(
       user,
     });
 
-    if (!collection) return next(ErrorResponse(404, "Resource not found"));
+    if (!collection) return next(ErrorResponse(404, 'Resource not found'));
 
-    collection.isPublic = req.body?.isPublic || collection.isPublic;
     collection.title = req.body?.title || collection.title;
     collection.description = req.body?.description || collection.description;
     collection.stories = req.body?.stories || collection.stories;
     collection = await collection.save();
 
-    return res.json({ status: "ok", collection });
+    return res.json({ status: 'ok', collection });
   }
 );
-export default updateCollection;
+
+const schema = yup.object({
+  body: yup.object({
+    title: yup
+      .string()
+      .label('title')
+      .typeError('Title must be of type string'),
+    description: yup
+      .string()
+      .label('description')
+      .typeError('Description must be of type string'),
+    stories: yup
+      .array()
+      .of(
+        yup
+          .string()
+          .label('stories')
+          .test('stories', 'Stories must be valid ids', (val: any) => {
+            return typeOf(val, 'mongoId');
+          })
+      )
+      .label('stories')
+      .typeError('Stories must be of type array of valid storyId'),
+  }),
+});
+
+export default [validateSchemaMdlwr(schema), updateCollection];

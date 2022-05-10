@@ -1,148 +1,105 @@
-import * as dotenv from "dotenv";
-import path from "path";
+import * as dotenv from 'dotenv';
+import path from 'path';
+
+function getRndInteger(min: number, max: number, include = false) {
+  return Math.floor(Math.random() * (max - min + (include ? 1 : 0))) + min;
+}
+const avatar = () => `https://i.pravatar.cc/100`;
+const titleImage = () => `https://random.imagecdn.app/800/600`;
 
 const setEnv = () =>
   new Promise((resolve) => {
     dotenv.config({
-      path: path.join(__dirname, "../", `config`, ".env"),
+      path: path.join(__dirname, '../', `config`, '.env'),
     });
     resolve(true);
   });
 
-import users, { createUsers } from "./data/users";
-import stories from "./data/stories";
-import tags from "./data/tags";
-import { primaries, createPrimaries } from "./data/primaries";
-import secondaries, { createSecondaries } from "./data/secondaries";
-import images from "./data/images";
+import users from './data/users';
+import tags from './data/tags';
+import stories from './data/stories';
+import slugs from './data/slugs';
 
-import User from "../src/models/User";
-import Tag from "../src/models/Tag";
-import Story from "../src/models/Story";
-import StoryMeta from "../src/models/StoryMeta";
-import Profile from "../src/models/Profile";
-import Image from "../src/models/Image";
-import StoryCollection from "../src/models/StoryCollection";
-import Primary from "../src/models/Comment/Primary";
-import Secondary from "../src/models/Comment/Secondary";
-import CommentMeta from "../src/models/Comment/CommentMeta";
+import User from '../src/models/User';
+import Tag from '../src/models/Tag';
+import Story from '../src/models/Story';
 
-import dbConnect from "../src/db/connectDB";
-import { nanoid } from "nanoid";
-import { lorem } from "../src/lib/utils";
+import StoryMeta from '../src/models/StoryMeta';
+import Profile from '../src/models/Profile';
+import Asset from '../src/models/Asset';
+import StoryCollection from '../src/models/StoryCollection';
+import Primary from '../src/models/Comment/Primary';
+import Secondary from '../src/models/Comment/Secondary';
+import CommentMeta from '../src/models/Comment/CommentMeta';
 
-const insertStoriesIntoColls = async () => {
-  try {
-    const ids = [
-      "62474c2fcb5443749cccd64d",
-      "624f804bdc397c69051bfde4",
-      "624f8056dc397c69051bfdeb",
-    ];
+import dbConnect from '../src/db/connectDB';
+import slugify from 'slugify';
 
-    let promise: any = [];
-
-    ids.forEach(async (id, index) => {
-      const storiesIds = stories
-        .filter(
-          (story, storyIndex) =>
-            storyIndex >= index * 100 && storyIndex <= (index + 1) * 100
-        )
-        .map(({ _id }) => _id);
-
-      await StoryCollection.findByIdAndUpdate(id, {
-        $addToSet: { stories: storiesIds },
-      });
-    });
-  } catch (err: any) {
-    console.log("first ", err);
-  }
-};
-
-const createCollections = async () => {
-  try {
-    const storiesIds = stories
-      .filter((story, storyIndex) => storyIndex < 100)
-      .map(({ _id }) => _id);
-    const colls: any = [];
-    for (var i = 0; i < 100; i++) {
-      const coll = {
-        title: lorem.generateWords(4),
-        user: "6221be7444eaf2d6fc67b964",
-        description: lorem.generateWords(10),
-        stories: storiesIds,
-      };
-      colls.push(coll);
-    }
-
-    await StoryCollection.create(colls);
-  } catch (err) {}
-};
 const importData = async () => {
   try {
-    await createCollections();
-    return;
-    // await Tag.create(tags);
-    // await Image.create(images);
+    let storyCreated = 0;
+    let slugCount = 0;
+    await Tag.create(tags);
+    const userCreated = await User.create(users);
 
-    await User.create(users);
-    let userCreated = await User.create(await createUsers());
-    let userIds: string[] = userCreated.map((usr) => usr._id);
+    userCreated.forEach(async function (user, index) {
+      try {
+        let crtUserStoriesLength = getRndInteger(0, 30, true);
 
-    // const storiesss = await Story.create(stories);
-    await Story.findOne({ title: "title" });
+        let tagsIndex = getRndInteger(0, tags.length - 4, true);
 
-    let primariesCreated = await Primary.create(
-      createPrimaries({
-        storyIds: stories
-          .filter((s, index) => index < 10 && true)
-          .map((user) => user._id),
-        userIds,
-        qty: 100,
-      })
-    );
+        let storyOfCrtUser = stories
+          .slice(storyCreated, storyCreated + crtUserStoriesLength)
+          .map(({ slug, title, ...rest }) => ({
+            ...rest,
+            title: `${slugCount + 1} - ${slugs[slugCount]}`,
+            author: user._id,
+            tags: tags.slice(tagsIndex, tagsIndex + 3),
+            slug: slugify(slugs[slugCount++]),
+          }));
 
-    // @ts-ignore
-    let primaryIds: string[] = primariesCreated.map((prim) =>
-      prim._id.toString()
-    );
+        storyCreated += crtUserStoriesLength;
+        await Story.create(storyOfCrtUser);
 
-    const secCreted = await Secondary.create(
-      createSecondaries({ primaryIds, userIds })
-    );
+        await StoryCollection.create([
+          {
+            user: user._id,
+            title: 'Read Later',
+            description: 'Add stories to read in future',
+          },
+        ]);
+        await Profile.create([{ _id: user._id }]);
 
-    // console.log("data imported");
-    process.exit(1);
+        if (index == users.length - 1) process.exit(1);
+      } catch (err) {
+        console.log('err from ', err);
+        if (index == users.length - 1) process.exit(1);
+      }
+    });
+
+    // await Asset.create(assets);
   } catch (err) {
-    console.log("import err ", err);
+    console.log('import err ', err);
     process.exit(1);
   }
 };
 
 const deleteData = async () => {
   try {
-    // await User.deleteMany();
-    // await Image.deleteMany();
-    // await Story.findOne({ title: "title" });
-    // await Story.deleteMany();
-    // await Tag.deleteMany();
-    // await Profile.deleteMany();
-    // await StoryMeta.deleteMany();
-    // await StoryCollection.deleteMany();
-
-    // primaries.forEach(async ({ story }) => {
-    await Story.findByIdAndUpdate("6246f5a68e399c2b1c3382e8", {
-      noOfComments: 0,
-    });
-    // });
-
-    await Primary.deleteMany({ story: "6246f5a68e399c2b1c3382e8" });
-
-    // await Secondary.deleteMany();
-    // await CommentMeta.deleteMany();
-    console.log("data deleted ");
+    await User.deleteMany();
+    await Tag.deleteMany();
+    await Story.deleteMany();
+    await Asset.deleteMany();
+    await Profile.deleteMany();
+    await StoryMeta.deleteMany();
+    await StoryCollection.deleteMany();
+    await Primary.deleteMany();
+    await Secondary.deleteMany();
+    await CommentMeta.deleteMany();
+    console.log('data deleted ');
     process.exit(1);
   } catch (err) {
-    console.log("delete err ", err);
+    console.log('delete err ', err);
     process.exit(1);
   }
 };
@@ -153,9 +110,9 @@ setEnv()
   })
   .then((res) => {
     if (!res) process.exit(1);
-    if (process.argv[2] === "-i") {
+    if (process.argv[2] === '-i') {
       importData();
-    } else if (process.argv[2] === "-d") {
+    } else if (process.argv[2] === '-d') {
       deleteData();
     }
   });

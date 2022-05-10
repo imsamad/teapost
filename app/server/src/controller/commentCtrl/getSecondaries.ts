@@ -1,47 +1,44 @@
-import { NextFunction, Request, Response } from "express";
-import { asyncHandler } from "../../lib/utils";
-import Secondary from "../../models/Comment/Secondary";
+import { NextFunction, Request, Response } from 'express';
+import { asyncHandler, typeOf } from '../../lib/utils';
+import Secondary from '../../models/Comment/Secondary';
 
+import * as yup from 'yup';
+import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
+import pagination from '../../lib/pagination';
 // @desc      Get comments reply of primary
 // @route     GET /api/v1/comments/secondaries/:primaryId
 // @access    Public
 
 const getSecondaries = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
-    const page = parseInt(req?.query?.page || 1, 10) || 1,
-      // @ts-ignore
-      limit = parseInt(req?.query?.limit || 10, 10) || 10;
-    // @ts-ignore
-    const startIndex = (page - 1) * limit,
-      endIndex = page * limit;
-    const comments = await Secondary.find({
+    const query = Secondary.find({
       primary: req.params.primaryId,
     })
       .populate([
-        { path: "meta" },
+        { path: 'meta' },
         {
-          path: "user",
-          select: "email username",
+          path: 'user',
+          select: 'email username',
         },
         {
-          path: "secondaryUser",
-          select: "username email",
+          path: 'secondaryUser',
+          select: 'username email',
         },
       ])
-      .skip(startIndex)
-      .limit(limit)
-      .lean();
-
-    let pagination: any = { limit };
-    if (comments.length) {
-      pagination.next = page + 1;
-    }
-    if (startIndex > 0) pagination.prev = page - 1;
-    res.json({
-      staus: "ok",
-      comments,
-    });
+      .sort('-createdAt');
+    pagination(req, res, { query, label: 'comments' });
   }
 );
-export default getSecondaries;
+export const schema = yup.object({
+  params: yup.object({
+    primaryId: yup
+      .string()
+      .label('primaryId')
+      .typeError('primaryId must be valid.')
+      .required()
+      .test('primaryId', 'primaryId must be valid.', (val: any) =>
+        typeOf(val, 'mongoId')
+      ),
+  }),
+});
+export default [validateSchemaMdlwr(schema), getSecondaries];

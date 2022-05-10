@@ -1,7 +1,7 @@
-import { Badge, HStack, Text } from "@chakra-ui/react";
-import { monthList } from "@lib/utils";
+import { Badge, HStack, Text } from '@chakra-ui/react';
+import { monthList } from '@lib/utils';
 
-import MyLink from "../../../MyLink";
+import MyLink from '../../../MyLink';
 
 const StoryInfo = ({ tag, createdAt, readingTime }: any) => {
   let date: any = new Date(createdAt);
@@ -16,7 +16,7 @@ const StoryInfo = ({ tag, createdAt, readingTime }: any) => {
       </MySmText>
       <MySmText>{readingTime} min</MySmText>
       <MySmText>~</MySmText>
-      <MyLink href={`/tag/${tag?.title || "tech"}`}>
+      <MyLink href={`/tag/${tag?.title || 'tech'}`}>
         <Badge
           textDecor="underline"
           variant="solid"
@@ -24,11 +24,11 @@ const StoryInfo = ({ tag, createdAt, readingTime }: any) => {
           // bgColor="gray.400"
           fontStyle="italic"
           _dark={{
-            color: "gray.900",
+            color: 'gray.900',
           }}
           textTransform="capitalize"
         >
-          {tag?.title || "tech"}
+          {tag?.title || 'tech'}
         </Badge>
       </MyLink>
       <MySmText>~</MySmText>
@@ -48,7 +48,7 @@ const MySmText = ({ children, ...rest }: { children: React.ReactNode }) => {
       // fontSize={13}
       fontWeight={300}
       _dark={{
-        color: "gray.300",
+        color: 'gray.300',
       }}
       {...rest}
     >

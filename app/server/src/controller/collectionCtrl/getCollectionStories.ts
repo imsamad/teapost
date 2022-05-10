@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { asyncHandler, peelUserDoc } from "../../lib/utils";
-import StoryCollection from "../../models/StoryCollection";
+import { Request, Response, NextFunction } from 'express';
+import { asyncHandler } from '../../lib/utils';
+import StoryCollection from '../../models/StoryCollection';
+import { peelUserDoc } from '../../models/User';
 
 // @desc      getCollectionStories
 // @route     GET /api/v1/collections/:collectionId
@@ -10,6 +11,7 @@ const getCollectionStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id;
+
     // @ts-ignore
     const page = parseInt(req.query.page) || 1,
       // @ts-ignore
@@ -22,9 +24,9 @@ const getCollectionStories = asyncHandler(
       { stories: { $slice: [startIndex, endIndex] } }
     ).populate([
       {
-        path: "stories",
-        select: "-content",
-        populate: { path: "author", transform: (v) => peelUserDoc(v) },
+        path: 'stories',
+        select: '-content',
+        populate: { path: 'author', transform: (v) => peelUserDoc(v) },
       },
     ]);
 
@@ -36,7 +38,7 @@ const getCollectionStories = asyncHandler(
 
     res.json({
       pagination,
-      status: "ok",
+      status: 'ok',
       stories: mycollections?.stories || [],
     });
   }

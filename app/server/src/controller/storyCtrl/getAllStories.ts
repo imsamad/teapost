@@ -1,100 +1,192 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from 'express';
+import { isValidObjectId } from 'mongoose';
+import pagination from '../../lib/pagination';
 
-import { asyncHandler, peelUserDoc } from "../../lib/utils";
-import Story from "../../models/Story";
+import { asyncHandler, typeOf } from '../../lib/utils';
+import Story from '../../models/Story';
+import { peelUserDoc } from '../../models/User';
 
 // @desc      Get all stories
 // @route     GGET /api/v1/story
 // @access    Public
 const getAllStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // return res.json(
-    //   await Story.find({ author: "6221be7444eaf2d6fc67b964" })
-    //     .select("-content")
-    //     .lean()
-    // );
-    const filter =
-      process.env.ONLY_VERIFIED_ALLOWED == "true"
-        ? {
-            isPublished: true,
-            isPublishedByAdmin: true,
-          }
-        : {};
+    let replace = [
+      ['likes', 'noOfLikes'],
+      ['dislikes', 'noOfDislikes'],
+      ['views', 'noOfViews'],
+      ['comments', 'noOfComments'],
+      // ['id', '_id'],
+    ];
 
-    // @ts-ignore
-    let stories: any = Story.find({ ...req.query, ...filter }).populate([
-      {
-        path: "author",
+    const id = req.query.id || req.query._id;
+    let queryClone = JSON.stringify(req.query);
+    let query: any = {};
+    if (id) {
+      queryClone = JSON.stringify({});
+      query._id = id;
+    }
+
+    queryClone = queryClone.replace(
+      /\b(gt|gte|lt|lte|in)\b/g,
+      (match) => `$${match}`
+    );
+    replace.forEach((repl) => {
+      queryClone = queryClone.replace(
+        new RegExp(repl[0]),
+        (match) => `${repl[1]}`
+      );
+    });
+    queryClone = JSON.parse(queryClone);
+
+    let populatedFilelds = {
+      collabWith: {
+        path: 'collabWith',
         transform: (v: any) => peelUserDoc(v),
       },
-      {
-        path: "tags",
-        select: "title",
+      author: {
+        path: 'author',
+        transform: (v: any) => peelUserDoc(v),
       },
-    ]);
-    if (req.query.nocontent == "true") stories.select("-content");
-    // @ts-ignore
-    if (req.query?.select?.includes("comments")) {
-      stories.populate({
-        path: "comments",
+      tags: {
+        path: 'tags',
+        select: 'title',
+      },
+      comments: {
+        path: 'comments',
         populate: [
           {
-            path: "user",
+            path: 'user',
             transform: (v: any) => peelUserDoc(v),
           },
           {
-            path: "secondary",
+            path: 'secondary',
             populate: [
               {
-                path: "user",
+                path: 'user',
                 transform: (v: any) => peelUserDoc(v),
               },
               {
-                path: "secondaryUser",
+                path: 'secondaryUser',
                 transform: (v: any) => peelUserDoc(v),
               },
             ],
           },
         ],
-      });
-    }
-    // @ts-ignore
-    let page: number = req.query.page!,
-      // @ts-ignore
-      limit: number = req.query.limit,
-      // @ts-ignore
-      startIndex = (page - 1) * limit,
-      endIndex = page * limit;
+      },
+    };
 
-    stories = await stories.skip(startIndex).limit(limit).lean();
-    let pagination: any = { limit };
-    if (stories.length) {
-      pagination.next = page + 1;
-    }
-    if (startIndex > 0) pagination.prev = page - 1;
+    const searchable = {
+      title: 'RegEx',
+      subtitle: 'RegEx',
+      keywords: 'RegEx',
+      content: 'RegEx',
 
-    if (req.query.cutcontent) {
-      stories = stories.map((story: any) => {
-        return {
-          ...story,
+      slug: 'string',
 
-          content: story.content.substr(
-            0, // @ts-ignore
-            parseInt(req.query.cutcontent, 10)
-          ),
-        };
-      });
-    } else if (req.query.onlycontent) {
-      stories = stories.map(({ content }: any) => ({ content }));
-    }
-    // return res.json(await Story.find({}).lean());
-    return res.status(200).json({
-      status: "ok",
-      pagination,
-      stories,
+      tags: 'mongoId',
+      author: 'mongoId',
+      collabWith: 'mongoId',
+      // _id: 'mongoId',
+
+      readingTime: 'operator',
+      noOfLikes: 'operator',
+      noOfDislikes: 'operator',
+      noOfViews: 'operator',
+      noOfComments: 'operator',
+    };
+    const types = {
+      operator: [
+        'readingTime',
+        'noOfLikes',
+        'noOfDislikes',
+        'noOfViews',
+        'noOfComments',
+      ],
+      mongoId: ['tags', 'author', 'collabWith'],
+      regEx: ['title', 'subtitle', 'content', 'keywords'],
+      string: ['slug'],
+    };
+    Object.keys(queryClone).forEach((field) => {
+      if (!(field in searchable)) return;
       // @ts-ignore
-      authors: req.authors || {},
+      const fieldValue: any = queryClone[field];
+      const isStr = typeOf(fieldValue, 'string');
+      // @ts-ignore
+      const type = searchable[field];
+
+      // console.log({ isStr, field, fieldValue, type, eval: type && isStr });
+
+      switch (type) {
+        case 'RegEx':
+          if (!isStr) break;
+          query.$or = query.$or ?? [];
+          query.$or.push({ [field]: new RegExp(`${fieldValue}`, 'gi') });
+          break;
+        case 'string':
+          if (!isStr) break;
+          query[field] = fieldValue;
+          break;
+        case 'mongoId':
+          if (isStr) {
+            const ids = fieldValue
+              .split(',')
+              .filter((id: any) => isValidObjectId(id));
+            if (ids.length) query[field] = query[field] ?? { $in: ids };
+          } else {
+            for (const keys in fieldValue) {
+              if (typeof fieldValue[keys] == 'string')
+                fieldValue[keys] = fieldValue[keys].split(',');
+              else delete fieldValue[keys];
+            }
+            if (Object.keys(fieldValue).length) query[field] = fieldValue;
+          }
+          break;
+        case 'operator':
+          if (isStr) {
+            query[field] = fieldValue;
+          } else
+            for (const keys in fieldValue) {
+              if (typeof fieldValue[keys] == 'string')
+                fieldValue[keys] = fieldValue[keys];
+              else delete fieldValue[keys];
+            }
+
+          if (Object.keys(fieldValue).length) query[field] = fieldValue;
+          break;
+      }
     });
+
+    let populate =
+      typeof req.query.populate == 'string'
+        ? req.query.populate?.split(',')
+        : [];
+
+    let queryRef = Story.find({
+      ...query,
+      isPublished: true,
+      isPublishedByAdmin: true,
+      hadEmailedToFollowers: true,
+    });
+
+    queryRef
+      .select('+hadEmailedToFollowers')
+      .populate(populate.map((popu: any) => populatedFilelds[popu]))
+      .lean();
+
+    // @ts-ignore
+    if (req.query.select?.includes('content')) queryRef.select('content');
+    else queryRef.select('-content');
+
+    pagination(req, res, {
+      query: queryRef,
+
+      label: 'stories',
+    });
+    // return res.status(200).json({
+    //   status: 'ok',
+    //   stories: await queryRef,
+    // });
   }
 );
 

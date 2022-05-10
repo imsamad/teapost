@@ -1,0 +1,1446 @@
+{
+	"info": {
+		"_postman_id": "c0f20aa0-e4cf-4047-9ec3-12008cb85c6b",
+		"name": "Teapost",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register As New User/ SignUp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"VERIFY_URL\", pm.response.json().redirectUrl) ",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"imsamad1\",\n    \"email\":\"imsamad1@gmail.com\",\n    \"password\":\"Password@1206\",\n    \"fullName\":\"Abdus Samad\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().accessToken)",
+									"pm.environment.set(\"USER_ID\", pm.response.json().user.id)",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\":\"{'$gt':''}\",\n    \"password\":\"Password@1206\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Log In"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{VERIFY_URL}}",
+							"host": [
+								"{{VERIFY_URL}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/auth/me",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Identifiers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifierInitials\":\"imsamad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/forgotidentifier",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"forgotidentifier"
+							]
+						},
+						"description": "In case you forget your login identifiers like username OR email."
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"identifier\":\"imsamad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/forgotpassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"forgotpassword"
+							]
+						},
+						"description": "If Forgot Password"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newEmail\":\"newEmail@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/changeemail",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"changeemail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"newEmail\":\"imsamad1@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/update",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Follow",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/auth/follow/627766f1d466486d8f3fec50",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"follow",
+								"627766f1d466486d8f3fec50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfollow",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/auth/unfollow/627766f1d466486d8f3fec50",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"unfollow",
+								"627766f1d466486d8f3fec50"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stories",
+			"item": [
+				{
+					"name": "Initialize story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"slug\":\"xsxcsdcsddcscdscedfcs\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/stories/init",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"init"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"keywords\":\"keywordskeywordskeywordskeywordskeywordskeywordskeywords\",\n    \"title\":\"onesubtitleonesubtitleonesubtitle\",\n    \"slug\":\"csdcdsfcvdf\",\n    \"subtitle\":\"onesubtitleonesubtitleonesubtitle\",\n    \"additionalTags\":[\"politics\",\"web\"],\n    \"tags\":[\"627772871f17e5cc160dc512\"],\n    \"content\":\"contentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedshcontentceoedsh\",\n    \"titleImage\":\"https://cdn.sstatic.net/Img/teams/teams-illo-free-sidebar-promo.svg?v=47faa659a05e\"\n    \n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/stories/62776db41b436f3f8b380d5a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"62776db41b436f3f8b380d5a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Published Story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/stories/published/6278a80b948ec50a45e8fb90",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"published",
+								"6278a80b948ec50a45e8fb90"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Collab Uncollab",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"removeAuthors\":[\"6277672bd466486d8f3fec61\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/stories/collab/6277737c35c6996d859bc4fe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"collab",
+								"6277737c35c6996d859bc4fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Stories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/STORIES",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"STORIES"
+							],
+							"query": [
+								{
+									"key": "nocontent",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Story By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/stories/6277737c35c6996d859bc4fe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"6277737c35c6996d859bc4fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/stories/62776f39f4e5afc61515818f",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"62776f39f4e5afc61515818f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Grade story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"like\":true,\n    \"undo\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/stories/grade/6277737c35c6996d859bc4fe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"grade",
+								"6277737c35c6996d859bc4fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Stories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/stories/my",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"stories",
+								"my"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Comments On Story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\":\"Awesome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/primaries/6277737c35c6996d859bc4fe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"primaries",
+								"6277737c35c6996d859bc4fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments of story",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/comments/primaries/6277737c35c6996d859bc4fe",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"primaries",
+								"6277737c35c6996d859bc4fe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reply To Primary Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\":\"Second Awesome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/secondaries/627789c5a816a2ea79aa076b",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"secondaries",
+								"627789c5a816a2ea79aa076b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get replies of Primary Comment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/comments/secondaries/627788c74e3edc0993d78a73",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"secondaries",
+								"627788c74e3edc0993d78a73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reply To Secondary comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\":\"Tertiary awesome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/secondaries/reply/62778938f70a78a9303ec96a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"secondaries",
+								"reply",
+								"62778938f70a78a9303ec96a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Primary Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\":\"Updated Second Awesome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/primaries/627789c5a816a2ea79aa076b",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"primaries",
+								"627789c5a816a2ea79aa076b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Secondary Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\":\"Ueeeeeeeeeeeeeeeeeeepdated Second secondarsasay Awesome\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/secondaries/62778938f70a78a9303ec96a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"secondaries",
+								"62778938f70a78a9303ec96a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Primary Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/comments/primaries/62778c426218184a7fc7055d",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"primaries",
+								"62778c426218184a7fc7055d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Secondary Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/comments/secondaries/62778adb158b62c6a89859c0",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"secondaries",
+								"62778adb158b62c6a89859c0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like/Dislike Primary Comments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dislike\":false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/grade/62778dff6218184a7fc705d4/primary",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"grade",
+								"62778dff6218184a7fc705d4",
+								"primary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like / Dislike Secondary Comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"like\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/comments/grade/62778dff6218184a7fc705d4/secondary",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"comments",
+								"grade",
+								"62778dff6218184a7fc705d4",
+								"secondary"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection",
+			"item": [
+				{
+					"name": "Create Story Collection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"XYZ1\",\n    \"stories\":[\"6277737c35c6996d859bc4fe\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/collections",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"collections"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete story Collection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/collections/6277c6514d396e662993c8b4",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"collections",
+								"6277c6514d396e662993c8b4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Collections",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/collections/my",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"collections",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Collection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\":\"titlessss\",\n    \"description\":\"here we go\",\n    \"stories\":[\"6277737c35c6996d859bc4fe\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/collections/6277dfc223bbd3c33828e7cf",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"collections",
+								"6277dfc223bbd3c33828e7cf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stories Of Collection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/collections/stories/627766f4d466486d8f3fec58",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"collections",
+								"stories",
+								"627766f4d466486d8f3fec58"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "11",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Build Collection",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"storyId\":\"6277de1358922c78f8f0c0cf\",\n    \"addTo\":[\"627766f4d466486d8f3fec58\"],\n    \"addToDefault\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/collections/build",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"collections",
+								"build"
+							]
+						},
+						"description": "Ad or remove stories from collections"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Create Tags",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titles\":[\"onetag\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/tags",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tags",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tags"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Story History",
+			"item": [
+				{
+					"name": "Delete Story History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/storyhistories/62776db41b436f3f8b380d5a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"storyhistories",
+								"62776db41b436f3f8b380d5a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Story-History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/storyhistories/62776da26be1f446708858ae",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"storyhistories",
+								"62776da26be1f446708858ae"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single Instance of story",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/storyhistories/62776da26be1f446708858ae/6277f34c77b41f6e319c1ace",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"storyhistories",
+								"62776da26be1f446708858ae",
+								"6277f34c77b41f6e319c1ace"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Images",
+			"item": [
+				{
+					"name": "Get My Assets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/assets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"assets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Assets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "files",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"type": "file",
+									"src": [
+										"/home/imsamad/Downloads/Qycm4AQ6KISRfJY_.mp4",
+										"/home/imsamad/Downloads/FZQFvBdcLCaSJRML.mp4",
+										"/home/imsamad/Downloads/8Lq1uO1p5e3HALqz.mp4",
+										"/home/imsamad/Downloads/imsamad-resume.pdf",
+										"/home/imsamad/Downloads/gaddafi-assaination.jpeg",
+										"/home/imsamad/Downloads/FR-ZzpfXwAERpPN.png",
+										"/home/imsamad/Downloads/DataScienceTimeline.jpeg",
+										"/home/imsamad/Downloads/MPRA_paper_87819.pdf"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/assets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"assets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

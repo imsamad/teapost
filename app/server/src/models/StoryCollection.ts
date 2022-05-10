@@ -1,35 +1,30 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model, Document, Types } from 'mongoose';
 
-import { StoryDocument } from "./Story";
-import { UserDocument } from "./User";
+import { StoryDocument } from './Story';
+import { UserDocument } from './User';
 
 export interface StoryCollectionDocument extends Document {
-  user: UserDocument["id"];
+  user: UserDocument['id'];
   description: string;
   title: string;
-  stories: Types.Array<StoryDocument["_id"]>;
-  isPublic: boolean;
+  stories: Types.Array<StoryDocument['_id']>;
 }
 
 const storyCollectionSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      required: [true, "User is required."],
-      ref: "User",
+      required: [true, 'User is required.'],
+      ref: 'User',
     },
     stories: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Story",
+        ref: 'Story',
       },
     ],
     title: { type: String, dropDups: true, required: true },
     description: String,
-    isPublic: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,
@@ -45,7 +40,7 @@ storyCollectionSchema.index(
 );
 
 const StoryCollection = model<StoryCollectionDocument>(
-  "StoryCollection",
+  'StoryCollection',
   storyCollectionSchema
 );
 

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { getAllImageFromCloudinary } from '../../lib/cloudinary';
 import { asyncHandler } from '../../lib/utils';
 import Asset from '../../models/Asset';
 
@@ -8,9 +9,9 @@ import Asset from '../../models/Asset';
 
 const getMeAssets = asyncHandler(async (req: Request, res: Response) => {
   // @ts-ignore
-  let assets = await Asset.findById(req.user._id).lean();
-
-  res.status(200).json({ assets });
+  // let assets = await Asset.findById(req.user._id).lean();
+  let original = await getAllImageFromCloudinary();
+  res.status(200).json({ original });
 });
 
 // export default getAllImagesFromCloudinary;

@@ -1,13 +1,13 @@
-import { StoryCollectionType } from "@lib/types/StoryCollectionType";
-import axios from "../axios";
+import { StoryCollectionType } from '@lib/types/StoryCollectionType';
+import axios from '../axios';
 
-export const createCollection = async (reqBody: {
+export const createCollectionApi = async (reqBody: {
   title: string;
   desciption: string;
 }) => {
   try {
     const { data } = await axios.post<{ collection: StoryCollectionType }>(
-      "/collections",
+      '/collections',
       reqBody
     );
     return data;
@@ -16,7 +16,7 @@ export const createCollection = async (reqBody: {
   }
 };
 
-export const updateCollection = async (
+export const updateCollectionApi = async (
   collId: string,
   reqBody: {
     title: string;
@@ -40,20 +40,19 @@ export const deleteCollection = async (collectionId: string) => {
     const { data } = await axios.delete(`/collections/${collectionId}`);
     return data;
   } catch (err: any) {
-    console.log("err ", err.response.data);
     throw err.response.data;
   }
 };
 
-export const buildCollection = async (reqObj: {
+export const buildCollectionApi = async (reqObj: {
   addTo: string[];
   removeFrom: string[];
   storyId: string;
 }) => {
   try {
-    const { data } = await axios.put(`/collections/build`, reqObj);
+    const { data } = await axios.patch(`/collections/build`, reqObj);
     return data;
   } catch (err: any) {
-    throw err?.response?.data || "Invalid Data";
+    throw err?.response?.data || 'Invalid Data';
   }
 };

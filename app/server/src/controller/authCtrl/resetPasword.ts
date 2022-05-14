@@ -31,6 +31,7 @@ export const resetPasword = asyncHandler(
 
 export const resetPaswordPage = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Content-Security-Policy', ` `);
     res.sendFile(path.join(__dirname, 'ResetPassword.html'));
   }
 );

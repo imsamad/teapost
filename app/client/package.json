@@ -17,6 +17,7 @@
     "cloudinary-react": "^1.7.1",
     "formik": "^2.2.9",
     "framer-motion": "^5.5.6",
+    "mongoose": "^6.3.3",
     "nanoid": "^3.2.0",
     "next": "^12.0.10",
     "next-universal-cookie": "^3.0.1",

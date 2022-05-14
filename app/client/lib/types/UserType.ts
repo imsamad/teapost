@@ -1,10 +1,10 @@
-import ProfileType from "./ProfileType";
+import ProfileType from './ProfileType';
 
 interface UserType {
   _id: string;
   email: string;
   username: string;
-  role: string | "admin" | "reader" | "author";
+  role: string | 'admin' | 'reader' | 'author';
   createdAt: Date;
 
   fullName: string;
@@ -18,7 +18,10 @@ interface UserType {
   profile?: ProfileType;
   stories: number;
 }
-export interface AuthTypeResponse {
+export interface GetMeType extends UserType {
+  profile: ProfileType;
+}
+export interface LogInResponseType {
   user: UserType;
   accessToken: string;
   message?: any;

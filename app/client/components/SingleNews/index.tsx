@@ -6,15 +6,15 @@ import {
   Image,
   Stack,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import Render from "@compo/Renderer";
-import StoryType from "@lib/types/StoryType";
-import AuthorCard from "@compo/AuthorCard";
-import StoryActions from "@compo/StoryActions";
-import UserType from "@lib/types/UserType";
-import { readAbleDate } from "@lib/utils";
-import Content from "./Content";
+import StoryType from '@lib/types/StoryType';
+import AuthorCard from '@compo/AuthorCard';
+import StoryActions from '@compo/StoryActions';
+import UserType from '@lib/types/UserType';
+import { placeholderImage, readAbleDate } from '@lib/utils';
+import Content from './Content';
+import FallbackImage from '@compo/FallbackImage';
 const SingleStory = ({
   story,
   author,
@@ -38,7 +38,19 @@ const SingleStory = ({
           <Text wordBreak="keep-all">{story.readingTime} min read </Text>
         </HStack>
         <AspectRatio maxW="full" ratio={4 / 3}>
-          <Image src={story.titleImage} alt={story.title} />
+          <Image
+            src={story.titleImage}
+            alt={story.title}
+            fallbackSrc={placeholderImage(400, 300)}
+            fallback={
+              <FallbackImage
+                width={400}
+                height={300}
+                tryAgain={story.titleImage}
+                title={story.title}
+              />
+            }
+          />
         </AspectRatio>
         <StoryActions
           storyId={story._id}
@@ -48,7 +60,7 @@ const SingleStory = ({
           share={{
             title: story.title,
             text: story.subtitle,
-            url: "/story/" + story.slug,
+            url: '/story/' + story.slug,
           }}
         />
         <Content storyId={story._id} />

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import 'colors';
 const connectDB = (mongoUriConnect?: string) => {
-  const mongoUri = mongoUriConnect ? mongoUriConnect : process.env.MONGO_URI;
+  const mongoUri = mongoUriConnect ? mongoUriConnect : process.env.MONGODB_URI;
 
   // @ts-ignore
   mongoose.connect(mongoUri);

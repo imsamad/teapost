@@ -1,31 +1,26 @@
-import { Button, useToast } from "@chakra-ui/react";
-import { Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useRouter } from "next/router";
+import { Button, useToast } from '@chakra-ui/react';
+import { Form, Formik, FormikHelpers, FormikProps } from 'formik';
+import { useRouter } from 'next/router';
 
-import { authSchema } from "@lib/schema/auth";
-import { submitAuth, AuthType } from "@lib/api/authApi";
-import { typeOf } from "@lib/utils";
+import { authSchema } from '@lib/schema/auth';
+import { submitAuth, AuthType } from '@lib/api/authApi';
+import { typeOf } from '@lib/utils';
 
-import FormBody from "./FormBody";
-import Footer from "./Footer";
-import Header from "./Header";
-import LoginWrapper from "./LoginWrapper";
-import FormStatus from "./FormStatus";
+import FormBody from './FormBody';
+import Footer from './Footer';
+import Header from './Header';
+import LoginWrapper from './LoginWrapper';
+import FormStatus from './FormStatus';
 
-import { useAuthCtx } from "@compo/Context";
+import { useAuthCtx } from '@compo/Context';
 
 const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   const router = useRouter();
   const toast = useToast();
 
-  // login modal in case login form is on, & have to off after logged in.
-  const { login, setAuth } = useAuthCtx();
+  const { setAuth } = useAuthCtx();
   // Get redirectUrl if present
-  const redirectTo = login.isOpen
-    ? ""
-    : router.query.redirectTo
-    ? (router.query.redirectTo as string)
-    : redirectToProp ?? "/me";
+  const redirectTo = (router.query.redirectTo as string) || redirectToProp;
 
   const handleSubmit = async (
     values: AuthType,
@@ -35,30 +30,31 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
     action.setSubmitting(true);
     try {
       const {
+        // if values.type== [login]
         user,
+        accessToken,
+
+        // if values.type== [register OR forgotPassword]
         redirectUrl,
         message,
+
+        // if values.type==forgotIdentifiers
         matchedIdentifiers,
+
         status,
-        accessToken,
       } = await submitAuth(values);
 
-      if (values.type == "logIn" && user) {
+      if (values.type == 'logIn' && user) {
         setAuth({ user, accessToken }, redirectTo);
-        // action.resetForm();
-        if (login.isOpen) {
-          login.onClose();
-          toast({
-            title: `Successfully logged in`,
-            status: "success",
-            isClosable: true,
-            duration: 1000,
-          });
-        }
-      }
+        action.resetForm();
 
-      // if registering user , it will api payload send back {redirectUrl Or message}>
-      else if (values.type == "register" || values.type == "forgotPassword") {
+        toast({
+          title: `Successfully logged in`,
+          status: 'success',
+          isClosable: true,
+          duration: 1000,
+        });
+      } else if (values.type == 'register' || values.type == 'forgotPassword') {
         if (redirectUrl || message) {
           // show status in header of form
           action.setStatus({
@@ -67,7 +63,7 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
             message,
           });
         }
-      } else {
+      } else if (values.type == 'forgotIdentifier') {
         action.setStatus({
           status,
           matchedIdentifiers,
@@ -77,10 +73,10 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
       action.setSubmitting(false);
     } catch (error: any) {
       const { message, status } = error;
-      if (typeOf(error, "string") || typeOf(error, "array")) {
+      if (typeOf(error, 'string') || typeOf(error, 'array')) {
         action.setStatus({
-          status: status || "error",
-          message: message || error || "Invalid data",
+          status: status || 'error',
+          message: message || error || 'Invalid data',
         });
       } else {
         action.setErrors(message);
@@ -92,25 +88,14 @@ const Index = ({ redirectTo: redirectToProp }: { redirectTo?: string }) => {
   return (
     <Formik
       initialValues={{
-        type: "logIn",
-        // fullName: "",
-
-        // identifier: "",
-
-        // username: "",
-
-        // email: "",
-
-        // password: "",
-
-        // confirmPassword: "",
-        fullName: "Abdus Samad",
-        identifier: "imsamad",
-        username: "imsamad",
-        email: "imsamad@gmail.com",
-        password: "Password@1206",
-        confirmPassword: "Password@1206",
-        identifierInitials: "",
+        type: 'logIn',
+        fullName: 'Abdus Samad',
+        identifier: 'imsamad',
+        username: 'imsamad',
+        email: 'imsamad@gmail.com',
+        password: 'Password@1206',
+        confirmPassword: 'Password@1206',
+        identifierInitials: '',
       }}
       validationSchema={authSchema}
       onSubmit={handleSubmit}

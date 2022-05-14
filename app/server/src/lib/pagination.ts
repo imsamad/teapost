@@ -25,7 +25,7 @@ const pagination = async (
         totalRecords,
         limit,
       },
-      [label]: null,
+      [label]: [],
     });
   }
   const skip = (pageNo - 1) * limit;

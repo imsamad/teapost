@@ -1,10 +1,10 @@
-import { HStack, Spinner } from "@chakra-ui/react";
-import { PrimaryComment } from "@lib/types/CommentTypes";
-import { memo, useCallback, useRef, useState } from "react";
-import useSWR from "swr";
-import Comment from "../Comment";
-import Skeleton from "../Skeleton";
-import { CtxProvider, Render } from "../AddedCtx";
+import { HStack, Spinner } from '@chakra-ui/react';
+import { PrimaryComment } from '@lib/types/CommentTypes';
+import { memo, useCallback, useRef, useState } from 'react';
+import useSWR from 'swr';
+import Comment from '../Comment';
+import Skeleton from '../Skeleton';
+import { CtxProvider, Render } from '../AddedCtx';
 
 const Index = ({
   url,

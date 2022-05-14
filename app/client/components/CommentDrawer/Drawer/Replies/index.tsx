@@ -1,9 +1,9 @@
-import { Collapse, useDisclosure } from "@chakra-ui/react";
-import TSButton from "@compo/UI/TSButton";
+import { Collapse, useDisclosure } from '@chakra-ui/react';
+import TSButton from '@compo/UI/TSButton';
 
-import CommentList from "../CommentList";
-import { useCTX } from "../AddedCtx";
-import { useEffect, useState } from "react";
+import CommentList from '../CommentList';
+import { useCTX } from '../AddedCtx';
+import { useEffect, useState } from 'react';
 const Index = (props: { primaryId: string; noOfReplies: number }) => {
   const showReplies = useDisclosure();
 
@@ -26,7 +26,7 @@ const Index = (props: { primaryId: string; noOfReplies: number }) => {
           outline="none"
           border="0px"
           _focus={{
-            outline: "1px",
+            outline: '1px',
           }}
           borderRadius="none"
           isFullWidth={false}
@@ -39,13 +39,13 @@ const Index = (props: { primaryId: string; noOfReplies: number }) => {
           {noOfReplies} Replies
         </TSButton>
       ) : (
-        ""
+        ''
       )}
       <Collapse in={showReplies.isOpen} animateOpacity>
         <CommentList
           isPrimary={false}
           url={
-            showReplies.isOpen ? `/comments/secondaries/${props.primaryId}` : ""
+            showReplies.isOpen ? `/comments/secondaries/${props.primaryId}` : ''
           }
           isInitial={true}
           pageNo={1}

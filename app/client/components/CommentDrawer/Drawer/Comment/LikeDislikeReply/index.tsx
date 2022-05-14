@@ -1,19 +1,19 @@
-import { ButtonGroup, Collapse, useDisclosure } from "@chakra-ui/react";
-import { useAuthCtx } from "@compo/Context";
-import TSButton from "@compo/UI/TSButton";
-import { likeOrDislikeComment, replyComment } from "@lib/api/commentApi";
-import { memo, useState } from "react";
+import { ButtonGroup, Collapse, useDisclosure } from '@chakra-ui/react';
+import { useAuthCtx } from '@compo/Context';
+import TSButton from '@compo/UI/TSButton';
+import { likeOrDislikeCommentApi, replyCommentApi } from '@lib/api/commentApi';
+import { memo, useState } from 'react';
 
 import {
   AiOutlineDislike,
   AiOutlineLike,
   AiFillLike,
   AiFillDislike,
-} from "react-icons/ai";
-import { FaReply } from "react-icons/fa";
+} from 'react-icons/ai';
+import { FaReply } from 'react-icons/fa';
 
-import InputField from "../../InputField";
-import { useCTX } from "../../AddedCtx";
+import InputField from '../../InputField';
+import { useCTX } from '../../AddedCtx';
 const Index = ({
   commentId,
   isPrimary,
@@ -38,7 +38,7 @@ const Index = ({
       return;
     }
     const isUndo = isLike ? state.hasBeenLike : state.hasBeenDisLike;
-    likeOrDislikeComment({
+    likeOrDislikeCommentApi({
       isPrimary,
       isLike,
       commentId,
@@ -56,8 +56,8 @@ const Index = ({
   const reply = useDisclosure();
   const { setAddComments, setNoOfReplies, noOfReplies } = useCTX();
   const onSave = async (val: string) => {
-    replyComment({
-      isReplyToPrimary: isPrimary,
+    replyCommentApi({
+      isPrimary,
       commentId,
       text: val,
     }).then(async (res) => {
@@ -77,8 +77,8 @@ const Index = ({
           outline="none"
           border="none"
           _focus={{
-            outline: "none",
-            border: "none",
+            outline: 'none',
+            border: 'none',
           }}
           onClick={() => handleLikeOrDislike(true)}
         >
@@ -94,8 +94,8 @@ const Index = ({
           outline="none"
           border="none"
           _focus={{
-            outline: "none",
-            border: "none",
+            outline: 'none',
+            border: 'none',
           }}
           onClick={() => handleLikeOrDislike(false)}
         >
@@ -109,8 +109,8 @@ const Index = ({
           outline="none"
           border="none"
           _focus={{
-            outline: "none",
-            border: "none",
+            outline: 'none',
+            border: 'none',
           }}
           onClick={() => {
             if (!auth.user?._id) {

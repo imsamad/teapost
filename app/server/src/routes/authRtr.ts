@@ -1,4 +1,5 @@
 import express from 'express';
+import helmet from 'helmet';
 const router = express();
 import authCtrl from '../controller/authCtrl';
 import { protect } from '../middleware/auth';
@@ -16,10 +17,16 @@ router.post('/forgotpassword', authCtrl.forgotPassword);
 
 router
   .route('/resetpassword/:resettoken')
-  .get(authCtrl.resetPaswordPage)
+  .get(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+    authCtrl.resetPaswordPage
+  )
   .put(authCtrl.resetPasword);
 
 router.get('/forgotidentifier', authCtrl.forgotIdentifier);
+router.post('/forgotidentifier', authCtrl.forgotIdentifier);
 
 /************* Protected routes **************/
 router.use(protect);

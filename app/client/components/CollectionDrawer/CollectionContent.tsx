@@ -6,14 +6,14 @@ import {
   useToast,
   VStack,
   Divider,
-} from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
+} from '@chakra-ui/react';
+import { ChangeEvent, useState } from 'react';
 
-import { useAuthCtx, useProfile } from "@compo/Context";
-import { buildCollection } from "@lib/api/collectionApi";
-import CollectionFooter from "./CollectionFooter";
-import NewCollectionBtn from "./NewCollectionBtn";
-import CollectionRow from "./CollectionRow";
+import { useAuthCtx, useProfile } from '@compo/Context';
+import { buildCollectionApi } from '@lib/api/collectionApi';
+import CollectionFooter from './CollectionFooter';
+import NewCollectionBtn from './NewCollectionBtn';
+import CollectionRow from './CollectionRow';
 
 const Content = ({ storyId }: { storyId: string }) => {
   const { myProfile } = useProfile();
@@ -22,8 +22,8 @@ const Content = ({ storyId }: { storyId: string }) => {
   const storyPartOf: string[] =
     //  If story is selected , plus logged in
     storyId && myProfile?._id
-      ? myProfile?.storyCollections
-        ? myProfile?.storyCollections
+      ? myProfile.profile?.storyCollections
+        ? myProfile.profile?.storyCollections
             ?.filter((collection) => collection.stories.includes(storyId))
             .map((coll) => coll._id)
         : []
@@ -55,39 +55,40 @@ const Content = ({ storyId }: { storyId: string }) => {
     };
     if (!finalObj.addTo.length && !finalObj.removeFrom.length) {
       toast({
-        status: "warning",
-        position: "bottom",
+        status: 'warning',
+        position: 'bottom',
         isClosable: true,
-        title: "No change",
-        variant: "top-accent",
+        title: 'No change',
+        variant: 'top-accent',
       });
-    } else {
-      loadingState.onOpen();
-      buildCollection(finalObj)
-        .then(() => {
-          toast({
-            status: "success",
-            position: "bottom",
-            isClosable: true,
-            title: "Saved",
-            variant: "top-accent",
-          });
-          loadingState.onClose();
-        })
-        .catch(() => {
-          toast({
-            status: "error",
-            position: "bottom",
-            isClosable: true,
-            title: "Unable tosave, please try again",
-            variant: "top-accent",
-          });
-          loadingState.onClose();
-        });
+      return;
     }
+
+    loadingState.onOpen();
+    buildCollectionApi(finalObj)
+      .then(() => {
+        toast({
+          status: 'success',
+          position: 'bottom',
+          isClosable: true,
+          title: 'Saved',
+          variant: 'top-accent',
+        });
+        loadingState.onClose();
+      })
+      .catch(() => {
+        toast({
+          status: 'error',
+          position: 'bottom',
+          isClosable: true,
+          title: 'Unable tosave, please try again',
+          variant: 'top-accent',
+        });
+        loadingState.onClose();
+      });
   };
 
-  const { login } = useAuthCtx();
+  const { loginModal } = useAuthCtx();
   const handleChange =
     (collId: string) => (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.checked) {
@@ -111,7 +112,7 @@ const Content = ({ storyId }: { storyId: string }) => {
         {!myProfile._id ? (
           <VStack>
             <Heading fontSize="md">Please Login first</Heading>
-            <Button onClick={login.onOpen} colorScheme="blue" size="sm">
+            <Button onClick={loginModal.onOpen} colorScheme="blue" size="sm">
               Login
             </Button>
           </VStack>
@@ -122,7 +123,7 @@ const Content = ({ storyId }: { storyId: string }) => {
               Add To
             </Heading>
             <Divider />
-            {myProfile?.storyCollections?.map((collection) => (
+            {myProfile?.profile?.storyCollections?.map((collection) => (
               <CollectionRow
                 key={collection._id}
                 sendObj={sendObj}

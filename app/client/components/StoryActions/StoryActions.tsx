@@ -1,11 +1,11 @@
-import { ButtonGroup, ThemingProps } from "@chakra-ui/react";
+import { ButtonGroup, ThemingProps } from '@chakra-ui/react';
 
 // import Collections from "./CommAndColl";
-import LikeAndDislike from "./LikeAndDislike";
-import CommentDrawer from "@compo/CommentDrawer";
-import CollectionDrawer from "@compo/CollectionDrawer";
-import ShareButton from "@compo/ShareButton";
-
+import LikeAndDislike from './LikeAndDislike';
+import CommentDrawer from '@compo/CommentDrawer';
+import CollectionDrawer from '@compo/CollectionDrawer';
+import ShareButton from '@compo/ShareButton';
+import Comments from '@compo/Comments';
 const Index = ({
   storyId,
   noOfLikes,
@@ -30,7 +30,7 @@ const Index = ({
         noOfLikes={noOfLikes}
         noOfDislikes={noOfDislikes}
       />
-      <CommentDrawer storyId={storyId} noOfComments={noOfComments} />
+      <Comments storyId={storyId} noOfComments={noOfComments} />
       <CollectionDrawer storyId={storyId} />
       <ShareButton share={share} />
     </ButtonGroup>

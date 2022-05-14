@@ -1,10 +1,10 @@
-import { Heading, HStack, Text } from "@chakra-ui/react";
-import { toPascalCase } from "@lib/utils";
-import { useField } from "formik";
-import SwitchTypeButton from "./SwitchTypeButton";
+import { Heading, HStack, Text } from '@chakra-ui/react';
+import { toPascalCase } from '@lib/utils';
+import { useField } from 'formik';
+import SwitchTypeButton from './SwitchTypeButton';
 
 const Header = () => {
-  const [{ value: type }] = useField("type");
+  const [{ value: type }] = useField('type');
 
   return (
     <>
@@ -12,7 +12,7 @@ const Header = () => {
         {toPascalCase(type)}
       </Heading>
       <HStack justify="center">
-        {type == "logIn" ? (
+        {type == 'logIn' ? (
           <>
             <Text color="muted">Don&rsquo;t have an account?</Text>
             <SwitchTypeButton type="register" />

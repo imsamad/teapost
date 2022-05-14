@@ -1,11 +1,11 @@
-import { ButtonGroup } from "@chakra-ui/react";
-import TSButton from "@compo/UI/TSButton";
-import TSIconButton from "@compo/UI/TSIconButton";
-import { BiCommentAdd, BiDislike, BiLike } from "react-icons/bi";
-import dynamic from "next/dynamic";
-import { AiFillFileAdd } from "react-icons/ai";
+import { ButtonGroup } from '@chakra-ui/react';
+import TSButton from '@compo/UI/TSButton';
+import TSIconButton from '@compo/UI/TSIconButton';
+import { BiCommentAdd, BiDislike, BiLike } from 'react-icons/bi';
+import dynamic from 'next/dynamic';
+import { AiFillFileAdd } from 'react-icons/ai';
 
-const StoryActions = dynamic(() => import("./StoryActions"), {
+const StoryActions = dynamic(() => import('./StoryActions'), {
   ssr: false,
   loading: () => <Temp />,
 });
@@ -43,8 +43,8 @@ const Temp = () => {
     <ButtonGroup alignItems="center">
       <TSButton
         _active={{
-          border: "1px solid blue",
-          color: "blue",
+          border: '1px solid blue',
+          color: 'blue',
         }}
         leftIcon={<BiLike />}
         size="xs"
@@ -55,8 +55,8 @@ const Temp = () => {
       </TSButton>
       <TSButton
         _active={{
-          border: "1px solid blue",
-          color: "blue",
+          border: '1px solid blue',
+          color: 'blue',
         }}
         leftIcon={<BiDislike />}
         size="xs"

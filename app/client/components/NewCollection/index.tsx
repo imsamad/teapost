@@ -5,14 +5,17 @@ import {
   Heading,
   Divider,
   useToast,
-} from "@chakra-ui/react";
-import { Form, Formik } from "formik";
+} from '@chakra-ui/react';
+import { Form, Formik } from 'formik';
 
-import { createCollection, updateCollection } from "@lib/api/collectionApi";
-import { trimExtra } from "@lib/utils";
-import { useProfile } from "../Context";
-import { TPInput, TPTextarea } from "../FormFields";
-import { StoryCollectionType } from "@lib/types/StoryCollectionType";
+import {
+  createCollectionApi,
+  updateCollectionApi,
+} from '@lib/api/collectionApi';
+import { trimExtra } from '@lib/utils';
+import { useProfile } from '../Context';
+import { TPInput, TPTextarea } from '../FormFields';
+import { StoryCollectionType } from '@lib/types/StoryCollectionType';
 
 const NewCollForm = ({
   onCancel,
@@ -22,13 +25,13 @@ const NewCollForm = ({
   editObj?: {
     collectionId: string;
     isEdit: boolean;
-    preValues: Pick<StoryCollectionType, "title" | "description">;
+    preValues: Pick<StoryCollectionType, 'title' | 'description'>;
     editCB: (title: string, description: string) => void;
   };
 }) => {
   const { myProfile, mutateProfile } = useProfile();
 
-  const alreadyCreatedCollections = myProfile.storyCollections
+  const alreadyCreatedCollections = myProfile?.profile?.storyCollections
     ?.map((collection) => collection?.title?.toLowerCase())
     .filter((title) => title != editObj?.preValues?.title?.toLowerCase());
 
@@ -36,8 +39,8 @@ const NewCollForm = ({
   return (
     <Formik
       initialValues={{
-        title: "",
-        description: "",
+        title: '',
+        description: '',
         ...editObj?.preValues,
       }}
       onSubmit={async (val, actions) => {
@@ -45,45 +48,48 @@ const NewCollForm = ({
         // @ts-ignore
         if (val.description) obj.description = val.description;
         const fun: any = editObj?.isEdit
-          ? updateCollection(editObj.collectionId, obj)
-          : createCollection(obj);
+          ? updateCollectionApi(editObj.collectionId, obj)
+          : createCollectionApi(obj);
 
-        const data = await fun;
+        fun
+          .then((data: any) => {
+            toast({
+              title: editObj?.isEdit ? 'Edit' : 'Saved',
+              status: 'success',
+              duration: 1000,
+              isClosable: true,
+              position: 'bottom',
+            });
 
-        if (data) {
-          toast({
-            title: editObj?.isEdit ? "Edit" : "Saved",
-            status: "success",
-            duration: 1000,
-            isClosable: true,
-            position: "bottom",
+            actions.setSubmitting(false);
+            actions.resetForm();
+            if (editObj?.isEdit && editObj?.editCB)
+              editObj?.editCB(
+                data.collection.title,
+                data.collection.description
+              );
+            else mutateProfile();
+            onCancel && onCancel();
+          })
+          .catch(() => {
+            toast({
+              title: `Unable to ${
+                editObj?.isEdit ? 'Edit' : 'Saved'
+              }, please retry.`,
+              status: 'error',
+              duration: 1000,
+              isClosable: true,
+              position: 'bottom',
+            });
+            actions.setSubmitting(false);
           });
-
-          actions.setSubmitting(false);
-          actions.resetForm();
-          if (editObj?.isEdit && editObj?.editCB)
-            editObj?.editCB(data.collection.title, data.collection.description);
-          else mutateProfile();
-          onCancel && onCancel();
-        } else {
-          toast({
-            title: `Unable to ${
-              editObj?.isEdit ? "Edit" : "Saved"
-            }, please retry.`,
-            status: "error",
-            duration: 1000,
-            isClosable: true,
-            position: "bottom",
-          });
-          actions.setSubmitting(false);
-        }
       }}
       validate={(value) => {
         let errors: { title?: string } = {};
         if (!value.title || !trimExtra(value.title, 1))
-          errors.title = "Title is required.";
+          errors.title = 'Title is required.';
         if (alreadyCreatedCollections?.includes(value.title.toLowerCase()))
-          errors.title = "This already exist";
+          errors.title = 'This already exist';
         return errors;
       }}
     >
@@ -95,14 +101,14 @@ const NewCollForm = ({
                 <>
                   <Heading fontSize="md" textAlign="center" fontWeight={400}>
                     Create new collection
-                  </Heading>{" "}
+                  </Heading>{' '}
                   <Divider />
                 </>
               )}
 
               <TPInput
                 isRequired={true}
-                label={editObj?.isEdit ? undefined : "Title"}
+                label={editObj?.isEdit ? undefined : 'Title'}
                 name="title"
                 placeholder="Enter unique title"
                 size="sm"
@@ -121,9 +127,9 @@ const NewCollForm = ({
                   size="sm"
                   type="submit"
                   isLoading={formikProps.isSubmitting}
-                  loadingText={editObj?.isEdit ? "Editing..." : "Saving..."}
+                  loadingText={editObj?.isEdit ? 'Editing...' : 'Saving...'}
                 >
-                  {editObj?.isEdit ? "Edit" : "Save"}
+                  {editObj?.isEdit ? 'Edit' : 'Save'}
                 </Button>
               </HStack>
             </Stack>

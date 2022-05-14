@@ -1,9 +1,10 @@
-import { Box, Center, Heading, HStack, Stack } from '@chakra-ui/react';
-// @ts-ignore
-import { Image } from 'cloudinary-react';
+import { Box, Center, Heading, HStack, Stack, Image } from '@chakra-ui/react';
+
 import StoryActions from '../../StoryActions';
 import MyLink from '../../MyLink';
 import StoryType from '@lib/types/StoryType';
+import FallbackImage from '@compo/FallbackImage';
+import { cloudinaryUrl, placeholderImage } from '@lib/utils';
 
 const index = ({ story }: { story: StoryType }) => {
   return (
@@ -59,15 +60,30 @@ const index = ({ story }: { story: StoryType }) => {
         />
       </Stack>
       <MyLink href={`/story/${story.slug}`}>
-        <Center minW="85px" w={['110px', '120px', '200px']}>
-          {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <Center
+          minW="85px"
+          overflow="hidden"
+          w={['110px', '120px', '200px']}
+          zIndex={2}
+        >
           <Image
-            cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
-            // @ts-ignore
-            publicId={story.titleImage?.split('/').pop().split('.')[0]}
+            src={cloudinaryUrl({
+              src: story.titleImage,
+              width: 200,
+              height: 200,
+            })}
+            fallback={
+              <FallbackImage
+                width={200}
+                height={150}
+                title={story.title}
+                tryAgain={story.titleImage}
+              />
+            }
             width={200}
-            height={134}
-            crop="scale"
+            // htmlWidth={150}
+            alt={story.title}
+            fallbackSrc={placeholderImage(200, 150)}
           />
         </Center>
       </MyLink>

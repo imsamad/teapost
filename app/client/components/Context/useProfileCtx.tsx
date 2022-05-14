@@ -1,25 +1,24 @@
-import { createContext, useContext } from "react";
-import useSWR from "swr";
+import { createContext, useContext } from 'react';
+import useSWR from 'swr';
 
-import useAuthCtx from "./useAuthCtx";
-import UserType from "@lib/types/UserType";
-import ProfileType from "@lib/types/ProfileType";
+import useAuthCtx from './useAuthCtx';
+import UserType from '@lib/types/UserType';
+import { GetMeType } from '@lib/types/UserType';
 
 const ProfileCtx = createContext<{
   mutateProfile: () => void;
-  myProfile: Partial<ProfileType>;
+  myProfile: Partial<GetMeType>;
 }>({ myProfile: {}, mutateProfile: () => {} });
 
 const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const { auth } = useAuthCtx();
-  const { data, mutate } = useSWR<{ user: Partial<UserType> }>(
+  const { data, mutate } = useSWR<{ myProfile: Partial<UserType> }>(
     () => auth?.user?._id && `/auth/me`
   );
-
   return (
     <ProfileCtx.Provider
       value={{
-        myProfile: data?.user?.profile || { _id: auth?.user?._id },
+        myProfile: data?.myProfile || { _id: auth?.user?._id },
         mutateProfile: async () => await mutate(),
       }}
     >

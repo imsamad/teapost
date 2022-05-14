@@ -1,24 +1,42 @@
-import { AnySchema } from "yup";
-import * as yup from "yup";
-import StoryType from "./types/StoryType";
+import { AnySchema } from 'yup';
+import * as yup from 'yup';
 
 export const trimExtra = (
   str: string | any,
   min: number,
   max = Infinity,
-  join = " "
+  join = ' '
 ): boolean => {
   if (!str) return false;
-  let splitted = str.split(" ");
-  let filtered = splitted.filter((val: string) => val !== "");
+  let splitted = str.split(' ');
+  let filtered = splitted.filter((val: string) => val !== '');
   let joined = filtered.join(join);
   return joined.length >= min && joined.length <= max ? true : false;
 };
+export const cloudinaryUrl = ({
+  src,
+  height,
+  width,
+}: {
+  src: string;
+  height: number;
+  width: number;
+}) => {
+  if (!src) return '';
+  const isCloudinary =
+    src.includes('cloudinary') && src.split('/upload/').length == 2;
+  let dim = width ? `w_${width},` : '';
+  dim = height ? `h_${height}` : dim;
 
+  const url =
+    isCloudinary && dim ? src.split('/upload/').join(`/upload/${dim}/`) : src;
+  return url;
+};
 export const typeOf = (
   val: any,
-  type: string | "string" | "array" | "object"
-) => val?.constructor?.name?.toLowerCase() === type.toLowerCase();
+  type: string | 'string' | 'array' | 'object'
+) =>
+  !val ? false : val?.constructor?.name?.toLowerCase() === type.toLowerCase();
 
 export const validateYupSchema = async (
   schema: AnySchema,
@@ -28,7 +46,7 @@ export const validateYupSchema = async (
   try {
     const res = await schema.validate(data, { abortEarly });
     if (res) return true;
-    else throw new Error("Provide proper data");
+    else throw new Error('Provide proper data');
   } catch (yupError: any) {
     let finalError: { [name: string]: string[] } = {};
     let fieldsAddedToFinalError: string[] = Object.keys(finalError);
@@ -80,22 +98,22 @@ export const validateYupSchema = async (
         }
       });
     }
-    throw Object.keys(finalError).length ? finalError : "Provide proper data";
+    throw Object.keys(finalError).length ? finalError : 'Provide proper data';
   }
 };
 export const monthList = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "June",
-  "July",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'June',
+  'July',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 export const readAbleDate = (value: Date, isFull = false) => {
@@ -110,7 +128,7 @@ export const readAbleDate = (value: Date, isFull = false) => {
   hour = Number(hour) >= 10 ? hour : `0${hour}`;
   hour += date.toLocaleTimeString().substring(2);
 
-  let isAmPm = date.getHours() >= 12 ? "PM" : "AM";
+  let isAmPm = date.getHours() >= 12 ? 'PM' : 'AM';
 
   date = `${hour} ${isAmPm}`;
 
@@ -171,7 +189,7 @@ export const strArrSchema = (
     strMax: number;
   }>
 ) => {
-  let lenMsg = "";
+  let lenMsg = '';
   if (strMax) {
     lenMsg += `${label} must have less than or equal to ${strMax} characters`;
   } else if (strMin) {
@@ -199,7 +217,7 @@ export const strArrSchema = (
   return schema;
 };
 export const spaceB4Capital = (str: string) =>
-  str.replace(/([A-Z])/g, " $1").trim();
+  str.replace(/([A-Z])/g, ' $1').trim();
 
 export const toPascalCase = (str: string, spaceBeforeCapital = true) => {
   let tempStr = spaceBeforeCapital ? spaceB4Capital(str) : str;
@@ -217,38 +235,38 @@ export function timeSince(date: Date) {
   var interval = seconds / 31536000;
 
   if (interval > 1) {
-    return Math.floor(interval) + " y";
+    return Math.floor(interval) + ' y';
   }
   interval = seconds / 2592000;
   if (interval > 1) {
-    return Math.floor(interval) + " mo";
+    return Math.floor(interval) + ' mo';
   }
   interval = seconds / 86400;
   if (interval > 1) {
-    return Math.floor(interval) + " d";
+    return Math.floor(interval) + ' d';
   }
   interval = seconds / 3600;
   if (interval > 1) {
-    return Math.floor(interval) + " h";
+    return Math.floor(interval) + ' h';
   }
   interval = seconds / 60;
   if (interval > 1) {
-    return Math.floor(interval) + " mi";
+    return Math.floor(interval) + ' mi';
   }
-  return Math.floor(seconds) + " sec";
+  return Math.floor(seconds) + ' sec';
 }
 
 export const impStoryFields = (story: any) => {
   const keys = [
-    "title",
-    "subtitle",
-    "tags",
-    "titleImage",
-    "slug",
-    "keywords",
-    "additionalTags",
-    "content",
-    "_id",
+    'title',
+    'subtitle',
+    'tags',
+    'titleImage',
+    'slug',
+    'keywords',
+    'additionalTags',
+    'content',
+    '_id',
   ];
   let obj: any = {};
   keys.forEach((key) => {
@@ -260,13 +278,35 @@ export const impStoryFields = (story: any) => {
 export const slugify = (str: string) => {
   //replace all special characters | symbols with a space
   str = str
-    .replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, " ")
+    .replace(/[`~!@#$%^&*()_\-+=\[\]{};:'"\\|\/,.<>?\s]/g, ' ')
     .toLowerCase();
 
   // trim spaces at start and end of string
-  str = str.replace(/^\s+|\s+$/gm, "");
+  str = str.replace(/^\s+|\s+$/gm, '');
 
   // replace space with dash/hyphen
-  str = str.replace(/\s+/g, "-");
+  str = str.replace(/\s+/g, '-');
   return str;
+};
+type numStr = number | string;
+export const placeholderImage = (w: numStr, h: numStr) => {
+  const shimmer = (w: numStr, h: numStr) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#333" offset="20%" />
+      <stop stop-color="#222" offset="50%" />
+      <stop stop-color="#333" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#333" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
+</svg>`;
+  const toBase64 = (str: string) =>
+    typeof window === 'undefined'
+      ? Buffer.from(str).toString('base64')
+      : window.btoa(str);
+  const blurDataURL = `data:image/svg+xml;base64,${toBase64(shimmer(w, h))}`;
+  return blurDataURL;
 };

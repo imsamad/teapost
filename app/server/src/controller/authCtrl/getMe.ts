@@ -1,28 +1,38 @@
 import { Request, Response } from 'express';
 
 import { asyncHandler } from '../../lib/utils';
-import Profile from '../../models/Profile';
-import { peelUserDoc } from '../../models/User';
+
+import User from '../../models/User';
 
 // @desc      Profile of logged in user
 // @route     GET /api/v1/auth/me
 // @access    Auth
 const getMe = asyncHandler(async (req: Request, res: Response) => {
   // @ts-ignore
-  const user = req.user._id;
-  let query = Profile.findById(user).populate([{ path: 'storyCollections' }]);
+  const userId = req.user._id;
+  let populateAble = [
+    'likedStories',
+    'dislikedStories',
+    'following',
+    'followers',
+    'collabStories',
+    'storyCollections',
+  ];
 
-  if (req.query.populateStory) query.populate('likedStories dislikedStories');
+  let populate = {
+    path: 'profile',
+    populate:
+      typeof req.query.populate == 'string'
+        ? // @ts-ignore
+          req.query.populate.split(',').map((v) => v)
+        : ['storyCollections'],
+  };
 
-  const profile = await query;
+  const myProfile = await User.findById(userId).populate(populate);
 
   return res.json({
     status: 'ok',
-    user: {
-      // @ts-ignore
-      ...peelUserDoc(req.user),
-      profile,
-    },
+    myProfile,
   });
 });
 

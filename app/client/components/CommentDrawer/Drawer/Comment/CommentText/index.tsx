@@ -1,6 +1,6 @@
-import { Box, Button, Collapse, Text } from "@chakra-ui/react";
-import { useState } from "react";
-import TextTruncate from "react-text-truncate";
+import { Box, Button, Collapse, Text } from '@chakra-ui/react';
+import { useState } from 'react';
+import TextTruncate from 'react-text-truncate';
 
 const CommentText = ({ text, replyTo }: { text: string; replyTo: string }) => {
   const [line, setLine] = useState(4);
@@ -17,7 +17,7 @@ const CommentText = ({ text, replyTo }: { text: string; replyTo: string }) => {
       fontSize="lg"
       color="rgb(3,3,3)"
       _dark={{
-        color: "#ddd",
+        color: '#ddd',
       }}
       fontWeight={500}
     >

@@ -28,6 +28,6 @@ const assetSchema = new Schema({
   raws: [SingleFile],
 });
 
-const Asset = model<AssetDocument>('asset', assetSchema);
+const Asset = model<AssetDocument>('Asset', assetSchema);
 
 export default Asset;

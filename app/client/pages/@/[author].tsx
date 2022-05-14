@@ -1,10 +1,13 @@
-import { Container, Divider, Heading, Stack } from "@chakra-ui/react";
-import axios from "axios";
+import { Container, Divider, Heading, Stack } from '@chakra-ui/react';
 
-import AuthorCard from "@compo/AuthorCard";
-import StoryType from "@lib/types/StoryType";
-import UserType from "@lib/types/UserType";
-import Stories from "@compo/Stories";
+import AuthorCard from '@compo/AuthorCard';
+import StoryType from '@lib/types/StoryType';
+import UserType from '@lib/types/UserType';
+import Stories from '@compo/Stories';
+import dbConnect from '@lib/dbConnect';
+import User, { peelUserDoc } from '@lib/models/User';
+import Story from '@lib/models/Story';
+import Head from 'next/head';
 
 const Index = ({
   stories,
@@ -14,40 +17,44 @@ const Index = ({
   author: UserType;
 }) => {
   if (!author) {
-    return "Skeleton";
+    return 'Skeleton';
   }
   return (
-    <Container maxW="container.md" p="0" pt="4">
-      <Stack spacing={4}>
-        <AuthorCard author={author} displayFull={true} />
+    <>
+      <Head>
+        <title>{author.fullName} | Teapost</title>
+      </Head>
+      <Container maxW="container.md" p="0" pt="4">
+        <Stack spacing={4}>
+          <AuthorCard author={author} displayFull={true} />
 
-        <Divider />
-        {stories?.length ? (
-          <>
-            <Heading size="md" textAlign="center">
-              Stories
-            </Heading>
-            <Stories
-              initialStories={stories}
-              // isInitial={true}
-              query={`/stories?authors=${author.username}&`}
-              nextPageNo={2}
-            />
-          </>
-        ) : (
-          <Heading textAlign="center">No stories found</Heading>
-        )}
-      </Stack>
-    </Container>
+          <Divider />
+          {stories?.length ? (
+            <>
+              <Heading size="md" textAlign="center">
+                Stories
+              </Heading>
+              <Stories
+                initialStories={stories}
+                // isInitial={true}
+                query={`/stories?authors=${author._id}&`}
+                nextPageNo={2}
+              />
+            </>
+          ) : (
+            <Heading textAlign="center">No stories found</Heading>
+          )}
+        </Stack>
+      </Container>
+    </>
   );
 };
 
 const apiUrl = process.env.API_URL!;
 
 export const getStaticPaths = async () => {
-  const {
-    data: { users },
-  } = await axios.get<{ users: UserType[] }>(`${apiUrl}/users`);
+  await dbConnect();
+  const users = await User.find({}).lean();
 
   const paths = users.map((user) => ({
     params: { author: user.username },
@@ -57,16 +64,40 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params }: any) => {
-  const {
-    data: { stories, authors },
-  } = await axios.get<{ stories: StoryType[]; authors: UserType[] }>(
-    `${apiUrl}/stories?authors=${params.author}&nocontent=true`
-  );
+  await dbConnect();
+
+  const author = await User.findOne({ username: params.author }).lean();
+
+  if (!author) {
+    return {
+      props: {
+        stories: [],
+      },
+      revalidate: 10,
+    };
+  }
+
+  const result = await Story.find({ author: author._id })
+    .populate([
+      {
+        path: 'collabWith',
+        transform: (v: any) => peelUserDoc(v),
+      },
+      {
+        path: 'author',
+        transform: (v: any) => peelUserDoc(v),
+      },
+      {
+        path: 'tags',
+      },
+    ])
+    .lean()
+    .limit(10);
 
   return {
     props: {
-      stories,
-      author: authors[0],
+      stories: JSON.parse(JSON.stringify(result)),
+      author: JSON.parse(JSON.stringify(peelUserDoc(author))),
     },
     revalidate: 10,
   };

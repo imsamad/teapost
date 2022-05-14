@@ -1,14 +1,15 @@
-import { Box, Skeleton, SkeletonText } from "@chakra-ui/react";
-import Render from "@compo/Renderer";
-import StoryType from "@lib/types/StoryType";
+import { Box, Skeleton, SkeletonText } from '@chakra-ui/react';
+import Render from '@compo/Renderer';
+import StoryType from '@lib/types/StoryType';
 
-import React from "react";
-import useSWR from "swr";
+import React from 'react';
+import useSWR from 'swr';
 
 const Index = ({ storyId }: { storyId: string }) => {
-  const isClientSide = typeof window !== "undefined";
-  const { data, isValidating } = useSWR<{ stories: StoryType[] }>(
-    () => isClientSide && `/stories?ids=${storyId}&onlycontent=true`
+  const isClientSide = typeof window !== 'undefined';
+
+  const { data, isValidating } = useSWR<{ story: StoryType }>(
+    () => isClientSide && `/stories/${storyId}`
   );
 
   return (
@@ -21,9 +22,7 @@ const Index = ({ storyId }: { storyId: string }) => {
         </Box>
       ) : (
         <Render
-          value={
-            data?.stories?.[0].content || "<h1>No Content available yet.</h1>"
-          }
+          value={data?.story?.content || '<h1>No Content available yet.</h1>'}
         />
       )}
     </>

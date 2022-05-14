@@ -1,8 +1,8 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import { useDisclosure } from "@chakra-ui/react";
-import TSIconButton from "@compo/UI/TSIconButton";
-import { buildCollection, deleteCollection } from "@lib/api/collectionApi";
-import React from "react";
+import { DeleteIcon } from '@chakra-ui/icons';
+import { useDisclosure } from '@chakra-ui/react';
+import TSIconButton from '@compo/UI/TSIconButton';
+import { buildCollectionApi, deleteCollection } from '@lib/api/collectionApi';
+import React from 'react';
 
 const RemoveBtn = ({
   collectionId,
@@ -18,7 +18,7 @@ const RemoveBtn = ({
   const removeCollection = () => {
     isLoading.onOpen();
     const fun: any = storyId
-      ? buildCollection({
+      ? buildCollectionApi({
           storyId,
           removeFrom: [collectionId],
           addTo: [],

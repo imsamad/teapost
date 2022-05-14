@@ -9,39 +9,37 @@ import Story from '../../models/Story';
 // @route     GET /api/v1/stories/:storyId
 // @access    Auth,Admin,Public
 
-export const ctrl = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const story = await Story.findById(req.params.storyId).lean();
+export const ctrl = asyncHandler(async (req: Request, res: Response) => {
+  const story = await Story.findById(req.params.storyId).lean();
 
-    if (story?.isPublished) {
+  if (story?.isPublished) {
+    return res.json({
+      status: 'ok',
+      story,
+    });
+  } else {
+    // @ts-ignore
+    const user = req?.user?._id;
+    if (
+      user &&
+      // isAuthor
+      (user == story?.author.toString() ||
+        // or collaborator
+        story?.collabWith.map((id) => id.toString()).includes(user))
+    )
       return res.json({
         status: 'ok',
         story,
       });
-    } else {
-      // @ts-ignore
-      const user = req?.user?._id;
-      if (
-        user &&
-        // isAuthor
-        (user == story?.author.toString() ||
-          // or collaborator
-          story?.collabWith.map((id) => id.toString()).includes(user))
-      )
-        return res.json({
-          status: 'ok',
-          story,
-        });
-      else {
-        return res.status(400).json({
-          status: 'error',
-          story: null,
-          message: `Story not exist with id ${req.params.storyId}`,
-        });
-      }
+    else {
+      return res.status(400).json({
+        status: 'error',
+        story: null,
+        message: `Story not exist with id ${req.params.storyId}`,
+      });
     }
   }
-);
+});
 const schema = object({
   params: object({
     storyId: string()

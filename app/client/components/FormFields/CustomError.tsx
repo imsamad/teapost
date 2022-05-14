@@ -1,6 +1,6 @@
-import { Box, Collapse, Text } from "@chakra-ui/react";
+import { Box, Collapse, Text } from '@chakra-ui/react';
 
-import { typeOf } from "../../lib/utils";
+import { typeOf } from '../../lib/utils';
 
 const Error = ({
   errors,
@@ -12,14 +12,14 @@ const Error = ({
   color?: string;
 }) => {
   return (
-    <Collapse in={isError} animateOpacity>
-      <Box color={color || "red.500"} my="1" fontSize="md">
-        {isError && typeOf(errors, "object") ? (
+    <Collapse in={isError && !!errors} animateOpacity>
+      <Box color={color || 'red.500'} my="1" fontSize="md">
+        {isError && typeOf(errors, 'object') ? (
           // @ts-ignore
           <RenderObjectErrors errors={errors} />
-        ) : typeOf(errors, "array") ? (
+        ) : typeOf(errors, 'array') ? (
           <RenderArrayOfErrors errors={errors} />
-        ) : typeOf(errors, "string") ? (
+        ) : typeOf(errors, 'string') ? (
           <RenderStringError error={errors} />
         ) : null}
       </Box>
@@ -33,7 +33,7 @@ const RenderObjectErrors = ({ errors }: { errors: Object }) => {
     <>
       {Object.keys(errors).map((field: any) =>
         // @ts-ignore
-        typeOf(errors[field], "array") ? ( // @ts-ignore
+        typeOf(errors[field], 'array') ? ( // @ts-ignore
           <RenderArrayOfErrors errors={errors[field]} />
         ) : (
           // @ts-ignore
@@ -42,15 +42,6 @@ const RenderObjectErrors = ({ errors }: { errors: Object }) => {
       )}
     </>
   );
-  // for (var key in errors) {
-  //   // @ts-ignore
-  //   return typeOf(errors[key], "array") ? ( // @ts-ignore
-  //     <RenderArrayOfErrors errors={errors[key]} />
-  //   ) : (
-  //     // @ts-ignore
-  //     <RenderStringError error={errors} />
-  //   );
-  // }
 };
 const RenderArrayOfErrors = ({ errors }: { errors: string[] }) => {
   return (

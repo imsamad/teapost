@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react";
+import { Stack } from '@chakra-ui/react';
 
 const StoryWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,7 +12,7 @@ const StoryWrapper = ({ children }: { children: React.ReactNode }) => {
       borderColor="gray.200"
       borderRadius="md"
       overflow="hidden"
-      maxH={["165px", "132px", "198px", "198px"]}
+      maxH={['165px', '132px', '198px', '198px']}
     >
       {children}
     </Stack>

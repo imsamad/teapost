@@ -1,13 +1,13 @@
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Button,
   HStack,
   Collapse,
   useDisclosure,
   Spacer,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import NewCollection from "../NewCollection";
+import NewCollection from '../NewCollection';
 
 const Index = () => {
   const { isOpen, onClose, onToggle } = useDisclosure();
@@ -22,7 +22,7 @@ const Index = () => {
           onClick={onToggle}
           colorScheme="teal"
         >
-          {isOpen ? "Close" : "New"}
+          {isOpen ? 'Close' : 'New'}
         </Button>
       </HStack>
 

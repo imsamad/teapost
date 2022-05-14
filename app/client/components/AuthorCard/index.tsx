@@ -1,9 +1,10 @@
-import { Avatar, Box, Flex, HStack, Stack, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Avatar, Box, Flex, HStack, Stack, Text } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import FollowAuthor from "@compo/FollowAuthor";
-import UserType from "@lib/types/UserType";
-import Stats from "./Stats";
+import FollowAuthor from '@compo/FollowAuthor';
+import UserType from '@lib/types/UserType';
+import Stats from './Stats';
+import { cloudinaryUrl } from '@lib/utils';
 
 const Index = ({
   author,
@@ -25,7 +26,15 @@ const Index = ({
   return (
     <>
       <Flex>
-        <Avatar size="md" name={author.fullName} src={author?.profilePic} />
+        <Avatar
+          size="md"
+          name={author.fullName}
+          src={cloudinaryUrl({
+            src: author?.profilePic,
+            width: 100,
+            height: 100,
+          })}
+        />
         <Box border="0px" pl="8">
           <HStack mb="2" border="0px">
             <Stack justifyContent="center" pr="8px">
@@ -51,7 +60,7 @@ const Index = ({
                 (tagLine, index) =>
                   index <= 2 && (
                     <React.Fragment key={tagLine}>
-                      {`    ${tagLine}  ${index != 2 ? "|" : ""}`}
+                      {`    ${tagLine}  ${index != 2 ? '|' : ''}`}
                     </React.Fragment>
                   )
               )}

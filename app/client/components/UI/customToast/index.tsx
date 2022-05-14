@@ -1,5 +1,5 @@
-import { Button, Heading, HStack } from "@chakra-ui/react";
-import { useAuthCtx } from "@compo/Context";
+import { Button, Heading, HStack } from '@chakra-ui/react';
+
 // eslint-disable-next-line react/display-name
 const CustomToast = (onClick: any) => () => {
   return (
@@ -13,7 +13,7 @@ const CustomToast = (onClick: any) => () => {
       <Heading
         fontSize="sm"
         _dark={{
-          color: "black",
+          color: 'black',
         }}
       >
         You are not logged in.

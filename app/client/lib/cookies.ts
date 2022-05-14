@@ -1,13 +1,13 @@
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 
-import { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { AuthTypeResponse } from "./types/UserType";
+import { NextApiRequestCookies } from 'next/dist/server/api-utils';
+import { LogInResponseType } from './types/UserType';
 
 const cookies = new Cookies();
 const userAuthCookie = process.env.NEXT_PUBLIC_AUTH_SESSION!;
 
 const getCookies = () => {
-  return cookies.get<AuthTypeResponse>(userAuthCookie);
+  return cookies.get<LogInResponseType>(userAuthCookie);
 };
 
 const oneDay = 24 * 60 * 60;
@@ -15,9 +15,9 @@ const oneDay = 24 * 60 * 60;
 const setCookies = (user: any) =>
   new Promise((resolve) => {
     cookies.set(userAuthCookie, user, {
-      path: "/",
+      path: '/',
       maxAge: oneDay,
-      sameSite: "strict",
+      sameSite: 'strict',
       encode: (val: any) => {
         return val;
       },
@@ -37,9 +37,9 @@ const getCookieFromServer = (cookies: NextApiRequestCookies): Promise<string> =>
     const userAuthCookie: string = process.env.AUTH_SESSION!;
     let token: any = cookies?.[userAuthCookie];
 
-    if (!token) resolve("");
+    if (!token) resolve('');
     token = JSON.parse(token).accessToken;
-    if (!token) resolve("");
+    if (!token) resolve('');
     resolve(token);
   });
 export { getCookies, setCookies, deleteCookies, getCookieFromServer };

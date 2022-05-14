@@ -1,7 +1,7 @@
-import { CombineComment } from "@lib/types/CommentTypes";
-import axios from "../axios";
+import { CombineComment } from '@lib/types/CommentTypes';
+import axios from '../axios';
 
-export const addComment = async (storyId: string, text: string) => {
+export const addCommentApi = async (storyId: string, text: string) => {
   try {
     const { data } = await axios.post<{ comment: CombineComment }>(
       `/comments/primaries/${storyId}`,
@@ -11,11 +11,11 @@ export const addComment = async (storyId: string, text: string) => {
     );
     return data;
   } catch (err: any) {
-    throw err.response.data;
+    throw err.response?.data;
   }
 };
 
-export const likeOrDislikeComment = async ({
+export const likeOrDislikeCommentApi = async ({
   isLike,
   undo,
   isPrimary,
@@ -27,26 +27,29 @@ export const likeOrDislikeComment = async ({
   commentId: string;
 }) => {
   try {
-    let endpoint: string = `/comments/${isLike ? "like" : "dislike"}`;
+    let endpoint: string = `/comments/grade/${commentId}/${
+      isPrimary ? 'primary' : 'secondary'
+    }`;
+    let reqBody: any = {};
+    isLike ? (reqBody.isLike = true) : (reqBody.isDislike = true);
+    undo && (reqBody.undo = true);
 
-    if (undo) endpoint = `${endpoint}/undo`;
+    const { data } = await axios.patch<{ comment: CombineComment }>(
+      endpoint,
+      reqBody
+    );
 
-    endpoint = `${endpoint}/${
-      isPrimary ? "primary" : "secondary"
-    }/${commentId}`;
-
-    const { data } = await axios.put<{ comment: CombineComment }>(endpoint);
     return data;
     // return true;
   } catch (err: any) {
-    throw err.response.data;
+    throw err?.response?.data;
   }
 };
 
 export const getComments = async (storyId: string, isPrimary: boolean) => {
   try {
     const { data } = await axios.get<{ comments: CombineComment[] }>(
-      `/comments/${isPrimary ? "primaries" : "secondaries"}/${storyId}`
+      `/comments/${isPrimary ? 'primaries' : 'secondaries'}/${storyId}`
     );
     return data;
   } catch (err: any) {
@@ -63,13 +66,13 @@ export const getRepliesOf = async (primaryId: string) => {
   }
 };
 
-export const updateComment = async (prop: {
+export const updateCommentApi = async (prop: {
   commentId: string;
   text: string;
   isPrimary: boolean;
 }) => {
   try {
-    let endpoint = `/comments/${prop.isPrimary ? "primaries" : "secondaries"}/${
+    let endpoint = `/comments/${prop.isPrimary ? 'primaries' : 'secondaries'}/${
       prop.commentId
     }`;
 
@@ -83,12 +86,12 @@ export const updateComment = async (prop: {
   }
 };
 
-export const deleteComment = async (prop: {
+export const deleteCommentApi = async (prop: {
   commentId: string;
   isPrimary: boolean;
 }) => {
   try {
-    let endpoint = `/comments/${prop.isPrimary ? "primaries" : "secondaries"}/${
+    let endpoint = `/comments/${prop.isPrimary ? 'primaries' : 'secondaries'}/${
       prop.commentId
     }`;
 
@@ -100,14 +103,14 @@ export const deleteComment = async (prop: {
   }
 };
 
-export const replyComment = async (prop: {
+export const replyCommentApi = async (prop: {
   commentId: string;
   text: string;
-  isReplyToPrimary: boolean;
+  isPrimary: boolean;
 }) => {
   try {
     let endpoint = `/comments/secondaries`;
-    if (!prop.isReplyToPrimary) endpoint += "/reply";
+    if (!prop.isPrimary) endpoint += '/reply';
     endpoint += `/${prop.commentId}`;
 
     const { data } = await axios.post<{ comment: CombineComment }>(endpoint, {

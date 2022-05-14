@@ -23,7 +23,7 @@ import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 
 const likeOrDislike = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const isLike = req.body.like ?? !req.body.dislike,
+    const isLike = req.body.isLike ?? !req.body.isDislike,
       undo = req.body.undo;
 
     // @ts-ignore
@@ -76,19 +76,19 @@ export const schema = yup.object({
     .object()
     .shape(
       {
-        like: yup
+        isLike: yup
           .boolean()
-          .label('like')
-          .typeError('Express like in true/false')
-          .when('dislike', {
+          .label('isLike')
+          .typeError('Express isLike in true/false')
+          .when('isDislike', {
             is: (dislike: any) => typeof dislike === 'undefined',
             then: yup.boolean().required('Like or dislike is required'),
           }),
-        dislike: yup
+        isDislike: yup
           .boolean()
-          .label('dislike')
-          .typeError('Express dislike in true/false')
-          .when('like', {
+          .label('isDislike')
+          .typeError('Express isDislike in true/false')
+          .when('isLike', {
             is: (like: any) => typeof like === 'undefined',
             then: yup.boolean().required('Like or dislike is required'),
           }),
@@ -97,11 +97,11 @@ export const schema = yup.object({
           .label('undo')
           .typeError('Express undo in booleans value'),
       },
-      [['like', 'dislike']]
+      [['isLike', 'isDislike']]
     )
     .label('body')
-    .test('body', 'Provide appropriate data', (val) => {
-      return typeOf(val.dislike, 'boolean') || typeOf(val.like, 'boolean')
+    .test('body', 'Provide appropriate data', (val: any) => {
+      return typeOf(val.isDislike, 'boolean') || typeOf(val.isLike, 'boolean')
         ? true
         : false;
     }),

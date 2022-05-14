@@ -1,12 +1,12 @@
-import axios from "axios";
-import { getCookies } from "./cookies";
+import axios from 'axios';
+import { getCookies } from './cookies';
 
 axios.interceptors.request.use(
   function (config) {
     const user = getCookies();
 
     // @ts-ignore
-    config.headers.common["Authorization"] = `Bearer ${user?.accessToken}`; // @ts-ignore
+    config.headers.common['Authorization'] = `Bearer ${user?.accessToken}`; // @ts-ignore
     config.baseURL = process.env.NEXT_PUBLIC_API_URL;
     return config;
   },

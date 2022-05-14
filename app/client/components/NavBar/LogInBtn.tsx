@@ -6,18 +6,18 @@ import {
   MenuGroup,
   MenuItem,
   MenuList,
-} from "@chakra-ui/react";
-import { RiLogoutCircleRLine } from "react-icons/ri";
-import { FaPenNib } from "react-icons/fa";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import { RiLogoutCircleRLine } from 'react-icons/ri';
+import { FaPenNib } from 'react-icons/fa';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 
-import { useAuthCtx } from "../Context";
-import MyLink from "../MyLink";
-import { nanoid } from "nanoid";
-import { BiUser } from "react-icons/bi";
+import { useAuthCtx } from '../Context';
+import MyLink from '../MyLink';
+import { nanoid } from 'nanoid';
+import { BiUser } from 'react-icons/bi';
 
 const LogInBtn = ({ size }: { size: any }) => {
-  const { login, auth, logout } = useAuthCtx();
+  const { loginModal, auth, logout } = useAuthCtx();
   return auth?.user?._id ? (
     <Menu>
       <MenuButton
@@ -25,8 +25,8 @@ const LogInBtn = ({ size }: { size: any }) => {
         rightIcon={<ChevronDownIcon />}
         size={size}
         _focus={{
-          outline: "none",
-          border: "none",
+          outline: 'none',
+          border: 'none',
         }}
       >
         Profile
@@ -48,7 +48,7 @@ const LogInBtn = ({ size }: { size: any }) => {
             </MenuItem>
           </MyLink>
           <MenuItem
-            onClick={() => logout("/auth")}
+            onClick={() => logout('/auth')}
             icon={<RiLogoutCircleRLine />}
             color="red.500"
           >
@@ -58,7 +58,7 @@ const LogInBtn = ({ size }: { size: any }) => {
       </MenuList>
     </Menu>
   ) : (
-    <Button mx={[1, 4]} onClick={() => login.onOpen()} size={size}>
+    <Button mx={[1, 4]} onClick={() => loginModal.onOpen()} size={size}>
       Login
     </Button>
   );

@@ -7,20 +7,14 @@ import storyType from '@lib/types/StoryType';
 const Index = ({ stories }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
-      <Stories
-        initialStories={stories}
-        // isInitial={true}
-        nextPageNo={1}
-        query="/stories?populate=author,tags&"
-      />
-      {/* <Stories stories={stories} /> */}
+      <Stories initialStories={stories} nextPageNo={1} query="/stories?" />
     </>
   );
 };
 
 export const getStaticProps = async () => {
   const { data } = await axios.get<{ stories: storyType[] }>(
-    `${process.env.API_URL}/stories?page=1&populate=author,tags`
+    `${process.env.API_URL}/stories`
   );
 
   return {

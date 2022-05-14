@@ -6,14 +6,14 @@ import {
   ModalCloseButton,
   ModalFooter,
   Divider,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import Form from "./Form";
-import MyLink from "../MyLink";
-import { useAuthCtx } from "../Context";
+import Form from './Form';
+import MyLink from '../MyLink';
+import { useAuthCtx } from '../Context';
 
 const LoginModal = ({ isOpen, onClose }: any) => {
-  const { login } = useAuthCtx();
+  const { loginModal } = useAuthCtx();
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xs" scrollBehavior="inside">
       <ModalOverlay />
@@ -26,16 +26,16 @@ const LoginModal = ({ isOpen, onClose }: any) => {
         <ModalFooter>
           <MyLink
             onClick={() => {
-              login.onClose();
+              loginModal.onClose();
             }}
-            href="/auth/"
+            href="/auth"
             sx={{
-              color: "blue.600",
-              fontStyle: "italic",
-              fontSize: "xs",
-              textDecor: "underline",
+              color: 'blue.600',
+              fontStyle: 'italic',
+              fontSize: 'xs',
+              textDecor: 'underline',
               _dark: {
-                color: "teal.400",
+                color: 'teal.400',
               },
             }}
           >

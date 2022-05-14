@@ -14,6 +14,7 @@ import UserType from '@lib/types/UserType';
 
 import StoryCard from '../StoryCard';
 import ShowStoryCard from '../MyCollections/CollectionCard/ShowStories/ShowStoryCard';
+import useInfinite from '@compo/Hooks/useInfinite';
 
 const Stories = ({
   initialStories,
@@ -34,25 +35,9 @@ const Stories = ({
     pagination: { next: number; prev: number; limit: number };
   }>(() => !initialStories && `${query}page=${nextPageNo}`);
 
-  const [show, setShow] = useState(false);
-
-  const lastDivRef: any = useRef();
-  const isInView = useCallback((node) => {
-    if (initialStories || !nextPageNo) {
-      return;
-    }
-    lastDivRef.current = new IntersectionObserver(
-      async (entries, observerInst) => {
-        if (entries[0].isIntersecting) {
-          setShow(true);
-          lastDivRef?.current?.disconnect(node);
-          observerInst?.unobserve(entries[0].target);
-        }
-      }
-    );
-    if (node) lastDivRef?.current?.observe(node);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { isInView, show } = useInfinite({
+    ignore: !!initialStories || !nextPageNo,
+  });
   return (
     <Container maxW="container.md" p="0">
       <div ref={initialStories ? null : isInView} />

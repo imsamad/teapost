@@ -1,12 +1,12 @@
-import { IconButton, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { BiBellPlus } from "react-icons/bi";
-import { CheckIcon } from "@chakra-ui/icons";
+import { IconButton, useDisclosure } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { BiBellPlus } from 'react-icons/bi';
+import { CheckIcon } from '@chakra-ui/icons';
 
-import { useAuthCtx, useProfile } from "@compo/Context";
-import { followAuthor } from "@lib/api/authApi";
-import TSButton from "@compo/UI/TSButton";
-import UserType from "@lib/types/UserType";
+import { useAuthCtx, useProfile } from '@compo/Context';
+import { followAuthorApi } from '@lib/api/authApi';
+import TSButton from '@compo/UI/TSButton';
+import UserType from '@lib/types/UserType';
 
 const FollowBtn = ({
   author,
@@ -28,7 +28,7 @@ const FollowBtn = ({
   useEffect(() => {
     setStats({
       hasBeenFollowing: Boolean(
-        myProfile?.following?.includes(author?._id || "")
+        myProfile?.profile?.following?.includes(author?._id || '')
       ),
       isItselfAuthor: myProfile?._id?.toString() == author._id,
     });
@@ -44,7 +44,7 @@ const FollowBtn = ({
       loadingState.onClose();
       return;
     }
-    const data = await followAuthor(author._id, stats.hasBeenFollowing);
+    const data = await followAuthorApi(author._id, stats.hasBeenFollowing);
     if (data) {
       followCB && followCB(stats.hasBeenFollowing);
       await mutateProfile();
@@ -79,7 +79,7 @@ const FollowBtn = ({
           onClick={handleFollowing}
           size="sm"
         >
-          {stats.hasBeenFollowing ? "Following" : "Follow"}
+          {stats.hasBeenFollowing ? 'Following' : 'Follow'}
         </TSButton>
       )}
     </>

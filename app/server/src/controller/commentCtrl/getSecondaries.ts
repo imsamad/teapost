@@ -25,7 +25,7 @@ const getSecondaries = asyncHandler(
           select: 'username email',
         },
       ])
-      .sort('-createdAt');
+      .sort('createdAt');
     pagination(req, res, { query, label: 'comments' });
   }
 );

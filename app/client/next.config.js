@@ -1,29 +1,32 @@
 /** @type {import('next').NextConfig} */
 
-const path = require("path");
+const path = require('path');
 module.exports = {
   // basePath: "https://www.example.com/docs",
+  images: {
+    domains: ['res.cloudinary.com', 'source.unsplash.com', '*'],
+  },
   reactStrictMode: false,
   async redirects() {
     return [
       {
-        source: "/home",
-        destination: "/",
+        source: '/home',
+        destination: '/',
         permanent: true,
       },
       {
-        source: "/index",
-        destination: "/",
+        source: '/index',
+        destination: '/',
         permanent: true,
       },
       {
-        source: "/auth/login",
-        destination: "/auth",
+        source: '/auth/login',
+        destination: '/auth',
         permanent: true,
       },
       {
-        source: "/login",
-        destination: "/auth",
+        source: '/login',
+        destination: '/auth',
         permanent: true,
       },
     ];

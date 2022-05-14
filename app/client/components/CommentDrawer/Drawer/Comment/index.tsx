@@ -5,22 +5,22 @@ import {
   Stack,
   Text,
   useDisclosure,
-} from "@chakra-ui/react";
-import TSButton from "@compo/UI/TSButton";
-import { deleteComment, updateComment } from "@lib/api/commentApi";
+} from '@chakra-ui/react';
+import TSButton from '@compo/UI/TSButton';
+import { deleteCommentApi, updateCommentApi } from '@lib/api/commentApi';
 
-import { getCookies } from "@lib/cookies";
-import { CombineComment } from "@lib/types/CommentTypes";
-import { memo, useState } from "react";
-import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
+import { getCookies } from '@lib/cookies';
+import { CombineComment } from '@lib/types/CommentTypes';
+import { memo, useState } from 'react';
+import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai';
 
-import EditDelete from "./EditDelete";
-import InputField from "../InputField";
-import Meta from "./Meta";
-import LikeDislikeReply from "./LikeDislikeReply";
-import CommentText from "./CommentText";
+import EditDelete from './EditDelete';
+import InputField from '../InputField';
+import Meta from './Meta';
+import LikeDislikeReply from './LikeDislikeReply';
+import CommentText from './CommentText';
 
-import Replies from "../Replies";
+import Replies from '../Replies';
 
 const Index = ({
   comment: commentUpper,
@@ -36,7 +36,7 @@ const Index = ({
   const isAuthor = userId == comment?.user?._id;
 
   const onDelete = async () => {
-    deleteComment({
+    deleteCommentApi({
       isPrimary,
       commentId: comment._id,
     }).then(() => {
@@ -47,7 +47,7 @@ const Index = ({
 
   const onSave = async (val: string) => {
     if (val != comment.text) {
-      updateComment({
+      updateCommentApi({
         isPrimary,
         commentId: comment._id,
         text: val,
@@ -99,8 +99,8 @@ const Index = ({
                 text={comment.text}
                 replyTo={
                   comment?.secondaryUser
-                    ? "@" + comment.secondaryUser.username
-                    : ""
+                    ? '@' + comment.secondaryUser.username
+                    : ''
                 }
               />
             )}

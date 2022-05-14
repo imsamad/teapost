@@ -6,59 +6,78 @@ import {
   Divider,
   Heading,
   Stack,
-} from "@chakra-ui/react";
-import axios from "axios";
-import { useRouter } from "next/router";
-import { ChevronRightIcon } from "@chakra-ui/icons";
-import Link from "next/link";
+} from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { ChevronRightIcon } from '@chakra-ui/icons';
+import Link from 'next/link';
 
-import StoryType from "@lib/types/StoryType";
-import Stories from "@compo/Stories";
-import TagType from "@lib/types/TagType";
+import StoryType from '@lib/types/StoryType';
+import Stories from '@compo/Stories';
+import Head from 'next/head';
+import dbConnect from '@lib/dbConnect';
+import Tag from '@lib/models/Tag';
+import Story from '@lib/models/Story';
+import { peelUserDoc } from '@lib/models/User';
 
 const Index = ({ stories }: { stories: StoryType[] }) => {
   const router = useRouter();
-  return (
-    <Container maxW="container.md" p="0" pt="4">
-      <Stack spacing={4}>
-        <Breadcrumb separator={<ChevronRightIcon color="gray.500" />}>
-          <BreadcrumbItem>
-            <BreadcrumbLink as={Link} href="/">
-              Home
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink isCurrentPage>{router.query.tag}</BreadcrumbLink>
-          </BreadcrumbItem>
-        </Breadcrumb>
+  const crtTag: string = router.query.tag as string;
 
-        <Divider />
-        {stories?.length ? (
-          <>
-            <Heading size="md" textAlign="center">
-              Stories
+  const crtTagId = stories[0].tags.filter(
+    (tag) => tag.title.toLowerCase() == crtTag.toLowerCase()
+  )[0]._id;
+
+  return (
+    <>
+      <Head>
+        <title>
+          {crtTag
+            .split('')
+            .map((v, i) => (i == 0 ? v.toUpperCase() : v))
+            .join('')}
+          | Teapost
+        </title>
+      </Head>
+      <Container maxW="container.md" p="0" pt="4">
+        <Stack spacing={4}>
+          <Breadcrumb separator={<ChevronRightIcon color="gray.500" />}>
+            <BreadcrumbItem>
+              <BreadcrumbLink as={Link} href="/">
+                Home
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink isCurrentPage>{crtTag}</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+
+          <Divider />
+          {stories?.length ? (
+            <>
+              <Heading size="md" textAlign="center">
+                Stories
+              </Heading>
+              <Stories
+                initialStories={stories}
+                nextPageNo={2}
+                query={`/stories?tags=${crtTagId}&`}
+              />
+            </>
+          ) : (
+            <Heading textAlign="center">
+              No stories found in this domain
             </Heading>
-            <Stories
-              initialStories={stories}
-              nextPageNo={2}
-              query={`/stories?tags=${router.query.tag}&`}
-              // isInitial={true}
-            />
-          </>
-        ) : (
-          <Heading textAlign="center">No stories found in this domain</Heading>
-        )}
-      </Stack>
-    </Container>
+          )}
+        </Stack>
+      </Container>
+    </>
   );
 };
 
-const apiUrl = process.env.API_URL!;
-
 export const getStaticPaths = async () => {
-  const {
-    data: { tags },
-  } = await axios.get<{ tags: TagType[] }>(`${apiUrl}/tags`);
+  await dbConnect();
+
+  const tags = await Tag.find({});
 
   const paths = tags.map((tag) => ({
     params: { tag: tag.title },
@@ -68,15 +87,36 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params }: any) => {
-  const {
-    data: { stories },
-  } = await axios.get<{ stories: StoryType[] }>(
-    `${apiUrl}/stories?tags=${params.tag}`
-  );
+  await dbConnect();
+  const tag = await Tag.findOne({ title: params.tag });
+  if (!tag) {
+    return {
+      props: {
+        stories: [],
+      },
+      revalidate: 10,
+    };
+  }
+  const result = await Story.find({ tags: { $in: tag._id } })
+    .populate([
+      {
+        path: 'collabWith',
+        transform: (v: any) => peelUserDoc(v),
+      },
+      {
+        path: 'author',
+        transform: (v: any) => peelUserDoc(v),
+      },
+      {
+        path: 'tags',
+      },
+    ])
+    .lean()
+    .limit(10);
 
   return {
     props: {
-      stories,
+      stories: JSON.parse(JSON.stringify(result)),
     },
     revalidate: 10,
   };

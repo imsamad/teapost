@@ -1,15 +1,15 @@
-import { CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { CloseIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Fade,
   useDisclosure,
   useOutsideClick,
   VStack,
-} from "@chakra-ui/react";
-import TSIconButton from "@compo/UI/TSIconButton";
-import React, { useRef } from "react";
-import { GrMoreVertical } from "react-icons/gr";
-import { useCTX } from "../../AddedCtx";
+} from '@chakra-ui/react';
+import TSIconButton from '@compo/UI/TSIconButton';
+import React, { useRef } from 'react';
+import { GrMoreVertical } from 'react-icons/gr';
+import { useCTX } from '../../AddedCtx';
 
 const Index = ({
   openEdit,

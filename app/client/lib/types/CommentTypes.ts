@@ -1,10 +1,10 @@
-import StoryType from "./StoryType";
-import UserType from "./UserType";
+import StoryType from './StoryType';
+import UserType from './UserType';
 
 export interface PrimaryComment {
   _id: string;
   user: UserType;
-  story: StoryType["_id"];
+  story: StoryType['_id'];
   text: string;
   meta?: CommentMeta;
   noOfReplies: number;
@@ -18,10 +18,10 @@ export interface PrimaryComment {
 export interface SecondaryComment {
   _id: string;
   user: UserType;
-  primary: PrimaryComment["_id"];
+  primary: PrimaryComment['_id'];
   text: string;
   secondaryUser?: UserType;
-  secondary?: SecondaryComment["_id"];
+  secondary?: SecondaryComment['_id'];
   meta?: CommentMeta;
   noOfLikes: number;
   noOfDislikes: number;
@@ -30,14 +30,15 @@ export interface SecondaryComment {
 }
 
 export interface CommentMeta {
-  _id: PrimaryComment["_id"] | SecondaryComment["_id"];
-  likedBy: UserType["_id"][];
-  dislikedBy: UserType["_id"][];
+  _id: PrimaryComment['_id'] | SecondaryComment['_id'];
+  likedBy: UserType['_id'][];
+  dislikedBy: UserType['_id'][];
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface CombineComment {
+  // common fields
   _id: string;
   text: string;
   user: UserType;
@@ -47,15 +48,15 @@ export interface CombineComment {
   updatedAt: Date;
   meta?: CommentMeta;
 
-  //primary
+  //primary comment fields
   story?: string;
   noOfReplies?: number;
-  //secondary
+  //secondary comment fields
   secondary?: string;
   secondaryUser?: UserType;
 }
 interface PickSecondary
-  extends Pick<SecondaryComment, "primary" | "secondary" | "secondaryUser"> {}
+  extends Pick<SecondaryComment, 'primary' | 'secondary' | 'secondaryUser'> {}
 
 // export interface CommentForDisplay
 //   extends Omit<PrimaryComment, "story">,

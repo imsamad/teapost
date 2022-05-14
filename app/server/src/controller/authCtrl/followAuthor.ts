@@ -33,7 +33,7 @@ const followAuthor = asyncHandler(
         new: true,
       }
     );
-    // 6277672bd466486d8f3fec61
+
     const authorProfile = await Profile.findByIdAndUpdate(
       authorId,
       toFollow

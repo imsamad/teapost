@@ -16,19 +16,17 @@ const StoryInfo = ({ tag, createdAt, readingTime }: any) => {
       </MySmText>
       <MySmText>{readingTime} min</MySmText>
       <MySmText>~</MySmText>
-      <MyLink href={`/tag/${tag?.title || 'tech'}`}>
+      <MyLink href={`/tag/${tag || 'tech'}`}>
         <Badge
-          textDecor="underline"
+          // textDecor="underline"
           variant="solid"
           colorScheme="gray"
           // bgColor="gray.400"
           fontStyle="italic"
-          _dark={{
-            color: 'gray.900',
-          }}
+          fontWeight={400}
           textTransform="capitalize"
         >
-          {tag?.title || 'tech'}
+          {tag || 'tech'}
         </Badge>
       </MyLink>
       <MySmText>~</MySmText>

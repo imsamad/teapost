@@ -1,10 +1,10 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Box, Collapse, Link, Text, Wrap, WrapItem } from "@chakra-ui/react";
-import { useFormikContext } from "formik";
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Box, Collapse, Link, Text, Wrap, WrapItem } from '@chakra-ui/react';
+import { useFormikContext } from 'formik';
 
-import { typeOf } from "@lib/utils";
-import { AuthResponse } from "@lib/api/authApi";
-import TSButton from "@compo/UI/TSButton";
+import { typeOf } from '@lib/utils';
+import { AuthResponse } from '@lib/api/authApi';
+import TSButton from '@compo/UI/TSButton';
 
 const FormStatus = () => {
   // @ts-ignore
@@ -12,8 +12,8 @@ const FormStatus = () => {
     useFormikContext();
 
   const handleClick = (email: string) => {
-    setFieldValue("identifier", email);
-    setFieldValue("type", "logIn");
+    setFieldValue('identifier', email);
+    setFieldValue('type', 'logIn');
     setStatus(null);
   };
   return (
@@ -28,14 +28,14 @@ const FormStatus = () => {
           >
             {status.message} <ExternalLinkIcon mx="2px" />
           </Link>
-        ) : typeOf(status?.message, "array") ? (
+        ) : typeOf(status?.message, 'array') ? (
           // @ts-ignore
           status?.message?.map((msg: any) => {
             return (
               <Text
                 key={msg}
                 fontSize="xs"
-                color={status.status !== "ok" ? "red.500" : "green.500"}
+                color={status.status !== 'ok' ? 'red.500' : 'green.500'}
               >
                 {msg}
               </Text>
@@ -44,7 +44,7 @@ const FormStatus = () => {
         ) : (
           <Text
             fontSize="xs"
-            color={status?.status !== "ok" ? "red.500" : "green.500"}
+            color={status?.status !== 'ok' ? 'red.500' : 'green.500'}
           >
             {status?.message}
           </Text>

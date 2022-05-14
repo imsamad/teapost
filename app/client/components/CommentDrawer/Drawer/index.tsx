@@ -1,18 +1,17 @@
 import {
-  Box,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  Heading,
 } from '@chakra-ui/react';
 
 import CommentList from './CommentList';
 import AddComment from './AddComment';
 import { useCTX, CtxProvider } from './AddedCtx';
 import { useEffect } from 'react';
+
 const Index = ({
   isOpen,
   onClose,
@@ -44,7 +43,7 @@ const Index = ({
         <DrawerHeader>Comments</DrawerHeader>
         <CtxProvider>
           <DrawerBody px="10px" pr="20px">
-            <AddComment storyId={storyId} />
+            {/* <AddComment storyId={storyId} /> */}
 
             <CommentList
               isPrimary={true}

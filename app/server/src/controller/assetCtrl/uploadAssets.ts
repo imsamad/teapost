@@ -61,7 +61,7 @@ const uploadAssets = asyncHandler(
         // @ts-ignore
         assetUploaded[resource_type].push({
           public_id: response.value.public_id,
-          url: response.value.public_id,
+          url: response.value.secure_url,
           tags: response.value.tags,
         });
       }
@@ -85,7 +85,6 @@ const uploadAssets = asyncHandler(
       { upsert: true, new: true }
     );
 
-    // console.log({ assetUploaded, assetInstane, saved });
     return res.status(200).json({ assetUploaded });
   }
 );

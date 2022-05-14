@@ -4,7 +4,6 @@ import { asyncHandler, ErrorResponse } from '../../lib/utils';
 import Profile from '../../models/Profile';
 import StoryMeta from '../../models/StoryMeta';
 import Story, { StoryDocument } from '../../models/Story';
-import { UserDocument } from '../../models/User';
 import * as yup from 'yup';
 import { isValidObjectId } from 'mongoose';
 import validateSchema from '../../middleware/validateSchemaMdlwr';
@@ -15,8 +14,8 @@ import validateSchema from '../../middleware/validateSchemaMdlwr';
 
 const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // here might to do some extra bit of type-checking
-    const like = req.body.like || !req.body.dislike;
+    // TODO :- extra bit of type-checking
+    const like = req.body.isLike ?? !req.body.isDislike;
     const undo = req.body.undo;
 
     const storyId = req.params.storyId as StoryDocument['id'];
@@ -70,10 +69,11 @@ const ctrl = asyncHandler(
 
     story.noOfLikes = storyMeta.likedBy.length;
     story.noOfDislikes = storyMeta.dislikedBy.length;
+    story = await story.save();
 
     res.json({
       status: 'ok',
-      story: await story.save(),
+      story,
     });
   }
 );
@@ -92,32 +92,34 @@ export const schema = yup.object({
     .object()
     .shape(
       {
-        like: yup
+        isLike: yup
           .boolean()
-          .label('like')
-          .typeError('Express like in true/false')
-          .when('dislike', {
+          .label('isLike')
+          .typeError('Express isLike in true/false')
+          .when('isDislike', {
             is: (dislike: any) => typeof dislike === 'undefined',
-            then: yup.boolean().required('Like or dislike is required'),
+            then: yup.boolean().required('isLike or isDislike is required'),
           }),
-        dislike: yup
+        isDislike: yup
           .boolean()
-          .label('dislike')
-          .typeError('Express dislike in true/false')
-          .when('like', {
+          .label('isDislike')
+          .typeError('Express isDislike in true/false')
+          .when('isLike', {
             is: (like: any) => typeof like === 'undefined',
-            then: yup.boolean().required('Like or dislike is required'),
+            then: yup.boolean().required('isLike or isDislike is required'),
           }),
         undo: yup
           .boolean()
           .label('undo')
           .typeError('Express undo in booleans value'),
       },
-      [['like', 'dislike']]
+      [['isLike', 'isDislike']]
     )
     .label('body')
     .test('body', 'Provide appropriate data', (val) =>
-      !val.dislike && !val.like ? false : true
+      typeof val.isDislike == 'undefined' && typeof val.isLike == 'undefined'
+        ? false
+        : true
     ),
 });
 

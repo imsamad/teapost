@@ -1,17 +1,17 @@
-import { Box, GridItem, useDisclosure } from "@chakra-ui/react";
-import TSButton from "@compo/UI/TSButton";
-import { addComment } from "@lib/api/commentApi";
-import { CombineComment } from "@lib/types/CommentTypes";
-import { useState } from "react";
-import InputField from "../InputField";
-import Comment from "../Comment";
+import { Box, GridItem, useDisclosure } from '@chakra-ui/react';
+import TSButton from '@compo/UI/TSButton';
+import { addCommentApi } from '@lib/api/commentApi';
+import { CombineComment } from '@lib/types/CommentTypes';
+import { useState } from 'react';
+import InputField from '../InputField';
+import Comment from '../Comment';
 
-import { useCTX } from "../AddedCtx";
+import { useCTX } from '../AddedCtx';
 const AddComment = ({ storyId }: { storyId: string }) => {
   const { addedComments, setAddComments, setNoOfReplies } = useCTX();
 
   const onSave = async (val: string) => {
-    addComment(storyId, val).then(({ comment }) => {
+    addCommentApi(storyId, val).then(({ comment }) => {
       setAddComments(comment);
       setNoOfReplies(1);
     });
@@ -51,8 +51,8 @@ const Index2 = ({ isPrimary }: { isPrimary: boolean }) => {
           outline="none"
           border="none"
           _focus={{
-            outline: "none",
-            border: "none",
+            outline: 'none',
+            border: 'none',
           }}
           onClick={() => action.onToggle()}
           isFullWidth={false}

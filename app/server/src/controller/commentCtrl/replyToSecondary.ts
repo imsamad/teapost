@@ -33,6 +33,10 @@ const replyToSecondary = asyncHandler(
           path: 'user',
           select: 'email username',
         },
+        {
+          path: 'secondaryUser',
+          select: 'email username',
+        },
       ]),
     });
   }

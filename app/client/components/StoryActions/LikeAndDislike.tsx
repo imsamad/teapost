@@ -1,15 +1,15 @@
-import { useDisclosure } from "@chakra-ui/react";
-import { useAuthCtx, useProfile } from "@compo/Context";
-import TSButton from "@compo/UI/TSButton";
-import { likeOrDislikeStory } from "@lib/api/storyApi";
+import { useDisclosure } from '@chakra-ui/react';
+import { useAuthCtx, useProfile } from '@compo/Context';
+import TSButton from '@compo/UI/TSButton';
+import { likeOrDislikeStoryApi } from '@lib/api/storyApi';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   AiFillDislike,
   AiFillLike,
   AiOutlineDislike,
   AiOutlineLike,
-} from "react-icons/ai";
+} from 'react-icons/ai';
 
 const LikeAndDislike = ({
   storyId,
@@ -32,22 +32,21 @@ const LikeAndDislike = ({
     () => {
       setGrade((pre) => ({
         ...pre,
-        hadBeenLiked: !!myProfile?.likedStories?.includes(storyId),
-        hadBeenDisLiked: !!myProfile?.dislikedStories?.includes(storyId),
+        hadBeenLiked: !!myProfile?.profile?.likedStories?.includes(storyId),
+        hadBeenDisLiked:
+          !!myProfile?.profile?.dislikedStories?.includes(storyId),
       }));
+      // user liked or disliked but page is not staticlly-regenerated
+      const isLikedButNotReGenerated =
+        !!myProfile?.profile?.likedStories?.includes(storyId) &&
+        grade.noOfLikes == 0;
+      const isDisLikedButNotReGenerated =
+        !!myProfile?.profile?.dislikedStories?.includes(storyId) &&
+        grade.noOfDislikes == 0;
+      isLikedButNotReGenerated && setGrade((pre) => ({ ...pre, like: 1 }));
 
-      if (
-        !!myProfile?.likedStories?.includes(storyId) &&
-        grade.noOfLikes == 0
-      ) {
-        setGrade((pre) => ({ ...pre, like: 1 }));
-      }
-      if (
-        !!myProfile?.dislikedStories?.includes(storyId) &&
-        grade.noOfDislikes == 0
-      ) {
+      isDisLikedButNotReGenerated &&
         setGrade((pre) => ({ ...pre, dislike: 1 }));
-      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [myProfile]
@@ -62,12 +61,13 @@ const LikeAndDislike = ({
     }
     loading.onOpen();
 
-    const data = await likeOrDislikeStory({
+    const data = await likeOrDislikeStoryApi({
       storyId,
       undo: isLike ? grade.hadBeenLiked : grade.hadBeenDisLiked,
       isLike,
     });
-    if (data) {
+
+    if (data?.story) {
       await mutateProfile();
       setGrade({
         noOfLikes: data.story.noOfLikes,
@@ -91,8 +91,8 @@ const LikeAndDislike = ({
         outline="none"
         border="none"
         _focus={{
-          outline: "none",
-          border: "none",
+          outline: 'none',
+          border: 'none',
         }}
         onClick={() => handleGrade(true)}
       >
@@ -108,8 +108,8 @@ const LikeAndDislike = ({
         outline="none"
         border="none"
         _focus={{
-          outline: "none",
-          border: "none",
+          outline: 'none',
+          border: 'none',
         }}
         onClick={() => handleGrade(false)}
       >

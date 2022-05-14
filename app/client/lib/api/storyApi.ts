@@ -1,9 +1,9 @@
-import StoryType, { StoryFormType } from "@lib/types/StoryType";
-import UserType from "@lib/types/UserType";
-import { impStoryFields } from "@lib/utils";
-import axios from "../axios";
+import StoryType, { StoryFormType } from '@lib/types/StoryType';
+import UserType from '@lib/types/UserType';
+import { impStoryFields } from '@lib/utils';
+import axios from '../axios';
 
-interface SubmitStoryType extends Partial<Omit<StoryFormType, "_id">> {
+interface SubmitStoryType extends Partial<Omit<StoryFormType, '_id'>> {
   _id: string;
 }
 
@@ -13,22 +13,22 @@ export const submitStory = async ({
   storeResToLocal,
 }: {
   values: SubmitStoryType;
-  type: "meta" | "content" | "image" | "autoSave";
+  type: 'meta' | 'content' | 'image' | 'autoSave';
   storeResToLocal?: boolean;
 }) => {
   let allowedFields = [
-    "title",
-    "subtitle",
-    "slug",
-    "keywords",
-    "titleImage",
-    "additionalTags",
+    'title',
+    'subtitle',
+    'slug',
+    'keywords',
+    'titleImage',
+    'additionalTags',
   ];
   let data: any = {};
   data.id = values._id;
-  if (type == "content") {
+  if (type == 'content') {
     data.content = values.content;
-  } else if (type == "image") {
+  } else if (type == 'image') {
     data.titleImage = values.titleImage;
   } else {
     allowedFields.forEach((key: string) => {
@@ -36,7 +36,7 @@ export const submitStory = async ({
       if (values?.[key]?.length) data[key] = values[key];
     });
     data.tags = values.tags;
-    if (type == "autoSave") {
+    if (type == 'autoSave') {
       data.content = values.content;
     }
   }
@@ -47,7 +47,7 @@ export const submitStory = async ({
     }>(`/stories/${values._id}`, data);
     if (storeResToLocal) {
       localStorage.setItem(
-        "story",
+        'story',
         JSON.stringify(impStoryFields(res.data.story))
       );
     }
@@ -59,7 +59,7 @@ export const submitStory = async ({
 
 export const changeSlug = async (reqBody: { id: string; slug: string }) => {
   try {
-    const { data } = await axios.put("/stories/changeslug", {
+    const { data } = await axios.put('/stories/changeslug', {
       ...reqBody,
     });
     return data.data;
@@ -74,17 +74,20 @@ type gradeStoryType = {
   undo: boolean;
 };
 
-export const likeOrDislikeStory = async (
+export const likeOrDislikeStoryApi = async (
   props: gradeStoryType
 ): Promise<{ story: StoryType }> => {
   try {
-    let endpoint = props.isLike ? "/stories/like/" : "/stories/dislike/";
-    endpoint += props.undo ? `undo/${props.storyId}` : props.storyId;
-
-    const { data } = await axios.put<{ story: StoryType }>(`${endpoint}`);
+    let body = {
+      isLike: props.isLike,
+      undo: props.undo,
+    };
+    const { data } = await axios.patch<{ story: StoryType }>(
+      `/stories/grade/${props.storyId}`,
+      body
+    );
     return data;
   } catch (err: any) {
-    // throw err.response.data;
     return err.response.data;
   }
 };

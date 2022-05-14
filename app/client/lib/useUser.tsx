@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import Router from "next/router";
+import { useEffect } from 'react';
+import Router from 'next/router';
 
-import { useAuthCtx } from "../components/Context";
+import { useAuthCtx } from '../components/Context';
 
-const useUser = ({ redirectTo = "", redirectToIfLoggedIn = false } = {}) => {
+const useUser = ({ redirectTo = '', redirectToIfLoggedIn = false } = {}) => {
   const { auth, setAuth, logout: logOutUser } = useAuthCtx();
 
   const setCookies = (user: any, customRedirect?: string) => {

@@ -5,27 +5,27 @@ import {
   HStack,
   Input,
   Stack,
-} from "@chakra-ui/react";
-import { useAuthCtx } from "@compo/Context";
-import TSButton from "@compo/UI/TSButton";
-import { useState } from "react";
+} from '@chakra-ui/react';
+import { useAuthCtx } from '@compo/Context';
+import TSButton from '@compo/UI/TSButton';
+import { useState } from 'react';
 
 const InputField = ({
   onSave,
   showAvatar = false,
   type,
-  placeholer = "Reply",
+  placeholer = 'Reply',
   value: valueClone,
   onCancel,
 }: {
   showAvatar?: boolean;
-  type: "edit" | "add";
+  type: 'edit' | 'add';
   onSave: (val: string) => Promise<void>;
   placeholer?: string;
   value?: string;
   onCancel?: () => void;
 }) => {
-  const [value, setValue] = useState(valueClone || "");
+  const [value, setValue] = useState(valueClone || '');
   const { auth, openLoginToast } = useAuthCtx();
   return (
     <HStack flex="1">
@@ -55,7 +55,7 @@ const InputField = ({
               colorScheme="red"
               variant="outline"
               onClick={() => {
-                setValue("");
+                setValue('');
                 onCancel && onCancel();
               }}
             >
@@ -71,11 +71,11 @@ const InputField = ({
                   return;
                 }
                 onSave(value).then(() => {
-                  setValue("");
+                  setValue('');
                 });
               }}
             >
-              {type == "edit" ? "Edit" : "Save"}
+              {type == 'edit' ? 'Edit' : 'Save'}
             </TSButton>
           </ButtonGroup>
         </Collapse>

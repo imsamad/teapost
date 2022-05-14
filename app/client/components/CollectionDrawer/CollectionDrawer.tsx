@@ -4,9 +4,9 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import CollectionContent from "./CollectionContent";
+import CollectionContent from './CollectionContent';
 
 const Index = ({
   storyId,

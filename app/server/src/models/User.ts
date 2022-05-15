@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
     },
     following: { type: Number, default: 0 },
     followers: { type: Number, default: 0 },
-    stories: { type: Number, default: 0 },
+    stories: { type: Number, default: 0, required: true },
   },
   {
     timestamps: true,

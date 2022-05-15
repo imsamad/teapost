@@ -1,11 +1,11 @@
-import axios from "axios";
-import { GetServerSideProps } from "next";
+import axios from 'axios';
+import { GetServerSideProps } from 'next';
 
-import { getCookieFromServer } from "@lib/cookies";
-import { StoryCollectionType } from "@lib/types/StoryCollectionType";
+import { getCookieFromServer } from '@lib/cookies';
+import { StoryCollectionType } from '@lib/types/StoryCollectionType';
 
-import DashboardHeader from "@compo/DashboardHeader";
-import MyCollections from "@compo/MyCollections";
+import DashboardHeader from '@compo/DashboardHeader';
+import MyCollections from '@compo/MyCollections';
 
 const Index = ({ mycollections }: { mycollections: StoryCollectionType[] }) => {
   return (
@@ -57,7 +57,10 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   } catch (err) {
     return {
-      notFound: true,
+      redirect: {
+        destination: '/404',
+        permanent: false,
+      },
     };
   }
 };

@@ -66,14 +66,10 @@ primaryCommentSchema.virtual('meta', {
 
 primaryCommentSchema.pre('save', async function (next) {
   if (!this.isNew) return next();
-  const update = await this.model('Story').findByIdAndUpdate(
-    this.story.toString(),
-    {
-      _id: this.story.toString(),
-      $inc: { noOfComments: 1 },
-    },
-    { new: true }
-  );
+  await this.model('Story').findByIdAndUpdate(this.story.toString(), {
+    _id: this.story.toString(),
+    $inc: { noOfComments: 1 },
+  });
   next();
 });
 

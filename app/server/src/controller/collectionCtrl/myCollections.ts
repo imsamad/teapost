@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import pagination from '../../lib/pagination';
 import { asyncHandler } from '../../lib/utils';
 import StoryCollection from '../../models/StoryCollection';
@@ -10,12 +10,9 @@ import StoryCollection from '../../models/StoryCollection';
 const myCollections = asyncHandler(async (req: Request, res: Response) => {
   // @ts-ignore
   const user = req.user._id;
-  const query = StoryCollection.find(
-    {
-      user,
-    },
-    { stories: { $slice: [0, 10] } }
-  );
+  const query = StoryCollection.find({
+    user,
+  });
   pagination(req, res, { query, label: 'mycollections' });
 });
 

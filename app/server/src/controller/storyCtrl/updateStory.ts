@@ -76,10 +76,6 @@ const ctrl = asyncHandler(
       message: warnings,
       story: newStory,
     });
-    // } catch (err) {
-    //   console.log('err ', err);
-    //   res.json({ err });
-    // }
   }
 );
 

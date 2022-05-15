@@ -11,7 +11,7 @@ const getMeAssets = asyncHandler(async (req: Request, res: Response) => {
   // @ts-ignore
   // let assets = await Asset.findById(req.user._id).lean();
   let original = await getAllImageFromCloudinary();
-  res.status(200).json({ original });
+  res.status(200).json(original);
 });
 
 // export default getAllImagesFromCloudinary;

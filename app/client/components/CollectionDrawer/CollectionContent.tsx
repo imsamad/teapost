@@ -16,7 +16,7 @@ import NewCollectionBtn from './NewCollectionBtn';
 import CollectionRow from './CollectionRow';
 
 const Content = ({ storyId }: { storyId: string }) => {
-  const { myProfile } = useProfile();
+  const { myProfile, mutateProfile } = useProfile();
   //   extract collId of which current SelectStory is part of
 
   const storyPartOf: string[] =
@@ -28,7 +28,6 @@ const Content = ({ storyId }: { storyId: string }) => {
             .map((coll) => coll._id)
         : []
       : [];
-
   const [sendObj, setSendObj] = useState<{
     storyPartOf: string[];
     removeFrom: string[];
@@ -36,11 +35,6 @@ const Content = ({ storyId }: { storyId: string }) => {
     storyPartOf,
     removeFrom: [],
   });
-  // useEffect(() => {
-  //   setSendObj({ removeFrom: [], addTo: storyPartOf });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [storyId]);
-
   const loadingState = useDisclosure();
 
   const toast = useToast();
@@ -73,7 +67,9 @@ const Content = ({ storyId }: { storyId: string }) => {
           isClosable: true,
           title: 'Saved',
           variant: 'top-accent',
+          duration: 600,
         });
+        mutateProfile();
         loadingState.onClose();
       })
       .catch(() => {
@@ -82,6 +78,7 @@ const Content = ({ storyId }: { storyId: string }) => {
           position: 'bottom',
           isClosable: true,
           title: 'Unable tosave, please try again',
+          duration: 600,
           variant: 'top-accent',
         });
         loadingState.onClose();

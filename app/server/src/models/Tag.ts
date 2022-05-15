@@ -9,7 +9,7 @@ const tagSchema = new Schema(
   {
     title: {
       type: String,
-      required: [true, 'This tag already exist'],
+      required: [true, 'Tag title is required'],
       unique: true,
       trim: true,
       lowercase: true,
@@ -34,6 +34,6 @@ tagSchema.post('save', function (error: any, doc: TagDocument, next: any) {
   }
 });
 
-const Tag = model('Tag', tagSchema);
+const Tag = model<TagDocument>('Tag', tagSchema);
 
 export default Tag;

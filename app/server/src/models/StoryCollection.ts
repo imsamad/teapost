@@ -23,7 +23,7 @@ const storyCollectionSchema = new Schema(
         ref: 'Story',
       },
     ],
-    title: { type: String, dropDups: true, required: true },
+    title: { type: String, required: true },
     description: String,
   },
   {
@@ -33,11 +33,11 @@ const storyCollectionSchema = new Schema(
   }
 );
 
-storyCollectionSchema.index({ user: 1, title: 1 }, { unique: true });
-storyCollectionSchema.index(
-  { title: 1, isPublic: 1 },
-  { partialFilterExpression: { isPublic: true }, unique: true }
-);
+// storyCollectionSchema.index({ user: 1, title: 1 }, { unique: true });
+// storyCollectionSchema.index(
+//   { title: 1, isPublic: 1 },
+//   { partialFilterExpression: { isPublic: true }, unique: true }
+// );
 
 const StoryCollection = model<StoryCollectionDocument>(
   'StoryCollection',

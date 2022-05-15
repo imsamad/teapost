@@ -2,8 +2,8 @@ import { Schema, model, Types, Document } from 'mongoose';
 
 export interface FileType {
   url: string;
-  tags: string[];
-  public_id: string;
+  tags?: string[];
+  public_id?: string;
 }
 
 export interface AssetDocument extends Document {
@@ -13,7 +13,7 @@ export interface AssetDocument extends Document {
 }
 
 const SingleFile = {
-  url: String,
+  url: { type: String, require: [true, 'Asset Url is required.'] },
   tags: [String],
   public_id: String,
 };

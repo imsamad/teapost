@@ -71,7 +71,7 @@ const tags = [
   { _id: '627a0d23fc13ae266e000123', title: 'UI' },
   { _id: '627a0d23fc13ae266e000124', title: 'Robust' },
   { _id: '627a0d23fc13ae266e000126', title: 'strategy' },
-  { _id: '627a0d23fc13ae266e000128', title: '3rd generation' },
+  { _id: '627a0d23fc13ae266e000128', title: '3rd-gen' },
   { _id: '627a0d23fc13ae266e000129', title: 'static' },
   { _id: '627a0d23fc13ae266e00012a', title: 'User-friendly' },
   { _id: '627a0d23fc13ae266e00012b', title: 'Optional' },

@@ -17,7 +17,7 @@ export const uploadImageToCloudinary = async (
     const uploadResponse = await cloudinary.uploader.upload(data, {
       resource_type,
       public_id: `${publicId}` || `teapost_${nanoid(5)}`,
-      upload_preset: 'teapost_preset',
+      folder: 'teapost',
       tags: [publicId],
     });
 
@@ -34,8 +34,7 @@ export const getAllImageFromCloudinary = async () => {
       all: true,
       type: 'upload',
       max_results: 200,
-
-      prefix: 'teapost',
+      prefix: 'avatar',
     });
     console.log('resources.length ', resources.length);
     return { resources: resources, result: true };

@@ -12,6 +12,9 @@ import { isValidObjectId } from 'mongoose';
 import { LoremIpsum } from 'lorem-ipsum';
 // const LoremIpsum = require("lorem-ipsum").LoremIpsum;
 
+export const capitalFirst = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
 export const lorem = new LoremIpsum({
   sentencesPerParagraph: {
     max: 8,

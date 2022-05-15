@@ -16,6 +16,7 @@ const pagination = async (
   limit <= 0 && (limit = 10);
 
   const totalPages = Math.ceil(totalRecords / limit);
+
   const endIndex = limit * pageNo;
   if (pageNo > totalPages) {
     return res.json({

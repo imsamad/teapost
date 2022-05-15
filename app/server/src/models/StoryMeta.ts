@@ -1,11 +1,11 @@
-import { Document, model, Schema, Types } from "mongoose";
-import { StoryDocument } from "./Story";
-import { UserDocument } from "./User";
+import { Document, model, Schema, Types } from 'mongoose';
+import { StoryDocument } from './Story';
+import { UserDocument } from './User';
 
 export interface StoryMetaDocument extends Document {
-  _id: StoryDocument["_id"];
-  likedBy: Types.Array<UserDocument["_id"]>;
-  dislikedBy: Types.Array<UserDocument["_id"]>;
+  _id: StoryDocument['_id'];
+  likedBy: Types.Array<UserDocument['_id']>;
+  dislikedBy: Types.Array<UserDocument['_id']>;
 }
 
 const storyMetaSchema = new Schema(
@@ -13,14 +13,14 @@ const storyMetaSchema = new Schema(
     _id: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Story",
+      ref: 'Story',
     },
     likedBy: {
       type: [
         {
           type: Schema.Types.ObjectId,
           required: true,
-          ref: "User",
+          ref: 'User',
         },
       ],
       select: !false,
@@ -30,7 +30,7 @@ const storyMetaSchema = new Schema(
         {
           type: Schema.Types.ObjectId,
           required: true,
-          ref: "User",
+          ref: 'User',
         },
       ],
       select: !false,
@@ -42,6 +42,7 @@ const storyMetaSchema = new Schema(
     toJSON: { virtuals: true },
   }
 );
-const StoryMetaModel = model("StoryMeta", storyMetaSchema);
 
-export default StoryMetaModel;
+const StoryMeta = model<StoryMetaDocument>('StoryMeta', storyMetaSchema);
+
+export default StoryMeta;

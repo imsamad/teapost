@@ -1,7 +1,7 @@
 import CollectionDrawer from './CollectionDrawer';
 
 import { IconButton, useDisclosure } from '@chakra-ui/react';
-import { BiBookAdd } from 'react-icons/bi';
+
 import { RiShieldStarFill } from 'react-icons/ri';
 
 const Index = ({ storyId }: { storyId: string }) => {

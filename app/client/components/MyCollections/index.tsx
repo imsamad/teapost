@@ -5,14 +5,14 @@ import {
   HStack,
   Spinner,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { useCallback, useRef, useState } from "react";
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import { StoryCollectionType } from "@lib/types/StoryCollectionType";
+import { StoryCollectionType } from '@lib/types/StoryCollectionType';
 
-import CollectionCard from "./CollectionCard";
+import CollectionCard from './CollectionCard';
+import useInfinite from '@compo/Hooks/useInfinite';
 
 const Index = ({
   initialMycollections,
@@ -28,25 +28,9 @@ const Index = ({
     pagination: { next: number; prev: number; limit: number };
   }>(() => !isInitial && `/collections/my?page=${nextPageNo}`);
 
-  const [show, setShow] = useState(false);
-
-  const observer: any = useRef();
-  const isInView = useCallback((node) => {
-    if (isInitial || !nextPageNo) {
-      return;
-    }
-    observer.current = new IntersectionObserver(
-      async (entries, observerInst) => {
-        if (entries[0].isIntersecting) {
-          setShow(true);
-          observer?.current?.disconnect(node);
-          observerInst?.unobserve(entries[0].target);
-        }
-      }
-    );
-    if (node) observer?.current?.observe(node);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { isInView, show } = useInfinite({
+    ignore: !!initialMycollections || !nextPageNo,
+  });
   return (
     <Container maxW="container.md" p="0">
       <div ref={isInitial ? null : isInView} />

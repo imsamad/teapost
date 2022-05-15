@@ -1,5 +1,5 @@
 import { getRndInteger, lorem } from '../../src/lib/utils';
-import { phrases } from './slugs';
+import { phrases } from './words';
 
 export const createContent = () => {
   let content = '';

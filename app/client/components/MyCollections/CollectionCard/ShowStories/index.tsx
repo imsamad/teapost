@@ -1,14 +1,14 @@
-import { UpDownIcon } from "@chakra-ui/icons";
-import { Box, Button, Collapse, useDisclosure } from "@chakra-ui/react";
-import { CgArrowsScrollV } from "react-icons/cg";
+import { UpDownIcon } from '@chakra-ui/icons';
+import { Box, Button, Collapse, useDisclosure } from '@chakra-ui/react';
+import { CgArrowsScrollV } from 'react-icons/cg';
 
-import Stories from "@compo/Stories";
+import Stories from '@compo/Stories';
 const fo = {
-  _focus: { outline: "none" },
-  variant: "outline",
-  colorScheme: "blue",
+  _focus: { outline: 'none' },
+  variant: 'outline',
+  colorScheme: 'blue',
 
-  size: "sm",
+  size: 'sm',
 };
 const ShowStories = ({ collectionId }: { collectionId: string }) => {
   const showStories = useDisclosure();

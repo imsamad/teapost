@@ -127,6 +127,9 @@ const getAllStories = asyncHandler(async (req: Request, res: Response) => {
   });
   let populate = [
     {
+      path: 'meta',
+    },
+    {
       path: 'collabWith',
       transform: (v: any) => peelUserDoc(v),
     },
@@ -167,6 +170,7 @@ const getAllStories = asyncHandler(async (req: Request, res: Response) => {
     typeof req.query.populate == 'string'
       ? req.query.populate?.includes('comment')
       : false;
+
   populateComment && queryRef.populate(commentPopulate);
   let selectContent =
     typeof req.query.select == 'string'

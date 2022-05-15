@@ -98,8 +98,17 @@ const storySchema = new Schema(
 
 storySchema.pre('save', async function (next) {
   if (!this.isNew) return next();
+  let user = await this.model('User').findById(this.author);
+  if (!user) {
+    next(
+      ErrorResponse(400, {
+        message: 'Not authorised',
+      })
+    );
+    return;
+  }
 
-  await this.model('User').findOneAndUpdate(
+  user = await this.model('User').findOneAndUpdate(
     { _id: this.author },
     { $inc: { stories: 1 } }
   );
@@ -139,6 +148,7 @@ storySchema.virtual('comments', {
   foreignField: 'story',
   justOne: false,
 });
+
 storySchema.pre('remove', async function (next) {
   // Remove related StoryMeta + StoryHistory + All Primary ==> Secondary
   let deletedPrimary: any = await this.model('Primary').find({

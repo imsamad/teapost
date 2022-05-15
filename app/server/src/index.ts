@@ -58,7 +58,6 @@ app.use(
 app.use(express.static(path.join(__dirname, '../', 'public')));
 
 app.use(BUSINESS_ROUTES);
-
 app.get('/api/v1/health', (_req, res) => {
   return res.json({
     dir: __dirname,
@@ -70,8 +69,8 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, async () => {
-  connectDB();
 
+app.listen(PORT, async () => {
+  await connectDB();
   console.log(`):- Listening on http://localhost:${PORT}`.yellow.bold);
 });

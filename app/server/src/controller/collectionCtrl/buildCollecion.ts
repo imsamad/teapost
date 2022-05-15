@@ -53,7 +53,7 @@ const buildCollecion = asyncHandler(
         updatePromise.push(
           StoryCollection.findOneAndUpdate(
             { _id: collId, user },
-            { _id: collId, user, $push: { stories: story._id } },
+            { _id: collId, user, $addToSet: { stories: story._id } },
             { new: true, upsert: true }
           )
         );

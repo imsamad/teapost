@@ -1,11 +1,11 @@
-import { Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Text } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Wrapper from "./Wrapper";
-import CollectionMeta from "./CollectionMeta";
-import ShowStories from "./ShowStories";
+import Wrapper from './Wrapper';
+import CollectionMeta from './CollectionMeta';
+import ShowStories from './ShowStories';
 
-import { StoryCollectionType } from "@lib/types/StoryCollectionType";
+import { StoryCollectionType } from '@lib/types/StoryCollectionType';
 
 const Index = ({
   collection: collectionTemp,

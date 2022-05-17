@@ -12,7 +12,7 @@ const getMyAssets = asyncHandler(async (req: Request, res: Response) => {
   let assets = await Asset.findById(req.user._id).lean();
   // let original = await getAllImageFromCloudinary();
   const type = req.originalUrl.split('/').pop();
-  console.log('type ', type);
+
   const allowedTypes = ['images', 'videos', 'raws', 'audios'];
   if (type && allowedTypes.includes(type)) {
     // @ts-ignore

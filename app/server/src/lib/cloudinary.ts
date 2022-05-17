@@ -36,7 +36,6 @@ export const getAllImageFromCloudinary = async () => {
       max_results: 200,
       prefix: 'avatar',
     });
-    console.log('resources.length ', resources.length);
     return { resources: resources, result: true };
   } catch (err) {
     console.log('err from getAllImageFromCloudinary ', err);

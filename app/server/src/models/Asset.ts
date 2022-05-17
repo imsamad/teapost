@@ -1,10 +1,5 @@
 import { Schema, model, Types, Document } from 'mongoose';
-
-export interface FileType {
-  src: string;
-  tags?: string[];
-  public_id?: string;
-}
+import { FileType } from '../lib/types/AssetType';
 
 export interface AssetDocument extends Document {
   images: Types.Array<FileType>;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import createToken from '../../lib/createToken';
 import sendEmail from '../../lib/sendEmail';
-import { asyncHandler, ErrorResponse, sendTokens } from '../../lib/utils';
+import { asyncHandler, sendTokens } from '../../lib/utils';
 import User from '../../models/User';
 
 // @desc      Update Details

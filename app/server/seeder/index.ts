@@ -56,8 +56,8 @@ const importData = async () => {
 (async () => {
   if (process.argv[2] === '-i') {
     await dbConnect();
-
-    await importData();
+    await generateAssets(13);
+    // await importData();
   } else if (process.argv[2] === '-d') {
     await dbConnect();
     await deleteData();

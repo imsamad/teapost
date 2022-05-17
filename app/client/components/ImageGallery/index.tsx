@@ -9,9 +9,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Skeleton,
-} from "@chakra-ui/react";
-import { ImageUrlType } from "@lib/types/ImageType";
-import useSWR from "swr";
+} from '@chakra-ui/react';
+
+import { AssetUploadResponse } from '@lib/types/AssetType';
+
+import useSWR from 'swr';
 
 const ImageGallery = ({
   isOpen,
@@ -22,10 +24,9 @@ const ImageGallery = ({
   onClose: () => void;
   onClickCb: (url: string) => void;
 }) => {
-  const { data, error, isValidating } = useSWR<{ result: ImageUrlType[] }>(
-    () => isOpen && "/image"
+  const { data, error, isValidating } = useSWR<AssetUploadResponse>(
+    () => isOpen && '/assets/images'
   );
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl" scrollBehavior="inside">
       <ModalOverlay />
@@ -34,7 +35,7 @@ const ImageGallery = ({
         <ModalCloseButton />
         <ModalBody flexWrap="wrap">
           <Box
-            display={["block", "block", "grid"]}
+            display={['block', 'block', 'grid']}
             gridTemplateColumns="repeat(2,1fr)"
             gridAutoRows="auto"
           >
@@ -56,22 +57,24 @@ const ImageGallery = ({
               </Heading>
             ) : (
               data?.result.map((image) => (
-                <Box key={image.id} p="2">
+                <Box key={image.public_id || image.src} p="2">
                   <Box
                     onClick={() => {
                       onClickCb(image.src!);
                       onClose();
                     }}
-                    key={image.id}
                     border="1px"
                     _hover={{
-                      outline: "2px solid blue",
+                      outline: '2px solid blue',
                     }}
                     borderRadius="md"
                     position="relative"
                     overflow="hidden"
                   >
-                    <Image key={image.id} src={image.src} alt={image.caption} />
+                    <Image
+                      src={image.src}
+                      alt={image.tags[0] || image.src.split('/').pop()}
+                    />
                     <Heading
                       position="absolute"
                       bottom="0"
@@ -85,7 +88,7 @@ const ImageGallery = ({
                       pl="2"
                       py="1"
                     >
-                      {image.caption}
+                      {image.src.split('/').pop()}
                     </Heading>
                   </Box>
                 </Box>

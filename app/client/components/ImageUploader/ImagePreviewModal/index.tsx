@@ -11,9 +11,9 @@ import {
   ModalOverlay,
   useDisclosure,
   useToast,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { uploadImage } from "@lib/api/imageApi";
+import { uploadImage } from '@lib/api/imageApi';
 
 const ImagePreviewModal = ({
   isOpen,
@@ -32,19 +32,21 @@ const ImagePreviewModal = ({
     isLoading.onOpen();
     uploadImage(file)
       .then(({ result }) => {
-        imageUploadCB(result[0].url);
-        onClose();
+        imageUploadCB(result[0].src);
       })
       .catch((err) => {
         toast({
-          status: "error",
-          title: "Unable to upload plz try again",
-          variant: "top-accent",
-          position: "bottom",
+          status: 'error',
+          title: 'Unable to upload plz try again',
+          variant: 'top-accent',
+          position: 'bottom',
           isClosable: true,
         });
       })
-      .finally(() => isLoading.onClose());
+      .finally(() => {
+        isLoading.onClose();
+        onClose();
+      });
   };
   return (
     <Modal

@@ -67,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Home | Teapost</title>
+        <title>Teapost</title>
       </Head>
       <ChakraProvider theme={theme}>
         <SWR>

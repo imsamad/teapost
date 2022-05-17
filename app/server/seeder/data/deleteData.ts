@@ -16,6 +16,7 @@ import 'colors';
 export const deleteData = async () => {
   try {
     await Asset.deleteMany();
+
     await Profile.deleteMany();
     await Story.deleteMany();
     await StoryCollection.deleteMany();

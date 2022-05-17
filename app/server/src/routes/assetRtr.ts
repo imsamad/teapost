@@ -5,12 +5,14 @@ import { protect } from '../middleware/auth';
 
 const router: Router = express();
 
-router.route(['/upload', '/']).post(
+router.route(['/upload', '/', '/images', '/videos', '/raws', '/audios']).post(
   protect,
   //  validateSchema(uploadAssetsSchema),
   uploadAssets
 );
 
-router.route(['/', '/my']).get(protect, getMyAssets);
+router
+  .route(['/', '/my', '/images', '/videos', '/raws', '/audios'])
+  .get(protect, getMyAssets);
 
 export default router;

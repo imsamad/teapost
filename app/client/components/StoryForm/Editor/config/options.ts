@@ -53,13 +53,13 @@ export const setOptions = (): SetOptions => {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     imageUploadSizeLimit: oneMB * 4,
-    imageMultipleFile: true,
+    imageMultipleFile: false,
     imageUploadUrl: `${process.env.NEXT_PUBLIC_API_URL}/assets/upload`,
     imageGalleryHeader: {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     imageGalleryUrl:
-      `${process.env.NEXT_PUBLIC_API_URL}/assets` ||
+      `${process.env.NEXT_PUBLIC_API_URL}/assets/images` ||
       'https://fake-images.glitch.me?limit=100',
     imageFileInput: true,
     imageUrlInput: true,
@@ -74,10 +74,10 @@ export const setOptions = (): SetOptions => {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     videoUploadUrl:
-      `${process.env.NEXT_PUBLIC_API_URL}/assets/video` ||
+      `${process.env.NEXT_PUBLIC_API_URL}/assets` ||
       'https://fake-images.glitch.me?limit=100',
     videoUploadSizeLimit: 4 * oneMB,
-    videoMultipleFile: true,
+    videoMultipleFile: false,
 
     audioFileInput: true,
     audioUrlInput: true,
@@ -85,10 +85,10 @@ export const setOptions = (): SetOptions => {
       Authorization: `Bearer ${user?.accessToken}`,
     },
     audioUploadUrl:
-      `${process.env.NEXT_PUBLIC_API_URL}/video` ||
+      `${process.env.NEXT_PUBLIC_API_URL}/assets` ||
       'https://fake-images.glitch.me?limit=100',
     audioUploadSizeLimit: 4 * oneMB,
-    audioMultipleFile: true,
+    audioMultipleFile: false,
     buttonList: buttonList(),
   };
 };

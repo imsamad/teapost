@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, Types, Document } from 'mongoose';
 
 export interface FileType {
-  url: string;
+  src: string;
   tags: string[];
   public_id: string;
 }
@@ -13,7 +13,7 @@ export interface AssetDocument extends Document {
 }
 
 const SingleFile = {
-  url: String,
+  src: String,
   tags: [String],
   public_id: String,
 };

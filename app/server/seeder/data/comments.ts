@@ -57,7 +57,7 @@ export const generateSecondaryComments = async () => {
   const mockSecondaryCommentsCreated = await Secondary.create(
     mockSecondaryComments.flat()
   );
-  console.log('):- Primary Comments generated.'.green.italic);
+  console.log('):- Secondary Comments generated.'.green.italic);
   return mockSecondaryCommentsCreated;
 };
 

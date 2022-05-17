@@ -23,7 +23,7 @@ import { deleteData } from './data/deleteData';
 
 const importData = async () => {
   try {
-    const isKickstart = !false;
+    const isKickstart = false;
     const lengthOfDocs = isKickstart ? 10 : undefined;
     await generateTags(lengthOfDocs);
     await generateUsers(lengthOfDocs);
@@ -56,6 +56,7 @@ const importData = async () => {
 (async () => {
   if (process.argv[2] === '-i') {
     await dbConnect();
+
     await importData();
   } else if (process.argv[2] === '-d') {
     await dbConnect();

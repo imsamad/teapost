@@ -16,7 +16,7 @@ export const generateAssets = async (maxNoOfAssets?: number) => {
           maxNoOfAssets || Math.floor(titleImages.length * 0.75)
         )
       )
-      .map((image) => ({ url: image.secure_url, public_id: image.public_id })),
+      .map((image) => ({ src: image.secure_url, public_id: image.public_id })),
   }));
   const assetsCreated = await Asset.create(assets);
   console.log('):- Assets generated.'.green.italic);

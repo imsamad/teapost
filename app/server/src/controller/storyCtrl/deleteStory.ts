@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { object, string } from 'yup';
+import { array, object, string } from 'yup';
 
 import { isValidObjectId } from 'mongoose';
 import validateSchema from '../../middleware/validateSchemaMdlwr';
-import { asyncHandler, ErrorResponse } from '../../lib/utils';
+import { asyncHandler, ErrorResponse, typeOf } from '../../lib/utils';
 import Story from '../../models/Story';
 
 // @desc      Delete story
@@ -13,18 +13,30 @@ import Story from '../../models/Story';
 
 const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    const storyIds =
+      req.params.storyId == 'multiple'
+        ? req.body?.storyIds
+        : [req.params.storyId];
+
+    if (!storyIds?.length) return next(ErrorResponse(400, 'Provide storyIds'));
     //  @ts-ignore
-    const { _id: user, role } = req.user;
-    const story = await Story.findById(req.params.storyId);
-    if (!story) {
+    const author = req.user._id.toString();
+    const stories = await Story.find({ _id: { $in: storyIds }, author }).select(
+      '-content'
+    );
+
+    if (!stories.length) {
       return next(ErrorResponse(400, 'Resource not found'));
     }
-    if (story.author.toString() != user && role != 'admin')
-      return next(ErrorResponse(400, 'Not authorised'));
+    const storiesDeleted = await Promise.allSettled(
+      stories.map((story) => story.remove())
+    );
 
-    await story.remove();
     return res.json({
-      status: 'deleted',
+      stories: storiesDeleted
+        .filter((resolve) => resolve.status == 'fulfilled')
+        // @ts-ignore
+        .map((resolve) => resolve.value),
     });
   }
 );
@@ -33,12 +45,30 @@ const schema = object({
   params: object({
     storyId: string()
       .label('storyId')
-      .required()
       .typeError('StoryId must be string type.')
       .test('storyId', 'Story Id must be a valid', (val) =>
-        isValidObjectId(val)
+        val == 'multiple' ? true : isValidObjectId(val)
       ),
   }),
-});
+  body: object({
+    storyIds: array()
+      .label('storyIds')
+      .typeError('To delete multiple proide array of storyIds')
+      .test(
+        'storyId',
+        'To delete multiple proide array of storyIds',
+        (val: any) =>
+          !val ? true : typeOf(val, 'array') && val.every(isValidObjectId)
+      ),
+  }),
+})
+  .label('body')
+  .test('body', 'Provide proper story id', (val: any) => {
+    console.log('val ', val);
+    if (val.params.storyId == 'multiple')
+      return val.body.storyIds && typeOf(val.body.storyIds, 'array');
+
+    return true;
+  });
 
 export default [validateSchema(schema), ctrl];

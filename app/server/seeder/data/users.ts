@@ -8,9 +8,10 @@ import Profile from '../../src/models/Profile';
 const genTagLines = () =>
   buzzwords.sort((a, b) => Math.random() - Math.random()).slice(0, 3);
 
-export const generateUsers = async (length?: number) => {
+export const generateUsers = async (from=0,length?: number) => {
+  console.time('):- Users generated '.green.italic);
   const users = mockUsers()
-    .slice(0, length)
+    .slice(from, length)
     .map(({ _id, ...rest }) => ({
       ...rest,
       profilePic: avatars[getRndInteger(0, avatars.length)].secure_url,
@@ -18,13 +19,14 @@ export const generateUsers = async (length?: number) => {
     }));
 
   const userCreated = await User.create(users);
-  console.log('):- Users generated.'.green.italic);
+  console.timeEnd('):- Users generated '.green.italic);
   return userCreated;
 };
 export const generateProfiles = async () => {
+  console.time('):- Profiles generated '.green.italic);
   const users = (await User.find({}).lean()).map(({ _id }) => _id);
   const profiles = await Profile.create(users.map((_id) => ({ _id })));
-  console.log('):- Profiles generated.'.green.italic);
+  console.timeEnd('):- Profiles generated '.green.italic);
   return profiles;
 };
 

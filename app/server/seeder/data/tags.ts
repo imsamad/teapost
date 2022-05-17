@@ -80,8 +80,9 @@ const tags = [
 ];
 
 export const generateTags = async (length?: number) => {
+  console.time('):- Tags generated '.green.italic);
   const tagsCreated = await Tag.create(tags.slice(0, length));
-  console.log('):- Tags generated.'.green.italic);
+  console.timeEnd('):- Tags generated '.green.italic);
   return tagsCreated;
 };
 

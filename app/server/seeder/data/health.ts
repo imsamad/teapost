@@ -3,40 +3,78 @@ import Secondary from '../../src/models/Comment/Secondary';
 import Story from '../../src/models/Story';
 import User from '../../src/models/User';
 import 'colors';
+import Profile from '../../src/models/Profile';
+import Tag from '../../src/models/Tag';
+import Asset from '../../src/models/Asset';
+import StoryMeta from '../../src/models/StoryMeta';
+import CommentMeta from '../../src/models/Comment/CommentMeta';
+import StoryCollection from '../../src/models/StoryCollection';
+
 export const checkCompatibility = async () => {
   console.log('):- Checking Data compatibilties'.blue);
+
   const users = await User.find({}).lean();
   const totalStories = users.reduce(
     (total, crtUser) => total + crtUser.stories,
     0
   );
-  console.log('Total No. of stories created by Users ', totalStories);
   const stories = await Story.find({}).populate('meta').lean();
+  if (totalStories != stories.length) {
+    console.log(
+      `Total stories eexist in DB conflict with no of stories registered in User schema`
+    );
+  }
 
-  console.log('Total stories exist in DB', stories.length);
-
-  const totalComents = stories.reduce(
+  const totalComments = stories.reduce(
     (total, crtStory) => total + crtStory.noOfComments,
     0
   );
-
-  console.log('Total No. of comments registered in stories', totalComents);
-
   const primaries = await Primary.find({}).lean();
   const secondaries = await Secondary.find({}).lean();
-  console.log(
-    'Total No of 1* & 2* comments exist in DB ',
-    primaries.length + secondaries.length
-  );
 
-  let flag = 0;
+  if (primaries.length + secondaries.length != totalComments) {
+    console.log(
+      `Total comments exist in DB conflict with no of comments registered in Story schema`
+    );
+  }
 
+  let everyThingHonkeyDory = 0;
+
+  const pro = () =>
+    new Promise((resolve) => {
+      stories.slice(0, 100).forEach(async (story, index) => {
+        const noOfUsersLiked = (
+          await Profile.find({
+            likedStories: { $in: [story._id] },
+          }).lean()
+        ).length;
+        const noOfUsersDisliked = (
+          await Profile.find({
+            dislikedStories: { $in: [story._id] },
+          }).lean()
+        ).length;
+        if (noOfUsersDisliked != story.noOfDislikes) {
+          console.log(`Story ${story._id} have mismatched disliked`);
+        }
+        if (noOfUsersLiked != story.noOfLikes) {
+          console.log(`Story ${story._id} have mismatched liked`);
+        }
+        console.log(
+          `Story.noOfLikes=> ${story.noOfLikes} <=> noOfUsersLiked ${noOfUsersLiked} `
+        );
+        console.log(
+          `Story.noOfDislikes=> ${story.noOfDislikes} <=> noOfUsersDisliked ${noOfUsersDisliked} `
+        );
+        if (index == stories.length - 1) resolve(true);
+      });
+    });
+  // await pro();
   stories.forEach((story) => {
     if (
       story.noOfLikes != 0 &&
       (!story?.meta || story.noOfLikes != story.meta.likedBy.length)
     ) {
-      flag++;
+      everyThingHonkeyDory++;
       console.log(`Story with id ${story._id} have mismatch like fields.`);
     }
 
@@ -44,14 +82,32 @@ export const checkCompatibility = async () => {
       story.noOfDislikes != 0 &&
       (!story?.meta || story.noOfDislikes != story.meta.dislikedBy.length)
     ) {
-      flag++;
+      everyThingHonkeyDory++;
       console.log(`Story with id ${story._id} have mismatch dislike fields.`);
     }
   });
 
-  if (flag) {
-    console.log(`${flag} stories is not according to schemas`);
-  } else {
-    console.log('Every thing is hunky-dory');
-  }
+  if (everyThingHonkeyDory)
+    console.log(`${everyThingHonkeyDory} stories is not according to schemas`);
+
+  console.log(`Total Tags ${await Tag.countDocuments()}`.blue.italic);
+  console.log(`Total Users ${users.length}`.blue.italic);
+  console.log(`Total Profiles ${await Profile.countDocuments()}`.blue.italic);
+  console.log(
+    `Total Collections ${await StoryCollection.countDocuments()}`.blue.italic
+  );
+  console.log(`Total Assets ${await Asset.countDocuments()}`.blue.italic);
+  console.log(`Total Stories ${stories.length}`.blue.italic);
+  console.log(
+    `Total StoryMetas ${await StoryMeta.countDocuments()}`.blue.italic
+  );
+  console.log(`Total Primary ${primaries.length}`.blue.italic);
+  console.log(`Total Secondary ${secondaries.length}`.blue.italic);
+  console.log(
+    `Total Comments ${primaries.length + secondaries.length}`.blue.italic
+  );
+
+  console.log(
+    `Total CommentMetas ${await CommentMeta.countDocuments()}`.blue.italic
+  );
 };

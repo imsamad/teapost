@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 import 'colors';
-const connectDB = () =>
+const connectDB = (setOptions = false) =>
   new Promise((resolve, reject) => {
     const mongoUri = process.env.MONGODB_URI!;
-    // const oneMin = 1000 * 60;
-    // const options = {
-    //   maxPoolSize: 10, // Maintain up to 10 socket connections
-    //   serverSelectionTimeoutMS: oneMin * 5, // Keep trying to send operations for 5 seconds
-    //   socketTimeoutMS: oneMin * 5, // Close sockets after 45 seconds of inactivity
-    // };
-    mongoose.connect(mongoUri);
+    const oneMin = 1000 * 60;
+    const options = {
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      serverSelectionTimeoutMS: oneMin * 5, // Keep trying to send operations for 5 seconds
+      socketTimeoutMS: oneMin * 5, // Close sockets after 45 seconds of inactivity
+    };
+    mongoose.connect(mongoUri, setOptions ? options : {});
 
     const db = mongoose.connection;
 
@@ -30,16 +30,18 @@ const connectDB = () =>
       );
     });
 
-    process.on('SIGINT', () => {
-      reject(false);
+    const closeDB = () =>
       db.close(() => {
         console.log(
-          `):- MongoDB is disconnecting due to app termination...`.red.underline
+          `):- MongoDB is disconnecting due to node app exit...`.red.underline
             .bold
         );
         process.exit(0);
       });
-    });
+
+    process.on('SIGINT', closeDB);
+    process.on('exit', closeDB);
+    process.on('beforeExit', closeDB);
   });
 
 export default connectDB;

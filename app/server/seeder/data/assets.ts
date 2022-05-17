@@ -4,6 +4,7 @@ import { getRndInteger } from '../../src/lib/utils';
 import 'colors';
 import Asset from '../../src/models/Asset';
 export const generateAssets = async (maxNoOfAssets?: number) => {
+  console.time('):- Assets generated '.green.italic);
   const userIds = (await User.find({})).map(({ _id }) => _id.toString());
   const assets = userIds.map((user) => ({
     _id: user,
@@ -19,6 +20,6 @@ export const generateAssets = async (maxNoOfAssets?: number) => {
       .map((image) => ({ src: image.secure_url, public_id: image.public_id })),
   }));
   const assetsCreated = await Asset.create(assets);
-  console.log('):- Assets generated.'.green.italic);
+  console.timeEnd('):- Assets generated '.green.italic);
   return assetsCreated;
 };

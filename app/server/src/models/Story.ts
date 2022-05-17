@@ -159,6 +159,14 @@ storySchema.pre('remove', async function (next) {
 
   promises.push(this.model('StoryMeta').findByIdAndRemove(this._id));
   promises.push(this.model('StoryHistory').findByIdAndRemove(this._id));
+  // promises.push(
+  //   this.model('Profile').updateMany(
+  //     {},
+  //     {
+  //       $pull: { likedStories: this._id, dislikedStories: this._id },
+  //     }
+  //   )
+  // );
 
   promises.push(
     this.model('User').findOneAndUpdate(

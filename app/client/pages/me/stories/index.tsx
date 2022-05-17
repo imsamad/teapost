@@ -1,7 +1,7 @@
-import MyStories from "@compo/MyStories";
-import React from "react";
+import MyStories from '@compo/MyStories';
+import React from 'react';
 
-import DashboardHeader from "@compo/DashboardHeader";
+import DashboardHeader from '@compo/DashboardHeader';
 const Index = () => {
   return (
     <>
@@ -10,5 +10,4 @@ const Index = () => {
     </>
   );
 };
-
 export default Index;

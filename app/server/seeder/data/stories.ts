@@ -11,7 +11,7 @@ import titleImages from './titleImages';
 import { phrases } from './words';
 import User from '../../src/models/User';
 import Tag from '../../src/models/Tag';
-import Story from '../../src/models/Story';
+import Story, { StoryDocument } from '../../src/models/Story';
 import StoryMeta from '../../src/models/StoryMeta';
 import Profile from '../../src/models/Profile';
 import 'colors';
@@ -21,6 +21,8 @@ const titleImagesLen = titleImages.length;
 const phrasesLen = phrases.length;
 
 export const generateStories = async (len = phrasesLen - 1) => {
+  console.time('):- Stories generated '.green.italic);
+
   const userIds = (await User.find({}).lean()).map(({ _id }) => _id.toString());
   const tagIds = (await Tag.find({}).lean()).map(({ _id }) => _id.toString());
   const tagLen = tagIds.length;
@@ -60,20 +62,26 @@ export const generateStories = async (len = phrasesLen - 1) => {
       return newStory;
     });
   const createStories = await Story.create(generatedStories);
-  console.log('):- Stories generated.'.green.italic);
+  console.timeEnd('):- Stories generated '.green.italic);
   return createStories;
+};
+export const downgradeStories = async () => {
+  await Story.updateMany({}, { noOfLikes: 0, noOfDislikes: 0 });
+  await StoryMeta.deleteMany();
+  await Profile.updateMany({}, { likedStories: [], dislikedStories: [] });
+  console.log('):- Stories downgrades'.blue);
 };
 
 export const gradeStories = async () => {
+  console.time('):- Stories graded '.green.italic);
   const users = (await User.find({}).lean()).map(({ _id }) => _id.toString());
-  const stories = await Story.find({});
 
-  let storyMetas: any = [];
-  let dbTscPromises: any = [];
+  // let storyMetas: any = [];
+  // let dbTscPromises: any = [];
 
-  const runProg = () =>
-    new Promise((resolve) => {
-      stories.forEach((story, index) => {
+  const runProg = (stories: StoryDocument[]) =>
+    new Promise(async (resolve) => {
+      stories.forEach(async (story, index) => {
         const noOfLikes = getRndInteger(0, users.length / 2);
         const noOfDislikes = getRndInteger(0, users.length / 2);
 
@@ -85,43 +93,49 @@ export const gradeStories = async () => {
           noOfLikes,
           noOfLikes + noOfDislikes
         );
-
-        storyMetas.push({
+        const storyMeta = {
           dislikedBy,
           likedBy,
           _id: story._id,
-        });
-
+        };
+        // storyMetas.push(storyMeta);
+        await StoryMeta.create(storyMeta);
         story.noOfLikes = noOfLikes;
         story.noOfDislikes = noOfDislikes;
-        dbTscPromises.push(story.save());
+        // dbTscPromises.push(story.save());
+        await story.save();
 
-        dbTscPromises.push(
-          Profile.updateMany(
-            { _id: { $in: likedBy } },
-            {
-              $addToSet: { likedStories: story._id },
-              $pull: { dislikedStories: story._id },
-            }
-          )
+        let profileUpdateRef: any = Profile.updateMany(
+          { _id: { $in: likedBy } },
+          {
+            $addToSet: { likedStories: story._id },
+            $pull: { dislikedStories: story._id },
+          }
         );
-
-        dbTscPromises.push(
-          Profile.updateMany(
-            { _id: { $in: dislikedBy } },
-            {
-              $addToSet: { dislikedStories: story._id },
-              $pull: { likedStories: story._id },
-            }
-          )
+        // dbTscPromises.push(profileUpdateRef);
+        await profileUpdateRef;
+        profileUpdateRef = Profile.updateMany(
+          { _id: { $in: dislikedBy } },
+          {
+            $addToSet: { dislikedStories: story._id },
+            $pull: { likedStories: story._id },
+          }
         );
+        // dbTscPromises.push(profileUpdateRef);
+        await profileUpdateRef;
         if (index == stories.length - 1) resolve(true);
       });
     });
-  await runProg();
-  await Promise.allSettled(dbTscPromises);
-  await StoryMeta.create(storyMetas);
 
-  console.log('):- Stories graded.'.green.italic);
+  let stories = await Story.find({});
+  for (let i = 0; i < stories.length; i = i + 50)
+    await runProg(stories.slice(i, i + 50));
+
+  // await runProg(stories.slice(0, Math.floor(stories.length / 2)));
+  // await runProg(stories.slice(Math.floor(stories.length / 2), undefined));
+  // await Promise.allSettled(dbTscPromises);
+  // await StoryMeta.create(storyMetas);
+
+  console.timeEnd('):- Stories graded '.green.italic);
   return;
 };

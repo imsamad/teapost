@@ -1,5 +1,6 @@
 import { getRndInteger, lorem } from '../../src/lib/utils';
 import { phrases } from './words';
+import titleImages from './titleImages';
 
 export const createContent = () => {
   let content = '';
@@ -49,9 +50,9 @@ export const createContent = () => {
           shouldInsertImage < 25)
       ) {
         content += `<figure>`;
-        content += `<img src="https://source.unsplash.com/random/800x600" alt=${lorem.generateWords(
-          3
-        )} />`;
+        content += `<img src=${
+          titleImages[getRndInteger(0, titleImages.length)].secure_url
+        } alt=${lorem.generateWords(3)} />`;
         content += `<figcaption>Fig.${imageCount++} - ${lorem.generateWords(
           getRndInteger(3, 7)
         )}</figcaption>`;

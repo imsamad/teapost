@@ -1,3 +1,5 @@
+import Tag from '../../src/models/Tag';
+import 'colors';
 const tags = [
   {
     _id: '6221bf0044eaf2d6fc67b995',
@@ -76,5 +78,11 @@ const tags = [
   { _id: '627a0d23fc13ae266e00012a', title: 'User-friendly' },
   { _id: '627a0d23fc13ae266e00012b', title: 'Optional' },
 ];
+
+export const generateTags = async (length?: number) => {
+  const tagsCreated = await Tag.create(tags.slice(0, length));
+  console.log('):- Tags generated.'.green.italic);
+  return tagsCreated;
+};
 
 export default tags;

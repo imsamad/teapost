@@ -9,7 +9,7 @@ import Secondary, {
 } from '../../src/models/Comment/Secondary';
 
 import CommentMeta from '../../src/models/Comment/CommentMeta';
-
+import 'colors';
 export const generatePrimaryComments = async () => {
   const storyIds = (await Story.find({}).lean()).map((_id) => _id);
   const userIds = (await User.find({}).lean()).map(({ _id }) => _id);
@@ -28,8 +28,12 @@ export const generatePrimaryComments = async () => {
       }));
     return commentsOfStory;
   });
+  const mockPrimaryCommentsCreated = await Primary.create(
+    mockPrimaryComments.flat()
+  );
+  console.log('):- Primary Comments generated.'.green.italic);
 
-  return mockPrimaryComments.flat();
+  return mockPrimaryCommentsCreated;
 };
 
 export const generateSecondaryComments = async () => {
@@ -50,8 +54,11 @@ export const generateSecondaryComments = async () => {
       }));
     return repliesToPrimary;
   });
-
-  return mockSecondaryComments.flat();
+  const mockSecondaryCommentsCreated = await Secondary.create(
+    mockSecondaryComments.flat()
+  );
+  console.log('):- Primary Comments generated.'.green.italic);
+  return mockSecondaryCommentsCreated;
 };
 
 export const gradeComments = async () => {
@@ -95,5 +102,6 @@ export const gradeComments = async () => {
   await runProg(secondaries);
   await Promise.allSettled(dbTscPromises);
   await CommentMeta.create(commentsMetas);
+  console.log('):- Stories graded.'.green.italic);
   return;
 };

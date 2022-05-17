@@ -8,6 +8,7 @@ import dbConnect from '@lib/dbConnect';
 import User, { peelUserDoc } from '@lib/models/User';
 import Story from '@lib/models/Story';
 import Head from 'next/head';
+import Tag from '@lib/models/Tag';
 
 const Index = ({
   stories,
@@ -66,6 +67,7 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }: any) => {
   await dbConnect();
 
+  await Tag.find({}).limit(1);
   const author = await User.findOne({ username: params.author }).lean();
 
   if (!author) {
@@ -77,7 +79,12 @@ export const getStaticProps = async ({ params }: any) => {
     };
   }
 
-  const result = await Story.find({ author: author._id })
+  const result = await Story.find({
+    author: author._id,
+    isPublished: true,
+    isPublishedByAdmin: true,
+    hadEmailedToFollowers: true,
+  })
     .populate([
       {
         path: 'collabWith',

@@ -1,22 +1,32 @@
 import { buzzwords } from './words';
 import avatars from './avatars';
 import { getRndInteger } from '../../src/lib/utils';
+import 'colors';
+import User from '../../src/models/User';
+import Profile from '../../src/models/Profile';
 
 const genTagLines = () =>
   buzzwords.sort((a, b) => Math.random() - Math.random()).slice(0, 3);
 
-export const generateUsers = () =>
-  mockUsers()
-    .slice(0, 100)
+export const generateUsers = async (length?: number) => {
+  const users = mockUsers()
+    .slice(0, length)
     .map(({ _id, ...rest }) => ({
       ...rest,
       profilePic: avatars[getRndInteger(0, avatars.length)].secure_url,
       tagLines: genTagLines(),
     }));
 
-// export const userIds = mockUsers()
-//   .slice(0, 100)
-//   .map(({ _id }) => _id);
+  const userCreated = await User.create(users);
+  console.log('):- Users generated.'.green.italic);
+  return userCreated;
+};
+export const generateProfiles = async () => {
+  const users = (await User.find({}).lean()).map(({ _id }) => _id);
+  const profiles = await Profile.create(users.map((_id) => ({ _id })));
+  console.log('):- Profiles generated.'.green.italic);
+  return profiles;
+};
 
 export function mockUsers() {
   return [

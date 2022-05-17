@@ -2,6 +2,7 @@ import { buzzwords, phrases } from './words';
 import { getRndInteger } from '../../src/lib/utils';
 import Story from '../../src/models/Story';
 import User from '../../src/models/User';
+import StoryCollection from '../../src/models/StoryCollection';
 
 export const generateCollections = async () => {
   const storyIds = (await Story.find({}).lean()).map(({ _id }) => _id);
@@ -24,5 +25,9 @@ export const generateCollections = async () => {
       }));
     return crtUserCollections;
   });
-  return allCollections.flat();
+  const collectionsCreated = await StoryCollection.create(
+    allCollections.flat()
+  );
+  console.log('):- Stories Collections generated.'.green.italic);
+  return collectionsCreated;
 };

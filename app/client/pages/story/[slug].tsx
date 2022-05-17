@@ -37,7 +37,12 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }: any) => {
   await dbConnect();
   await Tag.find({}).limit(1);
-  const story = await Story.findOne({ slug: params.slug })
+  const story = await Story.findOne({
+    slug: params.slug,
+    isPublished: true,
+    isPublishedByAdmin: true,
+    hadEmailedToFollowers: true,
+  })
     .populate([
       {
         path: 'collabWith',
@@ -52,7 +57,13 @@ export const getStaticProps = async ({ params }: any) => {
       },
     ])
     .lean();
-
+  if (!story) {
+    return {
+      notFound: true,
+      revalidate: 10,
+    };
+    throw new Error(`Failed to fetch posts, received status `);
+  }
   let parsedStory = JSON.parse(JSON.stringify(story));
 
   return {

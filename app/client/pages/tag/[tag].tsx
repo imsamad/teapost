@@ -97,7 +97,12 @@ export const getStaticProps = async ({ params }: any) => {
       revalidate: 10,
     };
   }
-  const result = await Story.find({ tags: { $in: tag._id } })
+  const result = await Story.find({
+    tags: { $in: tag._id },
+    isPublished: true,
+    isPublishedByAdmin: true,
+    hadEmailedToFollowers: true,
+  })
     .populate([
       {
         path: 'collabWith',

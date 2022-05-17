@@ -14,6 +14,7 @@ import Tag from '../../src/models/Tag';
 import Story from '../../src/models/Story';
 import StoryMeta from '../../src/models/StoryMeta';
 import Profile from '../../src/models/Profile';
+import 'colors';
 
 const titleImagesLen = titleImages.length;
 
@@ -58,8 +59,9 @@ export const generateStories = async (len = phrasesLen - 1) => {
       };
       return newStory;
     });
-
-  return generatedStories;
+  const createStories = await Story.create(generatedStories);
+  console.log('):- Stories generated.'.green.italic);
+  return createStories;
 };
 
 export const gradeStories = async () => {
@@ -119,5 +121,7 @@ export const gradeStories = async () => {
   await runProg();
   await Promise.allSettled(dbTscPromises);
   await StoryMeta.create(storyMetas);
+
+  console.log('):- Stories graded.'.green.italic);
   return;
 };

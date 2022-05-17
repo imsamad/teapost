@@ -11,7 +11,7 @@ import * as seeder from './data';
 
 const importData = async () => {
   try {
-    const isKickstart = true;
+    const isKickstart = !true;
     const lengthOfDocs = isKickstart ? 10 : undefined;
     await seeder.generateTags(lengthOfDocs);
     await seeder.generateUsers(lengthOfDocs);

@@ -146,12 +146,12 @@ export const getStories = async (page = 1, queryType?: string) => {
 
 export const collabWithApi = async (
   storyId: string,
-  body: { collabWith?: string[]; uncollabWith?: string[] }
+  body: { addAuthors?: string[]; removeAuthors?: string[] }
 ) => {
   try {
-    if (!body.collabWith?.length) delete body.collabWith;
-    if (!body.uncollabWith?.length) delete body.uncollabWith;
-    if (!body.uncollabWith?.length && !body.collabWith?.length) return;
+    if (!body.addAuthors?.length) delete body.addAuthors;
+    if (!body.removeAuthors?.length) delete body.removeAuthors;
+    if (!body.removeAuthors?.length && !body.addAuthors?.length) return;
 
     const { data } = await axios.put(`/stories/collab/${storyId}`, body);
     return data;

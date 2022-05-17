@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 import {
   Avatar,
   Button,
@@ -18,27 +18,26 @@ import {
   useToast,
   useDisclosure,
   Link,
-} from "@chakra-ui/react";
-import { collabWithApi } from "@lib/api/storyApi";
-import UserType from "@lib/types/UserType";
-import { useField } from "formik";
-import { useState } from "react";
-import useSWR from "swr";
+} from '@chakra-ui/react';
+import { collabWithApi } from '@lib/api/storyApi';
+import UserType from '@lib/types/UserType';
+import { useField } from 'formik';
+import { useState } from 'react';
 
 const Index = (props: {
   onClose: () => void;
   isOpen: boolean;
   users: UserType[];
 }) => {
-  const [{ value: storyId }] = useField("_id");
+  const [{ value: storyId }] = useField('_id');
 
-  const [{ value: collabWith }, {}, { setValue: setCollab }] =
-    useField<string[]>("collabWith");
-  const [state, setState] = useState<string[]>(collabWith);
+  const [{ value: alreadyCollabWith }, {}, { setValue: setCollab }] =
+    useField<string[]>('collabWith');
+  const [collabWith, setCollabWith] = useState<string[]>(alreadyCollabWith);
 
-  const onChange = (str: string) => {
-    setState((pre) =>
-      pre.includes(str) ? pre.filter((p) => p != str) : [...pre, str]
+  const onChange = (userId: string) => {
+    setCollabWith((pre) =>
+      pre.includes(userId) ? pre.filter((p) => p != userId) : [...pre, userId]
     );
   };
 
@@ -46,14 +45,14 @@ const Index = (props: {
   const toast = useToast();
   const handleSubmit = () => {
     const finalObj = {
-      collabWith: state.filter((id) => !collabWith.includes(id)),
-      uncollabWith: collabWith.filter((id) => !state.includes(id)),
+      addAuthors: collabWith.filter((id) => !alreadyCollabWith.includes(id)),
+      removeAuthors: collabWith.filter((id) => alreadyCollabWith.includes(id)),
     };
-    if (!finalObj.collabWith.length && !finalObj.uncollabWith.length) {
+    if (!finalObj.addAuthors.length && !finalObj.removeAuthors.length) {
       toast({
-        status: "warning",
-        variant: "top-accent",
-        title: "No changes",
+        status: 'warning',
+        variant: 'top-accent',
+        title: 'No changes',
         isClosable: true,
       });
       return;
@@ -62,11 +61,11 @@ const Index = (props: {
     collabWithApi(storyId, finalObj)
       .then(() => {
         props.onClose();
-        setCollab(state, false);
+        setCollab(collabWith, false);
         toast({
-          status: "success",
-          title: "Saved changes",
-          variant: "top-accent",
+          status: 'success',
+          title: 'Saved changes',
+          variant: 'top-accent',
           isClosable: true,
         });
       })
@@ -96,7 +95,7 @@ const Index = (props: {
                 key={user._id}
                 user={user}
                 onChange={onChange}
-                isChecked={!!state?.includes(user._id)}
+                isChecked={!!collabWith?.includes(user._id)}
               />
             );
           })}

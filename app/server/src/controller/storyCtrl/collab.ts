@@ -83,7 +83,7 @@ export const schema = Yup.object({
           .when('removeAuthors', {
             is: (removeAuthors: any) => !removeAuthors,
             then: Yup.array()
-              .required('Collab with is required')
+              .required('Add Authors with is required')
               .typeError('It must be valid author ID array')
               .label('addAuthors')
               .min(1)
@@ -103,7 +103,7 @@ export const schema = Yup.object({
             return !addAuthors;
           },
           then: Yup.array()
-            .required('Collab with is required')
+            .required('REmove Authors is required')
             .typeError('It must be valid author ID array')
             .label('removeAuthors')
             .min(1)

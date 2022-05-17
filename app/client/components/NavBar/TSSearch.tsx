@@ -11,16 +11,16 @@ import {
   InputRightElement,
   Text,
   useDisclosure,
-} from "@chakra-ui/react";
-import { Search2Icon } from "@chakra-ui/icons";
-import { ChangeEvent, useCallback, useState } from "react";
-import axios from "axios";
-import StoryType from "@lib/types/StoryType";
-import MyLink from "../MyLink";
+} from '@chakra-ui/react';
+import { Search2Icon } from '@chakra-ui/icons';
+import { ChangeEvent, useCallback, useState } from 'react';
+import axios from 'axios';
+import StoryType from '@lib/types/StoryType';
+import MyLink from '../MyLink';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL!;
 const TSSearch = ({ size }: any) => {
   const [results, setResults] = useState<any>(null);
-  const [isQuery, setIsQuery] = useState("");
+  const [isQuery, setIsQuery] = useState('');
   const isFetching = useDisclosure();
 
   const debounce = (func: Function) => {
@@ -38,7 +38,7 @@ const TSSearch = ({ size }: any) => {
 
   const fetchQuery = (e: any) => {
     const key = e.target.value;
-    if (!key.split(" ").join("").length) {
+    if (!key.split(' ').join('').length) {
       setResults(null);
     } else {
       isFetching.onOpen();
@@ -57,7 +57,7 @@ const TSSearch = ({ size }: any) => {
     <Box>
       <MySearch
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
-          if (!e.target.value.split(" ").join("").length) setIsQuery("");
+          if (!e.target.value.split(' ').join('').length) setIsQuery('');
           else setIsQuery(e.target.value);
         }}
         size={size}
@@ -85,7 +85,7 @@ const TSSearch = ({ size }: any) => {
           onClick={() => {
             isFetching.onClose();
             setResults(null);
-            setIsQuery("");
+            setIsQuery('');
           }}
         >
           <Collapse in={isFetching.isOpen}>
@@ -138,9 +138,9 @@ const TSSearch = ({ size }: any) => {
 export default TSSearch;
 
 const MySearch = ({ onChange, size, value, onKeyUp }: any) => (
-  <Box w="lg" maxW={["full", "md", "lg"]} mx="auto">
+  <Box w="lg" maxW={['full', 'md', 'lg']} mx="auto" pb={2}>
     <InputGroup
-      size={size ?? "md"}
+      size={size ?? 'md'}
       overflow="hidden"
       // display={["none", "none", "flex"]}
     >

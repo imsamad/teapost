@@ -1,7 +1,7 @@
-import MyAccount from "@compo/MyAccount";
-import React from "react";
+import MyAccount from '@compo/MyAccount';
+import React from 'react';
 
-import DashboardHeader from "@compo/DashboardHeader";
+import DashboardHeader from '@compo/DashboardHeader';
 const Index = () => {
   return (
     <>

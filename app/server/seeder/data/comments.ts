@@ -63,7 +63,7 @@ export const generateSecondaryComments = async () => {
 
 export const gradeComments = async () => {
   const primaries = await Primary.find({});
-  const secondaries = await Secondary.find({});
+  // const secondaries = await Secondary.find({});
 
   const users = (await User.find({}).lean()).map(({ _id }) => _id.toString());
   let commentsMetas: any = [];
@@ -99,9 +99,9 @@ export const gradeComments = async () => {
       resolve(true);
     });
   await runProg(primaries);
-  await runProg(secondaries);
+  // await runProg(secondaries);
   await Promise.allSettled(dbTscPromises);
   await CommentMeta.create(commentsMetas);
-  console.log('):- Stories graded.'.green.italic);
+  console.log('):- Comments graded.'.green.italic);
   return;
 };

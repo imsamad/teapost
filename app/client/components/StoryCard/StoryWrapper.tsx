@@ -6,7 +6,7 @@ const StoryWrapper = ({ children }: { children: React.ReactNode }) => {
       flex="1"
       py="8px"
       px="10px"
-      mt={4}
+      my={2}
       shadow="sm"
       border="1px"
       borderColor="gray.200"

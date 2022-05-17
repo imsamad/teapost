@@ -1,12 +1,4 @@
-import {
-  Box,
-  Container,
-  Heading,
-  HStack,
-  Spinner,
-  Text,
-} from '@chakra-ui/react';
-import { useCallback, useRef, useState } from 'react';
+import { Box, Heading, HStack, Spinner, Text } from '@chakra-ui/react';
 import useSWR from 'swr';
 
 import StoryType from '@lib/types/StoryType';
@@ -19,13 +11,11 @@ import useInfinite from '@compo/Hooks/useInfinite';
 const Stories = ({
   initialStories,
   query = '',
-  isInitial = false,
   nextPageNo,
   collectionId,
 }: {
   initialStories?: StoryType[];
   query?: string;
-  isInitial?: boolean;
   collectionId?: string;
   nextPageNo: number;
 }) => {
@@ -39,7 +29,7 @@ const Stories = ({
     ignore: !!initialStories || !nextPageNo,
   });
   return (
-    <Container maxW="container.md" p="0">
+    <>
       <div ref={initialStories ? null : isInView} />
       {initialStories ? (
         <>
@@ -54,11 +44,7 @@ const Stories = ({
               <StoryCard story={story} key={story._id} />
             )
           )}
-          <Stories
-            nextPageNo={nextPageNo + 1}
-            query={query}
-            collectionId={collectionId}
-          />
+          <Stories nextPageNo={2} query={query} collectionId={collectionId} />
         </>
       ) : !show || isValidating ? (
         <HStack justifyContent="center" my={2}>
@@ -92,7 +78,7 @@ const Stories = ({
       ) : (
         !isValidating && <Text textAlign="center"> The End </Text>
       )}
-    </Container>
+    </>
   );
 };
 

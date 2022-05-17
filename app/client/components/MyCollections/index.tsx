@@ -32,7 +32,7 @@ const Index = ({
     ignore: !!initialMycollections || !nextPageNo,
   });
   return (
-    <Container maxW="container.md" p="0">
+    <>
       <div ref={isInitial ? null : isInView} />
       {initialMycollections ? (
         <>
@@ -69,7 +69,7 @@ const Index = ({
       ) : (
         <Text textAlign="center"> {``}</Text>
       )}
-    </Container>
+    </>
   );
 };
 

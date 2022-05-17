@@ -1,8 +1,8 @@
-import { HStack } from "@chakra-ui/react";
-import StoryCard from "@compo/StoryCard";
-import StoryType from "@lib/types/StoryType";
-import React, { useState } from "react";
-import RemoveBtn from "../../RemoveBtn";
+import { Box, HStack } from '@chakra-ui/react';
+import StoryCard from '@compo/StoryCard';
+import StoryType from '@lib/types/StoryType';
+import React, { useState } from 'react';
+import RemoveBtn from '../../RemoveBtn';
 
 const ShowStoryCard = ({
   story: storyTemp,
@@ -15,15 +15,17 @@ const ShowStoryCard = ({
   return (
     <>
       {story && (
-        <HStack mt={4}>
-          <RemoveBtn
-            storyId={story._id}
-            collectionId={collectionId}
-            // @ts-ignore
-            removeCB={() => setStory(null)}
-          />
+        <Box mt={4} position="relative">
+          <Box pos="absolute" left="0" bottom="-10px">
+            <RemoveBtn
+              storyId={story._id}
+              collectionId={collectionId}
+              // @ts-ignore
+              removeCB={() => setStory(null)}
+            />
+          </Box>
           <StoryCard story={story} />
-        </HStack>
+        </Box>
       )}
     </>
   );

@@ -2,8 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 
 import path from 'path';
 import { uploadImageToCloudinary } from '../../lib/cloudinary';
+import { FileType } from '../../lib/types/AssetType';
 import { asyncHandler, ErrorResponse } from '../../lib/utils';
-import Asset, { FileType } from '../../models/Asset';
+import Asset from '../../models/Asset';
 
 // @desc      Upload photo
 // @route     POST /api/v1/assets/upload

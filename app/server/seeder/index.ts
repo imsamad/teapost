@@ -4,46 +4,34 @@ import path from 'path';
 dotenv.config({
   path: path.join(__dirname, '../', `config`, '.env'),
 });
-
-import dbConnect from '../src/db/connectDB';
 import 'colors';
 
-import { checkCompatibility } from './data/health';
-import { generateTags } from './data/tags';
-import { generateProfiles, generateUsers } from './data/users';
-import { generateAssets } from './data/assets';
-import { generateStories, gradeStories } from './data/stories';
-import {
-  generatePrimaryComments,
-  generateSecondaryComments,
-  gradeComments,
-} from './data/comments';
-import { generateCollections } from './data/collections';
-import { deleteData } from './data/deleteData';
+import dbConnect from '../src/db/connectDB';
+import * as seeder from './data';
 
 const importData = async () => {
   try {
-    const isKickstart = false;
+    const isKickstart = true;
     const lengthOfDocs = isKickstart ? 10 : undefined;
-    await generateTags(lengthOfDocs);
-    await generateUsers(lengthOfDocs);
-    await generateProfiles();
-    await generateAssets(lengthOfDocs);
-    await generateStories(lengthOfDocs);
+    await seeder.generateTags(lengthOfDocs);
+    await seeder.generateUsers(lengthOfDocs);
+    await seeder.generateProfiles();
+    await seeder.generateAssets(lengthOfDocs);
+    await seeder.generateStories(lengthOfDocs);
 
     if (isKickstart) {
       console.log('):- Data created to kickstart the app'.magenta.italic);
       process.exit(1);
     }
-    await generatePrimaryComments();
-    await generateSecondaryComments();
+    await seeder.generatePrimaryComments();
+    await seeder.generateSecondaryComments();
 
-    await generateCollections();
+    await seeder.generateCollections(10, 50);
 
-    await gradeStories();
-    await gradeComments();
+    await seeder.gradeStories();
+    await seeder.gradeComments();
 
-    await checkCompatibility();
+    await seeder.checkCompatibility();
 
     console.log('):- Data imported successfully'.green);
     process.exit();
@@ -56,10 +44,9 @@ const importData = async () => {
 (async () => {
   if (process.argv[2] === '-i') {
     await dbConnect();
-    await generateAssets(13);
-    // await importData();
+    await importData();
   } else if (process.argv[2] === '-d') {
     await dbConnect();
-    await deleteData();
+    await seeder.deleteData();
   }
 })();

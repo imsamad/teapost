@@ -4,12 +4,12 @@ import Story from '../../src/models/Story';
 import User from '../../src/models/User';
 import StoryCollection from '../../src/models/StoryCollection';
 
-export const generateCollections = async () => {
+export const generateCollections = async (minColl = 100, maxColl = 300) => {
   const storyIds = (await Story.find({}).lean()).map(({ _id }) => _id);
   const userIds = (await User.find({}).lean()).map(({ _id }) => _id);
 
   let allCollections = userIds.map((user) => {
-    const noOfCrtUserCollection = getRndInteger(100, 300);
+    const noOfCrtUserCollection = getRndInteger(minColl, maxColl);
     const crtUserCollections = Array(noOfCrtUserCollection)
       .fill(1)
       .map((v, index) => ({

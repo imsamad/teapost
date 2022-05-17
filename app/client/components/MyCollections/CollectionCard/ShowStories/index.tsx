@@ -28,7 +28,7 @@ const ShowStories = ({ collectionId }: { collectionId: string }) => {
       </Button>
 
       <Collapse in={showStories.isOpen} animateOpacity>
-        <Box maxH="90vh" overflowY="auto">
+        <Box maxH="90vh" overflowY="auto" pr={2}>
           {showStories.isOpen && (
             <Stories
               collectionId={collectionId}

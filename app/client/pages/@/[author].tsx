@@ -1,4 +1,4 @@
-import { Container, Divider, Heading, Stack } from '@chakra-ui/react';
+import { Divider, Heading, Stack } from '@chakra-ui/react';
 
 import AuthorCard from '@compo/AuthorCard';
 import StoryType from '@lib/types/StoryType';
@@ -25,28 +25,27 @@ const Index = ({
       <Head>
         <title>{author.fullName} | Teapost</title>
       </Head>
-      <Container maxW="container.md" p="0" pt="4">
-        <Stack spacing={4}>
-          <AuthorCard author={author} displayFull={true} />
 
-          <Divider />
-          {stories?.length ? (
-            <>
-              <Heading size="md" textAlign="center">
-                Stories
-              </Heading>
-              <Stories
-                initialStories={stories}
-                // isInitial={true}
-                query={`/stories?authors=${author._id}&`}
-                nextPageNo={2}
-              />
-            </>
-          ) : (
-            <Heading textAlign="center">No stories found</Heading>
-          )}
-        </Stack>
-      </Container>
+      <Stack spacing={4}>
+        <AuthorCard author={author} displayFull={true} />
+
+        <Divider />
+        {stories?.length ? (
+          <>
+            <Heading size="md" textAlign="center">
+              Stories
+            </Heading>
+            <Stories
+              initialStories={stories}
+              // isInitial={true}
+              query={`/stories?authors=${author._id}&`}
+              nextPageNo={2}
+            />
+          </>
+        ) : (
+          <Heading textAlign="center">No stories found</Heading>
+        )}
+      </Stack>
     </>
   );
 };

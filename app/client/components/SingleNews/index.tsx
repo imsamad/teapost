@@ -1,6 +1,5 @@
 import {
   AspectRatio,
-  Container,
   Heading,
   HStack,
   Image,
@@ -23,49 +22,45 @@ const SingleStory = ({
   author: UserType;
 }) => {
   return (
-    <Container maxW="container.md" border="0px" p={4}>
-      <Stack spacing={4}>
-        <AuthorCard author={author} displayFull={false} />
-        <Heading size="xl">{story?.title}</Heading>
-        <Heading size="md" color="gray.300">
-          {story?.subtitle}
-        </Heading>
-        <HStack fontWeight={400} wordBreak="keep-all">
-          <Text wordBreak="keep-all">
-            {readAbleDate(story.updatedAt, true)}
-          </Text>
-          <Text>~</Text>
-          <Text wordBreak="keep-all">{story.readingTime} min read </Text>
-        </HStack>
-        <AspectRatio maxW="full" ratio={4 / 3}>
-          <Image
-            src={story.titleImage}
-            alt={story.title}
-            fallbackSrc={placeholderImage(400, 300)}
-            fallback={
-              <FallbackImage
-                width={400}
-                height={300}
-                tryAgain={story.titleImage}
-                title={story.title}
-              />
-            }
-          />
-        </AspectRatio>
-        <StoryActions
-          storyId={story._id}
-          noOfLikes={story.noOfLikes || 0}
-          noOfDislikes={story.noOfDislikes || 0}
-          noOfComments={story.noOfComments || 0}
-          share={{
-            title: story.title,
-            text: story.subtitle,
-            url: '/story/' + story.slug,
-          }}
+    <Stack spacing={4} p={2}>
+      <AuthorCard author={author} displayFull={false} />
+      <Heading size="xl">{story?.title}</Heading>
+      <Heading size="md" color="gray.300">
+        {story?.subtitle}
+      </Heading>
+      <HStack fontWeight={400} wordBreak="keep-all">
+        <Text wordBreak="keep-all">{readAbleDate(story.updatedAt, true)}</Text>
+        <Text>~</Text>
+        <Text wordBreak="keep-all">{story.readingTime} min read </Text>
+      </HStack>
+      <AspectRatio maxW="full" ratio={4 / 3}>
+        <Image
+          src={story.titleImage}
+          alt={story.title}
+          fallbackSrc={placeholderImage(400, 300)}
+          fallback={
+            <FallbackImage
+              width={400}
+              height={300}
+              tryAgain={story.titleImage}
+              title={story.title}
+            />
+          }
         />
-        <Content storyId={story._id} />
-      </Stack>
-    </Container>
+      </AspectRatio>
+      <StoryActions
+        storyId={story._id}
+        noOfLikes={story.noOfLikes || 0}
+        noOfDislikes={story.noOfDislikes || 0}
+        noOfComments={story.noOfComments || 0}
+        share={{
+          title: story.title,
+          text: story.subtitle,
+          url: '/story/' + story.slug,
+        }}
+      />
+      <Content storyId={story._id} />
+    </Stack>
   );
 };
 

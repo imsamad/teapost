@@ -1,30 +1,29 @@
-import { Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
-import { useAuthCtx } from "@compo/Context";
-import { changeEmail, updateProfile } from "@lib/api/authApi";
-import { changePwdEmailScheme } from "@lib/schema/auth";
-import { Form, Formik } from "formik";
-import React from "react";
-import Fields from "./Fields";
+import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
+import { useAuthCtx } from '@compo/Context';
+import { changeEmailApi, updateProfileApi } from '@lib/api/authApi';
+import { changePwdEmailScheme } from '@lib/schema/auth';
+import { Form, Formik } from 'formik';
+
+import Fields from '../Fields';
 
 const ChangePwdEmail = ({
   type,
   submitCB,
-  isOpen,
   onClose,
 }: {
-  type: "changePassword" | "changeEmail";
+  type: 'changePassword' | 'changeEmail' | '';
   submitCB?: () => void;
-  isOpen: boolean;
+
   onClose: () => void;
 }) => {
   const { auth } = useAuthCtx();
 
   return (
     <>
-      {isOpen && (
+      {!!type && (
         <Modal
           closeOnOverlayClick={false}
-          isOpen={isOpen}
+          isOpen={!!type}
           onClose={onClose}
           isCentered
           scrollBehavior="inside"
@@ -38,37 +37,37 @@ const ChangePwdEmail = ({
             <Formik
               initialValues={{
                 type,
-                currentPassword: "Password@1206",
-                newPassword: "Password@1206",
-                confirmNewPassword: "Password@1206",
-                newEmail: "imsamad@gmail.com",
+                currentPassword: 'Password@1206',
+                newPassword: 'Password@1206',
+                confirmNewPassword: 'Password@1206',
+                newEmail: 'newEmail@email.com',
               }}
               onSubmit={(values, actions) => {
-                if (values.type == "changePassword") {
+                if (values.type == 'changePassword') {
                   if (values.newPassword == values.currentPassword) {
-                    actions.setFieldError("newPassword", "Same as previous ");
+                    actions.setFieldError('newPassword', 'Same as previous ');
                     actions.setSubmitting(false);
                     return;
                   }
-                  updateProfile({ type: "password", reqBody: values })
+                  updateProfileApi({ type: 'password', reqBody: values })
                     .then(() => {
                       actions.resetForm();
                       onClose();
                     })
-                    .finally(() => {
-                      submitCB && submitCB();
-                    })
                     .catch((err) => {
                       actions.setSubmitting(false);
                       actions.setErrors(err.message);
+                    })
+                    .finally(() => {
+                      submitCB && submitCB();
                     });
                 } else {
                   if (auth.user?.email == values.newEmail) {
-                    actions.setFieldError("newEmail", "Same as previous ");
+                    actions.setFieldError('newEmail', 'Same as previous ');
                     actions.setSubmitting(false);
                     return;
                   }
-                  changeEmail(values.newEmail)
+                  changeEmailApi(values.newEmail)
                     .then((data) => {
                       actions.setStatus(data);
                       actions.setSubmitting(false);

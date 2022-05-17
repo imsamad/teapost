@@ -1,6 +1,7 @@
 import {
   Box,
   Collapse,
+  Container,
   Heading,
   HStack,
   IconButton,
@@ -9,32 +10,32 @@ import {
   useBreakpointValue,
   useDisclosure,
   VStack,
-} from "@chakra-ui/react";
-import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
 
-import MyLink from "../MyLink";
-import DarkMode from "../DarkMode";
-import LogInBtn from "./LogInBtn";
-import TSSearch from "./TSSearch";
+import MyLink from '../MyLink';
+import DarkMode from '../DarkMode';
+import LogInBtn from './LogInBtn';
+import TSSearch from './TSSearch';
 
 const Index = () => {
-  const size = useBreakpointValue(["md", "md"]);
+  const size = useBreakpointValue(['md', 'md']);
   const serachFieldFormSm = useDisclosure();
-  const showBelowSm = { display: ["inline-block", "inline-block", "none"] };
-  const showAboveSm = { display: ["none", "none", "inline-block"] };
+  const showBelowSm = { display: ['inline-block', 'inline-block', 'none'] };
+  const showAboveSm = { display: ['none', 'none', 'inline-block'] };
   return (
-    <>
-      <HStack pt={1} as="nav">
+    <Container maxW="container.lg">
+      <HStack px={1} py={3}>
         <MyLink href="/">
           <Heading
             as="h1"
             textTransform="uppercase"
             // fontStyle="italic"
             color="black"
-            fontSize={["2xl", "2xl", "3xl"]}
+            fontSize={['2xl', '2xl', '3xl']}
             fontWeight={900}
             _dark={{
-              color: "white",
+              color: 'white',
             }}
           >
             Teapost
@@ -62,7 +63,7 @@ const Index = () => {
           </Stack>
         </Stack>
       </Collapse>
-    </>
+    </Container>
   );
 };
 

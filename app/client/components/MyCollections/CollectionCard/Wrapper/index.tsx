@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box } from '@chakra-ui/react';
 
 const index = ({ children }: { children: React.ReactNode }) => {
   return (

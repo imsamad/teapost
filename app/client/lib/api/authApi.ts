@@ -69,7 +69,7 @@ export interface UpdatDetailsType {
   tagLines: string[];
 }
 
-export const updateProfile = async ({
+export const updateProfileApi = async ({
   type,
   reqBody: { profilePic, ...rest },
 }: {
@@ -91,7 +91,7 @@ export const updateProfile = async ({
   }
 };
 
-export const changeEmail = async (newEmail: string) => {
+export const changeEmailApi = async (newEmail: string) => {
   try {
     const { data } = await axios.put<{ message: string; redirectUrl: string }>(
       '/auth/changeemail',

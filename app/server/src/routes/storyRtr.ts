@@ -26,6 +26,8 @@ router.patch('/grade/:storyId', storyCtrl.gradeStory);
 router.put('/collab/:storyId', storyCtrl.collab);
 router.post(['/initialize', '/init'], storyCtrl.initializeStory);
 
+router.delete('/deletemany', storyCtrl.deleteMultipleStories);
+
 router
   .route('/:storyId')
   .delete(storyCtrl.deleteStory)

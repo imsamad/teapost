@@ -8,6 +8,7 @@ import getStoryById from './getStoryById';
 import collab from './collab';
 import myStories from './myStories';
 import publishedMultipleStories from './publishedMultipleStories';
+import deleteMultipleStories from './deleteMultipleStories';
 
 export {
   updateStory,
@@ -20,4 +21,5 @@ export {
   collab,
   myStories,
   publishedMultipleStories,
+  deleteMultipleStories,
 };

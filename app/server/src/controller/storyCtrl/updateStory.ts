@@ -4,10 +4,8 @@ import {
   asyncHandler,
   ErrorResponse,
   readingTime as readingTimeFun,
-  validateYupSchema,
 } from '../../lib/utils';
-import Story, { StoryDocument, storyAllowedFields } from '../../models/Story';
-import { isAbleToPublished } from '../../lib/schema/storySchema';
+import Story, { storyAllowedFields } from '../../models/Story';
 import StoryHistory from '../../models/StoryHistory';
 
 import { array, object, string } from 'yup';

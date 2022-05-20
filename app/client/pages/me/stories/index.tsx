@@ -1,13 +1,69 @@
 import MyStories from '@compo/MyStories';
-import React from 'react';
 
 import DashboardHeader from '@compo/DashboardHeader';
-const Index = () => {
+import axios from 'axios';
+import StoryType from '@lib/types/StoryType';
+import { GetServerSideProps } from 'next';
+import { getCookieFromServer } from '@lib/cookies';
+import { Box, Flex } from '@chakra-ui/react';
+
+const Index = ({ stories }: { stories: StoryType[] }) => {
   return (
     <>
       <DashboardHeader type="stories" />
-      <MyStories />
+      <MyStories stories={stories} />
     </>
   );
 };
+Index.getContainer = function getContainer(page: any) {
+  return (
+    <Box justifyContent="center" p={4}>
+      {page}
+    </Box>
+  );
+};
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  params,
+}) => {
+  // @ts-ignore
+  const accessToken = await getCookieFromServer(req.cookies);
+
+  if (!accessToken) {
+    return {
+      redirect: {
+        destination: `/auth?redirectTo=/me`,
+        permanent: true,
+      },
+    };
+  }
+
+  try {
+    const {
+      data: { stories },
+    } = await axios.get<{ stories: StoryType[] }>(
+      `${process.env.API_URL}/stories/my`,
+      {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    return {
+      props: {
+        stories,
+      },
+    };
+  } catch (err) {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false,
+      },
+    };
+  }
+};
+
 export default Index;

@@ -127,9 +127,6 @@ const getAllStories = asyncHandler(async (req: Request, res: Response) => {
   });
   let populate = [
     {
-      path: 'meta',
-    },
-    {
       path: 'collabWith',
       transform: (v: any) => peelUserDoc(v),
     },
@@ -170,12 +167,18 @@ const getAllStories = asyncHandler(async (req: Request, res: Response) => {
     typeof req.query.populate == 'string'
       ? req.query.populate?.includes('comment')
       : false;
-
   populateComment && queryRef.populate(commentPopulate);
+  let populateMeta =
+    typeof req.query.populate == 'string'
+      ? req.query.populate?.includes('meta')
+      : false;
+  populateMeta && queryRef.populate('meta');
+
   let selectContent =
     typeof req.query.select == 'string'
       ? req.query.select?.includes('content')
       : false;
+
   // @ts-ignore
   if (selectContent) queryRef.select('content');
   else queryRef.select('-content');

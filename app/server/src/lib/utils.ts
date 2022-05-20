@@ -15,6 +15,10 @@ import { LoremIpsum } from 'lorem-ipsum';
 export const capitalFirst = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
+export const randomDate = (start = new Date(2000, 0, 1), end = new Date()) =>
+  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+
+// console.log(randomDate(new Date(2000, 0, 1), new Date()));
 export const lorem = new LoremIpsum({
   sentencesPerParagraph: {
     max: 8,

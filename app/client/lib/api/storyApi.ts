@@ -109,7 +109,7 @@ export const commentOnStory = async ({
   }
 };
 
-export const publishedStory = async ({
+export const publishedStoryApi = async ({
   isPublished,
   storyId,
 }: {
@@ -117,8 +117,8 @@ export const publishedStory = async ({
   storyId: string;
 }) => {
   try {
-    const { data } = await axios.put<{ story: StoryType }>(
-      `/stories/published/${storyId}`,
+    const { data } = await axios.patch<{ story: StoryType }>(
+      `/stories/${isPublished ? 'published' : 'unpublished'}/${storyId}`,
       {
         isPublished,
       }

@@ -8,7 +8,7 @@ import {
 import Story from '../../models/Story';
 import { isAbleToPublished } from '../../lib/schema/storySchema';
 import validateSchema from '../../middleware/validateSchemaMdlwr';
-import { boolean, object, string } from 'yup';
+import { object, string } from 'yup';
 import { isValidObjectId } from 'mongoose';
 
 // @desc      Published story story
@@ -16,7 +16,8 @@ import { isValidObjectId } from 'mongoose';
 // @access    Auth [Reader]
 const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const isPublish = req.originalUrl.startsWith('/publish');
+    const isPublish =
+      req.originalUrl.split('/').slice(-2, -1).pop() == 'published';
     let story = await Story.findById(req.params.storyId).select(
       '+hadEmailedToFollowers'
     );
@@ -33,7 +34,7 @@ const ctrl = asyncHandler(
     try {
       await validateYupSchema(isAbleToPublished, story);
 
-      story.isPublished = req.body.isPublished ?? true;
+      story.isPublished = true;
       if (!story.hadEmailedToFollowers) {
         /*
          * Send Email To Followers of story.author

@@ -1,28 +1,25 @@
-import { Button, ButtonGroup, Heading } from "@chakra-ui/react";
+import { Button, ButtonGroup, Heading } from '@chakra-ui/react';
 
-import MyLink from "@compo/MyLink";
+import MyLink from '@compo/MyLink';
 
 const fo = {
-  _focus: { outline: "none" },
-  colorScheme: "blue",
+  _focus: { outline: 'none' },
+  colorScheme: 'blue',
   isFullWidth: true,
   // borderRadius: "0",
   borderBottomRadius: 0,
 };
 
-const Profile = ({ type }: { type: "collections" | "stories" | "account" }) => {
+const Profile = ({ type }: { type: 'collections' | 'stories' | 'account' }) => {
   return (
     <>
-      <Heading fontSize="lg" textAlign="center" my={3}>
-        My Dashboard
-      </Heading>
       <ButtonGroup justifyContent="center" display="flex" border="0px">
         <MyLink href="/me">
           <Button
             {...fo}
             // @ts-ignore
-            borderBottom={type == "collections" && "0"}
-            variant={type == "collections" ? "outline" : "solid"}
+            borderBottom={type == 'collections' && '0'}
+            variant={type == 'collections' ? 'outline' : 'solid'}
           >
             Reading List
           </Button>
@@ -31,8 +28,8 @@ const Profile = ({ type }: { type: "collections" | "stories" | "account" }) => {
           <Button
             {...fo}
             // @ts-ignore
-            borderBottom={type == "stories" && "0"}
-            variant={type == "stories" ? "outline" : "solid"}
+            borderBottom={type == 'stories' && '0'}
+            variant={type == 'stories' ? 'outline' : 'solid'}
           >
             Stories
           </Button>
@@ -41,13 +38,21 @@ const Profile = ({ type }: { type: "collections" | "stories" | "account" }) => {
           <Button
             {...fo}
             // @ts-ignore
-            borderBottom={type == "account" && "0"}
-            variant={type == "account" ? "outline" : "solid"}
+            borderBottom={type == 'account' && '0'}
+            variant={type == 'account' ? 'outline' : 'solid'}
           >
             Profile
           </Button>
         </MyLink>
       </ButtonGroup>
+      <Heading fontSize="2xl" textAlign="center" my={3} fontWeight={700}>
+        My {`  `}
+        {type == 'stories'
+          ? ' Stories'
+          : type == 'collections'
+          ? ' Collections'
+          : ' Account'}
+      </Heading>
       {/* {type == "collections" ? (
         <MyCollections
           mycollections={data?.mycollections}

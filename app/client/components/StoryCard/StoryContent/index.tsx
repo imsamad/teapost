@@ -5,6 +5,7 @@ import MyLink from '../../MyLink';
 import StoryType from '@lib/types/StoryType';
 import FallbackImage from '@compo/FallbackImage';
 import { cloudinaryUrl, placeholderImage } from '@lib/utils';
+import TPImage from '@compo/TPImage';
 
 const index = ({ story }: { story: StoryType }) => {
   return (
@@ -66,24 +67,11 @@ const index = ({ story }: { story: StoryType }) => {
           w={['110px', '120px', '200px']}
           zIndex={2}
         >
-          <Image
-            src={cloudinaryUrl({
-              src: story.titleImage,
-              width: 200,
-              height: 200,
-            })}
-            fallback={
-              <FallbackImage
-                width={200}
-                height={150}
-                title={story.title}
-                tryAgain={story.titleImage}
-              />
-            }
-            width={200}
-            // htmlWidth={150}
+          <TPImage
+            src={story.titleImage}
             alt={story.title}
-            fallbackSrc={placeholderImage(200, 150)}
+            width={200}
+            height={150}
           />
         </Center>
       </MyLink>

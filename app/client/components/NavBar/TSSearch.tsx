@@ -138,7 +138,7 @@ const TSSearch = ({ size }: any) => {
 export default TSSearch;
 
 const MySearch = ({ onChange, size, value, onKeyUp }: any) => (
-  <Box w="lg" maxW={['full', 'md', 'lg']} mx="auto" pb={2}>
+  <Box w="lg" maxW={['full', 'md', 'lg']} mx="auto">
     <InputGroup
       size={size ?? 'md'}
       overflow="hidden"

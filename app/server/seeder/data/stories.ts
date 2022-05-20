@@ -3,6 +3,7 @@ import {
   capitalFirst,
   getRndInteger,
   lorem,
+  randomDate,
   readingTime,
 } from '../../src/lib/utils';
 
@@ -58,6 +59,7 @@ export const generateStories = async (len = phrasesLen - 1) => {
         noOfComments: 0,
         noOfLikes: 0,
         noOfDislikes: 0,
+        createdAt: randomDate(),
       };
       return newStory;
     });

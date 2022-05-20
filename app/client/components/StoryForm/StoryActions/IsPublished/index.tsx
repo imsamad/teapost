@@ -1,11 +1,11 @@
-import { Heading, HStack, Switch } from "@chakra-ui/react";
-import { useFormikContext } from "formik";
-import { memo } from "react";
+import { Heading, HStack, Switch } from '@chakra-ui/react';
+import { useFormikContext } from 'formik';
+import { memo } from 'react';
 
-import { isAbleToPublished } from "@lib/schema/story";
-import { validateYupSchema } from "@lib/utils";
-import { StoryFormType } from "@lib/types/StoryType";
-import { publishedStory } from "@lib/api/storyApi";
+import { isAbleToPublished } from '@lib/schema/story';
+import { validateYupSchema } from '@lib/utils';
+import { StoryFormType } from '@lib/types/StoryType';
+import { publishedStoryApi } from '@lib/api/storyApi';
 
 const Index = () => {
   const { values, setFieldValue, setFieldTouched, setErrors } =
@@ -13,21 +13,21 @@ const Index = () => {
 
   const handleChange = async () => {
     if (values.isPublished == true) {
-      const data = await publishedStory({
+      const data = await publishedStoryApi({
         isPublished: false,
         storyId: values._id,
       });
-      setFieldValue("isPublished", data.story.isPublished);
-      setFieldTouched("isPublished", true);
+      setFieldValue('isPublished', data.story.isPublished);
+      setFieldTouched('isPublished', true);
     } else
       validateYupSchema(isAbleToPublished, values)
         .then(async (res) => {
-          const data = await publishedStory({
+          const data = await publishedStoryApi({
             isPublished: true,
             storyId: values._id,
           });
-          setFieldValue("isPublished", data.story.isPublished);
-          setFieldTouched("isPublished", true);
+          setFieldValue('isPublished', data.story.isPublished);
+          setFieldTouched('isPublished', true);
         })
         .catch((err) => {
           let error = err?.message || err;

@@ -31,10 +31,10 @@ const importData = async () => {
       }
       return;
     };
-    await lightWeightsSeeders();
+    // await lightWeightsSeeders();
 
-    /** Heavey task run individually */
-    // await seeder.generateCollections();
+    /** Heavy task run individually */
+    await seeder.generateCollections();
     // await seeder.gradeComments();
     await seeder.checkCompatibility();
 
@@ -46,7 +46,7 @@ const importData = async () => {
 
 (async () => {
   await dbConnect(true);
-  console.time('Processing time');
+
   if (process.argv[2] === '-i') await importData();
   else if (process.argv[2] === '-d') {
     // await seeder.checkCompatibility();

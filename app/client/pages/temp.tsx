@@ -1,5 +1,5 @@
 import { Box, Image } from '@chakra-ui/react';
-
+const dummyImage = '/dummyImage.png';
 const Index = () => {
   const url = `https://res.cloudinary.com/dnkb5aetl/image/upload/v1652176759/teapost/inobpaq8odctm5h38hk2_g4ywbl.jpg`;
   const url2 = `https://res.cloudinary.com/dnkb5aetl/image/upload/v1652355086/carrrrr_PPPjm.jpg`;
@@ -11,6 +11,7 @@ const Index = () => {
 
   return (
     <>
+      <Image src={dummyImage} width={500} height={400} />
       <Box boxSize="sm" border="4px">
         <Image
           src="https://source.unsplash.com/random/1000x100"

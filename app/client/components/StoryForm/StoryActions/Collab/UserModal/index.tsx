@@ -5,7 +5,6 @@ import {
   Checkbox,
   Heading,
   HStack,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -33,6 +32,7 @@ const Index = (props: {
 
   const [{ value: alreadyCollabWith }, {}, { setValue: setCollab }] =
     useField<string[]>('collabWith');
+
   const [collabWith, setCollabWith] = useState<string[]>(alreadyCollabWith);
 
   const onChange = (userId: string) => {

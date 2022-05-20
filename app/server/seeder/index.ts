@@ -31,7 +31,7 @@ const importData = async () => {
       }
       return;
     };
-    // await lightWeightsSeeders();
+    await lightWeightsSeeders(true);
 
     /** Heavy task run individually */
     await seeder.generateCollections();

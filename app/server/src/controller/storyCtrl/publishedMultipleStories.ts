@@ -8,7 +8,7 @@ import Story from '../../models/Story';
 const publishedMultipleStories = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const isPublishMany =
-      req.originalUrl.split('/').pop().toLowerCase() == 'publishedmany';
+      req?.originalUrl?.split('/')?.pop()?.toLowerCase() == 'publishedmany';
 
     // @ts-ignore
     const author = req.user._id.toString();

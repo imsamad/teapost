@@ -1,6 +1,6 @@
 import { Image } from '@chakra-ui/react';
 import { cloudinaryUrl, placeholderImage } from '@lib/utils';
-
+const dummyImage = '/dummyImage.png';
 const TPImage = ({
   src,
   width,
@@ -14,13 +14,17 @@ const TPImage = ({
 }) => {
   return (
     <Image
-      src={cloudinaryUrl({
-        src,
-        // @ts-ignore
-        height: parseInt(height, 10),
-        // @ts-ignore
-        width: parseInt(width, 10),
-      })}
+      src={
+        !src
+          ? dummyImage
+          : cloudinaryUrl({
+              src,
+              // @ts-ignore
+              height: parseInt(height, 10),
+              // @ts-ignore
+              width: parseInt(width, 10),
+            })
+      }
       width={width}
       alt={alt}
       height={height}

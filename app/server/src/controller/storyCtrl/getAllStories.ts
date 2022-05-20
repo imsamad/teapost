@@ -178,10 +178,15 @@ const getAllStories = asyncHandler(async (req: Request, res: Response) => {
     typeof req.query.select == 'string'
       ? req.query.select?.includes('content')
       : false;
+  let selectCollabWith =
+    typeof req.query.select == 'string'
+      ? req.query.select?.includes('collabWith')
+      : false;
 
   // @ts-ignore
-  if (selectContent) queryRef.select('content');
-  else queryRef.select('-content');
+  queryRef.select(selectContent ? 'content' : '-content');
+
+  queryRef.select(selectCollabWith ? 'collabWith' : '-collabWith');
 
   pagination(req, res, {
     query: queryRef,

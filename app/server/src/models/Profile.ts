@@ -10,7 +10,6 @@ export interface ProfileDocument extends Document {
   dislikedStories: Types.Array<StoryDocument['_id']>;
   following: Types.Array<UserDocument['_id']>;
   followers: Types.Array<UserDocument['_id']>;
-  collabStories: Types.Array<StoryDocument['_id']>;
   storyCollections: Types.Array<StoryCollectionDocument>;
 }
 
@@ -43,12 +42,6 @@ const profileSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'User',
-      },
-    ],
-    collabStories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Story',
       },
     ],
   },

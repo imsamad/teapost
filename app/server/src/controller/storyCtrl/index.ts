@@ -9,6 +9,8 @@ import collab from './collab';
 import myStories from './myStories';
 import publishedMultipleStories from './publishedMultipleStories';
 import deleteMultipleStories from './deleteMultipleStories';
+import iamcollabing from './iamcollabing';
+import uncollabme from './uncollabme';
 
 export {
   updateStory,
@@ -22,4 +24,6 @@ export {
   myStories,
   publishedMultipleStories,
   deleteMultipleStories,
+  iamcollabing,
+  uncollabme,
 };

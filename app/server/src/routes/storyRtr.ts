@@ -4,9 +4,13 @@ const router: Router = express();
 import * as storyCtrl from '../controller/storyCtrl';
 import { fetchAuth, protect } from '../middleware/auth';
 
+router.get('/iamcollabing', protect, storyCtrl.iamcollabing);
 router.get('/my', protect, storyCtrl.myStories);
+
 router.route('/').get(storyCtrl.getAllStories);
+
 router.use(fetchAuth);
+
 router.get('/:storyId', storyCtrl.getStoryById);
 
 router.use(protect);
@@ -22,6 +26,8 @@ router.patch(
 );
 
 router.patch('/grade/:storyId', storyCtrl.gradeStory);
+
+router.put('/uncollabme/:storyId', storyCtrl.uncollabme);
 
 router.put('/collab/:storyId', storyCtrl.collab);
 router.post(['/initialize', '/init'], storyCtrl.initializeStory);

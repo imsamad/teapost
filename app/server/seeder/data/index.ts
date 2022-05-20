@@ -2,7 +2,7 @@ import { checkCompatibility } from './health';
 import { generateTags } from './tags';
 import { generateProfiles, generateUsers } from './users';
 import { generateAssets } from './assets';
-import { generateStories, gradeStories } from './stories';
+import { generateStories, gradeStories, addCollaborators } from './stories';
 import {
   generatePrimaryComments,
   generateSecondaryComments,
@@ -24,4 +24,5 @@ export {
   gradeComments,
   generateCollections,
   deleteData,
+  addCollaborators,
 };

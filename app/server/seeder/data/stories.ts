@@ -141,3 +141,24 @@ export const gradeStories = async () => {
   console.timeEnd('):- Stories graded '.green.italic);
   return;
 };
+export const addCollaborators = async () => {
+  console.time(`Story Collabed `.green.italic);
+  const stories = await Story.find({});
+  const users = (await User.find({}).lean()).map(({ _id }) => _id.toString());
+
+  let promises = stories.map((story) => {
+    let randomUsers = users.sort((a, b) => Math.random() - Math.random());
+    const noOfCollabUsers = getRndInteger(0, users.length / 3);
+    randomUsers = randomUsers
+      .slice(0, noOfCollabUsers)
+      .filter((user) => user != story.author.toString());
+    console.log(randomUsers.length, 'randomUsers ', randomUsers);
+    story.collabWith.addToSet(...randomUsers);
+
+    return story.save();
+  });
+  const storisUpdated = await Promise.allSettled(promises);
+  console.timeEnd(`Story Collabed `.green.italic);
+  // @ts-ignore
+  return storisUpdated.map((story) => story.value || story.reason);
+};

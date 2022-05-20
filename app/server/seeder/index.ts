@@ -24,6 +24,7 @@ const importData = async () => {
       await seeder.generatePrimaryComments();
       await seeder.generateSecondaryComments();
       await seeder.gradeStories();
+      await seeder.addCollaborators();
 
       if (isKickstart) {
         console.log('):- Data created to kickstart the app'.magenta.italic);
@@ -31,10 +32,10 @@ const importData = async () => {
       }
       return;
     };
-    await lightWeightsSeeders(true);
+    // await lightWeightsSeeders(true);
 
     /** Heavy task run individually */
-    await seeder.generateCollections();
+    // await seeder.generateCollections();
     // await seeder.gradeComments();
     await seeder.checkCompatibility();
 

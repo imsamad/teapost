@@ -15,24 +15,26 @@ const importData = async () => {
       const lengthOfDocs = isKickstart ? 10 : undefined;
       await seeder.generateTags(lengthOfDocs);
       await seeder.generateUsers(0, 10);
-      await seeder.generateProfiles();
-      await seeder.generateAssets(lengthOfDocs);
       await seeder.generateStories(lengthOfDocs);
-
-      await seeder.generateUsers(10);
-
-      await seeder.generatePrimaryComments();
-      await seeder.generateSecondaryComments();
-      await seeder.gradeStories();
-      await seeder.addCollaborators();
 
       if (isKickstart) {
         console.log('):- Data created to kickstart the app'.magenta.italic);
         process.exit(1);
       }
+
+      await seeder.generateUsers(10);
+
+      await seeder.generateAssets();
+      await seeder.generateProfiles();
+      await seeder.addCollaborators();
+      await seeder.gradeStories();
+
+      await seeder.generatePrimaryComments();
+      await seeder.generateSecondaryComments();
+
       return;
     };
-    // await lightWeightsSeeders(true);
+    await lightWeightsSeeders(true);
 
     /** Heavy task run individually */
     // await seeder.generateCollections();

@@ -59,19 +59,20 @@ const index = ({ story }: { story: StoryType }) => {
         />
       </Stack>
       <MyLink href={`/story/${story.slug}`}>
-        <Center
+        <Box
           minW="85px"
           overflow="hidden"
           w={['110px', '120px', '200px']}
           zIndex={2}
         >
           <TPImage
+            maxW={'200px'}
             src={story.titleImage}
             alt={story.title}
-            width={200}
-            height={150}
+            width={'200px'}
+            height={'130px'}
           />
-        </Center>
+        </Box>
       </MyLink>
     </HStack>
   );

@@ -14,6 +14,7 @@ import UserType from '@lib/types/UserType';
 import { placeholderImage, readAbleDate } from '@lib/utils';
 import Content from './Content';
 import FallbackImage from '@compo/FallbackImage';
+import TPImage from '@compo/TPImage';
 const SingleStory = ({
   story,
   author,
@@ -33,21 +34,13 @@ const SingleStory = ({
         <Text>~</Text>
         <Text wordBreak="keep-all">{story.readingTime} min read </Text>
       </HStack>
-      <AspectRatio maxW="full" ratio={4 / 3}>
-        <Image
-          src={story.titleImage}
-          alt={story.title}
-          fallbackSrc={placeholderImage(400, 300)}
-          fallback={
-            <FallbackImage
-              width={400}
-              height={300}
-              tryAgain={story.titleImage}
-              title={story.title}
-            />
-          }
-        />
-      </AspectRatio>
+      <TPImage
+        src={story.titleImage}
+        width={400}
+        height={300}
+        alt={story.title}
+      />
+
       <StoryReaderActions
         storyId={story._id}
         noOfLikes={story.noOfLikes || 0}

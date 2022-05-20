@@ -26,7 +26,7 @@ export const cloudinaryUrl = ({
   const isCloudinary =
     src.includes('cloudinary') && src.split('/upload/').length == 2;
   let dim = width ? `w_${width},` : '';
-  dim = height ? `h_${height}` : dim;
+  dim += height ? `h_${height}` : dim;
 
   const url =
     isCloudinary && dim ? src.split('/upload/').join(`/upload/${dim}/`) : src;

@@ -17,10 +17,12 @@ import { isValidObjectId } from 'mongoose';
 const ctrl = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const isPublish =
-      req.originalUrl.split('/').slice(-2, -1).pop() == 'published';
-    let story = await Story.findById(req.params.storyId).select(
-      '+hadEmailedToFollowers'
-    );
+      req.originalUrl.split('/').slice(-2, -1).pop()?.toLowerCase() ==
+      'published';
+
+    let story = await Story.findById(req.params.storyId)
+      .select('+hadEmailedToFollowers')
+      .select(isPublish ? '+content' : '-content');
 
     if (!story)
       return next(ErrorResponse(400, 'No resources found with this id.'));
@@ -32,18 +34,9 @@ const ctrl = asyncHandler(
     }
 
     try {
-      await validateYupSchema(isAbleToPublished, story);
-
-      story.isPublished = true;
-      if (!story.hadEmailedToFollowers) {
-        /*
-         * Send Email To Followers of story.author
-         *****************************************************/
-
-        story.hadEmailedToFollowers = true;
-      }
-      story = await story.save();
-      return res.status(200).json({ status: 'ok', story });
+      return res
+        .status(200)
+        .json({ status: 'ok', story: await story.publishedStory() });
     } catch (err: any) {
       return next(ErrorResponse(400, err));
     }

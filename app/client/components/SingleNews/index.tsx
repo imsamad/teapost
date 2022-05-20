@@ -9,7 +9,7 @@ import {
 
 import StoryType from '@lib/types/StoryType';
 import AuthorCard from '@compo/AuthorCard';
-import StoryActions from '@compo/StoryActions';
+import { StoryReaderActions } from '@compo/StoryActions';
 import UserType from '@lib/types/UserType';
 import { placeholderImage, readAbleDate } from '@lib/utils';
 import Content from './Content';
@@ -48,7 +48,7 @@ const SingleStory = ({
           }
         />
       </AspectRatio>
-      <StoryActions
+      <StoryReaderActions
         storyId={story._id}
         noOfLikes={story.noOfLikes || 0}
         noOfDislikes={story.noOfDislikes || 0}

@@ -1,10 +1,8 @@
-import { Box, Center, Heading, HStack, Stack, Image } from '@chakra-ui/react';
+import { Box, Center, Heading, HStack, Stack } from '@chakra-ui/react';
 
-import StoryActions from '../../StoryActions';
+import { StoryReaderActions } from '../../StoryActions';
 import MyLink from '../../MyLink';
 import StoryType from '@lib/types/StoryType';
-import FallbackImage from '@compo/FallbackImage';
-import { cloudinaryUrl, placeholderImage } from '@lib/utils';
 import TPImage from '@compo/TPImage';
 
 const index = ({ story }: { story: StoryType }) => {
@@ -48,7 +46,7 @@ const index = ({ story }: { story: StoryType }) => {
             </Box>
           </Stack>
         </MyLink>
-        <StoryActions
+        <StoryReaderActions
           storyId={story._id}
           noOfLikes={story?.noOfLikes || 0}
           noOfDislikes={story?.noOfDislikes || 0}

@@ -9,7 +9,7 @@ const ShowColumns = ({
 }) => {
   return (
     <VStack wrap="wrap" my={4}>
-      <Heading size="md"> Show Columns </Heading>
+      <Heading size="sm"> Show Columns </Heading>
       <HStack>
         {tableInstance.allColumns.map((column) => (
           <HStack key={column.id} mx={4}>

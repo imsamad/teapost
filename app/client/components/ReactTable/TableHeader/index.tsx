@@ -4,7 +4,16 @@ import {
   TriangleDownIcon,
   TriangleUpIcon,
 } from '@chakra-ui/icons';
-import { HStack, Thead, Tr, Th, chakra, Box, Flex } from '@chakra-ui/react';
+import {
+  HStack,
+  Thead,
+  Tr,
+  Th,
+  chakra,
+  Box,
+  Flex,
+  Heading,
+} from '@chakra-ui/react';
 import {
   HiOutlineSortAscending,
   HiOutlineSortDescending,
@@ -21,35 +30,32 @@ const TableHeader = ({
       {tableInstance.headerGroups.map((headerGroup: any) => (
         <Tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map((column: any) => (
-            <Th
-              {...column.getHeaderProps()}
-              p={0}
-              alignItems="flex-start"
-              alignContent="flex-start"
-              border="0px solid red"
-            >
-              <Flex
-                border="0px"
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                p={4}
-              >
-                {column.render('Header')}
-                {/* <span> */}
+            <Th {...column.getHeaderProps()} p={0}>
+              <Heading size="sm" borderLeft="0px">
+                <Flex
+                  justifyContent="center"
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  p={2}
+                  pt={6}
+                >
+                  {column.render('Header')}
+                  {/* <span> */}
 
-                {column.canSort && (
-                  <chakra.span pl="4">
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <TriangleDownIcon aria-label="sorted descending" />
+                  {column.canSort && (
+                    <chakra.span pl="4">
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <TriangleDownIcon aria-label="sorted descending" />
+                        ) : (
+                          <TriangleUpIcon aria-label="sorted ascending" />
+                        )
                       ) : (
-                        <TriangleUpIcon aria-label="sorted ascending" />
-                      )
-                    ) : (
-                      <ArrowUpDownIcon aria-label="unsorted" />
-                    )}
-                  </chakra.span>
-                )}
-              </Flex>
+                        <ArrowUpDownIcon aria-label="unsorted" />
+                      )}
+                    </chakra.span>
+                  )}
+                </Flex>
+              </Heading>
               {/* @ts-ignore */}
               <Box>
                 {column.canFilter ? (

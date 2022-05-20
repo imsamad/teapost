@@ -1,11 +1,47 @@
 import StoryType, { StoryFormType } from '@lib/types/StoryType';
-import UserType from '@lib/types/UserType';
 import { impStoryFields } from '@lib/utils';
+
 import axios from '../axios';
 
 interface SubmitStoryType extends Partial<Omit<StoryFormType, '_id'>> {
   _id: string;
 }
+
+export const deleteManyStoriesApi = async (storyIds: string[]) => {
+  try {
+    const data = await axios.delete<{ stories: StoryType[] }>(
+      `/stories/deletemany`,
+      {
+        data: { storyIds },
+      }
+    );
+
+    return data;
+  } catch (err: any) {
+    throw err?.response?.data || err?.response;
+  }
+};
+
+export const publishManyStoriesApi = async ({
+  storyIds,
+  isPublish,
+}: {
+  storyIds: string[];
+  isPublish: boolean;
+}) => {
+  try {
+    const data = await axios.patch<{ stories: StoryType[] }>(
+      `/stories/${isPublish ? 'published' : 'unpublished'}many`,
+      {
+        storyIds,
+      }
+    );
+
+    return data;
+  } catch (err: any) {
+    throw err?.response?.data || err?.response;
+  }
+};
 
 export const submitStory = async ({
   values,
@@ -129,15 +165,11 @@ export const publishedStoryApi = async ({
   }
 };
 
-export const getStories = async (page = 1, queryType?: string) => {
+export const getMyStoriesApi = async () => {
   try {
-    let endpoint = `/stories`;
-    if (queryType) endpoint += `?${queryType}&page=${page}`;
     const { data } = await axios.get<{
       stories: StoryType[];
-      authors: UserType[];
-      pagination: { next: number; prev: number; limit: number };
-    }>(endpoint);
+    }>('/stories/my');
     return data;
   } catch (err: any) {
     throw err.response.data;

@@ -1,6 +1,5 @@
 import { EditIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import {
-  Box,
   Button,
   Heading,
   HStack,
@@ -42,31 +41,24 @@ const StoryActions = (props: CellProps<StoryType>) => {
   };
 
   return (
-    <VStack>
-      <HStack>
-        {props.value ? (
-          <Link href={`/story/${slug}`} isExternal>
-            <Button
-              size="sm"
-              rightIcon={<ExternalLinkIcon mx="2px" />}
-              colorScheme="blue"
-            >
-              Visit
-            </Button>
-          </Link>
-        ) : null}
-        <Link href={`/me/stories/edit/${storyId}`} isExternal>
+    <VStack my={2}>
+      {props.value ? (
+        <Link href={`/story/${slug}`} isExternal>
           <Button
             size="sm"
-            rightIcon={<EditIcon mx="2px" />}
-            colorScheme="green"
+            rightIcon={<ExternalLinkIcon mx="2px" />}
+            colorScheme="blue"
           >
-            Edit
+            Visit
           </Button>
         </Link>
-      </HStack>
-      {/* <HStack>
-        <Heading size="sm">Published</Heading>
+      ) : null}
+      <Link href={`/me/stories/edit/${storyId}`} isExternal>
+        <Button size="sm" rightIcon={<EditIcon mx="2px" />} colorScheme="green">
+          Edit
+        </Button>
+      </Link>
+      <VStack>
         <Switch
           size="lg"
           colorScheme="teal"
@@ -74,9 +66,10 @@ const StoryActions = (props: CellProps<StoryType>) => {
           isChecked={isPublished}
           onChange={handlePublished}
         />
+        <Heading size="sm">Published</Heading>
         {isLoading.isOpen && <Spinner color="red.500" />}
-      </HStack>
-      <Button colorScheme="red" size="sm">
+      </VStack>
+      {/*  <Button colorScheme="red" size="sm">
         Delete
       </Button> */}
     </VStack>

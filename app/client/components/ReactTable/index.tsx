@@ -29,6 +29,7 @@ import { DefaultColumnFilter } from './TableFilters';
 const ReactTable = ({
   columns: unmemoCols,
   data: unMemoData,
+
   renderMultipleRowSelected,
 }: {
   columns: Column[];
@@ -39,8 +40,10 @@ const ReactTable = ({
 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const columns = useMemo(() => unmemoCols, []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const data = useMemo(() => unMemoData, []);
+  const data = useMemo(() => {
+    return unMemoData;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const defaultColumn: any = useMemo(
     () => ({ Filter: DefaultColumnFilter }),
     []
@@ -97,7 +100,7 @@ const ReactTable = ({
           size="sm"
           {...tableInstance.getTableProps()}
           variant="striped"
-          colorScheme="teal"
+          colorScheme="blue"
         >
           <TableHeader tableInstance={tableInstance} />
           <Tbody {...tableInstance.getTableBodyProps()}>

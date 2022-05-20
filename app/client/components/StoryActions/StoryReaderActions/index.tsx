@@ -1,12 +1,11 @@
-import { ButtonGroup, ThemingProps } from '@chakra-ui/react';
+import { ButtonGroup } from '@chakra-ui/react';
 
-// import Collections from "./CommAndColl";
 import LikeAndDislike from './LikeAndDislike';
-import CommentDrawer from '@compo/CommentDrawer';
 import CollectionDrawer from '@compo/CollectionDrawer';
 import ShareButton from '@compo/ShareButton';
 import Comments from '@compo/Comments';
-const Index = ({
+
+const StoryReaderActions = ({
   storyId,
   noOfLikes,
   noOfDislikes,
@@ -37,4 +36,4 @@ const Index = ({
   );
 };
 
-export default Index;
+export default StoryReaderActions;

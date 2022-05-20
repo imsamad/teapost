@@ -64,7 +64,6 @@ const schema = object({
 })
   .label('body')
   .test('body', 'Provide proper story id', (val: any) => {
-    console.log('val ', val);
     if (val.params.storyId == 'multiple')
       return val.body.storyIds && typeOf(val.body.storyIds, 'array');
 

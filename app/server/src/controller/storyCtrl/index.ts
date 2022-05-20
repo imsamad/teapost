@@ -7,6 +7,7 @@ import initializeStory from './initializeStory';
 import getStoryById from './getStoryById';
 import collab from './collab';
 import myStories from './myStories';
+import publishedMultipleStories from './publishedMultipleStories';
 
 export {
   updateStory,
@@ -18,4 +19,5 @@ export {
   getStoryById,
   collab,
   myStories,
+  publishedMultipleStories,
 };

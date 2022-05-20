@@ -12,6 +12,11 @@ router.get('/:storyId', storyCtrl.getStoryById);
 router.use(protect);
 
 router.patch(
+  ['/publishedmany', '/unpublishedmany'],
+  storyCtrl.publishedMultipleStories
+);
+
+router.patch(
   ['/published/:storyId', '/unpublished/:storyId'],
   storyCtrl.publishedStory
 );

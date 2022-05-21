@@ -6,18 +6,22 @@ import {
   HStack,
   IconButton,
   Spacer,
+  Spinner,
   Stack,
   useBreakpointValue,
   useDisclosure,
-  VStack,
 } from '@chakra-ui/react';
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
 
 import MyLink from '../MyLink';
 import DarkMode from '../DarkMode';
-import LogInBtn from './LogInBtn';
+// import LogInBtn from './LogInBtn';
 import TSSearch from './TSSearch';
-
+import dynamic from 'next/dynamic';
+const LogInBtn = dynamic(() => import('./LogInBtn'), {
+  ssr: false,
+  loading: () => <Spinner size="md" />,
+});
 const Index = () => {
   const size = useBreakpointValue(['md', 'md']);
   const serachFieldFormSm = useDisclosure();

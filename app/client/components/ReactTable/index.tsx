@@ -39,7 +39,7 @@ const ReactTable = ({
   ) => React.ReactNode;
 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const columns = useMemo(() => unmemoCols, []);
+  const columns = useMemo(() => unmemoCols, [unMemoData]);
   const data = useMemo(() => {
     return unMemoData;
     // eslint-disable-next-line react-hooks/exhaustive-deps

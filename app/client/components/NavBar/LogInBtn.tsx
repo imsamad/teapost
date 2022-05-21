@@ -1,6 +1,8 @@
 import {
+  Avatar,
   Button,
   Divider,
+  HStack,
   Menu,
   MenuButton,
   MenuGroup,
@@ -14,22 +16,22 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useAuthCtx } from '../Context';
 import MyLink from '../MyLink';
 import { nanoid } from 'nanoid';
-import { BiUser } from 'react-icons/bi';
+import { BiLogInCircle, BiUser } from 'react-icons/bi';
 
 const LogInBtn = ({ size }: { size: any }) => {
   const { loginModal, auth, logout } = useAuthCtx();
   return auth?.user?._id ? (
-    <Menu>
+    <Menu isLazy flip size={size}>
       <MenuButton
-        as={Button}
-        rightIcon={<ChevronDownIcon />}
-        size={size}
-        _focus={{
-          outline: 'none',
-          border: 'none',
-        }}
+        _hover={{ bg: 'gray.50' }}
+        borderRadius="full"
+        _expanded={{ bg: 'gray.50' }}
+        _focus={{ boxShadow: 'none' }}
       >
-        Profile
+        <HStack>
+          <Avatar src={auth.user.profilePic} size="md" />
+          <ChevronDownIcon fontSize="xl" />
+        </HStack>
       </MenuButton>
       <MenuList zIndex={10}>
         <MenuGroup
@@ -40,7 +42,7 @@ const LogInBtn = ({ size }: { size: any }) => {
         >
           <Divider />
           <MyLink href="/me">
-            <MenuItem icon={<BiUser />}>My Account </MenuItem>
+            <MenuItem icon={<BiUser />}>Dashboard </MenuItem>
           </MyLink>
           <MyLink href={`/me/stories/write/${nanoid(10)}`}>
             <MenuItem icon={<FaPenNib />} color="green.600">
@@ -58,7 +60,13 @@ const LogInBtn = ({ size }: { size: any }) => {
       </MenuList>
     </Menu>
   ) : (
-    <Button mx={[1, 4]} onClick={() => loginModal.onOpen()} size={size}>
+    <Button
+      mx={[1, 4]}
+      onClick={() => loginModal.onOpen()}
+      size={size}
+      leftIcon={<BiLogInCircle />}
+      colorScheme="blue"
+    >
       Login
     </Button>
   );

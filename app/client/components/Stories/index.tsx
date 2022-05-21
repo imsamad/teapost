@@ -25,12 +25,12 @@ const Stories = ({
     pagination: { next: number; prev: number; limit: number };
   }>(() => !initialStories && `${query}page=${nextPageNo}`);
 
-  const { isInView, show } = useInfinite({
+  const { isInViewRef, show } = useInfinite({
     ignore: !!initialStories || !nextPageNo,
   });
   return (
     <>
-      <div ref={initialStories ? null : isInView} />
+      <div ref={initialStories ? null : isInViewRef} />
       {initialStories ? (
         <>
           {initialStories?.map((story: StoryType) =>

@@ -1,14 +1,15 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import UsersListModal from '@compo/UsersListModal';
 import { collabWithApi } from '@lib/api/storyApi';
-import { useField } from 'formik';
+import StoryType from '@lib/types/StoryType';
+import React, { useState } from 'react';
 import { FcCollaboration } from 'react-icons/fc';
+import { CellProps } from 'react-table';
 
-const Index = () => {
-  const [{ value: storyId }] = useField('_id');
+const CollabWith = (props: CellProps<StoryType>) => {
+  const [alreadyCollabWith, setAlreadyCollabWith] = useState(props.value);
 
-  const [{ value: alreadyCollabWith }, {}, { setValue: setCollab }] =
-    useField<string[]>('collabWith');
+  const storyId = props.cell.row.original._id;
 
   const modal = useDisclosure();
   const onClickCB = async (userId: string, isChecked: boolean) => {
@@ -17,7 +18,7 @@ const Index = () => {
     else body.removeAuthors = [userId];
     try {
       const data = await collabWithApi(storyId, body);
-      data?.story.collabWith && setCollab(data?.story.collabWith, false);
+      data?.story.collabWith && setAlreadyCollabWith(data?.story.collabWith);
       return data?.story.collabWith.includes(userId) ? true : false;
     } catch (err) {
       return false;
@@ -48,4 +49,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default CollabWith;

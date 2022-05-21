@@ -4,7 +4,7 @@ const useInfinite = ({ ignore = false } = {}) => {
   const [show, setShow] = useState(false);
 
   const lastDivRef: any = useRef();
-  const isInView = useCallback((node) => {
+  const isInViewRef = useCallback((node) => {
     if (ignore) {
       return;
     }
@@ -21,7 +21,7 @@ const useInfinite = ({ ignore = false } = {}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { isInView, show };
+  return { isInViewRef, show };
 };
 
 export default useInfinite;

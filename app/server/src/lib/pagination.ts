@@ -3,7 +3,11 @@ import { Request, Response } from 'express';
 const pagination = async (
   req: Request,
   res: Response,
-  { query, label }: { query: any; label: string }
+  {
+    query,
+    label,
+    cbOnData,
+  }: { query: any; label: string; cbOnData?: (doc: any) => {} }
 ) => {
   const queryClone = query.clone();
   const totalRecords = await queryClone.countDocuments();
@@ -44,7 +48,7 @@ const pagination = async (
 
   res.json({
     pagination,
-    [label]: data,
+    [label]: cbOnData ? cbOnData(data) : data,
   });
 };
 export default pagination;

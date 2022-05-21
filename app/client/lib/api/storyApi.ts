@@ -185,9 +185,12 @@ export const collabWithApi = async (
     if (!body.removeAuthors?.length) delete body.removeAuthors;
     if (!body.removeAuthors?.length && !body.addAuthors?.length) return;
 
-    const { data } = await axios.put(`/stories/collab/${storyId}`, body);
+    const { data } = await axios.put<{ story: StoryType }>(
+      `/stories/collab/${storyId}`,
+      body
+    );
     return data;
   } catch (err: any) {
-    throw err.response.data;
+    throw err?.response?.data;
   }
 };

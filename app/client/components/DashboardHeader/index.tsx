@@ -10,9 +10,16 @@ const fo = {
   borderBottomRadius: 0,
 };
 
-const Profile = ({ type }: { type: 'collections' | 'stories' | 'account' }) => {
+const DashboardHeader = ({
+  type,
+}: {
+  type: 'collections' | 'stories' | 'account' | 'imcollabing';
+}) => {
   return (
     <>
+      <Heading fontSize="3xl" textAlign="center" my={3} fontWeight={700}>
+        My Dashboard
+      </Heading>
       <ButtonGroup justifyContent="center" display="flex" border="0px">
         <MyLink href="/me">
           <Button
@@ -31,7 +38,17 @@ const Profile = ({ type }: { type: 'collections' | 'stories' | 'account' }) => {
             borderBottom={type == 'stories' && '0'}
             variant={type == 'stories' ? 'outline' : 'solid'}
           >
-            Stories
+            MyStories
+          </Button>
+        </MyLink>
+        <MyLink href="/me/stories/imcollabing">
+          <Button
+            {...fo}
+            // @ts-ignore
+            borderBottom={type == 'imcollabing' && '0'}
+            variant={type == 'imcollabing' ? 'outline' : 'solid'}
+          >
+            IAMcollabing
           </Button>
         </MyLink>
         <MyLink href="/me/account">
@@ -45,30 +62,20 @@ const Profile = ({ type }: { type: 'collections' | 'stories' | 'account' }) => {
           </Button>
         </MyLink>
       </ButtonGroup>
-      <Heading fontSize="2xl" textAlign="center" my={3} fontWeight={700}>
-        My {`  `}
+      <Heading fontSize="2xl" textAlign="center" my={3} fontWeight={400}>
         {type == 'stories'
-          ? ' Stories'
+          ? 'My Stories'
           : type == 'collections'
-          ? ' Collections'
-          : ' Account'}
+          ? 'My Collections'
+          : type == 'imcollabing'
+          ? 'I AM Collabing In stories'
+          : 'My Account'}
       </Heading>
-      {/* {type == "collections" ? (
-        <MyCollections
-          mycollections={data?.mycollections}
-          isInitial={true}
-          nextPageNo={2}
-        />
-      ) : type == "stories" ? (
-        <MyStories />
-      ) : (
-        <Account />
-      )} */}
     </>
   );
 };
 
-export default Profile;
+export default DashboardHeader;
 /*
 const Temp = () => (
   <Tabs

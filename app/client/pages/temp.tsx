@@ -1,4 +1,5 @@
-import { Box, Image } from '@chakra-ui/react';
+import { Box, Button, Checkbox, Image, useDisclosure } from '@chakra-ui/react';
+import UsersListModal from '@compo/UsersListModal';
 const dummyImage = '/dummyImage.png';
 const Index = () => {
   const url = `https://res.cloudinary.com/dnkb5aetl/image/upload/v1652176759/teapost/inobpaq8odctm5h38hk2_g4ywbl.jpg`;
@@ -8,10 +9,17 @@ const Index = () => {
   const src = url.split('/upload/').join(`/upload/w_100,h_100/`);
   // .map((src) => (src == 'upload' ? src + `/w_100,h_100` : src))
   // .join('/');
-
+  const state = useDisclosure();
   return (
     <>
-      <Image src={dummyImage} width={500} height={400} />
+      <Button onClick={() => state.onOpen()}> Open </Button>
+      <Checkbox
+        onChange={(e) => {
+          console.log('first', e.target.checked);
+        }}
+      />
+      {/* <UsersListModal isOpen={state.isOpen} onClose={state.onClose} /> */}
+      <Image src={dummyImage} width={500} height={400} alt="aly" />
       <Box boxSize="sm" border="4px">
         <Image
           src="https://source.unsplash.com/random/1000x100"

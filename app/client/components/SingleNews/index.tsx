@@ -35,6 +35,8 @@ const SingleStory = ({
         <Text wordBreak="keep-all">{story.readingTime} min read </Text>
       </HStack>
       <TPImage
+        maxW="full"
+        aspectRatio={1}
         src={story.titleImage}
         width={400}
         height={300}

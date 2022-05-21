@@ -28,12 +28,12 @@ const Index = ({
     pagination: { next: number; prev: number; limit: number };
   }>(() => !isInitial && `/collections/my?page=${nextPageNo}`);
 
-  const { isInView, show } = useInfinite({
+  const { isInViewRef, show } = useInfinite({
     ignore: !!initialMycollections || !nextPageNo,
   });
   return (
     <>
-      <div ref={isInitial ? null : isInView} />
+      <div ref={isInitial ? null : isInViewRef} />
       {initialMycollections ? (
         <>
           {initialMycollections?.length ? (

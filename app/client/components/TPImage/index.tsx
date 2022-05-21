@@ -7,16 +7,18 @@ const TPImage = ({
   height,
   alt,
   maxW = '400px',
+  aspectRatio = 4 / 3,
 }: {
   width: number | string;
   height: number | string;
   alt: string;
   src: string;
   maxW?: string | number;
+  aspectRatio?: number;
 }) => {
   return (
     <Box maxW="full">
-      <AspectRatio maxW={maxW} ratio={4 / 3} mx="auto">
+      <AspectRatio maxW={maxW} ratio={aspectRatio} mx="auto">
         <Image
           src={
             !src

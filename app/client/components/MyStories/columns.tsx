@@ -4,6 +4,7 @@ import { Column, CellProps } from 'react-table';
 import StoryActions from './StoryActions';
 import { SliderColumnFilter } from '@compo/ReactTable/TableFilters';
 import { TotalColumnSum } from '@compo/ReactTable/TotalColumnSum';
+import CollabWith from './CollabWith';
 
 const columns: any | Column[] = [
   {
@@ -14,21 +15,21 @@ const columns: any | Column[] = [
     disableFilters: true,
     disableSortBy: true,
     Cell: (props: CellProps<any>) => (
-      <VStack>
-        <TPImage
-          width="70px"
-          height="50px"
-          alt="TitleImage"
-          src={props.value}
-        />
-      </VStack>
+      <TPImage width="70px" height="50px" alt="TitleImage" src={props.value} />
     ),
   },
   {
     Header: 'Actions',
-    accessor: 'isPublished',
+    accessor: '_id',
     Cell: StoryActions,
     disableSortBy: true,
+    disableFilters: true,
+  },
+  {
+    Header: 'Collab',
+    accessor: 'collabWith',
+    Cell: CollabWith,
+    // disableSortBy: true,
     disableFilters: true,
   },
   {

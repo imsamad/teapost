@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import pagination from '../../lib/pagination';
 import { asyncHandler } from '../../lib/utils';
 import User, { peelUserDoc } from '../../models/User';
 
@@ -7,32 +8,20 @@ import User, { peelUserDoc } from '../../models/User';
 // @access    Public
 export const getAllUsers = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // @ts-ignore
-    const page = parseInt(req?.query?.page || 1, 10) || 1,
-      // @ts-ignore
-      limit = parseInt(req?.query?.limit || 10, 10) || 10;
-    // @ts-ignore
-    const startIndex = (page - 1) * limit;
-    const usersDoc = await User.find({
+    const query = User.find({
       isEmailVerified: true,
       isAuthorised: true,
-    })
-      .populate('profile')
-      .skip(startIndex)
-      .limit(limit);
-    // .lean();
+    }).populate('profile');
 
-    let pagination: any = { limit };
-
-    if (usersDoc.length) {
-      pagination.next = page + 1;
-    }
-    if (startIndex > 0) pagination.prev = page - 1;
     // @ts-ignore
     const isAdmin = req?.user?.role == 'admin';
-    res.json({
-      status: 'ok',
-      users: isAdmin ? usersDoc : usersDoc.map((user) => peelUserDoc(user)),
+
+    pagination(req, res, {
+      query,
+
+      label: 'users',
+      cbOnData: (userDoc: any) =>
+        isAdmin ? userDoc : userDoc.map((user: any) => peelUserDoc(user)),
     });
   }
 );

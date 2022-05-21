@@ -1,14 +1,14 @@
-import { RepeatIcon } from "@chakra-ui/icons";
-import { Box, HStack, IconButton } from "@chakra-ui/react";
-import { TPInput } from "@compo/FormFields";
-import { slugify } from "@lib/utils";
-import { useField } from "formik";
+import { RepeatIcon } from '@chakra-ui/icons';
+import { Box, HStack, IconButton } from '@chakra-ui/react';
+import { TPInput } from '@compo/FormFields';
+import { slugify } from '@lib/utils';
+import { useField } from 'formik';
 
-import React from "react";
+import React from 'react';
 
 const Index = () => {
-  const [{ value: title }] = useField("title");
-  const [{ value: slug }, {}, { setValue }] = useField("slug");
+  const [{ value: title }] = useField('title');
+  const [, {}, { setValue }] = useField('slug');
   return (
     <HStack border="0px">
       <Box alignSelf="flex-end" flex="1">

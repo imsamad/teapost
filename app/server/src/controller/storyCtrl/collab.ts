@@ -21,6 +21,7 @@ const ctrl = asyncHandler(
 
     if (!story) return next(ErrorResponse(400, 'Resource not found'));
 
+    console.log('addAuthors ', addAuthors);
     story.collabWith.addToSet(...addAuthors);
     story.collabWith.pull(...removeAuthors);
 

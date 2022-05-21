@@ -1,4 +1,9 @@
-import { Button, ButtonGroup, Heading } from '@chakra-ui/react';
+import {
+  Button,
+  ButtonGroup,
+  Heading,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 
 import MyLink from '@compo/MyLink';
 
@@ -15,15 +20,23 @@ const DashboardHeader = ({
 }: {
   type: 'collections' | 'stories' | 'account' | 'imcollabing';
 }) => {
+  const size = useBreakpointValue({ base: 'sm', md: 'md' });
   return (
     <>
       <Heading fontSize="3xl" textAlign="center" my={3} fontWeight={700}>
         My Dashboard
       </Heading>
-      <ButtonGroup justifyContent="center" display="flex" border="0px">
+      <ButtonGroup
+        justifyContent="center"
+        display="flex"
+        border="0px"
+        overflow="auto"
+        pb={2}
+      >
         <MyLink href="/me">
           <Button
             {...fo}
+            size={size}
             // @ts-ignore
             borderBottom={type == 'collections' && '0'}
             variant={type == 'collections' ? 'outline' : 'solid'}
@@ -34,6 +47,7 @@ const DashboardHeader = ({
         <MyLink href="/me/stories">
           <Button
             {...fo}
+            size={size}
             // @ts-ignore
             borderBottom={type == 'stories' && '0'}
             variant={type == 'stories' ? 'outline' : 'solid'}
@@ -44,6 +58,7 @@ const DashboardHeader = ({
         <MyLink href="/me/stories/imcollabing">
           <Button
             {...fo}
+            size={size}
             // @ts-ignore
             borderBottom={type == 'imcollabing' && '0'}
             variant={type == 'imcollabing' ? 'outline' : 'solid'}
@@ -54,6 +69,7 @@ const DashboardHeader = ({
         <MyLink href="/me/account">
           <Button
             {...fo}
+            size={size}
             // @ts-ignore
             borderBottom={type == 'account' && '0'}
             variant={type == 'account' ? 'outline' : 'solid'}

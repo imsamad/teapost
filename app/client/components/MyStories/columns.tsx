@@ -5,6 +5,7 @@ import StoryActions from './StoryActions';
 import { SliderColumnFilter } from '@compo/ReactTable/TableFilters';
 import { TotalColumnSum } from '@compo/ReactTable/TotalColumnSum';
 import CollabWith from './CollabWith';
+import PublishedBtn from './PublisedBtn';
 
 const columns: any | Column[] = [
   {
@@ -30,6 +31,13 @@ const columns: any | Column[] = [
     accessor: 'collabWith',
     Cell: CollabWith,
     // disableSortBy: true,
+    disableFilters: true,
+  },
+  {
+    Header: 'Published',
+    accessor: 'isPublished',
+    Cell: PublishedBtn,
+    disableSortBy: true,
     disableFilters: true,
   },
   {

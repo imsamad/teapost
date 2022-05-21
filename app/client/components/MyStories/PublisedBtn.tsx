@@ -8,10 +8,10 @@ import {
 } from '@chakra-ui/react';
 import { publishedStoryApi } from '@lib/api/storyApi';
 import StoryType from '@lib/types/StoryType';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CellProps } from 'react-table';
 
-const PublisedBtn = (props: CellProps<StoryType>) => {
+const PublishedBtn = (props: CellProps<StoryType>) => {
   const storyId = props.cell.row.original._id;
   const [isPublished, setIsPublished] = useState(props.value);
   const isLoading = useDisclosure();
@@ -34,6 +34,10 @@ const PublisedBtn = (props: CellProps<StoryType>) => {
         isLoading.onClose();
       });
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (props.value != isPublished) setIsPublished(props.value);
+  });
   return (
     <VStack>
       <Switch
@@ -49,4 +53,4 @@ const PublisedBtn = (props: CellProps<StoryType>) => {
   );
 };
 
-export default PublisedBtn;
+export default PublishedBtn;

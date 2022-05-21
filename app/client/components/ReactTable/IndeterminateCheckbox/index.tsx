@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+import { Checkbox } from '@chakra-ui/react';
 import React from 'react';
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -8,7 +9,10 @@ const IndeterminateCheckbox = React.forwardRef(
     React.useEffect(() => {
       resolveRef.current.indeterminate = indeterminate;
     }, [resolveRef, indeterminate]);
-    return <input type="checkbox" ref={resolveRef} {...rest} />;
+
+    return (
+      <Checkbox isChecked={rest?.checked || false} ref={resolveRef} {...rest} />
+    );
   }
 );
 

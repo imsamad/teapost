@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { deleteManyStoriesApi, publishManyStoriesApi } from '@lib/api/storyApi';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TableInstance } from 'react-table';
 
 const MultipleRowSelected = ({
@@ -26,6 +26,8 @@ const MultipleRowSelected = ({
   const isUnPublishing = useDisclosure();
 
   const handleDelete = () => {
+    console.log('tableInstance ', tableInstance);
+    // tableInstance.stateReducer((state,actions))
     var res = confirm('Do you eant do delete?');
     if (!res) return;
     isDeleting.onOpen();
@@ -50,6 +52,7 @@ const MultipleRowSelected = ({
         isPublish ? isPublishing.onClose() : isUnPublishing.onClose();
       });
   };
+
   return (
     <Box my={2}>
       <Collapse in={storyIds.length}>

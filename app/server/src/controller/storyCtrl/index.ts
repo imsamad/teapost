@@ -11,7 +11,7 @@ import publishedMultipleStories from './publishedMultipleStories';
 import deleteMultipleStories from './deleteMultipleStories';
 import iamcollabing from './iamcollabing';
 import unCollabMe from './unCollabMe';
-// import unCollabMeMultiple from './unCollabMeMultiple';
+import unCollabMeMultiple from './unCollabMeMultiple';
 
 export {
   updateStory,
@@ -27,5 +27,5 @@ export {
   deleteMultipleStories,
   iamcollabing,
   unCollabMe,
-  // unCollabMeMultiple,
+  unCollabMeMultiple,
 };

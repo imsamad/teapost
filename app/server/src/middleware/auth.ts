@@ -40,7 +40,9 @@ export const authorise = (roles: ('admin' | 'reader' | 'author')[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     if (!roles.includes(req.user.role))
-      return next(ErrorResponse(400, `Not authorized to access this route`));
+      return next(
+        ErrorResponse(400, `Not authorized for non-admin to access this route`)
+      );
 
     next();
   };

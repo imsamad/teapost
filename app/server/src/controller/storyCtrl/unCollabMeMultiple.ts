@@ -9,7 +9,7 @@ const unCollabMeMultiple = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id.toString();
-    console.log('req.body.storyIds ', req.body.storyIds);
+
     const story = await Story.updateMany(
       { _id: { $in: req.body.storyIds } },
       { $pull: { collabWith: user } }

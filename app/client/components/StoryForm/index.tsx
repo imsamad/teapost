@@ -1,24 +1,24 @@
-import { Button, HStack, Text, useToast } from "@chakra-ui/react";
-import { Form, Formik } from "formik";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { Button, HStack, Text, useToast } from '@chakra-ui/react';
+import { Form, Formik } from 'formik';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-import { submitStory } from "@lib/api/storyApi";
+import { submitStory } from '@lib/api/storyApi';
 
-import FormBody from "./FormBody";
-import StoryType, { StoryFormType } from "@lib/types/StoryType";
-import { mutate } from "swr";
-import { impStoryFields } from "@lib/utils";
+import FormBody from './FormBody';
+import StoryType, { StoryFormType } from '@lib/types/StoryType';
+import { mutate } from 'swr';
+import { impStoryFields } from '@lib/utils';
 
 const initValues: StoryFormType = {
-  _id: "",
-  title: "",
-  titleImage: "",
-  subtitle: "",
-  slug: "",
-  keywords: "",
+  _id: '',
+  title: '',
+  titleImage: '',
+  subtitle: '',
+  slug: '',
+  keywords: '',
 
-  content: "",
+  content: '',
 
   tags: [],
   additionalTags: [],
@@ -32,8 +32,8 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
   useEffect(() => {
     const unloadCallback = (event: BeforeUnloadEvent) => {
       event.preventDefault();
-      event.returnValue = "";
-      return "";
+      event.returnValue = '';
+      return '';
     };
     // window.addEventListener('beforeunload', unloadCallback);
     // return () => window.removeEventListener('beforeunload', unloadCallback);
@@ -42,15 +42,15 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
   const saveToast = (title: string, position?: any) =>
     toast({
       title,
-      status: "success",
+      status: 'success',
       duration: 1000,
       isClosable: true,
-      position: position || "bottom",
+      position: position || 'bottom',
     });
 
   useEffect(() => {
-    localStorage.setItem("story", JSON.stringify(impStoryFields(story)));
-    return () => localStorage.removeItem("story");
+    localStorage.setItem('story', JSON.stringify(impStoryFields(story)));
+    return () => localStorage.removeItem('story');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,7 +66,7 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
 
         const data = await submitStory({
           values,
-          type: "meta",
+          type: 'meta',
           storeResToLocal: true,
         });
 
@@ -74,7 +74,7 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
           await mutate(`${process.env.NEXT_PUBLIC_API_URL}/tags`);
         }
         if (
-          router.route == "/me/story/write/[slug]" &&
+          router.route == '/me/story/write/[slug]' &&
           crtStorySlug !== data.story.slug
         ) {
           router.push(`/me/story/write/${data.story.slug}`, undefined, {
@@ -89,11 +89,11 @@ const Index = ({ story }: { story: Partial<StoryType> }) => {
           ...data.story,
         });
         if (data?.message?.slug) {
-          actions.setFieldError("slug", data.message.slug);
-          actions.setFieldTouched("slug", true);
+          actions.setFieldError('slug', data.message.slug);
+          actions.setFieldTouched('slug', true);
         }
 
-        saveToast("Saved Changes.");
+        saveToast('Saved Changes.');
       }}
     >
       <Form>

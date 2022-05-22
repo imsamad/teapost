@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       Component?.getContainer
     : (page: any) => (
         <Container
-          maxWidth={isOnMePage ? 'container.xl' : 'container.md'}
+          maxWidth={isOnMePage ? 'container.lg' : 'container.md'}
           p={1}
         >
           {page}

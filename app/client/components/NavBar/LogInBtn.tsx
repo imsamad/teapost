@@ -20,12 +20,16 @@ import { BiLogInCircle, BiUser } from 'react-icons/bi';
 
 const LogInBtn = ({ size }: { size: any }) => {
   const { loginModal, auth, logout } = useAuthCtx();
+
+  if (typeof window == 'undefined') {
+    return <></>;
+  }
   return auth?.user?._id ? (
     <Menu isLazy flip size={size}>
       <MenuButton
-        _hover={{ bg: 'gray.50' }}
+        // _hover={{ bg: 'gray.50' }}
         borderRadius="full"
-        _expanded={{ bg: 'gray.50' }}
+        // _expanded={{ bg: 'gray.50' }}
         _focus={{ boxShadow: 'none' }}
       >
         <HStack>
@@ -46,7 +50,7 @@ const LogInBtn = ({ size }: { size: any }) => {
           </MyLink>
           <MyLink href={`/me/stories/write/${nanoid(10)}`}>
             <MenuItem icon={<FaPenNib />} color="green.600">
-              Write
+              Write +
             </MenuItem>
           </MyLink>
           <MenuItem

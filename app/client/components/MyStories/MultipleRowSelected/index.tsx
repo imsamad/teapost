@@ -7,6 +7,7 @@ import {
   Spacer,
   useDisclosure,
 } from '@chakra-ui/react';
+import DeleteStoryBtn from '@compo/DeleteStoryBtn';
 import { deleteManyStoriesApi, publishManyStoriesApi } from '@lib/api/storyApi';
 import React, { useEffect } from 'react';
 import { TableInstance } from 'react-table';
@@ -21,25 +22,9 @@ const MultipleRowSelected = ({
   const storyIds = tableInstance.selectedFlatRows.map(
     (d: any) => d.original._id
   );
-  const isDeleting = useDisclosure();
   const isPublishing = useDisclosure();
   const isUnPublishing = useDisclosure();
 
-  const handleDelete = () => {
-    console.log('tableInstance ', tableInstance);
-    // tableInstance.stateReducer((state,actions))
-    var res = confirm('Do you eant do delete?');
-    if (!res) return;
-    isDeleting.onOpen();
-    deleteManyStoriesApi(storyIds)
-      .then(() => {
-        resetStories();
-      })
-      .catch(() => {})
-      .finally(() => {
-        isDeleting.onClose();
-      });
-  };
   const handlePublish = (isPublish: boolean) => {
     isPublish ? isPublishing.onOpen() : isUnPublishing.onOpen();
 
@@ -65,14 +50,12 @@ const MultipleRowSelected = ({
         >
           <Heading size="md">{storyIds.length} selected</Heading>
           <Spacer />
-          <Button
-            colorScheme="red"
-            onClick={handleDelete}
-            isLoading={isDeleting.isOpen}
-            loadingText="Deleting..."
-          >
-            Delete {storyIds.length > 1 && 'All'}
-          </Button>
+          <DeleteStoryBtn
+            storyIds={storyIds}
+            postDeleteCB={() => {
+              resetStories();
+            }}
+          />
           <Button
             isLoading={isPublishing.isOpen}
             colorScheme="green"

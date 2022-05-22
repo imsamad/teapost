@@ -27,8 +27,7 @@ const getMe = asyncHandler(async (req: Request, res: Response) => {
         : ['storyCollections'],
   };
 
-  const myProfile = await User.findById(userId);
-  // .populate(populate);
+  const myProfile = await User.findById(userId).populate('profile');
 
   return res.json({
     status: 'ok',

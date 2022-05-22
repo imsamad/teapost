@@ -1,19 +1,28 @@
+import { TriangleDownIcon } from '@chakra-ui/icons';
 import {
   Button,
   ButtonGroup,
+  Container,
+  Divider,
   Heading,
+  HStack,
   useBreakpointValue,
 } from '@chakra-ui/react';
 
 import MyLink from '@compo/MyLink';
+import WriteBtn from '@compo/WriteBtn';
 
-const fo = {
+const props = (size?: string, showIcon?: boolean) => ({
   _focus: { outline: 'none' },
-  colorScheme: 'blue',
+  colorScheme: 'twitter',
   isFullWidth: true,
   // borderRadius: "0",
   borderBottomRadius: 0,
-};
+  borderBottom: 0,
+  size,
+  leftIcon: showIcon ? <TriangleDownIcon /> : <></>,
+  variant: showIcon ? 'outline' : 'solid',
+});
 
 const DashboardHeader = ({
   type,
@@ -22,60 +31,31 @@ const DashboardHeader = ({
 }) => {
   const size = useBreakpointValue({ base: 'sm', md: 'md' });
   return (
-    <>
-      <Heading fontSize="3xl" textAlign="center" my={3} fontWeight={700}>
-        My Dashboard
-      </Heading>
-      <ButtonGroup
-        justifyContent="center"
-        display="flex"
-        border="0px"
-        overflow="auto"
-        pb={2}
-      >
-        <MyLink href="/me">
-          <Button
-            {...fo}
-            size={size}
-            // @ts-ignore
-            borderBottom={type == 'collections' && '0'}
-            variant={type == 'collections' ? 'outline' : 'solid'}
-          >
-            Reading List
-          </Button>
+    <Container maxW="container.lg">
+      <HStack mt={4} justifyContent="space-between" border="0px">
+        <Heading
+          fontSize="3xl"
+          textAlign="center"
+          fontWeight={700}
+          fontStyle="italic"
+        >
+          My Dashboard
+        </Heading>
+        <WriteBtn />
+      </HStack>
+      <Divider mt={4} />
+      <ButtonGroup border="0px" overflow="auto" w="full" mt={4}>
+        <MyLink href="/me" w="full">
+          <Button {...props(size, type == 'collections')}>Reading List</Button>
         </MyLink>
-        <MyLink href="/me/stories">
-          <Button
-            {...fo}
-            size={size}
-            // @ts-ignore
-            borderBottom={type == 'stories' && '0'}
-            variant={type == 'stories' ? 'outline' : 'solid'}
-          >
-            MyStories
-          </Button>
+        <MyLink href="/me/stories" w="full">
+          <Button {...props(size, type == 'stories')}>MyStories</Button>
         </MyLink>
-        <MyLink href="/me/stories/imcollabing">
-          <Button
-            {...fo}
-            size={size}
-            // @ts-ignore
-            borderBottom={type == 'imcollabing' && '0'}
-            variant={type == 'imcollabing' ? 'outline' : 'solid'}
-          >
-            IAMcollabing
-          </Button>
+        <MyLink href="/me/stories/imcollabing" w="full">
+          <Button {...props(size, type == 'imcollabing')}>IAMcollabing</Button>
         </MyLink>
-        <MyLink href="/me/account">
-          <Button
-            {...fo}
-            size={size}
-            // @ts-ignore
-            borderBottom={type == 'account' && '0'}
-            variant={type == 'account' ? 'outline' : 'solid'}
-          >
-            Profile
-          </Button>
+        <MyLink href="/me/account" w="full">
+          <Button {...props(size, type == 'account')}>Profile</Button>
         </MyLink>
       </ButtonGroup>
       <Heading fontSize="2xl" textAlign="center" my={3} fontWeight={400}>
@@ -87,7 +67,7 @@ const DashboardHeader = ({
           ? 'I AM Collabing In stories'
           : 'My Account'}
       </Heading>
-    </>
+    </Container>
   );
 };
 

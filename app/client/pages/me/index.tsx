@@ -6,7 +6,6 @@ import { StoryCollectionType } from '@lib/types/StoryCollectionType';
 
 import DashboardHeader from '@compo/DashboardHeader';
 import MyCollections from '@compo/MyCollections';
-import { Container } from '@chakra-ui/react';
 
 const Index = ({ mycollections }: { mycollections: StoryCollectionType[] }) => {
   return (
@@ -21,18 +20,7 @@ const Index = ({ mycollections }: { mycollections: StoryCollectionType[] }) => {
   );
 };
 
-Index.getContainer = function getContainer(page: any) {
-  return (
-    <Container maxW="container.lg" my={2}>
-      {page}
-    </Container>
-  );
-};
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  res,
-  params,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   // @ts-ignore
 
   const accessToken = await getCookieFromServer(req.cookies);

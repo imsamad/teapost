@@ -5,7 +5,6 @@ import axios from 'axios';
 import StoryType from '@lib/types/StoryType';
 import { GetServerSideProps } from 'next';
 import { getCookieFromServer } from '@lib/cookies';
-import { Box, Flex } from '@chakra-ui/react';
 
 const Index = ({ stories }: { stories: StoryType[] }) => {
   return (
@@ -15,13 +14,7 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
     </>
   );
 };
-Index.getContainer = function getContainer(page: any) {
-  return (
-    <Box justifyContent="center" p={4}>
-      {page}
-    </Box>
-  );
-};
+
 export const getServerSideProps: GetServerSideProps = async ({
   req,
   res,

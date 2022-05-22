@@ -1,13 +1,17 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { Heading, HStack, Spacer } from "@chakra-ui/react";
-import TSIconButton from "@compo/UI/TSIconButton";
-import { useField } from "formik";
-import AutoSave from "./AutoSave";
-import Collab from "./Collab";
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Heading, HStack, Spacer } from '@chakra-ui/react';
+import DeleteStoryBtn from '@compo/DeleteStoryBtn';
+import TSIconButton from '@compo/UI/TSIconButton';
+import { useField } from 'formik';
+import { useRouter } from 'next/router';
+import AutoSave from './AutoSave';
+import Collab from './Collab';
 
-import IsPublished from "./IsPublished";
+import IsPublished from './IsPublished';
 const Index = () => {
-  const [{ value }] = useField("_id");
+  const [{ value }] = useField('_id');
+
+  const router = useRouter();
   return (
     <HStack justifyContent="flex-end" my="4" wrap="wrap">
       <HStack borderRadius="md" p="1">
@@ -29,6 +33,12 @@ const Index = () => {
       <Collab />
       <AutoSave />
       <IsPublished />
+      <DeleteStoryBtn
+        storyIds={[value]}
+        postDeleteCB={() => {
+          router.push('/me');
+        }}
+      />
     </HStack>
   );
 };

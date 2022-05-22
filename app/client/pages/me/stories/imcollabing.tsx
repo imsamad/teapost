@@ -15,13 +15,6 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
   );
 };
 
-Index.getContainer = function getContainer(page: any) {
-  return (
-    <Box justifyContent="center" p={4}>
-      {page}
-    </Box>
-  );
-};
 export default Index;
 
 export const getServerSideProps: GetServerSideProps = async ({

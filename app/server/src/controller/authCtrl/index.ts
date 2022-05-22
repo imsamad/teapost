@@ -7,6 +7,7 @@ import changeEmail from './changeEmail';
 import updateDetails from './updateDetails';
 import forgotPassword from './forgotPassword';
 import forgotIdentifier from './forgotIdentifier';
+import deleteMe from './deleteMe';
 import { resetPaswordPage, resetPasword } from './resetPasword';
 
 export default {
@@ -21,4 +22,5 @@ export default {
   changeEmail,
   updateDetails,
   forgotIdentifier,
+  deleteMe,
 };

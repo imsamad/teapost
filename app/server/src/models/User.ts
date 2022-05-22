@@ -77,6 +77,29 @@ userSchema.post('save', function (error: any, doc: UserDocument, next: any) {
   }
 });
 
+userSchema.pre('remove', async function (next) {
+  await this.model('Asset').findByIdAndRemove(this._id);
+  await this.model('Profile').findByIdAndRemove(this._id);
+  await this.model('StoryCollection').deleteMany({ user: this._id });
+
+  let stories = await this.model('Story').find({
+    author: this._id,
+  });
+  const myPrimaryComment = await this.model('Primary').find({ user: this._id });
+  const mySecondaryComments = await this.model('Secondary').find({
+    user: this._id,
+  });
+  let promises: any = [];
+  promises.push(...stories.map((story: any) => story.remove()));
+  promises.push(...myPrimaryComment.map((story: any) => story.remove()));
+  promises.push(...mySecondaryComments.map((story: any) => story.remove()));
+  Promise.allSettled(promises)
+    .then((res: any) => {})
+    .finally(() => {
+      next();
+    });
+});
+
 userSchema.pre('save', async function (next) {
   const user = this as UserDocument;
   if (!user.isModified('password')) return next();

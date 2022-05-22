@@ -37,6 +37,8 @@ router.put(['/changeemail', '/updateemail'], authCtrl.changeEmail);
 
 router.put(['/', '/update'], authCtrl.updateDetails);
 
+router.delete(['/', '/deleteMe', '/deactivate'], authCtrl.deleteMe);
+
 router.patch(
   ['/follow/:authorId', '/unfollow/:authorId'],
   authCtrl.followAuthor

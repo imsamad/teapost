@@ -22,7 +22,7 @@ const logIn = asyncHandler(
     if (!user)
       return next(
         ErrorResponse(400, {
-          identifier: 'Identifier not registered/verfied .',
+          identifier: 'Identifier not registered/verified .',
         })
       );
 

@@ -218,3 +218,13 @@ export const unCollabMeMultipleApi = async (storyIds: string[]) => {
     throw err?.response?.data;
   }
 };
+export const deleteMeApi = async () => {
+  try {
+    const { data } = await axios.delete<{
+      message: string;
+    }>(`/auth`);
+    return data;
+  } catch (err: any) {
+    throw err?.response?.data;
+  }
+};

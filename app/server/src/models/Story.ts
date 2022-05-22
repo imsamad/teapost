@@ -79,10 +79,6 @@ const storySchema = new Schema(
     },
     isPublishedByAdmin: {
       type: Boolean,
-      require: [
-        true,
-        'Specifying the story, Is published or not is compulsary.',
-      ],
       default: true,
     },
     readingTime: { type: Number, default: 0 },

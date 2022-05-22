@@ -7,7 +7,7 @@ import User from '../../models/User';
 
 const blockUnBlockUsers = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const isBlock = req.originalUrl.split('/').pop() == 'block';
+    const isBlock = req.originalUrl.split('/').pop()?.startsWith('block');
 
     // @ts-ignore
     const admin = req.user._id.toString();

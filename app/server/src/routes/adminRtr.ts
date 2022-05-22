@@ -6,6 +6,11 @@ const router: Router = express();
 
 router.use(protect, authorise(['admin']));
 
-router.route(['/block', '/unblock']).put(adminCtrl.blockUnBlockUsers);
+router
+  .route(['/block', '/unblock', '/blockusers', '/unblockusers'])
+  .put(adminCtrl.blockUnBlockUsers);
+router
+  .route(['/publish', '/unpublish', '/publishstories', '/unpublishstories'])
+  .put(adminCtrl.publishUnPublishStories);
 
 export default router;

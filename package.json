@@ -4,6 +4,7 @@
   "description": "News Portal in MENN (Mongo, Express, NextJS & Node) stack...",
   "scripts": {
     "dev": "lerna run dev --stream",
+    "start": "lerna run start --stream",
     "clean": "npx lerna clean -y",
     "bootup": "npx lerna bootstrap --hoist"
   },

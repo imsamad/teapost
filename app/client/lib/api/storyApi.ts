@@ -207,3 +207,14 @@ export const unCollabMeApi = async (storyId: string) => {
     throw err.response.data;
   }
 };
+
+export const unCollabMeMultipleApi = async (storyIds: string[]) => {
+  try {
+    const { data } = await axios.put<{
+      message: string;
+    }>(`/stories/uncollabmemany`, { storyIds });
+    return data;
+  } catch (err: any) {
+    throw err?.response?.data;
+  }
+};

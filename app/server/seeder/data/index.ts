@@ -1,4 +1,4 @@
-import { checkCompatibility } from './health';
+import { checkCompatibility, totalDocs } from './health';
 import { generateTags } from './tags';
 import { generateProfiles, generateUsers } from './users';
 import { generateAssets } from './assets';
@@ -25,4 +25,5 @@ export {
   generateCollections,
   deleteData,
   addCollaborators,
+  totalDocs,
 };

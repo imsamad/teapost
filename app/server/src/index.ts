@@ -24,6 +24,7 @@ import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
 
 import BUSINESS_ROUTES from './routes';
+import checkTemp from './middleware/checkTemp';
 
 const app = express();
 app.use(mongoSanitize());
@@ -57,7 +58,7 @@ app.use(
 
 app.use(express.static(path.join(__dirname, '../', 'public')));
 
-app.use(BUSINESS_ROUTES);
+app.use(checkTemp(), BUSINESS_ROUTES);
 app.get('/api/v1/health', (_req, res) => {
   return res.json({
     dir: __dirname,

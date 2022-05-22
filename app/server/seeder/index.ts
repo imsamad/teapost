@@ -4,9 +4,10 @@ import path from 'path';
 dotenv.config({
   path: path.join(__dirname, '../', `config`, '.env'),
 });
+
 import 'colors';
 
-import dbConnect from '../src/db/connectDB';
+import connectDB from '../src/db/connectDB';
 import * as seeder from './data';
 
 const importData = async () => {
@@ -36,12 +37,12 @@ const importData = async () => {
 
       return;
     };
-    await lightWeightsSeeders(!true);
+    await lightWeightsSeeders(true);
 
     /** Heavy task run individually */
     // await seeder.generateCollections();
     // await seeder.gradeComments();
-    await seeder.checkCompatibility();
+    // await seeder.checkCompatibility(!true);
 
     console.log('):- Data imported successfully'.green);
   } catch (err) {
@@ -52,11 +53,12 @@ const importData = async () => {
 (async () => {
   console.time('Processing time '.green);
 
-  await dbConnect(true);
-
+  await connectDB(true);
   if (process.argv[2] === '-i') await importData();
   else if (process.argv[2] === '-d') await seeder.deleteData();
 
   console.timeEnd('Processing time '.green);
+  await seeder.totalDocs();
+
   process.exit(1);
 })();

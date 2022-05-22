@@ -137,7 +137,7 @@ export const gradeStories = async () => {
   return;
 };
 export const addCollaborators = async () => {
-  console.time(`Story Collabed `.green.italic);
+  console.time(`):- Story Collabed `.green.italic);
   const stories = await Story.find({});
   const users = (await User.find({}).lean()).map(({ _id }) => _id.toString());
 

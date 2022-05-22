@@ -74,7 +74,7 @@ export const gradeComments = async () => {
   ) =>
     new Promise((resolve) => {
       comments.forEach(async (comment, index) => {
-        console.log('index ', index);
+        // console.log('index ', index);
         const noOfLikes = getRndInteger(0, users.length / 2);
         const noOfDislikes = getRndInteger(0, users.length / 2);
 
@@ -104,9 +104,11 @@ export const gradeComments = async () => {
     });
   // const primaries = await Primary.find({});
   // await runProg(primaries);
-
-  const secondaries = await Secondary.find({}).skip(50000).limit(10000);
-  await runProg(secondaries);
+  // const oneK = 10000;
+  // const secondaries = await Secondary.find({})
+  //   .skip(oneK * 5)
+  //   .limit(10000);
+  // await runProg(secondaries);
 
   console.timeEnd('):- Comments graded '.green.italic);
   return;

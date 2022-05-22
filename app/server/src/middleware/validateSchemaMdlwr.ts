@@ -22,6 +22,7 @@ const validateSchemaMdlwr =
       );
       return next();
     } catch (yupError: any) {
+      // console.log('=====================yupError from mdlrSchema ', yupError);
       return next(
         ErrorResponse(
           422,

@@ -133,11 +133,6 @@ export const gradeStories = async () => {
   for (let i = 0; i < stories.length; i = i + 50)
     await runProg(stories.slice(i, i + 50));
 
-  // await runProg(stories.slice(0, Math.floor(stories.length / 2)));
-  // await runProg(stories.slice(Math.floor(stories.length / 2), undefined));
-  // await Promise.allSettled(dbTscPromises);
-  // await StoryMeta.create(storyMetas);
-
   console.timeEnd('):- Stories graded '.green.italic);
   return;
 };
@@ -148,17 +143,16 @@ export const addCollaborators = async () => {
 
   let promises = stories.map((story) => {
     let randomUsers = users.sort((a, b) => Math.random() - Math.random());
-    const noOfCollabUsers = getRndInteger(0, users.length / 3);
+    const noOfCollabUsers = getRndInteger(0, 20);
     randomUsers = randomUsers
       .slice(0, noOfCollabUsers)
       .filter((user) => user != story.author.toString());
-    console.log(randomUsers.length, 'randomUsers ', randomUsers);
     story.collabWith.addToSet(...randomUsers);
 
     return story.save();
   });
   const storisUpdated = await Promise.allSettled(promises);
-  console.timeEnd(`Story Collabed `.green.italic);
+  console.timeEnd(`):- Story Collabed `.green.italic);
   // @ts-ignore
   return storisUpdated.map((story) => story.value || story.reason);
 };

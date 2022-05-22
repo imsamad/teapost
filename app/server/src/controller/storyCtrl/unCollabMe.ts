@@ -5,7 +5,7 @@ import validateSchemaMdlwr from '../../middleware/validateSchemaMdlwr';
 import Story from '../../models/Story';
 import { isValidObjectId } from 'mongoose';
 
-const uncollabme = asyncHandler(
+const unCollabMe = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
     const user = req.user._id.toString();
@@ -22,17 +22,17 @@ const uncollabme = asyncHandler(
   }
 );
 
-const schema = yup.object({
+export const schema = yup.object({
   params: yup.object({
     storyId: yup
       .string()
       .label('storyId')
       .required()
       .typeError('StoryId must be string type.')
-      .test('storyId', 'Story Id must be a valid', (val) =>
+      .test('storyId', 'Story Id must be a valid', (val: any) =>
         isValidObjectId(val)
       ),
   }),
 });
 
-export default [validateSchemaMdlwr(schema), uncollabme];
+export default [validateSchemaMdlwr(schema), unCollabMe];

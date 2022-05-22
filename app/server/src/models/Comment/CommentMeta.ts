@@ -1,36 +1,36 @@
-import { Document, model, Schema, Types } from "mongoose";
+import { Document, model, Schema, Types } from 'mongoose';
 
-import { UserDocument } from "../User";
-import { CommentMeta as CommentMetaType } from "../../lib/types/CommentTypes";
-import { PrimaryCommentDocument } from "./Primary";
-import { SecondaryCommentDocument } from "./Secondary";
+import { UserDocument } from '../User';
+import { CommentMeta as CommentMetaType } from '../../lib/types/CommentTypes';
+import { PrimaryCommentDocument } from './Primary';
+import { SecondaryCommentDocument } from './Secondary';
 
 export interface CommentMetaDocument
   extends Document,
-    Omit<CommentMetaType, "_id" | "likedBy" | "dislikedBy"> {
+    Omit<CommentMetaType, '_id' | 'likedBy' | 'dislikedBy'> {
   //
-  _id: PrimaryCommentDocument["_id"] | SecondaryCommentDocument["_id"];
-  likedBy: Types.Array<UserDocument["_id"]>;
-  dislikedBy: Types.Array<UserDocument["_id"]>;
+  _id: PrimaryCommentDocument['_id'] | SecondaryCommentDocument['_id'];
+  likedBy: Types.Array<UserDocument['_id']>;
+  dislikedBy: Types.Array<UserDocument['_id']>;
 }
 
 const commentMetaSchema = new Schema(
   {
     _id: {
       type: Schema.Types.ObjectId,
-      required: [true, "Comment is required."],
-      ref: "Primary",
+      required: [true, 'Comment is required.'],
+      ref: 'Primary',
     },
     likedBy: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     dislikedBy: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
   },
@@ -42,7 +42,7 @@ const commentMetaSchema = new Schema(
 );
 
 const CommentMeta = model<CommentMetaDocument>(
-  "CommentMeta",
+  'CommentMeta',
   commentMetaSchema
 );
 

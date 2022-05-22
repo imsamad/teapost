@@ -1,10 +1,8 @@
 import TPImage from '@compo/TPImage';
 import { Column, CellProps } from 'react-table';
-import StoryActions from './StoryActions';
 import { SliderColumnFilter } from '@compo/ReactTable/TableFilters';
 import { TotalColumnSum } from '@compo/ReactTable/TotalColumnSum';
-import CollabWith from './CollabWith';
-import PublishedBtn from './PublisedBtn';
+import UnCollab from './UnCollab';
 
 const columns: any | Column[] = [
   {
@@ -19,23 +17,16 @@ const columns: any | Column[] = [
     ),
   },
   {
-    Header: 'Actions',
+    Header: 'UnCollab',
     accessor: '_id',
-    Cell: StoryActions,
+    Cell: UnCollab,
     disableSortBy: true,
-    disableFilters: true,
-  },
-  {
-    Header: 'Collab',
-    accessor: 'collabWith',
-    Cell: CollabWith,
-    // disableSortBy: true,
     disableFilters: true,
   },
   {
     Header: 'Published',
     accessor: 'isPublished',
-    Cell: PublishedBtn,
+    Cell: ({ value }: any) => (value ? 'True' : 'False'),
     disableSortBy: true,
     disableFilters: true,
   },
@@ -49,7 +40,6 @@ const columns: any | Column[] = [
     accessor: 'subtitle',
     show: false,
   },
-
   {
     Header: 'Stats',
     Footer: 'Total Stats',

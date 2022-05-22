@@ -165,11 +165,11 @@ export const publishedStoryApi = async ({
   }
 };
 
-export const getMyStoriesApi = async () => {
+export const getMyStoriesApi = async (type?: 'my' | 'iamcollabing') => {
   try {
     const { data } = await axios.get<{
       stories: StoryType[];
-    }>('/stories/my');
+    }>(`/stories/${type}`);
     return data;
   } catch (err: any) {
     throw err.response.data;
@@ -192,5 +192,18 @@ export const collabWithApi = async (
     return data;
   } catch (err: any) {
     throw err?.response?.data;
+  }
+};
+
+export const unCollabMeApi = async (storyId: string) => {
+  console.log('storyId from collam api', storyId);
+  if (!storyId) throw Error('Story is must');
+  try {
+    const { data } = await axios.put<{
+      story: StoryType;
+    }>(`/stories/uncollabme/${storyId}`);
+    return data;
+  } catch (err: any) {
+    throw err.response.data;
   }
 };

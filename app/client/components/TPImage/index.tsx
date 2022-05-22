@@ -17,7 +17,7 @@ const TPImage = ({
   aspectRatio?: number;
 }) => {
   return (
-    <Box maxW="full">
+    <Box w="full">
       <AspectRatio maxW={maxW} ratio={aspectRatio} mx="auto">
         <Image
           src={

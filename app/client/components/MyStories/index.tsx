@@ -13,13 +13,12 @@ import MultipleRowSelected from './MultipleRowSelected';
 const MyStories = ({ stories: storiesProp }: { stories: StoryType[] }) => {
   const [stories, setStories] = useState(storiesProp);
   const [revalidator, setRevalidator] = useState(false);
-  const resetStories = () => {
-    getMyStoriesApi()
-      .then((data) => {
-        setStories(data.stories);
-        setRevalidator(!revalidator);
-      })
-      .catch(() => {});
+  const resetStories = async () => {
+    try {
+      const data = await getMyStoriesApi('my');
+      setStories(data.stories);
+      setRevalidator(!revalidator);
+    } catch {}
   };
 
   if (!stories.length) {

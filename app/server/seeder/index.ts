@@ -14,6 +14,7 @@ const importData = async () => {
     const lightWeightsSeeders = async (isKickstart = false) => {
       const lengthOfDocs = isKickstart ? 10 : undefined;
       await seeder.generateTags(lengthOfDocs);
+      // initial 10 authors
       await seeder.generateUsers(0, 10);
       await seeder.generateStories(lengthOfDocs);
 
@@ -22,6 +23,7 @@ const importData = async () => {
         process.exit(1);
       }
 
+      // after 10 all readers
       await seeder.generateUsers(10);
 
       await seeder.generateAssets();
@@ -34,7 +36,7 @@ const importData = async () => {
 
       return;
     };
-    await lightWeightsSeeders(true);
+    await lightWeightsSeeders(!true);
 
     /** Heavy task run individually */
     // await seeder.generateCollections();
@@ -48,13 +50,13 @@ const importData = async () => {
 };
 
 (async () => {
+  console.time('Processing time '.green);
+
   await dbConnect(true);
 
   if (process.argv[2] === '-i') await importData();
-  else if (process.argv[2] === '-d') {
-    // await seeder.checkCompatibility();
-    await seeder.deleteData();
-  }
-  console.timeEnd('Processing time');
+  else if (process.argv[2] === '-d') await seeder.deleteData();
+
+  console.timeEnd('Processing time '.green);
   process.exit(1);
 })();

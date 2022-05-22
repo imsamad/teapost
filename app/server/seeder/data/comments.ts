@@ -74,6 +74,7 @@ export const gradeComments = async () => {
   ) =>
     new Promise((resolve) => {
       comments.forEach(async (comment, index) => {
+        console.log('index ', index);
         const noOfLikes = getRndInteger(0, users.length / 2);
         const noOfDislikes = getRndInteger(0, users.length / 2);
 
@@ -101,24 +102,12 @@ export const gradeComments = async () => {
       });
       resolve(true);
     });
-  const primaries = await Primary.find({});
-  await runProg(primaries);
+  // const primaries = await Primary.find({});
+  // await runProg(primaries);
 
-  // for (let i = 0; i < primaries.length; i = i + 50)
-  //   await runProg(primaries.slice(i, i + 50));
-  // await runProg(primaries.slice(Math.floor(primaries.length / 2), undefined));
+  const secondaries = await Secondary.find({}).skip(50000).limit(10000);
+  await runProg(secondaries);
 
-  // const secondaries = await Secondary.find({});
-  // for (let i = 0; i < primaries.length; i = i + 50)
-  //   await runProg(secondaries.slice(i, i + 50));
-
-  // await runProg(secondaries.slice(0, Math.floor(secondaries.length / 2)));
-  // await runProg(
-  //   secondaries.slice(Math.floor(secondaries.length / 2), undefined)
-  // );
-
-  // await Promise.allSettled(dbTscPromises);
-  // await CommentMeta.create(commentsMetas);
   console.timeEnd('):- Comments graded '.green.italic);
   return;
 };

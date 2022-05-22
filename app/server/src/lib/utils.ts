@@ -134,6 +134,7 @@ export const validateYupSchema = async (
     if (res) return true;
     else throw new Error('Provide proper data');
   } catch (yupError: any) {
+    // console.log(`validateYupSchema `, yupError);
     let errors: { [name: string]: string[] } = {};
 
     if (yupError?.inner?.length) {

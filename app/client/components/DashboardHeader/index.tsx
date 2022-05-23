@@ -1,4 +1,4 @@
-import { TriangleDownIcon } from '@chakra-ui/icons';
+import { StarIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import {
   Button,
   ButtonGroup,
@@ -8,6 +8,7 @@ import {
   HStack,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import { useAuthCtx } from '@compo/Context';
 
 import MyLink from '@compo/MyLink';
 import WriteBtn from '@compo/WriteBtn';
@@ -26,25 +27,58 @@ const props = (size?: string, showIcon?: boolean) => ({
 
 const DashboardHeader = ({
   type,
+  header = 'My Dashboard',
 }: {
-  type: 'collections' | 'stories' | 'account' | 'imcollabing';
+  type:
+    | 'collections'
+    | 'stories'
+    | 'account'
+    | 'imcollabing'
+    | 'allUsers'
+    | 'allStories';
+  header?: string;
 }) => {
   const size = useBreakpointValue({ base: 'sm', md: 'md' });
+  const { auth } = useAuthCtx();
+  const isAdmin = auth?.user?.role == 'admin';
   return (
-    <Container maxW="container.lg">
+    <Container maxW="container.lg" border="0px" p={0}>
       <HStack mt={4} justifyContent="space-between" border="0px">
         <Heading
           fontSize="3xl"
           textAlign="center"
           fontWeight={700}
           fontStyle="italic"
+          wordBreak="keep-all"
         >
-          My Dashboard
+          {header}
         </Heading>
         <WriteBtn />
       </HStack>
       <Divider mt={4} />
-      <ButtonGroup border="0px" overflow="auto" w="full" mt={4}>
+      <ButtonGroup border="0px" overflow="auto" w="full" mt={4} pb={4}>
+        {isAdmin && (
+          <>
+            <MyLink href="/me/admin" w="full">
+              <Button
+                {...props(size, type == 'allUsers')}
+                colorScheme="green"
+                rightIcon={<StarIcon />}
+              >
+                All Users
+              </Button>
+            </MyLink>
+            <MyLink href="/me/admin/stories" w="full">
+              <Button
+                {...props(size, type == 'allStories')}
+                colorScheme="green"
+                rightIcon={<StarIcon />}
+              >
+                All Stories
+              </Button>
+            </MyLink>
+          </>
+        )}
         <MyLink href="/me" w="full">
           <Button {...props(size, type == 'collections')}>Reading List</Button>
         </MyLink>
@@ -58,51 +92,8 @@ const DashboardHeader = ({
           <Button {...props(size, type == 'account')}>Profile</Button>
         </MyLink>
       </ButtonGroup>
-      <Heading fontSize="2xl" textAlign="center" my={3} fontWeight={400}>
-        {type == 'stories'
-          ? 'My Stories'
-          : type == 'collections'
-          ? 'My Collections'
-          : type == 'imcollabing'
-          ? 'I AM Collabing In stories'
-          : 'My Account'}
-      </Heading>
     </Container>
   );
 };
 
 export default DashboardHeader;
-/*
-const Temp = () => (
-  <Tabs
-    isLazy={true}
-    // align="center"
-    defaultIndex={type == "collections" ? 0 : type == "stories" ? 1 : 2}
-    isFitted
-    variant="enclosed-colored"
-    colorScheme="purple"
-  >
-    <TabList>
-      <Tab {...fo} as={MyLink} href="/me/">
-        Reading Collections
-      </Tab>
-      <Tab {...fo} as={MyLink} href="/me/stories">
-        Stories
-      </Tab>
-      <Tab {...fo} as={MyLink} href="/me/account">
-        Profile
-      </Tab>
-    </TabList>
-    <TabPanels>
-      <TabPanel>
-        <Collections />
-      </TabPanel>
-      <TabPanel>
-        <MyStories />
-      </TabPanel>
-      <TabPanel>
-        <Account />
-      </TabPanel>
-    </TabPanels>
-  </Tabs>
-);*/

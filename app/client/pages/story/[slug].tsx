@@ -2,9 +2,7 @@ import StoryType from '@lib/types/StoryType';
 import SingleStory from '@compo/SingleNews';
 import UserType from '@lib/types/UserType';
 import Story from '@lib/models/Story';
-import Tag from '@lib/models/Tag';
 import dbConnect from '@lib/dbConnect';
-import { peelUserDoc } from '@lib/models/User';
 import Head from 'next/head';
 
 const Index = ({ story, author }: { story: StoryType; author: UserType }) => {
@@ -15,6 +13,9 @@ const Index = ({ story, author }: { story: StoryType; author: UserType }) => {
     <>
       <Head>
         <title>{story.title} | Teapost</title>
+        <meta name="description" content={story.subtitle} />
+        <meta name="keywords" content={story.keywords} />
+        <meta name="author" content={story.author.username} />
       </Head>
       <SingleStory story={story} author={author} />
     </>
@@ -36,7 +37,6 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }: any) => {
   await dbConnect();
-  await Tag.find({}).limit(1);
   const story = await Story.findOne({
     slug: params.slug,
     isPublished: true,
@@ -46,11 +46,11 @@ export const getStaticProps = async ({ params }: any) => {
     .populate([
       {
         path: 'collabWith',
-        transform: (v: any) => peelUserDoc(v),
+        select: 'username email fullName',
       },
       {
         path: 'author',
-        transform: (v: any) => peelUserDoc(v),
+        select: 'username',
       },
       {
         path: 'tags',

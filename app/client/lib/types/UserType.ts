@@ -4,7 +4,7 @@ interface UserType {
   _id: string;
   email: string;
   username: string;
-  role: string | 'admin' | 'reader' | 'author';
+  role: 'admin' | 'reader' | 'author';
   createdAt: Date;
 
   fullName: string;

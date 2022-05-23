@@ -28,7 +28,7 @@ router.patch(
 router.patch('/grade/:storyId', storyCtrl.gradeStory);
 
 router.put('/uncollabmemany', storyCtrl.unCollabMeMultiple);
-router.put('/uncollabme', storyCtrl.unCollabMe);
+router.put('/uncollabme/:storyId', storyCtrl.unCollabMe);
 
 router.put('/collab/:storyId', storyCtrl.collab);
 router.post(['/initialize', '/init'], storyCtrl.initializeStory);

@@ -8,7 +8,7 @@ import Profile from '../../src/models/Profile';
 const genTagLines = () =>
   buzzwords.sort((a, b) => Math.random() - Math.random()).slice(0, 3);
 
-export const generateUsers = async (from=0,length?: number) => {
+export const generateUsers = async (from = 0, length?: number) => {
   console.time('):- Users generated '.green.italic);
   const users = mockUsers()
     .slice(from, length)
@@ -37,6 +37,15 @@ export function mockUsers() {
       fullName: 'Abdus Samad',
       username: 'imsamad',
       email: 'imsamad00@gmail.com',
+      role: 'reader',
+      password: 'Password@1206',
+      isEmailVerified: true,
+      isAuthorised: true,
+    },
+    {
+      fullName: 'Abdus Samad',
+      username: 'admin',
+      email: 'admin@email.com',
       role: 'reader',
       password: 'Password@1206',
       isEmailVerified: true,

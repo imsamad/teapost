@@ -1,5 +1,7 @@
 import { EditIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import { Button, Link, VStack } from '@chakra-ui/react';
+import DeleteStoryBtn from '@compo/DeleteStoryBtn';
+import { useResetData } from '@compo/ReactTableCtxProvider';
 import StoryType from '@lib/types/StoryType';
 import { CellProps } from 'react-table';
 
@@ -7,6 +9,7 @@ const StoryActions = (props: CellProps<StoryType>) => {
   const slug = props.cell.row.original.slug;
   const storyId = props.value;
   const isPublished = props.cell.row.original.isPublished;
+  const { resetData } = useResetData();
 
   return (
     <VStack my={2}>
@@ -26,6 +29,12 @@ const StoryActions = (props: CellProps<StoryType>) => {
           Edit
         </Button>
       </Link>
+      <DeleteStoryBtn
+        storyIds={[storyId]}
+        postDeleteCB={() => {
+          resetData();
+        }}
+      />
     </VStack>
   );
 };

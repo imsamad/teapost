@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import * as Models from '../models';
 const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
@@ -32,12 +32,31 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose
+      .connect(MONGODB_URI, opts)
+      .then(async (mongoose) => {
+        await registerSchemas();
+        return mongoose;
+      });
   }
   cached.conn = await cached.promise;
   return cached.conn;
 }
-
+async function registerSchemas() {
+  try {
+    await Models.Asset.find({}).limit(1);
+    await Models.Profile.find({}).limit(1);
+    await Models.Story.find({}).limit(1);
+    await Models.StoryCollection.find({}).limit(1);
+    await Models.StoryHistory.find({}).limit(1);
+    await Models.StoryMeta.find({}).limit(1);
+    await Models.User.find({}).limit(1);
+    await Models.Primary.find({}).limit(1);
+    await Models.Secondary.find({}).limit(1);
+    await Models.CommentMeta.find({}).limit(1);
+  } catch {
+  } finally {
+    return 1;
+  }
+}
 export default dbConnect;

@@ -16,7 +16,6 @@ import Head from 'next/head';
 import dbConnect from '@lib/dbConnect';
 import Tag from '@lib/models/Tag';
 import Story from '@lib/models/Story';
-import { peelUserDoc } from '@lib/models/User';
 
 const Index = ({ stories }: { stories: StoryType[] }) => {
   const router = useRouter();
@@ -41,6 +40,10 @@ const Index = ({ stories }: { stories: StoryType[] }) => {
             .join('')}
           | Teapost
         </title>
+
+        <meta name="description" content={stories[0]?.subtitle ?? ''} />
+        <meta name="keywords" content={stories[0]?.keywords ?? ''} />
+        <meta name="author" content={'imsamad'} />
       </Head>
 
       <Stack spacing={4}>
@@ -107,11 +110,11 @@ export const getStaticProps = async ({ params }: any) => {
     .populate([
       {
         path: 'collabWith',
-        transform: (v: any) => peelUserDoc(v),
+        select: 'username email fullName',
       },
       {
         path: 'author',
-        transform: (v: any) => peelUserDoc(v),
+        select: 'username',
       },
       {
         path: 'tags',

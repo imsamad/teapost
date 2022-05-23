@@ -17,6 +17,7 @@ import { useAuthCtx } from '../Context';
 import MyLink from '../MyLink';
 import { nanoid } from 'nanoid';
 import { BiLogInCircle, BiUser } from 'react-icons/bi';
+import { GrUserAdmin } from 'react-icons/gr';
 
 const LogInBtn = ({ size }: { size: any }) => {
   const { loginModal, auth, logout } = useAuthCtx();
@@ -53,6 +54,17 @@ const LogInBtn = ({ size }: { size: any }) => {
               Write +
             </MenuItem>
           </MyLink>
+          {auth.user.role == 'admin' && (
+            <MyLink href="/me/admin">
+              <MenuItem
+                icon={<GrUserAdmin color="green.600" fontWeight={800} />}
+                color="green.600"
+                fontWeight={800}
+              >
+                Admin
+              </MenuItem>
+            </MyLink>
+          )}
           <MenuItem
             onClick={() => logout('/auth')}
             icon={<RiLogoutCircleRLine />}

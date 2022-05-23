@@ -8,7 +8,14 @@ const myStories = asyncHandler(async (req: Request, res: Response) => {
 
   return res.status(200).json({
     success: 200,
-    stories: await Story.find({ author }).select('-content'),
+    stories: await Story.find({ author })
+      .select('-content')
+      .populate([
+        {
+          path: 'collabWith',
+          select: 'username fullName email',
+        },
+      ]),
   });
 });
 

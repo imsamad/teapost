@@ -37,7 +37,8 @@ const PublishedBtn = (props: CellProps<StoryType>) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (props.value != isPublished) setIsPublished(props.value);
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value]);
   return (
     <VStack>
       <Switch

@@ -10,9 +10,18 @@ const iamcollabing = asyncHandler(
 
     return res.status(200).json({
       success: 200,
-      stories: await Story.find({ collabWith: { $in: user } }).select(
-        '-content -collabWith'
-      ),
+      stories: await Story.find({ collabWith: { $in: user } })
+        .select('-content')
+        .populate([
+          {
+            path: 'collabWith',
+            select: 'username fullName email',
+          },
+          {
+            path: 'author',
+            select: 'username',
+          },
+        ]),
     });
   }
 );

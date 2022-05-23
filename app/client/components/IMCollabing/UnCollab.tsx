@@ -5,15 +5,16 @@ import {
   Switch,
   useDisclosure,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
+import { useResetData } from '@compo/ReactTableCtxProvider';
 import { unCollabMeApi } from '@lib/api/storyApi';
 import StoryType from '@lib/types/StoryType';
-import { useStories } from './index';
 import { CellProps } from 'react-table';
 
 const UnCollab = (props: CellProps<StoryType>) => {
   const storyId = props.value;
-  const { resetStories } = useStories();
+  const { resetData } = useResetData();
   const isLoading = useDisclosure();
   const toast = useToast();
   const handlePublished = async () => {
@@ -21,7 +22,7 @@ const UnCollab = (props: CellProps<StoryType>) => {
     console.log('storyId from columns ', storyId);
     unCollabMeApi(storyId)
       .then((data) => {
-        resetStories();
+        resetData();
       })
       .catch(() => {
         toast({
@@ -38,7 +39,7 @@ const UnCollab = (props: CellProps<StoryType>) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   return (
-    <>
+    <VStack>
       <Switch
         size="lg"
         colorScheme="teal"
@@ -46,9 +47,9 @@ const UnCollab = (props: CellProps<StoryType>) => {
         isChecked={true}
         onChange={handlePublished}
       />
-      <Heading size="sm">UnCollab</Heading>
+      <Heading size="sm">Un Collab</Heading>
       {isLoading.isOpen && <Spinner color="red.500" />}
-    </>
+    </VStack>
   );
 };
 

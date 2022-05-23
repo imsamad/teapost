@@ -1,29 +1,12 @@
-import {
-  Box,
-  Button,
-  Collapse,
-  Heading,
-  HStack,
-  Spacer,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Button, useDisclosure } from '@chakra-ui/react';
+import { useResetData } from '@compo/ReactTableCtxProvider';
 import { unCollabMeMultipleApi } from '@lib/api/storyApi';
 
-import { TableInstance } from 'react-table';
-
-const RenderMultipleSelect = ({
-  tableInstance,
-  resetStories,
-}: {
-  tableInstance: any | TableInstance<any>;
-  resetStories: () => void;
-}) => {
-  const storyIds = tableInstance.selectedFlatRows.map(
-    (d: any) => d.original._id
-  );
+const RenderMultipleSelect = ({ selectedRows }: { selectedRows: any }) => {
+  const storyIds = selectedRows.map((d: any) => d.original._id);
 
   const isUnCollabing = useDisclosure();
-
+  const { resetData } = useResetData();
   const handleClick = () => {
     // tableInstance.stateReducer((state,actions))
     var res = confirm('Do you want to uncollab from the stories?');
@@ -31,7 +14,7 @@ const RenderMultipleSelect = ({
     isUnCollabing.onOpen();
     unCollabMeMultipleApi(storyIds)
       .then(() => {
-        resetStories();
+        resetData();
       })
       .catch(() => {})
       .finally(() => {
@@ -40,28 +23,16 @@ const RenderMultipleSelect = ({
   };
 
   return (
-    <Box my={2}>
-      <Collapse in={storyIds.length}>
-        <HStack
-          wrap="wrap"
-          border="1px"
-          borderColor="gray.300"
-          p={2}
-          borderRadius="md"
-        >
-          <Heading size="md">{storyIds.length} selected</Heading>
-          <Spacer />
-          <Button
-            colorScheme="red"
-            onClick={handleClick}
-            isLoading={isUnCollabing.isOpen}
-            loadingText="UnCollabing..."
-          >
-            UnCollab {storyIds.length > 1 && 'All'}
-          </Button>
-        </HStack>
-      </Collapse>
-    </Box>
+    <>
+      <Button
+        colorScheme="red"
+        onClick={handleClick}
+        isLoading={isUnCollabing.isOpen}
+        loadingText="UnCollabing..."
+      >
+        UnCollab {storyIds.length > 1 && 'All'}
+      </Button>
+    </>
   );
 };
 

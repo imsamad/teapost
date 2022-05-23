@@ -5,6 +5,7 @@ import { SliderColumnFilter } from '@compo/ReactTable/TableFilters';
 import { TotalColumnSum } from '@compo/ReactTable/TotalColumnSum';
 import CollabWith from './CollabWith';
 import PublishedBtn from './PublisedBtn';
+import TruthyIcons from '@compo/TruthyIcons';
 
 const columns: any | Column[] = [
   {
@@ -40,6 +41,13 @@ const columns: any | Column[] = [
     disableFilters: true,
   },
   {
+    Header: 'PublishedByAdmin',
+    accessor: 'isPublishedByAdmin',
+    Cell: ({ value }: any) => <TruthyIcons value={value} />,
+    disableSortBy: true,
+    disableFilters: true,
+  },
+  {
     Header: 'Title',
     accessor: 'title',
     show: false,
@@ -51,47 +59,41 @@ const columns: any | Column[] = [
   },
 
   {
-    Header: 'Stats',
-    Footer: 'Total Stats',
-    disableFilters: true,
-    columns: [
-      {
-        Header: 'Reading Time',
-        accessor: 'readingTime',
-        Filter: SliderColumnFilter,
-        filter: 'equals',
-        Footer: TotalColumnSum('readingTime'),
-      },
-      {
-        Header: 'Views',
-        accessor: 'noOfViews',
-        Filter: SliderColumnFilter,
-        filter: 'equals',
-        Footer: TotalColumnSum('noOfViews'),
-      },
-      {
-        Header: 'Comments',
-        accessor: 'noOfComments',
-        Filter: SliderColumnFilter,
-        filter: 'equals',
-        Footer: TotalColumnSum('noOfComments'),
-      },
-      {
-        Header: 'Likes',
-        accessor: 'noOfLikes',
-        Filter: SliderColumnFilter,
-        filter: 'equals',
-        Footer: TotalColumnSum('noOfLikes'),
-      },
-      {
-        Header: 'Dislikes',
-        accessor: 'noOfDislikes',
-        Filter: SliderColumnFilter,
-        filter: 'equals',
-        Footer: TotalColumnSum('noOfDislikes'),
-      },
-    ],
+    Header: 'Reading Time',
+    accessor: 'readingTime',
+    Filter: SliderColumnFilter,
+    filter: 'equals',
+    Footer: TotalColumnSum('readingTime'),
   },
+  {
+    Header: 'Views',
+    accessor: 'noOfViews',
+    Filter: SliderColumnFilter,
+    filter: 'equals',
+    Footer: TotalColumnSum('noOfViews'),
+  },
+  {
+    Header: 'Comments',
+    accessor: 'noOfComments',
+    Filter: SliderColumnFilter,
+    filter: 'equals',
+    Footer: TotalColumnSum('noOfComments'),
+  },
+  {
+    Header: 'Likes',
+    accessor: 'noOfLikes',
+    Filter: SliderColumnFilter,
+    filter: 'equals',
+    Footer: TotalColumnSum('noOfLikes'),
+  },
+  {
+    Header: 'Dislikes',
+    accessor: 'noOfDislikes',
+    Filter: SliderColumnFilter,
+    filter: 'equals',
+    Footer: TotalColumnSum('noOfDislikes'),
+  },
+
   {
     Header: 'Created At',
     accessor: 'createdAt',

@@ -3,9 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
     "start": "next build && next start",
-    "lint": "next lint"
+    "deploy": "vercel --prod",
+    "lint": "next lint",
+    "build": "next build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.1.1",

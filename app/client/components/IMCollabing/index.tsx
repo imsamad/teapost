@@ -1,14 +1,11 @@
 import ReactTable from '@compo/ReactTable';
+import ReactTableCtxProvider from '@compo/ReactTableCtxProvider';
 import { getMyStoriesApi } from '@lib/api/storyApi';
 import StoryType from '@lib/types/StoryType';
-import { createContext, useContext, useState } from 'react';
+import { useState } from 'react';
 import { TableInstance } from 'react-table';
 import { columns } from './columns';
 import RenderMultipleSelect from './RenderMultipleSelect';
-
-const ImCollabingCtx = createContext<{ resetStories: () => Promise<any> }>({
-  resetStories: async () => {},
-});
 
 const IMCollabing = ({ stories: storiesProp }: { stories: StoryType[] }) => {
   const [stories, setStories] = useState(storiesProp);
@@ -22,22 +19,17 @@ const IMCollabing = ({ stories: storiesProp }: { stories: StoryType[] }) => {
   };
 
   return (
-    <ImCollabingCtx.Provider value={{ resetStories }}>
+    <ReactTableCtxProvider resetData={resetStories}>
       <ReactTable
         data={stories}
         columns={columns}
         revalidator={revalidator}
-        renderMultipleRowSelected={(tableInstance: TableInstance<any>) => (
-          <RenderMultipleSelect
-            tableInstance={tableInstance}
-            resetStories={resetStories}
-          />
+        renderMultipleRowSelected={(selectedRows) => (
+          <RenderMultipleSelect selectedRows={selectedRows} />
         )}
       />
-    </ImCollabingCtx.Provider>
+    </ReactTableCtxProvider>
   );
 };
-
-export const useStories = () => useContext(ImCollabingCtx);
 
 export default IMCollabing;

@@ -1,5 +1,6 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Button, useDisclosure } from '@chakra-ui/react';
+import TSButton from '@compo/UI/TSButton';
 import { deleteManyStoriesApi } from '@lib/api/storyApi';
 
 const DeleteStoryBtn = ({
@@ -24,7 +25,8 @@ const DeleteStoryBtn = ({
       });
   };
   return (
-    <Button
+    <TSButton
+      size="sm"
       colorScheme="red"
       onClick={handleDelete}
       isLoading={isDeleting.isOpen}
@@ -32,7 +34,7 @@ const DeleteStoryBtn = ({
       leftIcon={<DeleteIcon />}
     >
       Delete {storyIds.length > 1 && 'All'}
-    </Button>
+    </TSButton>
   );
 };
 

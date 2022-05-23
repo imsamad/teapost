@@ -1,5 +1,8 @@
+import { CheckCircleIcon } from '@chakra-ui/icons';
 import { Box, Button, Checkbox, Image, useDisclosure } from '@chakra-ui/react';
+import TruthyIcons from '@compo/TruthyIcons';
 import UsersListModal from '@compo/UsersListModal';
+import { ImCross } from 'react-icons/im';
 const dummyImage = '/dummyImage.png';
 const Index = () => {
   const url = `https://res.cloudinary.com/dnkb5aetl/image/upload/v1652176759/teapost/inobpaq8odctm5h38hk2_g4ywbl.jpg`;
@@ -12,6 +15,8 @@ const Index = () => {
   const state = useDisclosure();
   return (
     <>
+      <TruthyIcons value={true} />
+      <TruthyIcons value={!true} />
       <Button onClick={() => state.onOpen()}> Open </Button>
       <Checkbox
         onChange={(e) => {

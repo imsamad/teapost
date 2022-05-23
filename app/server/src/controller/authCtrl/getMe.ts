@@ -10,22 +10,6 @@ import User from '../../models/User';
 const getMe = asyncHandler(async (req: Request, res: Response) => {
   // @ts-ignore
   const userId = req.user._id;
-  let populateAble = [
-    'likedStories',
-    'dislikedStories',
-    'following',
-    'followers',
-    'storyCollections',
-  ];
-
-  let populate = {
-    path: 'profile',
-    populate:
-      typeof req.query.populate == 'string'
-        ? // @ts-ignore
-          req.query.populate.split(',').map((v) => v)
-        : ['storyCollections'],
-  };
 
   const myProfile = await User.findById(userId).populate('profile');
 

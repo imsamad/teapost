@@ -1,5 +1,15 @@
 /* eslint-disable react/jsx-key */
-import { Table, Tbody, Tr, Td, Tfoot, TableContainer } from '@chakra-ui/react';
+import {
+  Table,
+  Tbody,
+  Tr,
+  Td,
+  Tfoot,
+  TableContainer,
+  Heading,
+  HStack,
+  Box,
+} from '@chakra-ui/react';
 import React, { useMemo } from 'react';
 
 import {
@@ -17,6 +27,7 @@ import IndeterminateCheckbox from './IndeterminateCheckbox';
 import TableHeader from './TableHeader';
 import { DefaultColumnFilter } from './TableFilters';
 import TableMeta from './TableMeta';
+import MultipleRowsSelected from './MultipleRowsSelected';
 
 const ReactTable = ({
   columns: unmemoCols,
@@ -28,7 +39,8 @@ const ReactTable = ({
   data: any;
   revalidator?: boolean;
   renderMultipleRowSelected?: (
-    tabeInstance: TableInstance<any>
+    selectRows: any,
+    tableInstance: TableInstance<any>
   ) => React.ReactNode;
 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,18 +94,35 @@ const ReactTable = ({
   );
 
   return (
-    <>
-      <TableMeta tableInstance={tableInstance} />
-      {renderMultipleRowSelected && renderMultipleRowSelected(tableInstance)}
-
+    <Box my={4}>
+      <HStack justifyContent="center">
+        <TableMeta tableInstance={tableInstance} />
+        <Heading
+          verticalAlign="top"
+          size="sm"
+          textAlign="center"
+          justifySelf="flex-start"
+          whiteSpace="nowrap"
+          wordBreak="keep-all"
+        >
+          Total {data.length}
+        </Heading>
+      </HStack>
+      {renderMultipleRowSelected && (
+        <MultipleRowsSelected
+          render={renderMultipleRowSelected}
+          tableInstance={tableInstance}
+        />
+      )}
       <TableContainer
         border="1px"
         borderColor="gray.300"
         borderRadius="md"
         // @ts-ignore
         whiteSpace="wrap"
+        my={4}
       >
-        <Table size="sm" {...tableInstance.getTableProps()} variant="striped">
+        <Table size="md" {...tableInstance.getTableProps()} variant="striped">
           <TableHeader tableInstance={tableInstance} />
           <Tbody {...tableInstance.getTableBodyProps()}>
             {/* @ts-ignore */}
@@ -121,7 +150,7 @@ const ReactTable = ({
           </Tfoot>
         </Table>
       </TableContainer>
-    </>
+    </Box>
   );
 };
 

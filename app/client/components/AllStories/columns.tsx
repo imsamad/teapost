@@ -2,7 +2,7 @@ import TPImage from '@compo/TPImage';
 import { Column, CellProps } from 'react-table';
 import { SliderColumnFilter } from '@compo/ReactTable/TableFilters';
 import { TotalColumnSum } from '@compo/ReactTable/TotalColumnSum';
-import UnCollab from './UnCollab';
+import PublishStories from './PublishStories';
 import TruthyIcons from '@compo/TruthyIcons';
 import CollabingWith from '@compo/CollabingWith';
 
@@ -19,13 +19,18 @@ const columns: any | Column[] = [
     ),
   },
   {
-    Header: 'UnCollab',
-    accessor: '_id',
-    Cell: UnCollab,
+    Header: 'Actions',
+    accessor: 'isPublishedByAdmin',
+    Cell: (props: any) => (
+      <PublishStories
+        storyIds={[props.cell.row.original._id]}
+        showCheckBox={true}
+        isPublishedByAdmin={props.value}
+      />
+    ),
     disableSortBy: true,
     disableFilters: true,
   },
-
   {
     Header: 'Collab',
     accessor: 'collabWith',
@@ -34,15 +39,15 @@ const columns: any | Column[] = [
     disableFilters: true,
   },
   {
-    Header: 'Published',
-    accessor: 'isPublished',
-    Cell: ({ value }: any) => <TruthyIcons value={value} />,
-    disableSortBy: true,
+    Header: 'Author',
+    accessor: 'author',
+    Cell: ({ value }: any) => <>{value.username}</>,
+    // disableSortBy: true,
     disableFilters: true,
   },
   {
-    Header: 'PublishedByAdmin',
-    accessor: 'isPublishedByAdmin',
+    Header: 'PublishedByAuthor',
+    accessor: 'isPublished',
     Cell: ({ value }: any) => <TruthyIcons value={value} />,
     disableSortBy: true,
     disableFilters: true,

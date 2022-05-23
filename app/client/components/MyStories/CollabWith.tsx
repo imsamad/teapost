@@ -1,4 +1,5 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, useDisclosure, VStack } from '@chakra-ui/react';
+import CollabingWith from '@compo/CollabingWith';
 import UsersListModal from '@compo/UsersListModal';
 import { collabWithApi } from '@lib/api/storyApi';
 import StoryType from '@lib/types/StoryType';
@@ -25,7 +26,10 @@ const CollabWith = (props: CellProps<StoryType>) => {
     }
   };
   return (
-    <>
+    <VStack>
+      {alreadyCollabWith.length ? (
+        <CollabingWith users={alreadyCollabWith} />
+      ) : null}
       <Button
         mr="8px"
         _focus={{
@@ -35,9 +39,8 @@ const CollabWith = (props: CellProps<StoryType>) => {
         variant="outline"
         leftIcon={<FcCollaboration />}
         onClick={modal.onOpen}
-        rightIcon={<>{alreadyCollabWith.length}</>}
       >
-        Collab
+        Add Collab +
       </Button>
       <UsersListModal
         isOpen={modal.isOpen}
@@ -45,7 +48,7 @@ const CollabWith = (props: CellProps<StoryType>) => {
         checkedUsers={alreadyCollabWith}
         onClickCB={onClickCB}
       />
-    </>
+    </VStack>
   );
 };
 

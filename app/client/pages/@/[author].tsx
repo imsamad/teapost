@@ -5,10 +5,9 @@ import StoryType from '@lib/types/StoryType';
 import UserType from '@lib/types/UserType';
 import Stories from '@compo/Stories';
 import dbConnect from '@lib/dbConnect';
-import User, { peelUserDoc } from '@lib/models/User';
+import User from '@lib/models/User';
 import Story from '@lib/models/Story';
 import Head from 'next/head';
-import Tag from '@lib/models/Tag';
 
 const Index = ({
   stories,
@@ -24,6 +23,10 @@ const Index = ({
     <>
       <Head>
         <title>{author.fullName} | Teapost</title>
+
+        <meta name="description" content={stories[0]?.subtitle ?? ''} />
+        <meta name="keywords" content={stories[0]?.keywords ?? ''} />
+        <meta name="author" content={author.username} />
       </Head>
 
       <Stack spacing={4}>
@@ -66,7 +69,6 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }: any) => {
   await dbConnect();
 
-  await Tag.find({}).limit(1);
   const author = await User.findOne({ username: params.author }).lean();
 
   if (!author) {
@@ -87,11 +89,11 @@ export const getStaticProps = async ({ params }: any) => {
     .populate([
       {
         path: 'collabWith',
-        transform: (v: any) => peelUserDoc(v),
+        select: 'username email fullName',
       },
       {
         path: 'author',
-        transform: (v: any) => peelUserDoc(v),
+        select: 'username',
       },
       {
         path: 'tags',
@@ -103,7 +105,7 @@ export const getStaticProps = async ({ params }: any) => {
   return {
     props: {
       stories: JSON.parse(JSON.stringify(result)),
-      author: JSON.parse(JSON.stringify(peelUserDoc(author))),
+      author: JSON.parse(JSON.stringify(author)),
     },
     revalidate: 10,
   };

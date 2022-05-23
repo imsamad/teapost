@@ -11,8 +11,8 @@ const TableMeta = ({
 }) => {
   const showMeta = useDisclosure();
   return (
-    <Container maxW="container.lg">
-      <TSButton colorScheme="linkedin" onClick={showMeta.onToggle}>
+    <Container maxW="container.lg" p={0}>
+      <TSButton colorScheme="blackAlpha" onClick={showMeta.onToggle} size="sm">
         {showMeta.isOpen ? 'Hide' : 'Show'} Table Meta
       </TSButton>
       <Collapse in={showMeta.isOpen}>

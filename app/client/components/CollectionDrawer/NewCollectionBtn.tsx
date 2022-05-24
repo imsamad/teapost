@@ -6,24 +6,25 @@ import {
   useDisclosure,
   Spacer,
 } from '@chakra-ui/react';
+import TSButton from '@compo/UI/TSButton';
 
 import NewCollection from '../NewCollection';
 
-const Index = () => {
+const NewCollectionBtn = () => {
   const { isOpen, onClose, onToggle } = useDisclosure();
 
   return (
     <>
       <HStack my="2">
         <Spacer />
-        <Button
+        <TSButton
           leftIcon={isOpen ? <CloseIcon /> : <AddIcon />}
           size="xs"
           onClick={onToggle}
           colorScheme="teal"
         >
           {isOpen ? 'Close' : 'New'}
-        </Button>
+        </TSButton>
       </HStack>
 
       <Collapse in={isOpen} animateOpacity>
@@ -33,4 +34,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default NewCollectionBtn;

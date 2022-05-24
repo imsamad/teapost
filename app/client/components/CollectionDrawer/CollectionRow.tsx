@@ -1,85 +1,107 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 
 import {
+  Box,
   Checkbox,
   Heading,
   HStack,
   Icon,
   IconButton,
+  Progress,
+  Spinner,
+  Stack,
   Text,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react';
-import { ChangeEvent } from 'react';
+
+import { useState } from 'react';
 
 import { StoryCollectionType } from '@lib/types/StoryCollectionType';
-import { deleteCollection } from '@lib/api/collectionApi';
-import { useProfile } from '../Context';
+import { buildCollectionApi, deleteCollection } from '@lib/api/collectionApi';
+import CollectionText from './CollectionText';
 
 type CollRowProps = {
   collection: StoryCollectionType;
-  sendObj: { storyPartOf: string[]; removeFrom: string[] };
-  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  isDisabled: boolean;
+  storyId?: string;
 };
 
 const CollectionRow = ({
-  isDisabled,
-  collection,
-  handleChange,
-  sendObj,
+  storyId,
+  collection: collectionProp,
 }: CollRowProps) => {
-  const { mutateProfile } = useProfile();
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [collection, setColletion] = useState(collectionProp);
+  const isBuliding = useDisclosure();
+  const isDeleting = useDisclosure();
   const handleDelete = () => {
-    onOpen();
-    deleteCollection(collection._id).finally(() => {
-      mutateProfile();
-      onClose();
-    });
+    isDeleting.onOpen();
+    deleteCollection(collection._id)
+      .then(() => {
+        // @ts-ignore
+        setColletion(null);
+      })
+      .finally(() => {
+        isDeleting.onClose();
+      });
   };
 
+  const addRemoveStory = async (isAdd: boolean) => {
+    console.log('isAdd ', isAdd);
+    if (!storyId) return;
+    isBuliding.onOpen();
+    let reqBody: any = { storyId };
+    isAdd
+      ? (reqBody.addTo = [collection._id])
+      : (reqBody.removeFrom = [collection._id]);
+
+    try {
+      await buildCollectionApi(reqBody);
+
+      setColletion(({ stories, ...rest }) => ({
+        ...rest,
+        stories: isAdd
+          ? [...stories, storyId]
+          : stories.filter((story) => story != storyId),
+      }));
+    } catch {
+    } finally {
+      isBuliding.onClose();
+    }
+  };
   return (
-    <HStack my="4">
-      <HStack flex="1" overflow="hidden">
-        <Checkbox
-          isChecked={sendObj.storyPartOf.includes(collection._id)}
-          onChange={handleChange}
-          isDisabled={isDisabled}
-          icon={<CustomIcon />}
-          colorScheme="cyan"
-          size="lg"
-          w="full"
-        >
-          <Heading size="sm" noOfLines={1}>
-            {collection.title}
-          </Heading>
-          {/* <Text fontWeight={500} fontSize="md" noOfLines={1}>
-            {collection.title}
-          </Text> */}
-        </Checkbox>
-      </HStack>
+    <>
+      {collection && (
+        <>
+          <HStack overflow="hidden" my={2}>
+            {storyId &&
+              (isBuliding.isOpen ? (
+                <Spinner size="sm" alignSelf="flex-start" />
+              ) : (
+                <Checkbox
+                  alignSelf="flex-start"
+                  isChecked={collection.stories.includes(storyId)}
+                  onChange={(e) => addRemoveStory(e.target.checked)}
+                  icon={<CustomIcon />}
+                  colorScheme="cyan"
+                  size="lg"
+                />
+              ))}
 
-      {collection?.title?.toLowerCase() != 'read later' && (
-        <IconButton
-          isRound
-          icon={<DeleteIcon />}
-          aria-label="delete"
-          size="xs"
-          colorScheme="red"
-          isLoading={isOpen}
-          onClick={handleDelete}
-        />
+            <CollectionText collection={collection} />
+            <IconButton
+              alignSelf="flex-start"
+              isRound
+              icon={<DeleteIcon />}
+              aria-label="delete"
+              size="xs"
+              colorScheme="red"
+              isLoading={isDeleting.isOpen}
+              onClick={handleDelete}
+            />
+          </HStack>
+        </>
       )}
-
-      {/* <IconButton
-        variant="outline"
-        colorScheme="teal"
-        isRound
-        aria-label="Call Sage"
-        size="xs"
-        icon={<EditIcon color="red.500" />}
-      /> */}
-    </HStack>
+    </>
   );
 };
 function CustomIcon(props: any) {

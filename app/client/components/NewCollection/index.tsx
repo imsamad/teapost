@@ -31,10 +31,6 @@ const NewCollForm = ({
 }) => {
   const { myProfile, mutateProfile } = useProfile();
 
-  const alreadyCreatedCollections = myProfile?.profile?.storyCollections
-    ?.map((collection) => collection?.title?.toLowerCase())
-    .filter((title) => title != editObj?.preValues?.title?.toLowerCase());
-
   const toast = useToast();
   return (
     <Formik
@@ -88,8 +84,6 @@ const NewCollForm = ({
         let errors: { title?: string } = {};
         if (!value.title || !trimExtra(value.title, 1))
           errors.title = 'Title is required.';
-        if (alreadyCreatedCollections?.includes(value.title.toLowerCase()))
-          errors.title = 'This already exist';
         return errors;
       }}
     >

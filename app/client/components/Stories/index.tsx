@@ -7,6 +7,7 @@ import UserType from '@lib/types/UserType';
 import StoryCard from '../StoryCard';
 import ShowStoryCard from '../MyCollections/CollectionCard/ShowStories/ShowStoryCard';
 import useInfinite from '@compo/Hooks/useInfinite';
+import { PaginationType } from '@lib/types/PaginationType';
 
 const Stories = ({
   initialStories,
@@ -22,7 +23,7 @@ const Stories = ({
   const { data, isValidating } = useSWR<{
     stories: StoryType[];
     authors: UserType[];
-    pagination: { next: number; prev: number; limit: number };
+    pagination: PaginationType;
   }>(() => !initialStories && `${query}page=${nextPageNo}`);
 
   const { isInViewRef, show } = useInfinite({

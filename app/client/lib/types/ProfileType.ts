@@ -1,4 +1,3 @@
-import { StoryCollectionType } from './StoryCollectionType';
 import Story from './StoryType';
 import User from './UserType';
 
@@ -9,7 +8,6 @@ interface ProfileType {
   dislikedStories: Story['_id'][];
   following: User['_id'][];
   followers: User['_id'][];
-  storyCollections: StoryCollectionType[];
 }
 
 export default ProfileType;

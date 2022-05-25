@@ -16,11 +16,11 @@ import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
 import MyLink from '../MyLink';
 import DarkMode from '../DarkMode';
 import LogInBtn from './LogInBtn';
-import TSSearch from './TSSearch';
+import TSSearch from './TSSearch copy';
 const Index = () => {
   const size = useBreakpointValue(['md', 'md']);
   const serachFieldFormSm = useDisclosure();
-  const showBelowSm = { display: ['inline-block', 'inline-block', 'none'] };
+  const showBelowSm = { display: ['flex', 'flex', 'none'] };
   const showAboveSm = { display: ['none', 'none', 'inline-block'] };
   return (
     <>
@@ -41,11 +41,11 @@ const Index = () => {
               Teapost
             </Heading>
           </MyLink>
-          <Spacer />
-          <Box {...showAboveSm}>
+          {/* @ts-ignore */}
+          <Box {...showAboveSm} flex="1" pl={[undefined, 6]}>
             <TSSearch />
           </Box>
-          <Box {...showBelowSm}>
+          <Box {...showBelowSm} flex="1" justifyContent="flex-end">
             <IconButton
               size={size}
               icon={serachFieldFormSm.isOpen ? <CloseIcon /> : <SearchIcon />}
@@ -59,7 +59,7 @@ const Index = () => {
       </Container>
       <Collapse in={serachFieldFormSm.isOpen} animateOpacity>
         <Stack>
-          <Stack mt="4" {...showBelowSm}>
+          <Stack my="4" {...showBelowSm} px={2}>
             <TSSearch size={size} />
           </Stack>
         </Stack>

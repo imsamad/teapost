@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   CircularProgress,
   Collapse,
   Heading,
@@ -8,7 +7,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -16,10 +14,10 @@ import { Search2Icon } from '@chakra-ui/icons';
 import { ChangeEvent, useCallback, useState } from 'react';
 import axios from 'axios';
 import StoryType from '@lib/types/StoryType';
-import MyLink from '../MyLink';
+import Stories from '@compo/Stories';
 const apiUrl = process.env.NEXT_PUBLIC_API_URL!;
 const TSSearch = ({ size }: any) => {
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<StoryType[]>([]);
   const [isQuery, setIsQuery] = useState('');
   const isFetching = useDisclosure();
 
@@ -39,22 +37,21 @@ const TSSearch = ({ size }: any) => {
   const fetchQuery = (e: any) => {
     const key = e.target.value;
     if (!key.split(' ').join('').length) {
-      setResults(null);
+      setResults([]);
     } else {
       isFetching.onOpen();
       axios
         .get(`${apiUrl}/stories?title=${key}&subtitle=${key}`)
         .then(({ data }) => {
-          setResults(data?.stories.length ? data?.stories : null);
+          setResults(data?.stories.length ? data?.stories : []);
           isFetching.onClose();
         });
     }
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleKeyUp = useCallback(debounce(fetchQuery), []);
-
   return (
-    <Box pos="relative">
+    <Box pos="relative" w="full">
       <MySearch
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
           if (!e.target.value.split(' ').join('').length) setIsQuery('');
@@ -68,14 +65,17 @@ const TSSearch = ({ size }: any) => {
         <Box
           position="absolute"
           bgColor="white"
-          border="1px"
+          border="4px"
+          right="0"
+          left="0"
           color="black"
           borderColor="gray.300"
           borderRadius="md"
+          // w="100%"
           mt="2"
           shadow="lg"
-          maxH="300px"
-          scrollMargin="5"
+          maxH="400px"
+          // scrollMargin="5"
           overflowX="hidden"
           overflowY="auto"
           zIndex="toast"
@@ -83,7 +83,7 @@ const TSSearch = ({ size }: any) => {
           pt="1"
           onClick={() => {
             isFetching.onClose();
-            setResults(null);
+            setResults([]);
             setIsQuery('');
           }}
         >
@@ -95,30 +95,16 @@ const TSSearch = ({ size }: any) => {
               <CircularProgress isIndeterminate color="green.300" size="20px" />
             </HStack>
           </Collapse>
-          <Collapse in={!isFetching.isOpen || results}>
+          <Collapse in={!isFetching.isOpen || !!results.length}>
             {results?.length ? (
-              results.map((story: StoryType) => (
-                <MyLink key={story._id} href={`/story/${story.slug}`}>
-                  <Box
-                    color="blue.500"
-                    border="1px"
-                    borderColor="gray.100"
-                    borderRadius="md"
-                    p="1"
-                    mb="2"
-                  >
-                    <Heading fontSize="md" noOfLines={2}>
-                      {story.title}
-                    </Heading>
-                    <Text size="sm" noOfLines={1}>
-                      {story.subtitle}
-                    </Text>
-                  </Box>
-                </MyLink>
-              ))
+              <Stories
+                initialStories={results}
+                nextPageNo={2}
+                query={`/stories?title=${isQuery}&subtitle=${isQuery}&`}
+              />
             ) : (
               <Heading
-                w="100%"
+                w="full"
                 fontSize="sm"
                 color="pink.200"
                 textAlign="center"
@@ -138,7 +124,7 @@ const TSSearch = ({ size }: any) => {
 export default TSSearch;
 
 const MySearch = ({ onChange, size, value, onKeyUp }: any) => (
-  <Box w="lg" maxW={['full', 'md', 'lg']} mx="auto">
+  <Box w="full" mx="auto">
     <InputGroup
       size={size ?? 'md'}
       overflow="hidden"

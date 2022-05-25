@@ -27,11 +27,16 @@ const Stories = ({
   }>(() => !initialStories && `${query}page=${nextPageNo}`);
 
   const { isInViewRef, show } = useInfinite({
-    ignore: !!initialStories || !nextPageNo,
+    ignore: !!initialStories,
   });
+
+  if (!initialStories?.length && !data?.pagination?.next) {
+    return <></>;
+  }
+
   return (
     <>
-      <div ref={initialStories ? null : isInViewRef} />
+      {!initialStories && <div ref={isInViewRef} />}
       {initialStories ? (
         <>
           {initialStories?.map((story: StoryType) =>
@@ -47,17 +52,7 @@ const Stories = ({
           )}
           <Stories nextPageNo={2} query={query} collectionId={collectionId} />
         </>
-      ) : !show || isValidating ? (
-        <HStack justifyContent="center" my={2}>
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="sm"
-          />
-        </HStack>
-      ) : data?.stories?.length ? (
+      ) : show && !isValidating ? (
         <>
           {data?.stories?.map((story: StoryType) =>
             collectionId ? (
@@ -70,14 +65,24 @@ const Stories = ({
               <StoryCard story={story} key={story._id} />
             )
           )}
-          <Stories
-            nextPageNo={nextPageNo + 1}
-            query={query}
-            collectionId={collectionId}
-          />
+          {data?.pagination?.next && (
+            <Stories
+              nextPageNo={data?.pagination?.next}
+              query={query}
+              collectionId={collectionId}
+            />
+          )}
         </>
       ) : (
-        !isValidating && <Text textAlign="center"> The End </Text>
+        <HStack justifyContent="center" my={2}>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="sm"
+          />
+        </HStack>
       )}
     </>
   );

@@ -1,4 +1,4 @@
-# TEAPOST - MERN Web App
+# TEAPOST - News Portal Web App
 
 ## DEMO
 
@@ -11,8 +11,6 @@
 </td>
 </tr> 
 </table>
-
-A News Portal web app
 
 ## Features
 
@@ -34,9 +32,10 @@ A News Portal web app
 
 ## Tech Used
 
+- **Stack**- MERN
 - **Language** - TypeScript
 - **Front-End** - NextJS, Formik, ChakraUI, SWR, Sun-Editor
-- **Back-End** - Express,Yup(Validation)
+- **Back-End** - Express, Yup(Validation), JWT
 - **DBMS** - MongoDB
 - **Assets Management** - Cloudinary
 - **Hosting** - Heroku, Vercel

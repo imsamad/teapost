@@ -2,13 +2,11 @@
 
 ## DEMO
 
-[Front-End](https://teapost.verel.app)
-
-[Back-End](https://teapost.herokuapp.com)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Front-End](https://teapost.verel.app)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Back-End](https://teapost.herokuapp.com)
 
 A News Portal web app
 
-> Features
+## Features
 
 - **Reader**
 

@@ -56,7 +56,7 @@ To use default config
 npm run mvConfig
 ```
 
-<center>OR</center>
+<p align='center'>OR</p>
 
 Set .env vars at
 
@@ -75,7 +75,7 @@ Create minimum essential data to kickstart app
 npm run seed:k
 ```
 
-<center>OR</center>
+<p align='center'>OR</p>
 
 Create High Volume Data, This may take time
 

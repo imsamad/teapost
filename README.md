@@ -18,7 +18,7 @@
 
   - can read news, comment, like or dislike and share news.
 
-  - can add stories/news to \*\*Reading collection\*\* like YouTube playlist.
+  - can add stories/news to **Reading collection** like YouTube playlist.
 
   - can follow authors and when following author publish story/news followers would be notified.
 

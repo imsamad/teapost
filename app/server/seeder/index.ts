@@ -10,9 +10,9 @@ import 'colors';
 import connectDB from '../src/db/connectDB';
 import * as seeder from './data';
 
-const importData = async () => {
+const importData = async (isKickstart = false) => {
   try {
-    const lightWeightsSeeders = async (isKickstart = false) => {
+    const lightWeightsSeeders = async () => {
       const lengthOfDocs = isKickstart ? 10 : undefined;
       await seeder.generateTags(lengthOfDocs);
       // initial 10 authors
@@ -21,7 +21,8 @@ const importData = async () => {
 
       if (isKickstart) {
         console.log('):- Data created to kickstart the app'.magenta.italic);
-        process.exit(1);
+        // process.exit(1);
+        return;
       }
 
       // after 10 all readers
@@ -37,7 +38,7 @@ const importData = async () => {
 
       return;
     };
-    await lightWeightsSeeders(true);
+    await lightWeightsSeeders();
 
     /** Heavy task run individually */
     // await seeder.generateCollections();
@@ -54,11 +55,14 @@ const importData = async () => {
   console.time('Processing time '.green);
 
   await connectDB(true);
-  if (process.argv[2] === '-i') await importData();
-  else if (process.argv[2] === '-d') await seeder.deleteData();
+
+  if (process.argv[2] == '-d') await seeder.deleteData();
+  else await importData(process.argv[2] == '-k');
 
   console.timeEnd('Processing time '.green);
   await seeder.totalDocs();
-
-  process.exit(1);
+  // process.off
+  // process.abort();
+  return;
+  // process.exit(1);
 })();

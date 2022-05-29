@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "News Portal in MENN (Mongo, Express, NextJS & Node) stack...",
   "scripts": {
+    "bootup": "lerna bootstrap --ci",
+    "mvConfig": "cd app/client && cp .env.example .env && cd ../server/config &&  cp .env.example .env ",
+    "seed:i": "lerna run seed:i --scope=@teapost/server",
+    "seed:d": "lerna run seed:d --scope=@teapost/server",
+    "seed:k": "lerna run seed:k --scope=@teapost/server",
     "dev": "lerna run dev --stream",
     "start": "lerna run start --stream",
     "deploy": "cd app/server && npm run deploy && cd ../client && npm run deploy",
     "clean": "npx lerna clean -y",
-    "bootup": "npx lerna bootstrap --hoist"
+    "spin": "npm run clean && npm run bootup && npm run mvConfig && npm run seed:d && npm run dev"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,16 @@
-# TEAPOST
+# TEAPOST - MERN Web App
 
 ## DEMO
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Front-End](https://teapost.verel.app)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Back-End](https://teapost.herokuapp.com)
+<table  width="100%"  >
+<tr>
+<td><a href="https://teapost.vercel.app" target="_blank" >Frontend</a>
+</td><td><a href="https://teapost.herokuapp.com" target="_blank" >Backend</a>
+</td>
+</tr>
+<tr>
+</tr>
+</table>
 
 A News Portal web app
 
@@ -41,11 +49,26 @@ A News Portal web app
 npm run bootup
 ```
 
-3.) Set Config (Optional)
+2.) Set Config (Optional)
 
-> _This step is optional, if you want to use localhost of MongoDB & No Email service provider And No Cloudinary .envs_
+To use default config
 
-2.) Run data seeder
+```sh
+npm run mvConfig
+```
+
+<center>OR</center>
+
+Set .env vars at
+
+```sh
+cd app/client/.env
+cd app/server/config/.env
+```
+
+<!-- > _This step is optional, if you want to use localhost of MongoDB & No Email service provider And No Cloudinary .envs_ -->
+
+3.) Run data seeder
 
 Create minimum essential data to kickstart app
 
@@ -61,11 +84,26 @@ Create High Volume Data, This may take time
 npm run seed:i
 ```
 
-2.) Run dev server
+4.) Run dev server
 
 ```sh
 npm run dev
 ```
+
+App ready On
+
+<table  width="100%"  >
+<tr>
+<td>Frontend
+</td><td>Backend
+</td>
+</tr>
+<tr>
+<td><a href="http://localhost:3000" target="_blank" >localhost:3000</a>
+</td><td><a href="http://localhost:4000" target="_blank" >localhost:4000</a>
+</td>
+</tr>
+</table>
 
 ---
 

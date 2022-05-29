@@ -4,12 +4,12 @@
 
 <table  width="100%"  >
 <tr>
-<td><a href="https://teapost.vercel.app" target="_blank" >Frontend</a>
-</td><td><a href="https://teapost.herokuapp.com" target="_blank" >Backend</a>
+<td>
+<a href="https://teapost.vercel.app" target="_blank" >Frontend</a>
 </td>
-</tr>
-<tr>
-</tr>
+<td><a href="https://teapost.herokuapp.com" target="_blank" >Backend</a>
+</td>
+</tr> 
 </table>
 
 A News Portal web app

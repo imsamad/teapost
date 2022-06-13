@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ErrorResponseType } from '../lib/utils';
+import { ErrorResponseType, stars } from '../lib/utils';
 import 'colors';
 
 const errorHandler = (
@@ -8,22 +8,18 @@ const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.log(
-    `*********************************** Error from error middleware *************************`
-      .red
-  );
-  console.log(`${JSON.stringify(err, null, 4)}`.red);
-  console.log(
-    '*****************************************************************************************'
-      .red
-  );
-  let error = { ...err };
-  if (typeof err == 'string') {
-    error = {};
-    error.message = err;
-  } else error.message = err.message;
+  console.log(`${stars(4)} Error from error middleware ${stars(4)}`.red);
+  if (!Object.values(err).length) {
+    console.log(err);
+  } else console.log(`${JSON.stringify(err, null, 4)}`.red);
+  console.log(`${stars(10)}`.red);
 
-  // Do some thing if error.mesage include 'call stack exceed'
+  let error = { ...err };
+  if (typeof err == 'string') error = { message: err };
+
+  // error.mesage include 'call stack exceed'
+
+  // Mongo Validation Errors
   if (err.name === 'ValidationError') {
     const inValidFields = Object.keys(err.errors);
     error = {
@@ -35,13 +31,26 @@ const errorHandler = (
     };
   }
 
+  // Mongo CastErrors like invalid _id
   if (err.name === 'CastError') {
     const message = `Resource not found`;
     error = { message, statusCode: 404 };
   }
+
   // Mongoose duplicate key
   if (err.code === 11000) {
     const message = 'Duplicate field value entered';
+    error = { message, statusCode: 404 };
+  }
+
+  // Most severe error need to log.
+  /**
+   * e.g
+   * val.split() where val @string
+   * but user send val as @object
+   */
+  if (err.name === 'TypeError') {
+    const message = `Invalid data`;
     error = { message, statusCode: 404 };
   }
 

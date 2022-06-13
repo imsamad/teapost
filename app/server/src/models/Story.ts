@@ -75,7 +75,6 @@ const storySchema = new Schema(
     hadEmailedToFollowers: {
       type: Boolean,
       default: false,
-      select: true,
     },
     isPublishedByAdmin: {
       type: Boolean,

@@ -1,8 +1,9 @@
 import { UpDownIcon } from '@chakra-ui/icons';
 import { Box, Button, Collapse, useDisclosure } from '@chakra-ui/react';
+
 import { CgArrowsScrollV } from 'react-icons/cg';
 
-import Stories from '@compo/Stories';
+import ShowStoriesList from './ShowStoriesList';
 const fo = {
   _focus: { outline: 'none' },
   variant: 'outline',
@@ -20,8 +21,7 @@ const ShowStories = ({ collectionId }: { collectionId: string }) => {
         rightIcon={
           !showStories.isOpen ? <UpDownIcon /> : <CgArrowsScrollV size="25px" />
         }
-        onClick={() => showStories.onToggle()}
-        // isLoading={isValidating}
+        onClick={showStories.onToggle}
         loadingText="loading.."
       >
         Stories
@@ -30,12 +30,7 @@ const ShowStories = ({ collectionId }: { collectionId: string }) => {
       <Collapse in={showStories.isOpen} animateOpacity>
         <Box maxH="90vh" overflowY="auto" pr={2}>
           {showStories.isOpen && (
-            <Stories
-              collectionId={collectionId}
-              // isInitial={true}
-              nextPageNo={1}
-              query={`/collections/stories/${collectionId}?`}
-            />
+            <ShowStoriesList collectionId={collectionId} pageNo={1} />
           )}
         </Box>
       </Collapse>

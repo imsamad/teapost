@@ -3,9 +3,11 @@ import axios from '../axios';
 
 export const createCollectionApi = async (reqBody: {
   title: string;
-  desciption: string;
+  desciption?: string;
 }) => {
   try {
+    if (!reqBody.desciption) delete reqBody.desciption;
+
     const { data } = await axios.post<{ collection: StoryCollectionType }>(
       '/collections',
       reqBody
@@ -20,9 +22,10 @@ export const updateCollectionApi = async (
   collId: string,
   reqBody: {
     title: string;
-    desciption: string;
+    desciption?: string;
   }
 ) => {
+  if (!reqBody.desciption) delete reqBody.desciption;
   try {
     const { data } = await axios.put<{ collection: StoryCollectionType }>(
       `/collections/${collId}`,

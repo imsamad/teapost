@@ -1,4 +1,4 @@
-import { EditIcon } from "@chakra-ui/icons";
+import { EditIcon } from '@chakra-ui/icons';
 import {
   Box,
   Heading,
@@ -7,12 +7,12 @@ import {
   Text,
   useDisclosure,
   VStack,
-} from "@chakra-ui/react";
-import TSIconButton from "@compo/UI/TSIconButton";
-import { useState } from "react";
+} from '@chakra-ui/react';
+import TSIconButton from '@compo/UI/TSIconButton';
+import { useState } from 'react';
 
-import NewCollection from "@compo/NewCollection";
-import RemoveBtn from ".././RemoveBtn";
+import NewCollection from '@compo/NewCollection';
+import RemoveBtn from '.././RemoveBtn';
 
 const Index = ({
   collectionId,
@@ -31,7 +31,7 @@ const Index = ({
     <>
       {editColl.isOpen ? (
         <NewCollection
-          editObj={{
+          editFormData={{
             preValues: collection,
             isEdit: true,
             collectionId: collectionId,
@@ -46,7 +46,7 @@ const Index = ({
         <>
           <HStack>
             <Box flex="1">
-              <Heading size="md"> {collection.title}</Heading>{" "}
+              <Heading size="md"> {collection.title}</Heading>{' '}
               <Text size="2xl" color="muted">
                 {collection?.description}
               </Text>

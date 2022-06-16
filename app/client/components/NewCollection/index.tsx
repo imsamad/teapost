@@ -1,85 +1,85 @@
-import {
-  Button,
-  Stack,
-  HStack,
-  Heading,
-  Divider,
-  useToast,
-} from '@chakra-ui/react';
-import { Form, Formik } from 'formik';
+import { useToast } from '@chakra-ui/react';
+import { Formik, FormikHelpers } from 'formik';
 
 import {
   createCollectionApi,
   updateCollectionApi,
 } from '@lib/api/collectionApi';
+
 import { trimExtra } from '@lib/utils';
-import { useProfile } from '../Context';
-import { TPInput, TPTextarea } from '../FormFields';
-import { StoryCollectionType } from '@lib/types/StoryCollectionType';
+import { useProfile } from '@compo/Context';
+import NewCollectionFormFields from './NewCollectionFormFields';
+
+interface NewCollData {
+  title: string;
+  description?: string;
+}
 
 const NewCollForm = ({
   onCancel,
-  editObj,
+  editFormData,
 }: {
   onCancel?: () => void;
-  editObj?: {
+  editFormData?: {
     collectionId: string;
     isEdit: boolean;
-    preValues: Pick<StoryCollectionType, 'title' | 'description'>;
+    preValues: NewCollData;
     editCB: (title: string, description: string) => void;
   };
 }) => {
   const { myProfile, mutateProfile } = useProfile();
 
   const toast = useToast();
+  const handleSubmit = async (
+    val: NewCollData,
+    actions: FormikHelpers<NewCollData>
+  ) => {
+    const submitFun: any = editFormData?.isEdit
+      ? updateCollectionApi(editFormData.collectionId, val)
+      : createCollectionApi(val);
+
+    submitFun
+      .then((data: any) => {
+        toast({
+          title: editFormData?.isEdit ? 'Edit' : 'Saved',
+          status: 'success',
+          duration: 1000,
+          isClosable: true,
+          position: 'bottom',
+        });
+
+        actions.setSubmitting(false);
+        actions.resetForm();
+        if (editFormData?.isEdit && editFormData?.editCB)
+          editFormData?.editCB(
+            data.collection.title,
+            data.collection.description
+          );
+        else mutateProfile();
+        onCancel && onCancel();
+      })
+      .catch(() => {
+        toast({
+          title: `Unable to ${
+            editFormData?.isEdit ? 'Edit' : 'Saved'
+          }, please retry.`,
+          status: 'error',
+          duration: 1000,
+          isClosable: true,
+          position: 'bottom',
+        });
+        actions.setSubmitting(false);
+      });
+  };
   return (
     <Formik
       initialValues={{
         title: '',
         description: '',
-        ...editObj?.preValues,
+        ...editFormData?.preValues,
       }}
-      onSubmit={async (val, actions) => {
-        let obj: any = { title: val.title };
-        // @ts-ignore
-        if (val.description) obj.description = val.description;
-        const fun: any = editObj?.isEdit
-          ? updateCollectionApi(editObj.collectionId, obj)
-          : createCollectionApi(obj);
-
-        fun
-          .then((data: any) => {
-            toast({
-              title: editObj?.isEdit ? 'Edit' : 'Saved',
-              status: 'success',
-              duration: 1000,
-              isClosable: true,
-              position: 'bottom',
-            });
-
-            actions.setSubmitting(false);
-            actions.resetForm();
-            if (editObj?.isEdit && editObj?.editCB)
-              editObj?.editCB(
-                data.collection.title,
-                data.collection.description
-              );
-            else mutateProfile();
-            onCancel && onCancel();
-          })
-          .catch(() => {
-            toast({
-              title: `Unable to ${
-                editObj?.isEdit ? 'Edit' : 'Saved'
-              }, please retry.`,
-              status: 'error',
-              duration: 1000,
-              isClosable: true,
-              position: 'bottom',
-            });
-            actions.setSubmitting(false);
-          });
-      }}
+      // @ts-ignore
+      onSubmit={handleSubmit}
       validate={(value) => {
         let errors: { title?: string } = {};
         if (!value.title || !trimExtra(value.title, 1))
@@ -87,49 +87,10 @@ const NewCollForm = ({
         return errors;
       }}
     >
-      {(formikProps) => {
-        return (
-          <Form>
-            <Stack rounded="md" border="1px" borderColor="gray.300" p="2">
-              {!editObj?.isEdit && (
-                <>
-                  <Heading fontSize="md" textAlign="center" fontWeight={400}>
-                    Create new collection
-                  </Heading>{' '}
-                  <Divider />
-                </>
-              )}
-
-              <TPInput
-                isRequired={true}
-                label={editObj?.isEdit ? undefined : 'Title'}
-                name="title"
-                placeholder="Enter unique title"
-                size="sm"
-              />
-              <TPTextarea
-                name="description"
-                placeholder="Write a short & sweet description..."
-                label="Description"
-              />
-              <HStack>
-                <Button variant="outline" mr={3} onClick={onCancel} size="sm">
-                  Cancel
-                </Button>
-                <Button
-                  colorScheme="blue"
-                  size="sm"
-                  type="submit"
-                  isLoading={formikProps.isSubmitting}
-                  loadingText={editObj?.isEdit ? 'Editing...' : 'Saving...'}
-                >
-                  {editObj?.isEdit ? 'Edit' : 'Save'}
-                </Button>
-              </HStack>
-            </Stack>
-          </Form>
-        );
-      }}
+      <NewCollectionFormFields
+        onCancel={onCancel}
+        isEdit={!!editFormData?.isEdit}
+      />
     </Formik>
   );
 };

@@ -1,11 +1,5 @@
-import {
-  Box,
-  Container,
-  Heading,
-  HStack,
-  Spinner,
-  Text,
-} from '@chakra-ui/react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import { Box, Heading, HStack, Spinner, Text } from '@chakra-ui/react';
 
 import useSWR from 'swr';
 
@@ -16,40 +10,50 @@ import useInfinite from '@compo/Hooks/useInfinite';
 
 const Index = ({
   initialMycollections,
-  isInitial = false,
-  nextPageNo,
+  pageNo,
 }: {
   initialMycollections?: StoryCollectionType[];
-  isInitial?: boolean;
-  nextPageNo: number;
+  pageNo: number;
 }) => {
-  const { data } = useSWR<{
+  if (initialMycollections) {
+    return (
+      <>
+        {initialMycollections?.map((collection) => (
+          <CollectionCard key={collection._id} collection={collection} />
+        ))}
+        <Index pageNo={2} />
+      </>
+    );
+  }
+
+  const { data, isValidating } = useSWR<{
     mycollections: StoryCollectionType[];
     pagination: { next: number; prev: number; limit: number };
-  }>(() => !isInitial && `/collections/my?page=${nextPageNo}`);
+  }>(`/collections/my?page=${pageNo}`);
 
   const { isInViewRef, show } = useInfinite({
-    ignore: !!initialMycollections || !nextPageNo,
+    ignore: false,
   });
+  if (isValidating) {
+    return (
+      <HStack justifyContent="center">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="sm"
+        />
+      </HStack>
+    );
+  }
+  if (!isValidating && !data?.pagination.next) {
+    return <></>;
+  }
   return (
     <>
-      <div ref={isInitial ? null : isInViewRef} />
-      {initialMycollections ? (
-        <>
-          {initialMycollections?.length ? (
-            <>
-              {initialMycollections?.map((collection) => (
-                <CollectionCard key={collection._id} collection={collection} />
-              ))}
-              <Index nextPageNo={2} />
-            </>
-          ) : (
-            <Text textAlign="center" my={3}>
-              No collection
-            </Text>
-          )}
-        </>
-      ) : !show ? (
+      <div ref={isInViewRef} />
+      {!show ? (
         <HStack justifyContent="center">
           <Spinner
             thickness="4px"
@@ -59,30 +63,16 @@ const Index = ({
             size="sm"
           />
         </HStack>
-      ) : data?.mycollections.length ? (
+      ) : (
         <>
           {data?.mycollections?.map((collection) => (
             <CollectionCard key={collection._id} collection={collection} />
           ))}
-          <Index nextPageNo={nextPageNo + 1} />
+          <Index pageNo={pageNo + 1} />
         </>
-      ) : (
-        <Text textAlign="center"> {``}</Text>
       )}
     </>
   );
 };
 
 export default Index;
-const Server = () => (
-  <Box
-    maxW="400px"
-    p="15px"
-    borderRadius="md"
-    mx="auto"
-    bgColor="gray.300"
-    color="pink.500"
-  >
-    <Heading fontSize="md">Sorry, server is updating right now...</Heading>
-  </Box>
-);

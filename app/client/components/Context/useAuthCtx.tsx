@@ -8,7 +8,7 @@ import { LogInResponseType } from '@lib/types/UserType';
 import CustomToast from '@compo/UI/customToast';
 
 type AuthCtxType = {
-  auth: Partial<LogInResponseType>;
+  auth: Partial<LogInResponseType> | null;
   setAuth: (props: Partial<LogInResponseType>, redirectTo?: string) => void;
 
   openLoginToast: () => void;

@@ -27,5 +27,9 @@
   "homepage": "https://github.com/imsamad/teapost#readme",
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "engines": {
+    "node": "16.15.*",
+    "npm": "8.12.*"
   }
 }

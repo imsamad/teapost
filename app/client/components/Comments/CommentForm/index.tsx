@@ -40,18 +40,17 @@ const CommentForm = ({
       setValue('');
     });
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <HStack flex="1">
         {showAvatar && (
           <Avatar
             alignSelf="flex-start"
-            name={auth.user?.username}
+            name={auth?.user?.username}
             src={cloudinaryUrl({
               width: 20,
               height: 20,
-              src: auth.user?.profilePic!,
+              src: auth?.user?.profilePic!,
             })}
             size="sm"
             mr="2"

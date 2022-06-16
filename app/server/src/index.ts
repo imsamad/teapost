@@ -59,6 +59,7 @@ app.use(
 app.use(express.static(path.join(__dirname, '../', 'public')));
 
 app.use(BUSINESS_ROUTES);
+
 app.get('/api/v1/health', (_req, res) => {
   return res.json({
     dir: __dirname,

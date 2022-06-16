@@ -12,8 +12,8 @@ import commentRtr from './commentRtr';
 import assetRtr from './assetRtr';
 import adminRtr from './adminRtr';
 
-Router.use('/api/v1/auth', authRtr);
 Router.use('/api/v1/stories', storyRtr);
+Router.use('/api/v1/auth', authRtr);
 Router.use('/api/v1/collections', collectionRtr);
 Router.use('/api/v1/users', userRtr);
 Router.use('/api/v1/storyhistories', storyHistoryRtr);

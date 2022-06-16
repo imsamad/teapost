@@ -26,7 +26,7 @@ const getSecondaries = asyncHandler(
         },
       ])
       .sort('createdAt');
-    pagination(req, res, { query, label: 'comments' });
+    pagination(req, res, next,{ query, label: 'comments' });
   }
 );
 export const schema = yup.object({

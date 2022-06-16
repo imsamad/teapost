@@ -9,6 +9,8 @@ import { peelUserDoc, UserDocument } from '../models/User';
 import { signJwt } from './jwt';
 import { isValidObjectId } from 'mongoose';
 
+export const stars = (val = 1) => '**********'.repeat(val);
+
 import { LoremIpsum } from 'lorem-ipsum';
 // const LoremIpsum = require("lorem-ipsum").LoremIpsum;
 

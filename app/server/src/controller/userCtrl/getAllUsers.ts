@@ -8,7 +8,7 @@ import User from '../../models/User';
 // @access    Public
 export const getAllUsers = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    pagination(req, res, {
+    pagination(req, res, next, {
       query: User.find({
         isEmailVerified: true,
         isAuthorised: true,

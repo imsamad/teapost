@@ -93,7 +93,7 @@ export const getStaticProps = async ({ params }: any) => {
       },
       {
         path: 'author',
-        select: 'username',
+        select: 'username email fullName',
       },
       {
         path: 'tags',

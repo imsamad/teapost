@@ -3,16 +3,11 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import {
   Box,
   Checkbox,
-  Heading,
   HStack,
   Icon,
   IconButton,
-  Progress,
   Spinner,
-  Stack,
-  Text,
   useDisclosure,
-  VStack,
 } from '@chakra-ui/react';
 
 import { useState } from 'react';
@@ -73,20 +68,21 @@ const CollectionRow = ({
       {collection && (
         <>
           <HStack overflow="hidden" my={2}>
-            {storyId &&
-              (isBuliding.isOpen ? (
-                <Spinner size="sm" alignSelf="flex-start" />
-              ) : (
-                <Checkbox
-                  alignSelf="flex-start"
-                  isChecked={collection.stories.includes(storyId)}
-                  onChange={(e) => addRemoveStory(e.target.checked)}
-                  icon={<CustomIcon />}
-                  colorScheme="cyan"
-                  size="lg"
-                />
-              ))}
-
+            <Box m={1}>
+              {storyId &&
+                (isBuliding.isOpen ? (
+                  <Spinner size="sm" alignSelf="flex-start" />
+                ) : (
+                  <Checkbox
+                    alignSelf="flex-start"
+                    isChecked={collection.stories.includes(storyId)}
+                    onChange={(e) => addRemoveStory(e.target.checked)}
+                    icon={<CustomIcon />}
+                    colorScheme="cyan"
+                    size="lg"
+                  />
+                ))}
+            </Box>
             <CollectionText collection={collection} />
             <IconButton
               alignSelf="flex-start"

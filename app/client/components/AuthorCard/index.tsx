@@ -5,6 +5,7 @@ import FollowAuthor from '@compo/FollowAuthor';
 import UserType from '@lib/types/UserType';
 import Stats from './Stats';
 import { cloudinaryUrl } from '@lib/utils';
+import MyLink from '@compo/MyLink';
 
 const Index = ({
   author,
@@ -25,33 +26,37 @@ const Index = ({
 
   return (
     <>
-      <Flex>
-        <Avatar
-          size="md"
-          name={author.fullName}
-          src={cloudinaryUrl({
-            src: author?.profilePic,
-            width: 100,
-            height: 100,
-          })}
-        />
+      <Flex my={2}>
+        <MyLink href={`/@/${author.username}`}>
+          <Avatar
+            size="md"
+            name={author.fullName}
+            src={cloudinaryUrl({
+              src: author?.profilePic,
+              width: 100,
+              height: 100,
+            })}
+          />
+        </MyLink>
         <Box border="0px" pl="8">
           <HStack mb="2" border="0px">
-            <Stack justifyContent="center" pr="8px">
-              <Text size="xl" fontWeight={700} lineHeight={1}>
-                {author.fullName}
-              </Text>
+            <MyLink href={`/@/${author.username}`}>
+              <Stack justifyContent="center" pr="8px">
+                <Text size="xl" fontWeight={700} lineHeight={1}>
+                  {author.fullName}
+                </Text>
 
-              <Text
-                m="0"
-                p="0"
-                border="0px solid red"
-                lineHeight={1}
-                fontStyle="italic"
-              >
-                @{author.username}
-              </Text>
-            </Stack>
+                <Text
+                  m="0"
+                  p="0"
+                  border="0px solid red"
+                  lineHeight={1}
+                  fontStyle="italic"
+                >
+                  @{author.username}
+                </Text>
+              </Stack>
+            </MyLink>
             <FollowAuthor author={author} isFullBtn followCB={followCB} />
           </HStack>
           {displayFull && (

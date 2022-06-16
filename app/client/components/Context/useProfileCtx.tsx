@@ -7,7 +7,7 @@ import { GetMeType } from '@lib/types/UserType';
 
 const ProfileCtx = createContext<{
   mutateProfile: () => void;
-  myProfile: Partial<GetMeType>;
+  myProfile: Partial<GetMeType> | undefined;
 }>({ myProfile: {}, mutateProfile: () => {} });
 
 const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
@@ -18,7 +18,7 @@ const ProfileCtxProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ProfileCtx.Provider
       value={{
-        myProfile: data?.myProfile || { _id: auth?.user?._id },
+        myProfile: data?.myProfile,
         mutateProfile: async () => await mutate(),
       }}
     >

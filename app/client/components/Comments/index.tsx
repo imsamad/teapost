@@ -13,6 +13,7 @@ import { BiCommentAdd } from 'react-icons/bi';
 import { useCallback, useState } from 'react';
 import NewComments from './NewComments';
 import Primaries from './Primaries';
+
 export default function CommentDrawer({
   storyId,
   noOfComments: noCommentsProp,

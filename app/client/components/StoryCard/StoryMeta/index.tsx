@@ -1,21 +1,25 @@
 import { HStack, Spacer } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+
 import storyType from '@lib/types/StoryType';
 
-import Author from './Author';
-import StoryInfo from './StoryInfo';
-import { useRouter } from 'next/router';
-const Index = ({ story }: { story: storyType }) => {
+import StoryAuthor from './StoryAuthor';
+import StoryMetaInfo from './StoryMetaInfo';
+
+const StoryMeta = ({ story }: { story: storyType }) => {
   const router = useRouter();
-  const tag =
+
+  // Select shortest tags from story.tag array.
+  const shortestTag =
     router?.query?.tag ||
     story.tags.sort((a, b) => a.title.length - b.title.length)[0].title;
 
   return (
-    <HStack>
-      <Author author={story.author} />
+    <HStack border="0px">
+      <StoryAuthor author={story.author} />
       <Spacer />
-      <StoryInfo
-        tag={tag}
+      <StoryMetaInfo
+        tag={shortestTag}
         createdAt={story.createdAt}
         readingTime={story.readingTime}
       />
@@ -23,4 +27,4 @@ const Index = ({ story }: { story: storyType }) => {
   );
 };
 
-export default Index;
+export default StoryMeta;

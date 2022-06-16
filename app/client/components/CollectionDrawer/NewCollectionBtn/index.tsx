@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import TSButton from '@compo/UI/TSButton';
 
-import NewCollection from '../NewCollection';
+import NewCollection from '@compo/NewCollection';
 
 const NewCollectionBtn = () => {
   const { isOpen, onClose, onToggle } = useDisclosure();

@@ -21,6 +21,7 @@ const LikeAndDislike = ({
   noOfDislikes: number;
 }) => {
   const { myProfile, mutateProfile } = useProfile();
+
   const [grade, setGrade] = useState({
     noOfLikes,
     noOfDislikes,
@@ -36,6 +37,7 @@ const LikeAndDislike = ({
         hadBeenDisLiked:
           !!myProfile?.profile?.dislikedStories?.includes(storyId),
       }));
+
       // user liked or disliked but page is not staticlly-regenerated
       const isLikedButNotReGenerated =
         !!myProfile?.profile?.likedStories?.includes(storyId) &&

@@ -1,19 +1,11 @@
-import {
-  AspectRatio,
-  Heading,
-  HStack,
-  Image,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Heading, HStack, Stack, Text } from '@chakra-ui/react';
 
 import StoryType from '@lib/types/StoryType';
 import AuthorCard from '@compo/AuthorCard';
 import { StoryReaderActions } from '@compo/StoryActions';
 import UserType from '@lib/types/UserType';
-import { placeholderImage, readAbleDate } from '@lib/utils';
+import { readAbleDate } from '@lib/utils';
 import Content from './Content';
-import FallbackImage from '@compo/FallbackImage';
 import TPImage from '@compo/TPImage';
 const SingleStory = ({
   story,
@@ -22,6 +14,7 @@ const SingleStory = ({
   story: StoryType;
   author: UserType;
 }) => {
+  // console.log('author ', author);
   return (
     <Stack spacing={4} p={2}>
       <AuthorCard author={author} displayFull={false} />
@@ -43,17 +36,7 @@ const SingleStory = ({
         alt={story.title}
       />
 
-      <StoryReaderActions
-        storyId={story._id}
-        noOfLikes={story.noOfLikes || 0}
-        noOfDislikes={story.noOfDislikes || 0}
-        noOfComments={story.noOfComments || 0}
-        share={{
-          title: story.title,
-          text: story.subtitle,
-          url: '/story/' + story.slug,
-        }}
-      />
+      <StoryReaderActions story={story} />
       <Content storyId={story._id} />
     </Stack>
   );

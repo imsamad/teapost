@@ -7,14 +7,16 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Heading,
+  HStack,
   IconButton,
+  Spinner,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
 
 import { RiShieldStarFill } from 'react-icons/ri';
 import { StoryCollectionType } from '@lib/types/StoryCollectionType';
-import CollectionRows from './CollectionRows';
+import CollectionList from './CollectionList';
 import { useAuthCtx } from '@compo/Context';
 import TSButton from '@compo/UI/TSButton';
 import NewCollectionBtn from './NewCollectionBtn';
@@ -24,9 +26,10 @@ const Index = ({ storyId }: { storyId: string }) => {
 
   const drawer = useDisclosure();
 
-  const { data } = useSWR<{
+  const { data, isValidating } = useSWR<{
     mycollections: StoryCollectionType[];
   }>(() => auth?.user?._id && '/collections/my');
+
   return (
     <>
       <IconButton
@@ -36,7 +39,7 @@ const Index = ({ storyId }: { storyId: string }) => {
         variant="outline"
         colorScheme="blue"
         outline="none"
-        isLoading={drawer.isOpen && !data}
+        isLoading={drawer.isOpen && isValidating}
         border="0"
         _focus={{
           outline: 'none',
@@ -72,12 +75,22 @@ const Index = ({ storyId }: { storyId: string }) => {
             ) : (
               <>
                 <NewCollectionBtn />
-                {data?.mycollections.length ? (
+                {isValidating ? (
+                  <HStack justifyContent="center" my={2}>
+                    <Spinner
+                      thickness="4px"
+                      speed="0.65s"
+                      emptyColor="gray.200"
+                      color="blue.500"
+                      size="sm"
+                    />
+                  </HStack>
+                ) : data?.mycollections.length ? (
                   <>
-                    <CollectionRows
+                    <CollectionList
                       storyId={storyId}
                       initialCollections={data?.mycollections}
-                      page={2}
+                      pageNo={2}
                     />
                   </>
                 ) : (

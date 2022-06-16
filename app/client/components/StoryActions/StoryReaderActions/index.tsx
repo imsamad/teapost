@@ -4,34 +4,25 @@ import LikeAndDislike from './LikeAndDislike';
 import CollectionDrawer from '@compo/CollectionDrawer';
 import ShareButton from '@compo/ShareButton';
 import Comments from '@compo/Comments';
+import StoryType from '@lib/types/StoryType';
 
-const StoryReaderActions = ({
-  storyId,
-  noOfLikes,
-  noOfDislikes,
-  noOfComments,
-  share,
-}: {
-  storyId: string;
-  noOfLikes: number;
-  noOfDislikes: number;
-  noOfComments: number;
-  share: {
-    title: string;
-    text: string;
-    url: string;
-  };
-}) => {
+const StoryReaderActions = ({ story }: { story: StoryType }) => {
   return (
     <ButtonGroup spacing={0} alignItems="center">
       <LikeAndDislike
-        storyId={storyId}
-        noOfLikes={noOfLikes}
-        noOfDislikes={noOfDislikes}
+        storyId={story._id}
+        noOfLikes={story.noOfLikes}
+        noOfDislikes={story.noOfDislikes}
       />
-      <Comments storyId={storyId} noOfComments={noOfComments} />
-      <CollectionDrawer storyId={storyId} />
-      <ShareButton share={share} />
+      <Comments storyId={story._id} noOfComments={story.noOfComments} />
+      <CollectionDrawer storyId={story._id} />
+      <ShareButton
+        share={{
+          text: story.subtitle,
+          title: story.title,
+          url: '/story/' + story.slug,
+        }}
+      />
     </ButtonGroup>
   );
 };

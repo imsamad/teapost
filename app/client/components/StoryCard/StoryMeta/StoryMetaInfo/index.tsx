@@ -1,11 +1,14 @@
 import { Badge, HStack, Text } from '@chakra-ui/react';
 import { monthList } from '@lib/utils';
 
-import MyLink from '../../../MyLink';
+import MyLink from '@compo/MyLink';
 
-const StoryInfo = ({ tag, createdAt, readingTime }: any) => {
+const StoryMetaInfo = ({ tag, createdAt, readingTime }: any) => {
+  // Convert 2012-02-02T01:58:28.998Z => Thu Feb 02 2012 07:28:28 GMT+0530 (India Standard Time)
   let date: any = new Date(createdAt);
+  // Then more-readable => 2 Feb
   date = `${date.getDate()} ${monthList[date.getMonth()]}`;
+
   return (
     <HStack spacing={1} alignItems="center">
       <MySmText
@@ -54,4 +57,4 @@ const MySmText = ({ children, ...rest }: { children: React.ReactNode }) => {
     </Text>
   );
 };
-export default StoryInfo;
+export default StoryMetaInfo;

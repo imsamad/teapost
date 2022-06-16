@@ -87,6 +87,7 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
       duration: 2000,
       isClosable: true,
       render: CustomToast(onOpen),
+      id: 'login-modal-toast',
     });
 
   useEffect(() => {

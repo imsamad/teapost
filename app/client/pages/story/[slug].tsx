@@ -1,9 +1,10 @@
 import StoryType from '@lib/types/StoryType';
-import SingleStory from '@compo/SingleNews';
+import SingleStory from '@compo/SingleStory';
 import UserType from '@lib/types/UserType';
 import Story from '@lib/models/Story';
 import dbConnect from '@lib/dbConnect';
 import Head from 'next/head';
+import { User } from '@lib/models';
 
 const Index = ({ story, author }: { story: StoryType; author: UserType }) => {
   if (!story) {
@@ -50,7 +51,7 @@ export const getStaticProps = async ({ params }: any) => {
       },
       {
         path: 'author',
-        select: 'username',
+        select: 'username email fullName',
       },
       {
         path: 'tags',
@@ -64,6 +65,7 @@ export const getStaticProps = async ({ params }: any) => {
     };
     throw new Error(`Failed to fetch posts, received status `);
   }
+
   let parsedStory = JSON.parse(JSON.stringify(story));
 
   return {

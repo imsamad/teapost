@@ -1,16 +1,12 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  Container,
-  ChakraProvider,
-} from '@chakra-ui/react';
+import { Box, Divider, Flex, ChakraProvider } from '@chakra-ui/react';
 import NavBar from '../NavBar';
 import Footer from '../Footer';
 import Context from '../Context';
+
 type LayoutProps = {
   children: React.ReactNode;
 };
+
 import SWR from '../SWR';
 import { theme } from '../../theme';
 

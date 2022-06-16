@@ -5,7 +5,7 @@ import MyLink from '@compo/MyLink';
 import FollowAuthor from '@compo/FollowAuthor';
 import { cloudinaryUrl } from '@lib/utils';
 
-const Index = ({ author }: { author: UserType }) => {
+const StoryAuthor = ({ author }: { author: UserType }) => {
   return (
     <HStack>
       <MyLink
@@ -38,4 +38,4 @@ const Index = ({ author }: { author: UserType }) => {
   );
 };
 
-export default Index;
+export default StoryAuthor;

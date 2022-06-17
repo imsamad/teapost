@@ -9,6 +9,7 @@ const connectDB = (setOptions = false) =>
       serverSelectionTimeoutMS: oneMin * 5, // Keep trying to send operations for 5 seconds
       socketTimeoutMS: oneMin * 5, // Close sockets after 45 seconds of inactivity
     };
+
     mongoose.connect(mongoUri, setOptions ? options : {});
 
     const db = mongoose.connection;

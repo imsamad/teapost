@@ -24,7 +24,9 @@ import errorHandler from './middleware/errorHandler';
 import notFound from './middleware/notFound';
 
 import BUSINESS_ROUTES from './routes';
-import checkTemp from './middleware/checkTemp';
+
+import os from 'os';
+import cluster from 'cluster';
 
 const app = express();
 app.use(mongoSanitize());
@@ -60,10 +62,17 @@ app.use(express.static(path.join(__dirname, '../', 'public')));
 
 app.use(BUSINESS_ROUTES);
 
+const numOfCpu = os.cpus().length;
+const noOfCluster = numOfCpu == 1 ? 4 : numOfCpu;
+
 app.get('/api/v1/health', (_req, res) => {
+  cluster.worker?.kill();
   return res.json({
-    dir: __dirname,
-    env: process.env,
+    // dir: __dirname,
+    // env: process.env,
+    status: 'running',
+    env: process.env.NODE_ENV,
+    numOfCpu
   });
 });
 
@@ -72,7 +81,40 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, async () => {
-  await connectDB();
-  console.log(`):- Listening on http://localhost:${PORT}`.yellow.bold);
-});
+
+// Kickstart app
+if (cluster.isPrimary) for (let i = 0; i < noOfCluster; i++) cluster.fork();
+else
+  connectDB()
+    .then(() => {
+      app.listen(PORT);
+    })
+    .catch(() => {});
+
+cluster
+  .on('fork', function (worker) {
+    console.log(
+      `):- New Cluster with no ${worker.id} with pid ${worker.process.pid} forked.`
+        .blue.bold
+    );
+  })
+  .on('exit', function (worker) {
+    console.log(
+      `):- cluster with id ${worker.process.pid} died.`.red.underline.bold
+    );
+    cluster.fork();
+  })
+  .on('listening', function (worker, { port, address }) {
+    console.log(
+      `):- Cluster no ${worker.id} with pid ${worker.process.pid} listening on http://localhost:${PORT}`
+        .yellow.bold
+    );
+  });
+
+// app.listen(PORT, async () => {
+//   await connectDB();
+//   console.log(
+//     `):- App cluster with pid ${process.pid} Listening on http://localhost:${PORT}`
+//       .yellow.bold
+//   );
+// });

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "start": "tsc && node build/index.js",
+    "start": "export NODE_ENV=production && node build/index.js",
     "deploy": "heroku container:login && docker build -t registry.heroku.com/teapost/web:3 . && docker push registry.heroku.com/teapost/web:3 && heroku container:push web --app teapost && heroku container:release web -a teapost",
     "build": "tsc",
     "seed:i": "ts-node-dev seeder/index.ts -i",

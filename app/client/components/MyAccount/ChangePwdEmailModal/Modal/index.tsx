@@ -62,7 +62,7 @@ const ChangePwdEmail = ({
                       submitCB && submitCB();
                     });
                 } else {
-                  if (auth.user?.email == values.newEmail) {
+                  if (auth?.user?.email == values.newEmail) {
                     actions.setFieldError('newEmail', 'Same as previous ');
                     actions.setSubmitting(false);
                     return;

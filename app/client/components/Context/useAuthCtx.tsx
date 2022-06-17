@@ -64,7 +64,8 @@ const AuthCtxProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = (redirect?: string) => {
     deleteCookies().finally(() => {
       setAuthState({});
-      if (redirect && router.pathname.startsWith('/me')) router.push('/auth');
+      if (redirect && router.pathname.startsWith('/me'))
+        router.push(`/auth?redirectTo=me`);
     });
   };
   /**

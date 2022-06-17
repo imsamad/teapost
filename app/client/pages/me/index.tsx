@@ -11,11 +11,7 @@ const Index = ({ mycollections }: { mycollections: StoryCollectionType[] }) => {
   return (
     <>
       <DashboardHeader type="collections" />
-      <MyCollections
-        initialMycollections={mycollections}
-        isInitial={true}
-        nextPageNo={2}
-      />
+      <MyCollections initialMycollections={mycollections} pageNo={1} />
     </>
   );
 };

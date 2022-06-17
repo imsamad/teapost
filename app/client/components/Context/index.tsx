@@ -3,10 +3,7 @@ import useProfile, { ProfileCtxProvider } from './useProfileCtx';
 const Index = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthCtxProvider>
-      <ProfileCtxProvider>
-        {/*  */}
-        {children}
-      </ProfileCtxProvider>
+      <ProfileCtxProvider>{children}</ProfileCtxProvider>
     </AuthCtxProvider>
   );
 };

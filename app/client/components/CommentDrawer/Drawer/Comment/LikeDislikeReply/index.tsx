@@ -33,7 +33,7 @@ const Index = ({
   const [state, setState] = useState(rest);
 
   const handleLikeOrDislike = (isLike: boolean) => {
-    if (!auth.user?._id) {
+    if (!auth?.user?._id) {
       openLoginToast();
       return;
     }
@@ -113,7 +113,7 @@ const Index = ({
             border: 'none',
           }}
           onClick={() => {
-            if (!auth.user?._id) {
+            if (!auth?.user?._id) {
               openLoginToast();
               return;
             }

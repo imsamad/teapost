@@ -1,19 +1,19 @@
-# ############## 1.) build packages ################ #
-FROM node:alpine as packages
+# ############## 1.) install packages ################ #
+FROM node:16-alpine as packages
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
 # ############## 2.) build app ################ #
-FROM node:alpine as builder
+FROM node:16-alpine as builder
 WORKDIR /app
 COPY . .
 COPY --from=packages /app/node_modules ./node_modules
 RUN npm run build
 
-# ############## 3.) run app ################ #
-FROM node:alpine as runner
+# ############## 3.) run/start app ################ #
+FROM node:16-alpine as runner
 WORKDIR /app
 ENV NODE_ENV production
 

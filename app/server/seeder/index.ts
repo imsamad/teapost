@@ -38,10 +38,10 @@ const importData = async (isKickstart = false) => {
 
       return;
     };
-    // await lightWeightsSeeders();
 
     /** Heavy task run individually */
-    await seeder.generateCollections();
+    await lightWeightsSeeders();
+    // await seeder.generateCollections();
     // await seeder.gradeComments();
     // await seeder.checkCompatibility(!true);
 
@@ -60,7 +60,7 @@ const importData = async (isKickstart = false) => {
   else await importData(process.argv[2] == '-k');
 
   console.timeEnd('Processing time '.green);
-  await seeder.totalDocs();
+  // await seeder.totalDocs();
   // process.off
   // process.abort();
   return;

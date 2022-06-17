@@ -48,7 +48,7 @@ const ReplyComment = ({
             border: 'none',
           }}
           onClick={() => {
-            if (!auth.user?._id) {
+            if (!auth?.user?._id) {
               openLoginToast();
               return;
             }

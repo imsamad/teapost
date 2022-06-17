@@ -34,7 +34,11 @@ const LogInBtn = ({ size }: { size: any }) => {
         _focus={{ boxShadow: 'none' }}
       >
         <HStack>
-          <Avatar src={auth.user.profilePic} size="md" />
+          <Avatar
+            src={auth.user.profilePic}
+            size="md"
+            name={auth.user.username}
+          />
           <ChevronDownIcon fontSize="xl" />
         </HStack>
       </MenuButton>

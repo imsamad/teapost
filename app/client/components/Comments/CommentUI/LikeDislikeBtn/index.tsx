@@ -26,17 +26,17 @@ const LikeDislike = ({
     noOfDislikes: comment.noOfDislikes,
     noOfLikes: comment.noOfLikes,
     hasBeenLike:
-      auth.user?._id && comment.noOfLikes
-        ? !!comment.meta?.likedBy.includes(auth.user?._id)
+      auth?.user?._id && comment.noOfLikes
+        ? !!comment.meta?.likedBy.includes(auth?.user?._id)
         : false,
     hasBeenDisLike:
-      auth.user?._id && comment.noOfDislikes
-        ? !!comment.meta?.dislikedBy.includes(auth.user?._id)
+      auth?.user?._id && comment.noOfDislikes
+        ? !!comment.meta?.dislikedBy.includes(auth?.user?._id)
         : false,
   });
 
   const handleLikeOrDislike = (isLike: boolean) => {
-    if (!auth.user?._id) {
+    if (!auth?.user?._id) {
       openLoginToast();
       return;
     }

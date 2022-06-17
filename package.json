@@ -12,7 +12,7 @@
     "start": "lerna run start --stream",
     "deploy": "cd app/server && npm run deploy && cd ../client && npm run deploy",
     "clean": "npx lerna clean -y",
-    "spin": "npm run clean && npm run bootup && npm run mvConfig && npm run seed:d && npm run dev"
+    "spin": "npm run clean && npm run bootup && npm run dev"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "lerna": "^4.0.0"
   },
   "engines": {
-    "node": "16.15.*",
-    "npm": "8.12.*"
+    "node": "16.*",
+    "npm": "8.*"
   }
 }

@@ -1,47 +1,35 @@
 version: "3"
 services:
-  # database:
-  #   image: mongo
-  #   container_name: teapost_database
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=imsamad
-  #     - MONGO_INITDB_ROOT_PASSWORD=Test_123
-  #   volumes:
-  #     - mongoVal:/data/db
-
   backend:
-    # depends_on:
-    # - database
     build: .
-    # image: registry.heroku.com/teapost/web:2
     image: imsamad/teapost_server:1.0.0
     container_name: teapost_backend
     env_file:
-      # these would over-write the .envs loaded by dotenv
       - ./config/.env
-    # environment:
-    # highest preference
-    # - MONGODB_URI=mongodb://imsamad:Test_123@database:27017/teapost?authSource=admin
     command: npm start
 
   nginx:
-    # build: ./nginx
-    image: nginx:stable-alpine
-    container_name: teapost_proxy
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    build: ./nginx
+    image: imsamad/teapost_nginx:1.0.0
+    container_name: teapost_nginx
     ports:
       - "80:80"
     depends_on:
-      # - database
       - backend
+
+  watchtower:
+    depends_on:
+      - nginx
+      - backend
+    image: containrrr/watchtower
+    container_name: watch_tower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_TRACE=true
+      - WATCHTOWER_DEBUG=true
+      - WATCHTOWER_POLL_INTERVAL=50
+    command: teapost_backend teapost_nginx
 
 volumes:
   mongoVal:
-# heroku apps:create <HEROKU-APP-NAME>
-# heroku container:login
-# docker build registry.heroku.com/<HEROKU-APP-NAME>/web
-# docker push registry.heroku.com/<HEROKU-APP-NAME>/web
-# heroku container:push web --app <HEROKU-APP-NAME>
-# heroku container:release web -a <HEROKU-APP-NAME>
-# heroku open -a <HEROKU-APP-NAME>

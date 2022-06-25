@@ -65,14 +65,15 @@ app.use(BUSINESS_ROUTES);
 const numOfCpu = os.cpus().length;
 const noOfCluster = numOfCpu == 1 ? 4 : numOfCpu;
 
-app.get("/api/v1/health", (_req, res) => {
-  cluster.worker?.kill();
+app.get(["/api/v1", "/api/v1/health"], (_req, res) => {
+  // cluster.worker?.kill();
   return res.json({
     // dir: __dirname,
     // env: process.env,
     status: "running",
-    env: process.env.NODE_ENV,
-    numOfCpu,
+    // env: process.env.NODE_ENV,
+    num: numOfCpu,
+    message: "I am running & every thing is honkey-dorry.",
   });
 });
 

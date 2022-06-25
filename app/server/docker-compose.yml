@@ -1,17 +1,39 @@
-version: '3'
+version: "3"
 services:
+  # database:
+  #   image: mongo
+  #   container_name: teapost_database
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=imsamad
+  #     - MONGO_INITDB_ROOT_PASSWORD=Test_123
+  #   volumes:
+  #     - mongoVal:/data/db
+
   backend:
+    # depends_on:
+    # - database
     build: .
     image: registry.heroku.com/teapost/web:2
-    ports:
-      - '4000:4000'
-    container_name: teapost-backend
-    # env_file:
-    # these would over-write the .envs loaded by dotenv
-    # - ./config/.env.example
+    container_name: teapost_backend
+    env_file:
+      # these would over-write the .envs loaded by dotenv
+      - ./config/.env
     # environment:
     # highest preference
-    # - APP_NAME=fromfile
+    # - MONGODB_URI=mongodb://imsamad:Test_123@database:27017/teapost?authSource=admin
+    command: npm start
+
+  nginx:
+    build: ./nginx
+    container_name: teapost_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      # - database
+      - backend
+
+volumes:
+  mongoVal:
 # heroku apps:create <HEROKU-APP-NAME>
 # heroku container:login
 # docker build registry.heroku.com/<HEROKU-APP-NAME>/web

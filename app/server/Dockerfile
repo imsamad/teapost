@@ -4,5 +4,12 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm ci 
 COPY . .
-RUN npm run build && rm -rf src && rm -rf node_modules && rm -rf tsconfig.json && npm ci --omit=dev
+
+# Peel down extra .ts files to just prod app.
+RUN npm run build
+RUN rm -rf src
+RUN rm -rf node_modules
+RUN rm -rf tsconfig.json
+RUN npm ci --omit=dev
+
 CMD npm start

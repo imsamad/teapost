@@ -1,0 +1,27 @@
+version: "3"
+services:
+  database:
+    image: mongo
+    container_name: teapost_database
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=imsamad
+      - MONGO_INITDB_ROOT_PASSWORD=Test_123
+    volumes:
+      - mongoVal:/data/db
+
+  seeder_backend:
+    depends_on:
+      - database
+    build:
+      context: .
+      dockerfile: Dockerfile-seeder
+    image: seeder_backend
+    container_name: seeder_backend
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://imsamad:Test_123@database:27017/teapost?authSource=admin
+    # command: npm run seed:k
+
+volumes:
+  mongoVal:

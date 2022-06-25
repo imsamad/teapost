@@ -1,8 +1,17 @@
-import mongoose from 'mongoose';
-import 'colors';
+import mongoose from "mongoose";
+import "colors";
+// @ts-ignore
+// import { insertDate } from "../../seeder/utils";
+
 const connectDB = (setOptions = false) =>
-  new Promise((resolve, reject) => {
+  new Promise(async (resolve, reject) => {
+    const exportData =
+      process.env.SEEDER_K == "true" || process.env.SEEDER_F == "true";
+    if (exportData) {
+      // await insertDate(process.env.SEEDER_F == "true");
+    }
     const mongoUri = process.env.MONGODB_URI!;
+    console.log({ mongoUri });
     const oneMin = 1000 * 60;
     const options = {
       maxPoolSize: 10, // Maintain up to 10 socket connections
@@ -14,24 +23,32 @@ const connectDB = (setOptions = false) =>
 
     const db = mongoose.connection;
 
-    db.on('connected', () => {
+    let isDisconnected = false;
+    db.on("connected", () => {
       resolve(true);
       console.log(`):- MongoDB connected successfully!`.blue.italic);
     });
 
-    db.on('error', (err) => {
+    db.on("error", (err) => {
       reject(false);
-      console.log(`\n):- ${err.message}`.red.underline.bold);
+      // if (isDisconnected) return;
+      isDisconnected = true;
+      console.log(`\n):-MongoDB Error - ${err.message}`.red.underline.bold);
     });
 
-    db.on('disconnected', () => {
+    db.on("disconnected", () => {
       reject(false);
+      // if (isDisconnected) return;
+      isDisconnected = true;
       console.log(
         `\n):- MongoDB connection is disconnected...`.red.underline.bold
       );
     });
 
-    const closeDB = () =>
+    const closeDB = () => {
+      if (isDisconnected) return;
+      isDisconnected = true;
+
       db.close(() => {
         console.log(
           `):- MongoDB is disconnecting due to node app exit...`.red.underline
@@ -39,10 +56,11 @@ const connectDB = (setOptions = false) =>
         );
         process.exit(0);
       });
+    };
 
-    process.on('SIGINT', closeDB);
-    process.on('exit', closeDB);
-    process.on('beforeExit', closeDB);
+    process.on("SIGINT", closeDB);
+    process.on("exit", closeDB);
+    process.on("beforeExit", closeDB);
   });
 
 export default connectDB;

@@ -1,4 +1,4 @@
-import { checkCompatibility, totalDocs } from './health';
+ 
 import { generateTags } from './tags';
 import { generateProfiles, generateUsers } from './users';
 import { generateAssets } from './assets';
@@ -9,10 +9,8 @@ import {
   gradeComments,
 } from './comments';
 import { generateCollections } from './collections';
-import { deleteData } from './deleteData';
 
-export {
-  checkCompatibility,
+const seeder={
   generateTags,
   generateProfiles,
   generateUsers,
@@ -23,7 +21,7 @@ export {
   generateSecondaryComments,
   gradeComments,
   generateCollections,
-  deleteData,
   addCollaborators,
-  totalDocs,
-};
+
+}
+export {seeder}

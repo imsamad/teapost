@@ -116,5 +116,5 @@ const runApp = () => {
     })
     .catch(() => {});
 };
-clusterise();
-// runApp();
+// clusterise();
+runApp();

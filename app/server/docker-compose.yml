@@ -3,14 +3,13 @@ services:
   backend:
     build: .
     # deploy:
-    #   replicas: 8
+    #   replicas: 4
     #   restart_policy:
     #     condition: any
 
     #   update_config:
     #     parallelism: 2
     #     delay: 10s
-    #     # order: stop-first
 
     image: imsamad/teapost_server:1.0.1
     # container_name: teapost_backend

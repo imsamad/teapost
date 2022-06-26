@@ -2,8 +2,18 @@ version: "3"
 services:
   backend:
     build: .
+    # deploy:
+    #   replicas: 8
+    #   restart_policy:
+    #     condition: any
+
+    #   update_config:
+    #     parallelism: 2
+    #     delay: 10s
+    #     # order: stop-first
+
     image: imsamad/teapost_server:1.0.0
-    container_name: teapost_backend
+    # container_name: teapost_backend
     env_file:
       - ./config/.env
     command: npm start
@@ -11,25 +21,11 @@ services:
   nginx:
     build: ./nginx
     image: imsamad/teapost_nginx:1.0.0
-    container_name: teapost_nginx
+    # container_name: teapost_nginx
     ports:
       - "80:80"
     depends_on:
       - backend
-
-  watchtower:
-    depends_on:
-      - nginx
-      - backend
-    image: containrrr/watchtower
-    container_name: watch_tower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - WATCHTOWER_TRACE=true
-      - WATCHTOWER_DEBUG=true
-      - WATCHTOWER_POLL_INTERVAL=50
-    command: teapost_backend teapost_nginx
 
 volumes:
   mongoVal:

@@ -1,0 +1,15 @@
+version: "3"
+services:
+  watchtower:
+  depends_on:
+    - nginx
+    - backend
+  image: containrrr/watchtower
+  container_name: watch_tower
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  environment:
+    - WATCHTOWER_TRACE=true
+    - WATCHTOWER_DEBUG=true
+    - WATCHTOWER_POLL_INTERVAL=50
+  command: teapost_backend teapost_nginx

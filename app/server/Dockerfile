@@ -6,10 +6,11 @@ RUN npm ci
 COPY . .
 
 # Peel down extra .ts files to just prod app.
+RUN ls
 RUN npm run build
 RUN rm -rf src
 RUN rm -rf node_modules
 RUN rm -rf tsconfig.json
 RUN npm ci --omit=dev
-
-CMD npm start
+RUN ls
+CMD ["npm start"]

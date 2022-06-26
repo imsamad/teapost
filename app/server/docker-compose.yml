@@ -12,7 +12,7 @@ services:
     #     delay: 10s
     #     # order: stop-first
 
-    image: imsamad/teapost_server:1.0.0
+    image: imsamad/teapost_server:1.0.1
     # container_name: teapost_backend
     env_file:
       - ./config/.env

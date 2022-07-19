@@ -1,4 +1,4 @@
-# TEAPOST - Stroy Publishing Web App
+# TEAPOST - Story Publishing Web App
 
 ## DEMO
 
